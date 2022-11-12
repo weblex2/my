@@ -6,8 +6,8 @@
     @apply bg-slate-100 bg-opacity-30 border rounded p-5 mb-5 border-slate-600
 }
 
-.blog .blog_content{
-    
+.blog .blog_content a{
+    @apply text-blue-200 
 }
 
 .blog h1{
