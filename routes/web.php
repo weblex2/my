@@ -34,4 +34,6 @@ Route::controller(BlogController::class)->group(function () {
     Route::get('/blog', 'index')->name('blog.index');
     Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
     Route::post('/blog/store', 'store')->middleware(['auth'])->name('blog.store');
+    Route::get('/blog/edit/{id}', 'edit')->middleware(['auth'])->name('blog.edit');
+    Route::post('/blog/update', 'update')->middleware(['auth'])->name('blog.update');
 });    
