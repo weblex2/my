@@ -22,20 +22,16 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
-])->group(function () {
+])->group(function () { 
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 });
 
-/* without logon */
+
+
 Route::controller(BlogController::class)->group(function () {
     Route::get('/blog', 'index')->name('blog.index');
-});
-
-/* only logged in */
-Route::middleware(['auth:sanctum', 'verified'])->controller(BlogController::class)->group(function () {
-    Route::get('/blog/{id}', 'edit')->name('blog.edit');
-    Route::get('/blog/create', 'create')->name('blog.create');
-    Route::post('/blog/save', 'store')->name('blog.save');
-});
+    Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
+    Route::post('/blog/store', 'store')->middleware(['auth'])->name('blog.store');
+});    

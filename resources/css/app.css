@@ -21,3 +21,11 @@
 .block .header{
     @apply pb-5
 }
+
+.blog-button{
+    @apply py-2 px-3 border border-slate-500 rounded text-xs font-bold bg-slate-100
+}
+
+.blog input, .blog textarea{
+    @apply border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full
+}

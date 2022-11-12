@@ -8,6 +8,9 @@
     <div class="py-12">
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="pl-8 pt-6">
+                    <a class="blog-button" href="{{route("blog.create")}}">Create</a>
+                </div>    
                 <div class="p-3 m-5">
                     @foreach ($posts as $post)
                         <x-blog.blog-item :post="$post" />    

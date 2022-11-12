@@ -37,7 +37,12 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        #dump($request->all());
+        $post = new Blog();
+        $post->fill($request->all());
+        $post->slug = $post->title;
+        $post->save();
+        return redirect()->route('blog.index');
     }
 
     /**
