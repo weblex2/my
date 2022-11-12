@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .blog {
-    @apply bg-slate-100 border rounded p-5 mb-5 border-slate-400
+    @apply bg-slate-100 bg-opacity-30 border rounded p-5 mb-5 border-slate-600
 }
 
 .blog .blog_content{
@@ -32,4 +32,13 @@
 
 .blog .edit-post{
     @apply text-xs text-blue-400
+}
+
+ .blog-main-content{
+    background: url(../img/pen-gb438350eb_1920.jpg); 
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: center top;
+    background-attachment: fixed;
+    @apply h-screen
 }
