@@ -14,21 +14,9 @@ use App\Http\Controllers\BlogController;
 |
 */
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('welcome');
-});
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () { 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
-
-
+}); */
 
 Route::controller(BlogController::class)->group(function () {
     Route::get('/blog', 'index')->name('blog.index');
@@ -36,4 +24,18 @@ Route::controller(BlogController::class)->group(function () {
     Route::post('/blog/store', 'store')->middleware(['auth'])->name('blog.store');
     Route::get('/blog/edit/{id}', 'edit')->middleware(['auth'])->name('blog.edit');
     Route::post('/blog/update', 'update')->middleware(['auth'])->name('blog.update');
-});    
+});   
+
+
+
+Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
+    Route::get('/dashboard', function () {
+        return redirect()->route('blog.index');
+    })->name('dashboard');
+});
+
+
+Route::get('/', [BlogController::class, 'index']);
+//Route::get('/dashboard', [BlogController::class, 'index']);
+
+ 

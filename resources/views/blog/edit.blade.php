@@ -1,16 +1,13 @@
-<x-app-layout>
-    <x-slot name="header">
+<x-blog.blog-layout>
+   {{--  <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
         </h2>
-    </x-slot>
+    </x-slot> --}}
 
     <div class="py-12">
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="pl-8 pt-6">
-                    <a class="blog-button" href="/blog/create">Create</a>
-                </div>    
+            <div class="overflow-hidden  sm:rounded-lg">
                 <div class="p-3 m-5">
                    <form name="createPost" action="{{route("blog.update")}}" method="POST"  class="blog">
                         @csrf
@@ -27,10 +24,10 @@
                             <div class="col-span-12">
                                <textarea name="content">{{ $post->content }}</textarea> 
                             </div>
-                            <button type="submit" class="blog-button">Submit</button>   
+                            <button type="submit" class="blog-button">Save</button>   
                    </form>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-blog.blog-layout>

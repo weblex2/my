@@ -10,12 +10,16 @@
     
 }
 
+.blog h1{
+    @apply font-extrabold text-slate-900
+}
+
 .blog .blog_created_at{
-    @apply text-xs
+    @apply  text-[12px]
 }
 
 .blog .avatar{
-    @apply float-left rounded-full w-4 h-4 border border-slate-500 mr-2 mt-1
+    @apply float-left rounded-full w-5 h-5 border border-slate-500 mr-2 -mt-1
 }
 
 .block .header{
@@ -28,6 +32,10 @@
 
 .blog input, .blog textarea{
     @apply border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full
+}
+
+.blog textarea{
+    @apply h-[200px]
 }
 
 .blog .edit-post{
