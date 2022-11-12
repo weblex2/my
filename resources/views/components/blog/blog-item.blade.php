@@ -9,7 +9,7 @@
         @endif
     </div>
     <div class="blog_content">
-            {{ $post->content }}
+            {!! $post->content !!}
     </div>
     <div class="blog_created_at">{{ $post->created_at }} {{ $post->user->email }} </div>   
 </div>
