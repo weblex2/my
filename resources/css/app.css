@@ -19,7 +19,7 @@
 }
 
 .blog .avatar{
-    @apply float-left rounded-full w-5 h-5 border border-slate-500 mr-2 -mt-1
+    @apply float-left rounded-full w-6 h-6 border border-slate-500 mr-2 -mt-1
 }
 
 .block .header{
@@ -40,6 +40,9 @@
 
 .blog .edit-post{
     @apply text-xs text-blue-400
+}
+.blog .delete-post{
+    @apply text-xs text-red-400
 }
 
  .blog-main-content{
