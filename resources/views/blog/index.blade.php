@@ -34,7 +34,25 @@
                     var blog_id = data.blog_id;
                     $('#frmtmp').after(data);
                     $('#frmtmp').remove();
-                    var x  = 1;
+                },
+                error: function( data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        function deleteComment(id) {
+            var data = {};
+                data['id']=id;    
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },        
+                type: 'POST',
+                url: '{{ url("blog/deleteComment") }}',
+                data: data,
+                success: function (data){
+                   $('#blog-comment-'+id).remove();
                 },
                 error: function( data) {
                     console.log(data);

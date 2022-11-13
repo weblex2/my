@@ -27,6 +27,7 @@ Route::controller(BlogController::class)->group(function () {
     Route::post('/blog/delete', 'destroy')->middleware(['auth'])->name('blog.delete');
     Route::post('/blog/makeComment', 'makeComment')->name('blog.makeComment');
     Route::get('blog/newComment/{id}', 'commentForm')->name('blog.newComment');
+    Route::post('/blog/deleteComment', 'deleteComment')->name('blog.deleteComment');
 });   
 
 

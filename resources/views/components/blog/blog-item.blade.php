@@ -46,13 +46,23 @@
         </div>
         <div class="blog-comments"> 
             @foreach ($post->comments as $comment)
-            <div class="blog-comment">
+            <div id="blog-comment-{{$comment->id}}" class="blog-comment">
                 <div class="blog-comment-header">
                     {{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.Y')}} 
                     @isset($comment->comment_user->name) 
                         {{ $comment->comment_user->name }}
                     @else 
                         Gast
+                    @endif 
+                    @if (Auth()->check() && Auth()->user()->id == $post->user_id) 
+                        <form id="frmDelComm{{$comment->id}}" method="POST" action="{{route("blog.deleteComment")}}">
+                            <input type="hidden" name="comment_id" value="{{$comment->id}}"> 
+                        </form>    
+                        <a href="javascript:void(0)" onclick="deleteComment({{$comment->id}})">
+                            <span class="delete-comment float-right">
+                                <i class="fa-regular fa-trash-can text-xs text-red-500"></i>       
+                            </span>    
+                        </a>    
                     @endif        
                 </div>
                 <div class="blog-comment-body">{{ $comment->comment }}</div> 

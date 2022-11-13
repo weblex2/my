@@ -156,4 +156,11 @@ class BlogController extends Controller
         }
         return $response;
     }
+
+    public function deleteComment(Request $request){
+        $req = $request->all();
+        $id  =$req['id'];
+        $comment  = BlogComments::find($id);
+        $res = $comment->delete();
+    }    
 }
