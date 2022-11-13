@@ -123,7 +123,14 @@ class BlogController extends Controller
 
     public function makeComment(Request $request){
         $req  = $request->all();
-        $user = User::find($req['user_id']);
+        if ($req['user_id']!="") {
+            $user = User::find($req['user_id']);
+            $username = $user->name;
+        }
+        else{
+            $username = 'Gast';
+        }
+
         $comment = new BlogComments;
         $comment->fill($req);
         $res = $comment->save();
@@ -131,7 +138,7 @@ class BlogController extends Controller
             $html = '<div class="blog-comment">
                         <div class="blog-comment-header">
                             '. \Carbon\Carbon::parse($comment->created_at)->format('d.m.Y').'
-                            '.$user->name.'</div>
+                            '.$username.'</div>
                         <div class="blog-comment-body">'.$comment->comment.'</div>
                         </div>';
 
