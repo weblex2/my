@@ -20,11 +20,15 @@
 }
 
 .blog .avatar{
-    @apply float-left rounded-full w-6 h-6 border border-slate-500 mr-2 -mt-1
+    @apply float-left rounded-full w-6 h-6 border border-slate-500 mr-2 
 }
 
 .block .header{
-    @apply pb-5
+    @apply pb-5 
+}
+
+.blog h1 {
+    @apply text-orange-500
 }
 
 .blog-button{
@@ -40,14 +44,14 @@
 }
 
 .blog .edit-post{
-    @apply text-xs text-blue-300 font-extrabold mr-2
+    @apply text-xs text-slate-800 font-extrabold mr-2
 }
 .blog .delete-post{
-    @apply text-xs text-red-500 font-extrabold mr-2
+    @apply text-xs text-slate-800 font-extrabold mr-2
 }
 
 .blog .comment-post{
-    @apply text-xs text-green-300 font-extrabold mr-2
+    @apply text-xs text-slate-800 font-extrabold mr-2
 }
 
  .blog-main-content{
