@@ -118,7 +118,13 @@ class BlogController extends Controller
     }
 
     public function commentForm($id){
-        return view('blog.createComment', compact('id'));
+        if (Auth()->check()) {
+            $user_id = Auth()->user()->id;
+        }
+        else{
+            $user_id = 0;
+        }
+        return view('blog.createComment', compact('id', 'user_id'));
     } 
 
     public function makeComment(Request $request){

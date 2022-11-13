@@ -43,17 +43,15 @@
         }
 
         $(function() { 
+            
             $('.comment-post').click(function(){
                 var blog_id = $(this).closest('.blog').attr('blog_id');
                 $.get(
                     "blog/newComment/"+ blog_id,
                     function (data) {
-                        
                         $('#blog-'+ blog_id).find('.blog-comments').prepend(data);
                     }
                 );
-
-                $( ".divNewComment" ).load("resources/views/blog/createComment.blade.php");
             });
         });
     </script>    
