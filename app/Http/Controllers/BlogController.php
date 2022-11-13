@@ -129,7 +129,7 @@ class BlogController extends Controller
 
     public function makeComment(Request $request){
         $req  = $request->all();
-        if ($req['user_id']!="") {
+        if ($req['user_id']!="0") {
             $user = User::find($req['user_id']);
             $username = $user->name;
         }
