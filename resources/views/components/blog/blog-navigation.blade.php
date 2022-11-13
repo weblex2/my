@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('blog.index') }}">
                         <img src="{{asset('img/me.png')}}" class="rounded-full block h-9 w-auto" />
                     </a>
                 </div>
@@ -22,7 +22,7 @@
                     <x-jet-nav-link 
                         class="text-gray-200 hover:text-zinc-400"
                         href="{{ route('blog.create') }}" :active="request()->routeIs('blog.create')">
-                        {{ __('Create Post') }}
+                        <i class="fa-solid fa-circle-plus"></i> &nbsp; {{ __('Create Post') }}
                     </x-jet-nav-link>
                     @endif
 

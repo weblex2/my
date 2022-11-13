@@ -16,4 +16,46 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+        function saveComment(){
+            var comment  = $('frmtmp').find('.comment').val();
+            var data = $('#frmtmp').serialize();
+            
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },        
+                type: 'POST',
+                url: '{{ url("blog/makeComment") }}',
+                data: data,
+                success: function (data){
+                    var blog_id = data.blog_id;
+                    $('#frmtmp').after(data);
+                    $('#frmtmp').remove();
+                    var x  = 1;
+                },
+                error: function( data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        $(function() { 
+            $('.comment-post').click(function(){
+                var blog_id = $(this).closest('.blog').attr('blog_id');
+                $.get(
+                    "blog/newComment/"+ blog_id,
+                    function (data) {
+                        
+                        $('#blog-'+ blog_id).find('.blog-comments').prepend(data);
+                    }
+                );
+
+                $( ".divNewComment" ).load("resources/views/blog/createComment.blade.php");
+            });
+        });
+    </script>    
+
 </x-blog.blog-layout>

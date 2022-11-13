@@ -1,9 +1,10 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .blog {
-    @apply bg-slate-100 bg-opacity-30 border rounded p-5 mb-5 border-slate-600
+    @apply bg-slate-100 bg-opacity-30 border rounded p-5 mb-5 border-slate-600 text-slate-200
 }
 
 .blog .blog_content a{
@@ -39,10 +40,14 @@
 }
 
 .blog .edit-post{
-    @apply text-xs text-blue-400
+    @apply text-xs text-blue-300 font-extrabold mr-2
 }
 .blog .delete-post{
-    @apply text-xs text-red-400
+    @apply text-xs text-red-500 font-extrabold mr-2
+}
+
+.blog .comment-post{
+    @apply text-xs text-green-300 font-extrabold mr-2
 }
 
  .blog-main-content{
@@ -52,4 +57,12 @@
     background-position: center top;
     background-attachment: fixed;
     @apply h-screen
+}
+
+.blog-comment {
+    @apply border border-slate-500 p-3 mb-3 rounded-md bg-slate-900 bg-opacity-30
+}
+
+.blog-comment-header{
+    @apply text-xs font-extrabold
 }
