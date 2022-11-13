@@ -44,14 +44,14 @@
 }
 
 .blog .edit-post{
-    @apply text-xs text-slate-800 font-extrabold mr-2
+    @apply text-xs text-slate-300 font-extrabold mr-2
 }
 .blog .delete-post{
-    @apply text-xs text-slate-800 font-extrabold mr-2
+    @apply text-xs text-slate-300 font-extrabold mr-2
 }
 
 .blog .comment-post{
-    @apply text-xs text-slate-800 font-extrabold mr-2
+    @apply text-xs text-slate-300 font-extrabold mr-2
 }
 
  .blog-main-content{
