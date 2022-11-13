@@ -23,6 +23,7 @@ class BlogController extends Controller
         foreach ($posts as $i => $post) {
             foreach ($post->comments as $j => $comment ) {
                 $posts[$i]->comments[$j]->load('comment_user');
+                
             }
         }
         /*

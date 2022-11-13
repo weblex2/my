@@ -49,7 +49,12 @@
             <div class="blog-comment">
                 <div class="blog-comment-header">
                     {{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.Y')}} 
-                    {{ $comment->comment_user->name }}</div>
+                    @isset($comment->comment_user->name) 
+                        {{ $comment->comment_user->name }}
+                    @else 
+                        Gast
+                    @endif        
+                </div>
                 <div class="blog-comment-body">{{ $comment->comment }}</div> 
             </div>    
             @endforeach
