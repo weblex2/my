@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,14 @@ use App\Http\Controllers\BlogController;
     return view('welcome');
 }); */
 
+Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
+    Route::get('/dashboard', function () {
+        return redirect()->route('blog.index');
+    })->name('dashboard');
+});
+
+Route::get('/send-mail', [MailController::class, 'index']);
+
 Route::controller(BlogController::class)->group(function () {
     Route::get('/blog', 'index')->name('blog.index');
     Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
@@ -32,14 +41,12 @@ Route::controller(BlogController::class)->group(function () {
 
 
 
-Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
-    Route::get('/dashboard', function () {
-        return redirect()->route('blog.index');
-    })->name('dashboard');
-});
+
 
 
 Route::get('/', [BlogController::class, 'index']);
 //Route::get('/dashboard', [BlogController::class, 'index']);
 
- 
+
+
+
