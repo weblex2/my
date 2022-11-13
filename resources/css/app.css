@@ -32,15 +32,15 @@
 }
 
 .blog-button{
-    @apply py-2 px-3 border border-slate-500 rounded text-xs font-bold bg-slate-100
+    @apply py-2 px-3 border border-slate-800 rounded text-xs font-bold bg-slate-800
 }
 
 .blog input, .blog textarea{
-    @apply border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-0 rounded-md shadow-sm mt-1 block w-full
+    @apply p-5 text-slate-100 mb-4 bg-slate-800 border-slate-600 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-0 rounded-md shadow-sm mt-1 block w-full
 }
 
 .blog textarea{
-    @apply h-[200px] text-slate-100 mb-4 bg-slate-800
+    @apply h-[200px] 
 }
 
 .blog .edit-post{
