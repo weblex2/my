@@ -3,5 +3,5 @@
     <input type="hidden" name="user_id" value="{{ $user_id }}"> 
     <input type="hidden" name="blog_id" value="{{ $id }}"> 
     <textarea name='comment'></textarea>
-    <button type='button' onclick="saveComment()">Comment</button>
+    <button class="blog-btn-add-comment" type='button' onclick="saveComment()">Comment</button>
 </form>
