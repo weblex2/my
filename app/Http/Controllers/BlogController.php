@@ -17,11 +17,9 @@ class BlogController extends Controller
      */
     public function index($cat_id=0)
     {
-        if ($cat_id==0) {   
-             
+        if ($cat_id==0) {       
             $posts = Blog::orderBy('created_at', 'DESC')->get();
         }    
-
         else{
             $posts = Blog::where('category_id', '=', $cat_id)->orderBy('created_at', 'DESC')->get();
         }
@@ -33,18 +31,27 @@ class BlogController extends Controller
                 $posts[$i]->comments[$j]->load('comment_user');
             }
         }
-        
-        
-        
-        /*
-        $posts = DB::select( DB::raw("SELECT b.title, c.comment, u1.*, u2.name 
-                                        FROM blogs b
-                                        LEFT JOIN blog_comments c ON b.id  = c.blog_id
-                                        LEFT JOIN users u1 ON b.user_id  = u1.id
-                                        LEFT JOIN users u2 ON c.user_id = u2.id") );
-        */                                
-        #$posts->load('comment_user');
-        #dump ($posts);
+     
+        return view('blog.index', compact('posts'));
+    }
+
+    public function showcat($cat_id)
+    {
+        if ($cat_id==0) {       
+            $posts = Blog::orderBy('created_at', 'DESC')->get();
+        }    
+        else{
+            $posts = Blog::where('category_id', '=', $cat_id)->orderBy('created_at', 'DESC')->get();
+        }
+
+        $posts->load('user');
+        $posts->load('comments');
+        foreach ($posts as $i => $post) {
+            foreach ($post->comments as $j => $comment ) {
+                $posts[$i]->comments[$j]->load('comment_user');
+            }
+        }
+     
         return view('blog.index', compact('posts'));
     }
 

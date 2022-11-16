@@ -32,7 +32,8 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])-
 Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::controller(BlogController::class)->group(function () {
-    Route::get('/blog/{id?}', 'index')->name('blog.index');
+    Route::get('/blog', 'index')->name('blog.index');
+    Route::get('/blog/cat/{id}', 'showcat')->name('blog.showcat');
     Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
     Route::post('/blog/store', 'store')->middleware(['auth'])->name('blog.store');
     Route::get('/blog/edit/{id}', 'edit')->middleware(['auth'])->name('blog.edit');
@@ -58,8 +59,7 @@ Route::controller(FacebookController::class)->group(function(){
 Route::get('/home', [FileUploadController::class, 'index']);
 Route::post('/upload', [FileUploadController::class, 'uploadToServer']);
 
-Route::get('/', [BlogController::class, 'index']);
-//Route::get('/dashboard', [BlogController::class, 'index']);
+
 
 
 

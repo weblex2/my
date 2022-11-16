@@ -39,7 +39,7 @@
     @apply py-2 px-3 border border-slate-800 rounded text-xs font-bold bg-slate-800
 }
 
-.blog input, .blog textarea{
+.blog input, .blog textarea, .blog select{
     @apply p-5 text-slate-100 mb-4 bg-slate-800 border-slate-600 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-0 rounded-md shadow-sm mt-1 block w-full
 }
 

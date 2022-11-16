@@ -47,11 +47,11 @@
                         <x-slot name="content">
     
                             <!-- User Management -->
-                            <x-jet-dropdown-link href="{{ route('blog.index') }}">
+                            <x-jet-dropdown-link href="{{ route('blog.showcat', ['id'=>1] ) }}">
                                 {{ __('Meine Reise mit Laravel') }}
                             </x-jet-dropdown-link>
     
-                            <x-jet-dropdown-link href="{{ route('blog.index', [$id=2] ) }}">
+                            <x-jet-dropdown-link href="{{ route('blog.showcat', ['id'=>2] ) }}">
                                 {{ __('Projekte') }}
                             </x-jet-dropdown-link>
     
