@@ -17,6 +17,8 @@ class BlogController extends Controller
      */
     public function index()
     {
+        #dump(Auth()->user());
+        #die();
         $posts = Blog::orderBy('created_at', 'DESC')->get();
         $posts->load('user');
         $posts->load('comments');

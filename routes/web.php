@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\FacebookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,7 @@ use App\Http\Controllers\FileUploadController;
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
     Route::get('/dashboard', function () {
+        //return view('dashboard');
         return redirect()->route('blog.index');
     })->name('dashboard');
 });
@@ -41,7 +43,10 @@ Route::controller(BlogController::class)->group(function () {
 });   
 
 
-
+Route::controller(FacebookController::class)->group(function(){
+    Route::get('auth/facebook', 'redirectToFacebook')->name('auth.facebook');
+    Route::get('auth/facebook/callback', 'handleFacebookCallback');
+});
 
 Route::get('/home', [FileUploadController::class, 'index']);
 Route::post('/upload', [FileUploadController::class, 'uploadToServer']);

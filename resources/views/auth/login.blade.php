@@ -32,6 +32,8 @@
                 </label>
             </div>
 
+            
+
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
                     <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
@@ -43,6 +45,14 @@
                     {{ __('Log in') }}
                 </x-jet-button>
             </div>
+
+
+            <div class="flex items-center justify-end mt-4">
+                <a class="ml-1 btn btn-primary" href="{{ url('auth/facebook') }}" style="margin-top: 0px !important;background: blue;color: #ffffff;padding: 5px;border-radius:7px;" id="btn-fblogin">
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i> Login with Facebook
+                </a>
+            </div>
+
         </form>
     </x-jet-authentication-card>
 </x-guest-layout>

@@ -70,8 +70,13 @@
                         $('#blog-'+ blog_id).find('.blog-comments').prepend(data);
                     }
                 );
+                
             });
         });
-    </script>    
+    </script>  
+    
+    
+        
+    
 
 </x-blog.blog-layout>
