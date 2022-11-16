@@ -15,19 +15,27 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($cat_id=0)
     {
-        #dump(Auth()->user());
-        #die();
-        $posts = Blog::orderBy('created_at', 'DESC')->get();
+        if ($cat_id==0) {   
+             
+            $posts = Blog::orderBy('created_at', 'DESC')->get();
+        }    
+
+        else{
+            $posts = Blog::where('category_id', '=', $cat_id)->orderBy('created_at', 'DESC')->get();
+        }
+
         $posts->load('user');
         $posts->load('comments');
         foreach ($posts as $i => $post) {
             foreach ($post->comments as $j => $comment ) {
                 $posts[$i]->comments[$j]->load('comment_user');
-                
             }
         }
+        
+        
+        
         /*
         $posts = DB::select( DB::raw("SELECT b.title, c.comment, u1.*, u2.name 
                                         FROM blogs b

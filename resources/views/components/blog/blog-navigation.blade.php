@@ -51,7 +51,7 @@
                                 {{ __('Meine Reise mit Laravel') }}
                             </x-jet-dropdown-link>
     
-                            <x-jet-dropdown-link href="{{ route('blog.index') }}">
+                            <x-jet-dropdown-link href="{{ route('blog.index', [$id=2] ) }}">
                                 {{ __('Projekte') }}
                             </x-jet-dropdown-link>
     

@@ -5,6 +5,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\FacebookController;
+use App\Http\Controllers\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,7 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])-
 Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::controller(BlogController::class)->group(function () {
-    Route::get('/blog', 'index')->name('blog.index');
+    Route::get('/blog/{id?}', 'index')->name('blog.index');
     Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
     Route::post('/blog/store', 'store')->middleware(['auth'])->name('blog.store');
     Route::get('/blog/edit/{id}', 'edit')->middleware(['auth'])->name('blog.edit');
@@ -41,6 +42,12 @@ Route::controller(BlogController::class)->group(function () {
     Route::get('blog/newComment/{id}', 'commentForm')->name('blog.newComment');
     Route::post('/blog/deleteComment', 'deleteComment')->name('blog.deleteComment');
 });   
+
+Route::controller(CalendarController::class)->group(function () {
+    Route::get('/calendar', 'index')->name('calendar.index'); 
+    Route::get('/calendar/save', 'store')->name('calendar.saveEvent'); 
+});    
+   
 
 
 Route::controller(FacebookController::class)->group(function(){

@@ -9,9 +9,11 @@
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3">
             <div class="overflow-hidden h-full sm:rounded-lg">
                 <div class="p-3 m-5">
-                    @foreach ($posts as $post)
+                    @forelse ($posts as $post)
                         <x-blog.blog-item :post="$post" />    
-                    @endforeach
+                    @empty
+                        <p class="text-white">No Posts so far... but proberly coming soon..</p>
+                    @endforelse
                 </div>
             </div>
         </div>
