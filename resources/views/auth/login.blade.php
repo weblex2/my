@@ -48,8 +48,8 @@
 
 
             <div class="flex items-center justify-end mt-4">
-                <a class="ml-1 btn btn-primary" href="{{ url('auth/facebook') }}" style="margin-top: 0px !important;background: blue;color: #ffffff;padding: 5px;border-radius:7px;" id="btn-fblogin">
-                    <i class="fa fa-facebook-square" aria-hidden="true"></i> Login with Facebook
+                <a class="ml-1 bg-blue-600 text-white border border-blue-400 px-4 py-3 rounded text-l font-extrabold" href="{{ url('auth/facebook') }}" id="btn-fblogin">
+                    <i class="fa-brands fa-facebook pr-3"></i> Login with Facebook
                 </a>
             </div>
 
