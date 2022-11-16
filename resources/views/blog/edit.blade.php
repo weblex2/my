@@ -22,7 +22,7 @@
                                 Content:
                             </div>    
                             <div class="col-span-12">
-                               <textarea name="content">{{ $post->content }}</textarea> 
+                               <textarea name="content" id="blog-content">{{ $post->content }}</textarea> 
                             </div>
                             <button type="submit" class="blog-button">Save</button>   
                    </form>
@@ -30,4 +30,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        ClassicEditor
+        .create( document.querySelector( '#blog-content' ) )
+        .catch( error => {
+        console.error( error );
+        } );
+    </script>
 </x-blog.blog-layout>

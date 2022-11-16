@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +43,8 @@ Route::controller(BlogController::class)->group(function () {
 
 
 
-
+Route::get('/home', [FileUploadController::class, 'index']);
+Route::post('/upload', [FileUploadController::class, 'uploadToServer']);
 
 Route::get('/', [BlogController::class, 'index']);
 //Route::get('/dashboard', [BlogController::class, 'index']);

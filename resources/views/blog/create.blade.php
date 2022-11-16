@@ -17,16 +17,25 @@
                             <div class="col-span-12">
                                 <input type="text" name="title" value="title">
                             </div>
-                            <div class="cols-span-12">
+                            <div class="col-span-12">
                                 Content:
                             </div>    
                             <div class="col-span-12">
-                               <textarea name="content">Content goes here..</textarea> 
+                               <textarea name="content" id="blog-content">Content goes here..</textarea> 
                             </div>
-                            <button type="submit" class="blog-button">Submit</button>   
+                            <x-file-upload.fileupload />
+ 
                    </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        ClassicEditor
+        .create( document.querySelector( '#blog-content' ) )
+        .catch( error => {
+        console.error( error );
+        } );
+    </script>
 </x-blog.blog-layout>

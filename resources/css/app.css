@@ -27,6 +27,10 @@
     @apply pb-5 
 }
 
+.block .ck-content{
+    @apply bg-green-500
+}
+
 .blog h1 {
     @apply text-orange-500
 }
@@ -39,8 +43,8 @@
     @apply p-5 text-slate-100 mb-4 bg-slate-800 border-slate-600 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-0 rounded-md shadow-sm mt-1 block w-full
 }
 
-.blog textarea{
-    @apply h-[200px] 
+#blog-content{
+    @apply text-black
 }
 
 .blog .edit-post{
