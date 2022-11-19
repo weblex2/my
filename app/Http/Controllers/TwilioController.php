@@ -16,6 +16,8 @@ class TwilioController extends Controller
         $token  = env('TWILIO_AUTH_TOKEN'); 
         $twilio = new Client($sid, $token); 
  
+        // This costs 0.005ct per message - noo way!!
+        /*
         $message = $twilio->messages 
                   ->create("whatsapp:" .$to, // to 
                         array( 
@@ -23,7 +25,7 @@ class TwilioController extends Controller
                                "body" => $body 
                         ) 
                   ); 
- 
-        print($message->sid);
+        */            
+        //print($message->sid);
     }
 }
