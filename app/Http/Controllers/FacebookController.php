@@ -38,7 +38,7 @@ class FacebookController extends Controller
             if($finduser){
          
                 $res = Auth::login($finduser);
-                return redirect()->intended('blog');
+                return redirect()->intended('/');
          
             }else{
                 $newUser = User::updateOrCreate(['email' => $user->email],[
