@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])-
 Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::controller(BlogController::class)->group(function () {
+    Route::get('/', 'index')->name('blog.index');
     Route::get('/blog', 'index')->name('blog.index');
     Route::get('/blog/cat/{id}', 'showcat')->name('blog.showcat');
     Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
