@@ -96,3 +96,10 @@
     scrollbar-color: rebeccapurple green;
     scrollbar-width: thin;
   }
+
+  .blog .ck .ck-editor, .blog .ck .ck-reset, .blog .ck-sticky-panel{
+    @apply rounded border-slate-600
+  }
+  .blog .ck .ck-editor__top, .blog .ck .ck-editor__main, .blog .ck .ck-content{
+    @apply bg-slate-800 rounded
+  }

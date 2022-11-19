@@ -6,7 +6,9 @@ use App\Models\Blog;
 use App\Models\User;
 use App\Models\BlogComments;
 use Illuminate\Http\Request;
+use App\Http\Controllers\TwilioController;
 use DB;
+
 
 class BlogController extends Controller
 {
@@ -17,6 +19,7 @@ class BlogController extends Controller
      */
     public function index($cat_id=0)
     {
+        
         if ($cat_id==0) {       
             $posts = Blog::orderBy('created_at', 'DESC')->get();
         }    
@@ -26,12 +29,15 @@ class BlogController extends Controller
 
         $posts->load('user');
         $posts->load('comments');
+        
+        //$posts->comments->load('comment_user');
+        
         foreach ($posts as $i => $post) {
             foreach ($post->comments as $j => $comment ) {
                 $posts[$i]->comments[$j]->load('comment_user');
             }
         }
-     
+        
         return view('blog.index', compact('posts'));
     }
 
@@ -78,6 +84,8 @@ class BlogController extends Controller
         $post->fill($request->all());
         $post->slug = $post->title;
         $post->save();
+        $wa = new TwilioController();
+        $wa->sendWhatsApp('+491722044069', 'New Blog was created.');
         return redirect()->route('blog.index');
     }
 
@@ -158,6 +166,8 @@ class BlogController extends Controller
         $comment = new BlogComments;
         $comment->fill($req);
         $res = $comment->save();
+        $wa = new TwilioController();
+        $wa->sendWhatsApp('+491722044069', 'New Comment was created!');
         if ($res) {
             $html = '<div class="blog-comment">
                         <div class="blog-comment-header">

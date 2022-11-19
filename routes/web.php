@@ -6,6 +6,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\TwilioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,10 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])-
 });
 
 Route::get('/send-mail', [MailController::class, 'index']);
+
+Route::controller(TwilioController::class)->group(function () {
+    Route::get('/wa', 'send')->name('sendWhatsapp');
+});    
 
 Route::controller(BlogController::class)->group(function () {
     Route::get('/', 'index')->name('blog.index');
