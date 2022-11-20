@@ -23,6 +23,11 @@ class DemoMail extends Mailable
         $this->mailData = $mailData;
     }
   
+    public function __invoke()
+    {
+        return $this;
+    }
+
     /**
      * Build the message.
      *
@@ -30,7 +35,7 @@ class DemoMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Mail from ItSolutionStuff.com')
+        return $this->subject($this->mailData['title'])
                     ->view('email.demoMail');
     }
 }

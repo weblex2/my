@@ -7,6 +7,7 @@ use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\TwilioController;
+use App\Http\Controllers\QueueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,11 @@ Route::get('/home', [FileUploadController::class, 'index']);
 Route::post('/upload', [FileUploadController::class, 'uploadToServer']);
 
 
+//Queue Test
+Route::controller(QueueController::class)->group(function(){
+    Route::get('email-test', 'index')->name('queue.test');
+    Route::get('Jobs', 'showJobs')->name('showJobs');
+});
 
 
 

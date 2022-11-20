@@ -13,15 +13,15 @@ class MailController extends Controller
      *
      * @return response()
      */
-    public function index()
+    public function index($mailData=[])
     {
-        $mailData = [
-            'title' => 'My test mail from noppal.de',
-            'body' => 'This is for testing email using smtp.'
-        ];
-         
+        if (!isset($mailData['title']) || $mailData['title']=="") {
+            $mailData['title'] = "Test";
+        }
+        if (!isset($mailData['body']) || $mailData['body']=="") {
+            $mailData['body'] = "This is for testing email using smtp.";
+        }
+
         Mail::to('alex@noppenberger.org')->send(new DemoMail($mailData));
-           
-        dd("Email is sent successfully.");
     }
 }

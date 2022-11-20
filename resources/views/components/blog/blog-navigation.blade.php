@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
-                    <x-jet-dropdown align="right" width="48">
+                    <x-jet-dropdown align="left" width="48">
                         <x-slot name="trigger">
     
                             <button class="flex items-center text-sm font-medium text-gray-200 hover:text-zinc-400 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
@@ -47,7 +47,7 @@
                         <x-slot name="content">
     
                             <!-- User Management -->
-                            <x-jet-dropdown-link href="{{ route('blog.showcat', ['id'=>1] ) }}">
+                            <x-jet-dropdown-link href="{{ url('blog/cat/1') }}">
                                 {{ __('Meine Reise mit Laravel') }}
                             </x-jet-dropdown-link>
     
