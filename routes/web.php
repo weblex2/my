@@ -69,7 +69,9 @@ Route::post('/upload', [FileUploadController::class, 'uploadToServer']);
 
 //Queue Test
 Route::controller(QueueController::class)->group(function(){
-    Route::get('email-test', 'index')->name('queue.test');
+    Route::get('testJob', 'index')->name('job.test');
+    Route::post('createJob', 'createJob')->name('job.createJob');
+    //Route::get('email-test', 'index')->name('queue.test');
     Route::get('Jobs', 'showJobs')->name('showJobs');
 });
 
