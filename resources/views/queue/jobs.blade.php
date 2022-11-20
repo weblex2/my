@@ -8,7 +8,7 @@
                 <table class="text-white bg-slate-700">
                     <tr>
                         @foreach ($jobs[0]->getAttributes() as $field => $value) 
-                            <td class="p-2 border border-slate-300">{{ strtoupper($field) }}</td>
+                            <td class="p-2 border border-slate-500">{{ strtoupper($field) }}</td>
                             @endforeach  
                     </tr>    
                     @foreach ($jobs as $job)
