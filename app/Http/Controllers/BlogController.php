@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use App\Models\User;
 use App\Models\BlogComments;
 use Illuminate\Http\Request;
 use App\Http\Controllers\TwilioController;
+use App\Models\User;
 use DB;
 
 
@@ -190,4 +190,41 @@ class BlogController extends Controller
         $comment  = BlogComments::find($id);
         $res = $comment->delete();
     }    
+
+    public function reactTest(){
+        $arr4['user'] = [
+            'name'  => 'Noppenberger',
+            'firstname'  => 'Alex',
+            'job' => [
+                'company' => 'ASSD',
+                'description' => 'Developer',
+            ]      
+        ];
+
+        #echo json_encode($arr);
+        $arr[0] =[
+                "id" => 1,
+                "first_name" => "Ethelred",
+                "last_name" => "Slowly",
+                "email" => "eslowly0@google.es"
+        ];
+        $arr[1] = [        
+                "id" => 2,
+                "first_name" => "Reta",
+                "last_name" => "Woolmer",
+                "email" => "rwoolmer1@miibeian.gov.cn"
+        ];
+        $arr[2] = [
+                "id" => 3,
+                "first_name" => "Arabel",
+                "last_name" => "Pestor",
+                "email" => "apestor2@bloglovin.com"
+        ];
+    
+        $arr2['customer'] = $arr;
+        #echo json_encode($arr2);
+        $arr = User::all();
+        return  json_encode($arr);
+        
+    }
 }

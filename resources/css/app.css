@@ -101,3 +101,31 @@
   .blog .ck .ck-editor__top, .blog .ck .ck-editor__main, .blog .ck .ck-content{
     @apply bg-slate-800 rounded
   }
+
+
+  /* React components */
+
+
+  .react h1{
+    @apply font-extrabold text-green-500 text-xl
+  }
+
+  .react .content{
+    @apply font-extrabold text-blue-200
+  }
+
+  .react .btn{
+    @apply px-5 py-2 bg-slate-200 border border-slate-600 rounded
+  }
+
+  #tblTest{
+    @apply px-5 py-2 bg-slate-200 border w-full
+  }
+
+  .tblTest  th{
+    @apply text-left p-2
+  }
+
+  .tblTest  td{
+    @apply text-left p-2
+  }

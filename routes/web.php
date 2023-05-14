@@ -49,6 +49,7 @@ Route::controller(BlogController::class)->group(function () {
     Route::post('/blog/makeComment', 'makeComment')->name('blog.makeComment');
     Route::get('blog/newComment/{id}', 'commentForm')->name('blog.newComment');
     Route::post('/blog/deleteComment', 'deleteComment')->name('blog.deleteComment');
+    Route::GET('/blog/reactTest', 'reactTest')->name('blog.reactText');
 });   
 
 Route::controller(CalendarController::class)->group(function () {
@@ -75,6 +76,11 @@ Route::controller(QueueController::class)->group(function(){
     Route::get('Jobs', 'showJobs')->name('showJobs');
 });
 
+Route::get('/react', function () {
+    return view('react.index');
+}); 
 
-
+Route::get('/react/ajax', function () {
+    return view('react.index');
+}); 
 
