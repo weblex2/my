@@ -8,6 +8,7 @@ use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\QueueController;
+use App\Http\Controllers\FriesenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,3 +85,11 @@ Route::get('/react/ajax', function () {
     return view('react.index');
 }); 
 
+
+
+//Friesen 
+Route::controller(FriesenController::class)->group(function(){
+    Route::get('/friese', 'index')->name('friese.index');
+    Route::get('getFriesen/{plz?}', 'getFriesen')->name('getfriesen');  
+    //Route::post('createFriese', 'createFriese')->name('firese.create');
+});

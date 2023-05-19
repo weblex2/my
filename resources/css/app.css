@@ -129,3 +129,21 @@
   .tblTest  td{
     @apply text-left p-2
   }
+
+
+/* Friese */
+.frise {
+    @apply bg-slate-300 text-black
+}
+
+.frise h1 {
+    @apply bg-slate-800 text-green-500 text-4xl 
+}
+
+.friesenTable td, .friesenTable th {
+    @apply text-left p-3 border border-slate-200
+}
+
+.friesenTable tr {
+    @apply hover:bg-gray-700
+}
