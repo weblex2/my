@@ -25,7 +25,7 @@ class FriesenController extends Controller
         else{
             $friesen  = Friesen::where('plz', '=', $plz)->orderBy("plz")->get();
         }    
-        $friesen->load('friesenpics');
+        //$friesen->load('friesenpics');
         $friesen = json_encode(['results' => $friesen->toArray()]);
         #header('Content-Type: application/json');
         return response($friesen, 200)
