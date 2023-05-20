@@ -20,12 +20,13 @@ class FriesenController extends Controller
 
     public function getFriesen($plz=""){
         if ($plz=="") {
-            $friesen  = Friesen::where('plz', '!=', '')->orderBy("plz")->get()->toArray();
+            $friesen  = Friesen::where('plz', '!=', '')->orderBy("plz")->get();
         }
         else{
-            $friesen  = Friesen::where('plz', '=', $plz)->orderBy("plz")->get()->toArray();
+            $friesen  = Friesen::where('plz', '=', $plz)->orderBy("plz")->get();
         }    
-        $friesen = json_encode(['results' => $friesen]);
+        $friesen->load('friesenpics');
+        $friesen = json_encode(['results' => $friesen->toArray()]);
         #header('Content-Type: application/json');
         return response($friesen, 200)
                   ->header('Content-Type', 'text/plain');
