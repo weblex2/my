@@ -132,18 +132,42 @@
 
 
 /* Friese */
-.frise {
-    @apply bg-slate-300 text-black
+.friese {
+    @apply text-black
 }
 
-.frise h1 {
-    @apply bg-slate-800 text-green-500 text-4xl 
+.friese h1 {
+    @apply text-green-500 text-6xl font-extrabold pt-3
 }
 
-.friesenTable td, .friesenTable th {
-    @apply text-left p-3 border border-slate-200
+.friese .friesenTable td, .friese .friesenTable th {
+    @apply text-left p-3 border border-slate-400
 }
 
-.friesenTable tr {
-    @apply hover:bg-gray-700
+.friese .friesenTable tbody tr {
+    @apply hover:bg-yellow-100 cursor-pointer
+}
+
+.friese .logo{
+    @apply p-3 rounded-full mr-5 float-left
+}
+
+.friese #search{
+    @apply p-3
+}
+
+.friese .btn {
+    @apply py-2 px-5 border border-slate-600 rounded text-xs font-bold bg-slate-200 mt-3
+}
+
+.friese input[type="text"] {
+    @apply py-2 px-5 border border-slate-600 rounded text-xs font-bold bg-slate-200
+}
+
+.friese .frisenImages {
+    @apply ml-3
+}
+
+.friese .frisenImages img{
+    @apply rounded-full
 }

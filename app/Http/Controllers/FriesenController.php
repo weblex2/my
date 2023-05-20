@@ -19,14 +19,16 @@ class FriesenController extends Controller
     }
 
     public function getFriesen($plz=""){
-        $friesen  = Friesen::all()->toArray();
+        if ($plz=="") {
+            $friesen  = Friesen::where('plz', '!=', '')->orderBy("plz")->get()->toArray();
+        }
+        else{
+            $friesen  = Friesen::where('plz', '=', $plz)->orderBy("plz")->get()->toArray();
+        }    
         $friesen = json_encode(['results' => $friesen]);
         #header('Content-Type: application/json');
         return response($friesen, 200)
                   ->header('Content-Type', 'text/plain');
-        #echo  $friesen;
-        #echo substr($friesen,1,strlen($friesen)-2);
-        //return Response::json($friesen->toArray());
     }
 
     /**

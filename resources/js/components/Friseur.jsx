@@ -27,27 +27,29 @@ const getFriesen = () =>{
 
 export function Frise() {
     const [ friesen, setFriesen ] = useState([]);
-    const fetchDetails = () => {
+    const [ actual, setActual ] = useState([]);
+    const fetchDetails = (id) => {
         //const key = e.target.getAttribute('key');
-        console.log('We need to get the details for key');
+        console.log('We need to get the details for key', id);
     }
 
-    const handler = (_selectedRow) => {
-        //console.log("selectedRow:", selectedRow)
-    }
+    const showDetails = (friese) => {
+        // Here
+        //console.log(`Name is: ${friese.name}, Age: ${friese.id}, Role: ${friese.id}`)
+        console.log(friese);
+        setActual(friese);
+      }
 
     useEffect(() => {
         const fetchata = async () => {
-        
             const response = await fetch(
               '/getFriesen');
                const data = await response.json();
                console.log(data.results);     
-               //use only 3 sample data
                setFriesen( data.results );
+               setActual(data.results[0]);
            
         }
-      
         // Call the function
         fetchata();
      }, []);
@@ -55,8 +57,17 @@ export function Frise() {
     return (
         <React.StrictMode>
         <div className='frise w-full'>
-            <div className="grid w-full grid-cols-12 gap-1">
-                <div className="col-span-6">
+            <div className="grid grid-cols-12 gap-4 w-full">
+                <div className="col-span-12 bg-slate-300">
+                    <div id="search">
+                        <form method="POST" action="/friese/search">
+                        <div>Suche:</div> 
+                        <div>PLZ:<input type="text" name="plz"></input></div>
+                        <div><button className='btn'>Search</button></div>
+                        </form>
+                    </div>
+                </div>    
+                <div className="col-span-4">
                     <table className="friesenTable w-full">
                     <thead>
                         <tr>
@@ -67,16 +78,28 @@ export function Frise() {
                     </thead>   
                     <tbody>
                     {friesen.map(friese => 
-                        <tr key={friese.id} onClick={() => this.handler('hiHo')}>
+                        <tr key={friese.id} data-item={friese.id} onClick={() => showDetails(friese)}>
                             <td>{friese.plz}</td>
                             <td>{friese.name}</td>
                             <td>{friese.city}</td>
                         </tr>)}
-                
                     </tbody>
                     </table>
+                    
                 </div>
-                <div className='col-span-7'>Details</div>        
+                <div className='col-span-8'>
+                    <div>
+                        <span className="p-3">Name</span>
+                        <span className="p-3">{actual.name}</span>
+                    </div>
+                    <div>
+                        <span className="p-3">Email</span>
+                        <span className="p-3">{actual.email}</span>
+                    </div>
+                    <div className="frisenImages">
+                        <img src={"img/friese24/"+ actual.id + "/" + actual.pic}></img> 
+                    </div>
+                </div>        
             </div>
         </div>    
         </React.StrictMode>
