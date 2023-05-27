@@ -85,7 +85,14 @@ Route::get('/react/ajax', function () {
     return view('react.index');
 }); 
 
-
+Route::domain('friese24.' . env('APP_URL'))->group(function () {
+    Route::get('/', function () {
+        return 'Second subdomain landing page';
+    });
+    Route::get('post/{id}', function ($id) {
+        return 'Post ' . $id . ' in second subdomain';
+    });
+});
 
 //Friesen 
 Route::controller(FriesenController::class)->group(function(){
