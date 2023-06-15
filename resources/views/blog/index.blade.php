@@ -12,7 +12,7 @@
                     @forelse ($posts as $post)
                         <x-blog.blog-item :post="$post" />    
                     @empty
-                        <p class="text-white">No Posts so far... but proberly coming soon..</p>
+                        <p class="text-white">No Posts so far... but coming soon..</p>
                     @endforelse
                 </div>
             </div>
