@@ -85,11 +85,11 @@ Route::get('/react/ajax', function () {
     return view('react.index');
 }); 
 
-Route::domain('friese24.noppal.de')->group(function () {
+/* Route::domain('friese24.noppal.de')->group(function () {
     Route::controller(FriesenController::class)->group(function(){
         Route::get('/friese', 'index')->name('friese.index');
     });
-});
+}); */
 
 //Friesen 
 Route::controller(FriesenController::class)->group(function(){
