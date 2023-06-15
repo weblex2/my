@@ -9,31 +9,48 @@ import { useEffect, useState, setState } from "react";
 export function Frise() {
     const [ inputs, setInputs] = useState({});
     const [ friesen, setFriesen ] = useState([]);
+    const [ friesenpics, setFriesenPics ] = useState({});
     const [ actual, setActual ] = useState([]);
     const [ plz , setPlz ] = useState('');
-    
-    const [form, setForm] = React.useState({
-        plz: '',
-    });
+    const [ form, setForm ] = useState({ plz: '', });
     
     const handleChange = (event) => {
-        console.log(event.target.id);
+        //console.log(event.target.id);
         setForm({
           ...form,
           [event.target.id]: event.target.value,
         });
     };
-    
-    const handleSubmit = (event) => {
+
+    const ShowFriesenpics = (actual)   => {
+        console.log('Func FriesenPics');
+        console.log( actual.friesenpics);
+        /*
+        const listItems = friesenpics.map((pic) =>  
+            <li>{pic.name}</li>  
+        );  
+        return (  
+            <div>  
+                <ul>{listItems}</ul>  
+            </div>  
+        ); 
+        */ 
+    };
+
+    const search = (event) => {
         event.preventDefault();
         let plz  = form.plz;
         axios.get('getFriesen/' + plz)
             .then(function (response) {
                let data  = response.data.results;
-               console.log(data);
+               //console.log(data);
                //console.log(data.json());  
                setFriesen(data);
                setActual(data[0]);
+               setFriesenPics(data[0].friesenpics);
+               //console.log(friesenpics);
+               //console.log(data[0].friesenpics);
+               
             })
             .catch(function (error) {
                 // handle error
@@ -44,20 +61,13 @@ export function Frise() {
             });
     };
 
-
-    const search = async (event, data) => {
-        event.preventDefault();
-        const formData = new FormData();
-        console.log(data);
-        
-        const res = await fetch("getFriesen/", {
-            method: "GET",
-            body: formData
-            }).then((res) => res.json());
-                alert(JSON.stringify(`${res.message}, status: ${res.status}`));
-    };
+    useEffect(() => {
+        console.log("Show Pics");
+        console.log(friesenpics);
+    }, ['friesenpics']);    
 
     const showDetails = (friese) => {
+        //console.log(friese);
         setActual(friese);
     }
 
@@ -66,26 +76,33 @@ export function Frise() {
             const response = await fetch(
               '/getFriesen');
                const data = await response.json();
-               console.log(data.results);     
-               setFriesen( data.results );
+               setFriesen(data.results);
                setActual(data.results[0]);
-           
+               //console.log("loading Friesenpics:", data.results[0].friesenpics); 
+               //console.log("Frisen updated!");
+               //console.log("Settinig FPs:" + data.results[0].friesenpics)
         }
         // Call the function
         fetchata();
-     }, []);
+     }, ['friesen']);
 
     return (
+        
+           
         <React.StrictMode>
         <div className='frise w-full'>
             <div className="grid grid-cols-12 gap-4 w-full">
                 <div className="col-span-12 bg-slate-300">
                     <div id="search">
-                    <form onSubmit={handleSubmit}>
-                        <div>Suche:</div> 
-                        <div>PLZ:<input type="text" id="plz" name="plz" value={form.plz} onChange={handleChange}></input></div>
-                        <div><button className='btn'>Search</button></div>
-                        </form>
+                    <form onSubmit={search}>
+                        <table id="friesenSearchTbl">
+                        <tbody>
+                            <tr><td colSpan="2">Suche </td></tr>
+                            <tr><td className="plz">PLZ </td><td><input type="text" id="plz" name="plz" value={form.plz} onChange={handleChange}></input></td></tr>
+                            <tr><td colSpan="2"><button className='btn'>Search</button></td></tr>
+                        </tbody>    
+                        </table>
+                    </form>
                     </div>
                 </div>    
                 <div className="col-span-4">
@@ -131,6 +148,7 @@ export function Frise() {
                     </table>
                     <div className="frisenImages">
                         <img src={"img/friese24/"+ actual.id + "/" + actual.pic}></img> 
+                        <ShowFriesenpics actual={actual}></ShowFriesenpics>
                     </div>
                 </div>        
             </div>

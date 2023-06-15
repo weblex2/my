@@ -15,6 +15,9 @@ class FriesenController extends Controller
      */
     public function index()
     {
+        $friesen  = Friesen::where('id', '<', '10')->orderBy("plz")->get();
+        $friesen->load('friesenpics');
+        //dump($friesen);    
         return view('friese.index');
     }
 
@@ -23,13 +26,11 @@ class FriesenController extends Controller
             $friesen  = Friesen::where('plz', '!=', '')->orderBy("plz")->get();
         }
         else{
-            $friesen  = Friesen::where('plz', '=', $plz)->orderBy("plz")->get();
+            $friesen  = Friesen::where('plz', 'like', $plz.'%')->orderBy("plz")->get();
         }    
-        //$friesen->load('friesenpics');
+        $friesen->load('friesenpics');
         $friesen = json_encode(['results' => $friesen->toArray()]);
-        #header('Content-Type: application/json');
-        return response($friesen, 200)
-                  ->header('Content-Type', 'text/plain');
+        return response($friesen, 200)->header('Content-Type', 'text/plain');
     }
 
     /**

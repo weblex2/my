@@ -171,3 +171,11 @@
 .friese .frisenImages img{
     @apply rounded-full
 }
+
+.friese #friesenSearchTbl{
+    @apply w-full
+}
+
+.friese #friesenSearchTbl .plz {
+    @apply w-20
+}

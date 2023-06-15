@@ -7,7 +7,8 @@
         @php 
             $title = "Fri·seu·sen";
         @endphp
-        @if (request()->is('blog*'))
+        
+{{--         @if (request()->is('blog*'))
             @php
                 $title = "Noppals Blog";     
             @endphp
@@ -15,7 +16,8 @@
             @php
                 $title = "Noppals Laravel";     
             @endphp
-        @endif
+        @endif --}}
+       
         <title>{{ $title }}</title>
 
         <!-- Fonts -->
