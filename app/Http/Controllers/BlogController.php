@@ -41,6 +41,8 @@ class BlogController extends Controller
         return view('blog.index', compact('posts'));
     }
 
+
+    
     public function showcat($cat_id)
     {
         if ($cat_id==0) {       

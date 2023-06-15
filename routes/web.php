@@ -25,6 +25,10 @@ use App\Http\Controllers\FriesenController;
     return view('welcome');
 }); */
 
+Route::get('/arcade', function () {
+    return view('arcade.index');
+}); 
+
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
     Route::get('/dashboard', function () {
         //return view('dashboard');

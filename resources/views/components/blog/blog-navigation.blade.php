@@ -54,6 +54,10 @@
                             <x-jet-dropdown-link href="{{ route('blog.showcat', ['id'=>2] ) }}">
                                 {{ __('Projekte') }}
                             </x-jet-dropdown-link>
+
+                            <x-jet-dropdown-link href="/arcade">
+                                {{ __('Arcade Project') }}
+                            </x-jet-dropdown-link>
     
                         </x-slot>
     
