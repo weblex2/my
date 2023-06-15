@@ -9,7 +9,7 @@ class Friesenpics extends Model
 {
     use HasFactory;
 
-    protected $table = 'Friesenpics';
+    protected $table = 'friesenpics';
 
     public function friese(){
         return $this->belongsTo(Friesen::Class);
