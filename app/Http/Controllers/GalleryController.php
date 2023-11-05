@@ -18,7 +18,7 @@ class GalleryController extends Controller
     }
 
     public function showGallery($id, $offset=0){
-        echo storage_path('gallery/test');
+        echo storage_path('app/public/gallery/test');
         $pics = Gallery::find($id);
         $limit  = 2;
         $gc = new GalleryPics();
