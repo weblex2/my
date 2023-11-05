@@ -18,7 +18,7 @@
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
-            <div id="gallery_content" class="content-center max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
+            <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
             {{-- @foreach ($pics as $i =>  $file)
                 <div class="flex justify-center bg-zinc-900 p-5 w-fit">
                     <x-gallery-item pic='{{$file->pic}}' content="blubb" />
