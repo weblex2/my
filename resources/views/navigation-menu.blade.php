@@ -19,7 +19,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{asset('img/noppal.jpg')}}" class="h-12  block w-auto rounded-full">
+                        <img src="{{asset('img/noppal.jpg')}}" class="w-12  block w-auto rounded-full">
                         {{-- <x-jet-application-mark class="block h-9 w-auto" /> --}}
                     </a>
                 </div>
