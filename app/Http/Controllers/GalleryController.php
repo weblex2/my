@@ -22,6 +22,7 @@ class GalleryController extends Controller
         $limit  = 2;
         $gc = new GalleryPics();
         $pics = $gc->select("*")
+        ->where('gallery_id', '=', 0)
         ->offset(0)
         ->limit($this->reloadItems)
         ->get();
@@ -33,6 +34,7 @@ class GalleryController extends Controller
         $limit  = 2;
         $gc = new GalleryPics();
         $pics = $gc->select("*")
+        ->where('gallery_id', '=', 0)
         ->offset($offset)
         ->limit($this->reloadItems)
         ->get();
@@ -49,7 +51,37 @@ class GalleryController extends Controller
         return $html;
     }
 
-    public function test(){
-        return view('components.gallery-item', ['pic' => '1.JPG', 'content' => 'Tah is a test']);
+    
+    public function upload(){
+        return view('gallery.upload');
+    }
+
+    public function store(Request $request){
+        
+        $path = "app/public/gallery/test";
+        $request->validate([
+            #'file' => 'required|max:2048',
+            'file' => 'required',
+        ]);
+
+        $gp  = new GalleryPics();
+        $gp->gallery_id = 0;
+        $gp->pic = $request->file->getClientOriginalName();
+        $gp->text = $request->content;
+        $res = $gp->save();
+        if ($res){
+            $fileName = $request->file->getClientOriginalName();  
+            $x =  storage_path($path);
+            $res = $request->file->move(storage_path($path), $fileName);
+        }    
+        /*  
+            Write Code Here for
+            Store $fileName name in DATABASE from HERE 
+        */
+       
+        return back()
+            ->with('success','File successfully uploaded.')
+            ->with('file', $fileName);
+        dump($request);
     }
 }

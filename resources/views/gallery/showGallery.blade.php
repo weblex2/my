@@ -14,6 +14,7 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight">
             <a href="/gallery">{{ __('Gallery') }}</a>
+            <a href="/gallery/upload" class="float-right">Upload Pic</a>
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">

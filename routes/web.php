@@ -34,7 +34,8 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/gallery', 'index')->name('gallery.index');
     Route::get('/gallery/show/{id}', 'showGallery')->name('gallery.showGallery');
     Route::get('/showMore/{offset?}', 'showMore')->name('gallery.showMore');
-    Route::get('/test', 'test')->name('t');
+    Route::get('/gallery/upload', 'upload')->name('gallery.upload');
+    Route::post('/gallery/store', 'store')->name('gallery.store');
 });    
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
