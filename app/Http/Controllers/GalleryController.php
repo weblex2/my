@@ -18,7 +18,6 @@ class GalleryController extends Controller
     }
 
     public function showGallery($id, $offset=0){
-        echo storage_path('app/public/gallery/test');
         $pics = Gallery::find($id);
         $limit  = 2;
         $gc = new GalleryPics();
@@ -59,7 +58,7 @@ class GalleryController extends Controller
 
     public function store(Request $request){
         
-        $path = "gallery/test";
+        $path = "app/public/gallery/test";
         $request->validate([
             #'file' => 'required|max:2048',
             'file' => 'required',
