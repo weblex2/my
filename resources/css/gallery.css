@@ -8,7 +8,7 @@
 
  #scroll::-webkit-scrollbar{
     width: 12px;               /* width of the entire scrollbar */
-}
+} 
   
  #scroll::-webkit-scrollbar-track {
     background: #18181b;        /* color of the tracking area */
