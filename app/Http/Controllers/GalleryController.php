@@ -58,7 +58,7 @@ class GalleryController extends Controller
 
     public function store(Request $request){
         
-        $path = "app/public/gallery/test";
+        $path = "gallery/test";
         $request->validate([
             #'file' => 'required|max:2048',
             'file' => 'required',
