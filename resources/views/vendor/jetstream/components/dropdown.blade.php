@@ -1,3 +1,16 @@
+@php
+    $bgColor = "bg-white";
+    $bgBorder = "border-gray-100";
+    if (Route::is('gallery*')){
+        $bgColor = "bg-zinc-800";
+        $bgBorder = "border-zinc-900";
+    }
+    else{
+        $bgColor = "bg-white";
+        $bgBorder = "border-gray-100";
+    } 
+@endphp
+
 @props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white', 'dropdownClasses' => ''])
 
 @php
@@ -40,7 +53,7 @@ switch ($width) {
             class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }} {{ $dropdownClasses }}"
             style="display: none;"
             @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }} {{ $bgColor }}">
             {{ $content }}
         </div>
     </div>

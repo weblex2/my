@@ -9,6 +9,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\FriesenController;
+use App\Http\Controllers\GalleryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,13 @@ use App\Http\Controllers\FriesenController;
 Route::get('/arcade', function () {
     return view('arcade.index');
 }); 
+
+Route::controller(GalleryController::class)->group(function () {
+    Route::get('/gallery', 'index')->name('gallery.index');
+    Route::get('/gallery/show/{id}', 'showGallery')->name('gallery.showGallery');
+    Route::get('/showMore/{offset?}', 'showMore')->name('gallery.showMore');
+    Route::get('/test', 'test')->name('t');
+});    
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
     Route::get('/dashboard', function () {
