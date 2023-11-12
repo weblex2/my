@@ -6,6 +6,14 @@
     @apply text-4xl font-extrabold text-black
 }    
 
+.gallery-delete-icon{
+    @apply text-red-500
+}
+
+.gallery-edit-icon{
+    @apply text-orange-500
+}
+
  #scroll::-webkit-scrollbar{
     width: 12px;               /* width of the entire scrollbar */
 } 

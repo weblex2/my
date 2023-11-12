@@ -32,10 +32,13 @@ Route::get('/arcade', function () {
 
 Route::controller(GalleryController::class)->group(function () {
     Route::get('/gallery', 'index')->name('gallery.index');
-    Route::get('/gallery/show/{id}', 'showGallery')->name('gallery.showGallery');
-    Route::get('/showMore/{offset?}', 'showMore')->name('gallery.showMore');
-    Route::get('/gallery/upload', 'upload')->name('gallery.upload');
+    Route::get('/gallery/create', 'create')->name('gallery.create');
     Route::post('/gallery/store', 'store')->name('gallery.store');
+    Route::get('/gallery/show/{id}', 'showGallery')->name('gallery.showGallery');
+    Route::get('/showMore/{gallery_id}/{offset?}', 'showMore')->name('gallery.showMore');
+    Route::get('/gallery/upload/{gallery_id}', 'upload')->name('gallery.upload');
+    Route::post('/gallery/storepic', 'storepic')->name('gallery.storepic');
+    Route::post('/gallery/delete', 'delete')->name('gallery.delete');
 });    
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 

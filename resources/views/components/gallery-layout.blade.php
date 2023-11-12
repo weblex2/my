@@ -23,7 +23,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/css/gallery.css', 'resources/js/app.js'])
-
+           
         <!-- Styles -->
         @livewireStyles
     </head>
@@ -43,7 +43,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="overflow-hidden">
                 {{ $slot }}
             </main>
         </div>

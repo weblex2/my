@@ -1,20 +1,9 @@
-@php
-    $directory = storage_path('gallery/test');
-    $files = scandir($directory);
-    foreach($files as $i => $file){
-        if (in_array($file,[".",".."]) || is_dir(storage_path('gallery/test')."/".$file)){
-            unset($files[$i]);
-        }
-    }
-@endphp    
-
 <x-gallery-layout>
     <div id="debug" class="hidden fixed top-0 left-0 bg-gray-900 p-10 z-10 text-white">debug</div>
     <div id="debug2" class="hidden fixed top-0 right-0 bg-gray-900 p-10 z-10 text-white">debug2</div>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight">
+        <h2 class="font-semibold text-xl leading-tight text-orange-500">
             <a href="/gallery">{{ __('Gallery') }}</a>
-            <a href="/gallery/upload" class="float-right">Upload Pic</a>
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
@@ -27,6 +16,7 @@
             </div>    
     </div>    
     <script>
+        var gallery_id = <?php echo $gal_id; ?>;
         var top=0;
         var noMore = false;
         var lastpictop=0;
@@ -81,7 +71,7 @@
         function more(){
             $.ajax({
                 type: 'GET',
-                url: '/showMore/'+offset,
+                url: '/showMore/'+gallery_id+"/"+offset,
                 async: false,
                 success: function (data){
                     console.log("Data loaded");
