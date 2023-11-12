@@ -20,6 +20,7 @@
                         <input type="text" name="name" class="p-5 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
                         <div class="text-xl font-extrabold py-5 pl-1">Country</div>
                         <select name="code" class="mt-2 p-5 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
+                            <option value="BR">Brazil</option>
                             <option value="CO">Colombia</option>
                             <option value="VN">Vietnam</option>
                             
