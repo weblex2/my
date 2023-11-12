@@ -1036,8 +1036,6 @@
     document.getElementById("world-map").addEventListener("load", function() {
         let svg = document.getElementById("world-map");
         svg.style.height = $('#world_wrapper').outerHeight();
-        svg.querySelector("#VN").setAttribute('style', 'fill: #f97316');
-        var vn  = $(svg.querySelector("#VN")); 
         $(svg).mousemove(function(e){
         p =e.target.closest('path');
         var selected = svg.querySelector(".selected");
