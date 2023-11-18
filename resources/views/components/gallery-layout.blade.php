@@ -21,7 +21,10 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
         <!-- Scripts -->
+        <script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
         @vite(['resources/css/app.css', 'resources/css/gallery.css', 'resources/js/app.js'])
            
         <!-- Styles -->

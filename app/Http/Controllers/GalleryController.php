@@ -6,11 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\Gallery;
 use App\Models\GalleryPics;
 use PhpParser\Node\Expr\AssignOp\Concat;
+use App\Traits\ImageTrait;
+use File;
 
 class GalleryController extends Controller
 {
-
+   
+    
+    use ImageTrait;
     var $reloadItems = 3;
+    var $img_base_path =  "gallery/";
 
     public function index(){
         $galleries = Gallery::all();
@@ -51,7 +56,6 @@ class GalleryController extends Controller
 
     public function showMore($gallery_id, $offset=0){
         $offset = $offset*$this->reloadItems;
-        $limit  = 2;
         $gc = new GalleryPics();
         $pics = $gc->select("*")
         ->where('gallery_id', '=', $gallery_id)
@@ -62,7 +66,7 @@ class GalleryController extends Controller
         $html="";
         if (count($pics)>0){
             foreach ($pics as $pic){
-                $html.= view('components.gallery-item', ['pic' => $pic->pic, 'content' => $pic->text]);
+                $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
             }
         }
         else{
@@ -88,7 +92,10 @@ class GalleryController extends Controller
 
     public function storepic(Request $request){
         
-        $path = "app/public/gallery/test";
+        $path = $this->img_base_path.$request->country_code;
+        if (!file_exists($path)) {
+            File::makeDirectory($path, 0777, true, true);
+        }    
         $request->validate([
             #'file' => 'required|max:2048',
             'file' => 'required',
@@ -96,14 +103,15 @@ class GalleryController extends Controller
         ]);
         $gp  = new GalleryPics();
         $gp->gallery_id = $this->getGalIdFromCode($request->country_code);
-        $gp->pic = $request->file->getClientOriginalName();
+        $gp->pic = $path."/".$request->file->getClientOriginalName();
         $gp->text = $request->content;
         
         $res = $gp->save();
         if ($res){
             $fileName = $request->file->getClientOriginalName();  
-            $x =  storage_path($path);
-            $res = $request->file->move(storage_path($path), $fileName);
+            $res = $request->file->move($path, $fileName);
+            // Trait
+            $this->createImgSourceSet($path, $fileName);
         }    
         /*  
             Write Code Here for

@@ -7,11 +7,19 @@
 }    
 
 .gallery-delete-icon{
-    @apply text-red-500
+    @apply text-orange-500
 }
 
 .gallery-edit-icon{
     @apply text-orange-500
+}
+
+.country_visited{
+    @apply cursor-pointer;
+}
+
+.gallery-comment-icon{
+    @apply hover:text-blue-500 cursor-pointer;
 }
 
  #scroll::-webkit-scrollbar{
@@ -24,6 +32,6 @@
   
 #scroll::-webkit-scrollbar-thumb {
     background-color: #18181b;    /* color of the scroll thumb */
-    border-radius: 20px;       /* roundness of the scroll thumb */
+    border-radius: 0px;       /* roundness of the scroll thumb */
     border: 3px solid #3f3f46;  /* creates padding around scroll thumb */
 }

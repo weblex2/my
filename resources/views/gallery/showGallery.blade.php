@@ -25,6 +25,9 @@
         $('#scroll').scroll(function(lastPictop) {
             var alreadyScrolled = parseInt($('#scroll').scrollTop());
             var img  = $('#scroll img').eq(-2);
+            if (img.length==0){
+                img = $('#scroll img').eq(0);
+            }
             var imgHeight = parseInt(img.height());
             this.lastpictop = img.offset().top + imgHeight ;
             var scrollAndTop = alreadyScrolled + imgHeight;
@@ -43,8 +46,8 @@
         $(function () {
             var img  = $('#scroll img').eq(-2);
             if (img.length > 0){
-            var top = parseInt(img.offset().top); 
-            var imgHeight = parseInt(img.height());
+                var top = parseInt(img.offset().top); 
+                var imgHeight = parseInt(img.height());
             }
             else{
                 top=0;
