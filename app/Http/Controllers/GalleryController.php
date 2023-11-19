@@ -101,34 +101,40 @@ class GalleryController extends Controller
             'file' => 'required',
             'country_code' => 'required',
         ]);
-        $gp  = new GalleryPics();
-        $gp->gallery_id = $this->getGalIdFromCode($request->country_code);
-        $gp->pic = $path."/".$request->file->getClientOriginalName();
-        $gp->text = $request->content;
         
-        $res = $gp->save();
-        if ($res){
-            $fileName = $request->file->getClientOriginalName();  
-            $res = $request->file->move($path, $fileName);
-            // Trait
-            $this->createImgSourceSet($path, $fileName);
-        }    
-        /*  
-            Write Code Here for
-            Store $fileName name in DATABASE from HERE 
-        */
-       
+        
+        $fileName = $request->file->getClientOriginalName();  
+        $successfullyMoved = $request->file->move($path, $fileName);
+        if ($successfullyMoved){
+                // Create smaller pics
+                // Trait
+            $file  = $path."/".$fileName;
+            $fname = strtoupper(pathinfo($file, PATHINFO_FILENAME));
+            $extension = strtoupper(pathinfo($file, PATHINFO_EXTENSION));
+            if (in_array($extension,['JPG', 'JPEG'])){
+                $thumpsCreatedSuccsess =  $this->createImgSourceSet($path, $fileName);
+                if ($thumpsCreatedSuccsess){
+                    // Save to DB
+                    $gp  = new GalleryPics();
+                    $gp->gallery_id = $this->getGalIdFromCode($request->country_code);
+                    $gp->pic = $path."/srcset/".$fileName."/".$fname."_768.".$extension;
+                    $gp->text = $request->content;
+                    $res = $gp->save();    
+                } 
+            }
+        }
+        
         return back()
             ->with('success','File successfully uploaded.')
             ->with('file', $fileName);
-        dump($request);
     }
 
     public function deletePic(Request $request ){
-        $id = $request->id;
+        $id = $request->item_id;
         $galPics = GalleryPics::find($id);
         $galPics->delete();
-        return back()
-        ->with('success','File successfully deleted.');
+        return 'Jupp';
+        /* return back()
+        ->with('success','File successfully deleted.'); */
     }
 }

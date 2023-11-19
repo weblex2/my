@@ -10,6 +10,10 @@
     @apply text-orange-500
 }
 
+.ck{
+    @apply bg-gray-700 !important
+}
+
 .gallery-edit-icon{
     @apply text-orange-500
 }

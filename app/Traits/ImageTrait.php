@@ -23,20 +23,26 @@ trait ImageTrait {
         $extension = pathinfo($file, PATHINFO_EXTENSION);
 
         $imgSmall  = $newDir.'/'.$filename."_s.".$extension;
-        $imgMedium = $newDir.'/'.$filename."_m.".$extension;;
-        $imgLarge  = $newDir.'/'.$filename."_l.".$extension;;
-            $img = Image::make($file);
-            $img->resize(1024, 768, function ($constraint) {
+        $imgMedium = $newDir.'/'.$filename."_m.".$extension;
+        $imgLarge  = $newDir.'/'.$filename."_768.".$extension;
+        $img = Image::make($file);
+
+            // resize the image to a width of 768 and constrain aspect ratio (auto height)
+            $img->resize(768, null, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save($imgLarge);
+            })->rotate(-90)->save($imgLarge);
+            /* $img->resize(1024, 768, function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($imgLarge); */
             $img->resize(640, 480, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save($imgMedium);
+            });
+            $img->rotate(-90);
+            $img->save($imgMedium);
             $img->resize(320, 240, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($imgSmall);
-        
-
+            return true;
     }
 
 }    

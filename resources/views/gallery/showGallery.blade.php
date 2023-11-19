@@ -14,7 +14,21 @@
                 </div> 
             @endforeach  --}}
             </div>    
-    </div>    
+    </div>  
+    <div id="deletePopup" class="hidden fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-80">
+        <div>
+            <div class="p-5 font font-extrabold text-orange-500">
+                <i class="fa-solid fa-trash gallery-delete-icon"></i> Really delete this blog item?
+            </div>
+                <input type="hidden" id="delete_id" name="id" value="" />
+                <div class="float-left">
+                    <a href="javascript:void(0)" onclick="deleteBlogItem()" class="mt-5 my-5 px-5 py-2 bg-zinc-900 border border-zinc-900 rounded-xl">Yes! Delete it!</a>
+                </div> 
+                <div class="float-right">
+                    <a href="javascript:void(0)" onclick="closeDeletePopup()" class="mt-5 my-5 px-5 py-2 bg-zinc-900 border border-zinc-900 rounded-xl">No! I think about it...</a>
+                </div> 
+        </div>    
+    </div>  
     <script>
         var gallery_id = <?php echo $gal_id; ?>;
         var top=0;
@@ -68,9 +82,41 @@
             
         });
 
+       function showDeletePopup(id){
+            $('#delete_id').val(id) ;
+            $('#deletePopup').show();
+       }
+
+        function closeDeletePopup(){
+            $('#deletePopup').hide();
+        }
        
-        
-       
+        function deleteBlogItem(){
+            var id = $('#delete_id').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            
+            $.ajax({
+                type: 'POST',
+                url: '/gallery/deletepic',
+                data: {
+                    item_id: id,
+                },
+                async: false,
+                success: function (data){
+                    console.log("Data " + id+ " deleted");
+                    $('#'+id).remove();
+                    closeDeletePopup();
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+
         function more(){
             $.ajax({
                 type: 'GET',
@@ -96,8 +142,6 @@
                     console.log(data);
                 }
             });
-            
-            
         }
     </script>    
 </x-gallery-layout>

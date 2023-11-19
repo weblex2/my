@@ -38,6 +38,7 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/showMore/{gallery_id}/{offset?}', 'showMore')->name('gallery.showMore');
     Route::get('/gallery/upload/{gallery_id}', 'upload')->name('gallery.upload');
     Route::post('/gallery/storepic', 'storepic')->name('gallery.storepic');
+    Route::post('/gallery/deletepic', 'deletePic')->name('gallery.deleteBlog');
     Route::post('/gallery/delete', 'delete')->name('gallery.delete');
 });    
 
