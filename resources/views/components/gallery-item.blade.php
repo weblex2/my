@@ -26,5 +26,5 @@
             <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true"></i>            
         </div>
     </div>
-    <div class="p-4 block w-fit w-[756px] text-white">{!!$content!!}</div>
+    <div class="p-4 block w-[756px] text-white">{!!$content!!}</div>
 </div>
