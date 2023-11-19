@@ -14,7 +14,7 @@ trait ImageTrait {
      */
     public function createImgSourceSet($path, $filename) {
 
-        $newDir = $path.'\\srcset\\'.$filename;
+        $newDir = $path.'/srcset/'.$filename;
         if(!File::isDirectory($newDir)){
             File::makeDirectory($newDir, 0777, true, true);
         }   
