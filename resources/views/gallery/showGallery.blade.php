@@ -3,7 +3,7 @@
     <div id="debug2" class="hidden fixed top-0 right-0 bg-gray-900 p-10 z-10 text-white">debug2</div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight text-orange-500">
-            <a href="/gallery">{{ __('Gallery') }}</a>
+            <a href="/gallery1">{{ __('Gallery') }}</a>
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
