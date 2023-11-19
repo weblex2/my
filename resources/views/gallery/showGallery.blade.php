@@ -8,11 +8,11 @@
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
             <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
-            {{-- @foreach ($pics as $i =>  $file)
+            @foreach ($pics as $i => $pic)
                 <div class="flex justify-center bg-zinc-900 p-5 w-fit">
-                    <x-gallery-item pic='{{$file->pic}}' content="blubb" />
+                    <x-gallery-item :pic="$pic" content="{{$pic->text}}" />
                 </div> 
-            @endforeach  --}}
+            @endforeach 
             </div>    
     </div>  
     <div id="deletePopup" class=" fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-80 invisible">
@@ -35,7 +35,7 @@
         var noMore = false;
         var lastpictop=0;
         var scrolled = 0;
-        var offset = 0;
+        var offset = 1;
         $('#scroll').scroll(function(lastPictop) {
             var alreadyScrolled = parseInt($('#scroll').scrollTop());
             var img  = $('#scroll img').eq(-2);
@@ -78,7 +78,7 @@
                 $('#debug2').html("<div>X = " + currentMousePos.x +"</div><div>Y = " + currentMousePos.y+"</div>");
             });
 
-            more();
+            //more();
             
         });
 
