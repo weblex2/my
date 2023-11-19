@@ -15,7 +15,7 @@
             @endforeach  --}}
             </div>    
     </div>  
-    <div id="deletePopup" class="hidden fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-80">
+    <div id="deletePopup" class=" fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-80 invisible">
         <div>
             <div class="p-5 font font-extrabold text-orange-500">
                 <i class="fa-solid fa-trash gallery-delete-icon"></i> Really delete this blog item?
@@ -84,11 +84,11 @@
 
        function showDeletePopup(id){
             $('#delete_id').val(id) ;
-            $('#deletePopup').show();
+            $('#deletePopup').css('visibility', 'visible');
        }
 
         function closeDeletePopup(){
-            $('#deletePopup').hide();
+            $('#deletePopup').css('visibility', 'hidden');;
         }
        
         function deleteBlogItem(){
