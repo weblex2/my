@@ -31,7 +31,7 @@ Route::get('/arcade', function () {
 }); 
 
 Route::controller(GalleryController::class)->group(function () {
-    Route::get('/gallery/', 'index')->name('gallery.index');
+    Route::get('/gallery1', 'index')->name('gallery.index');
     Route::get('/gallery/create', 'create')->name('gallery.create');
     Route::post('/gallery/store', 'store')->name('gallery.store');
     Route::get('/gallery/show/{id}', 'showGallery')->name('gallery.showGallery');
