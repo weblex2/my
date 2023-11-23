@@ -28,7 +28,7 @@
                 @if (Route::is('gallery*'))
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-jet-nav-link href="{{ route('gallery.index') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Back to the world') }}
+                        <i class="mr-2 fa-solid fa-earth-americas"></i> {{ __('Back to the world') }} 
                     </x-jet-nav-link>
                 </div>
                 @else
