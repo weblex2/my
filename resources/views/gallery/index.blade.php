@@ -4,16 +4,38 @@
         $visited_countries[] = "'".$gal->code."'";
     }
     $visited_countries = "[".implode(', ', $visited_countries)."]";
+
+    
+    $countries[0] = ['code' => 'DE', 'name' => 'germany'];
+    $countries[1] = ['code' => 'CO', 'name' => 'colombia'];
+    $countries[2] = ['code' => 'VN', 'name' => 'vietnam'];
+    $countries[3] = ['code' => 'AT', 'name' => 'austria'];
+    $countries[4] = ['code' => 'PE', 'name' => 'peru'];
+    $countries[5] = ['code' => 'AU', 'name' => 'australia'];
+    $countries[5] = ['code' => 'PA', 'name' => 'panama'];
+    $countries[5] = ['code' => 'IN', 'name' => 'indonesia'];
+    foreach ($countries as $country){
+        echo '<script src="https://cdn.amcharts.com/lib/5/geodata/'.$country['name'].'Low.js"></script>';
+    }
+
 @endphp
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/geodata/lang/DE.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
 <x-gallery-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight text-orange-500">
             {{ __('Gallery') }}
         </h2>
     </x-slot>
-    <div id="cname" class="hidden px-2 py-1 bg-gray-800 text-white absolute border border-red overflow-hidden">Test</div>
-    <div id="world_wrapper" class="h-[870px] w-screen bg-zinc-700 flex items-center justify-center ">
-            <!--object id='test' class="border border-red-500" data="world5.svg" type="image/svg+xml" ></object-->
+
+    <div id="chartdiv" class="w-full h-[880px]"></div> 
+
+    {{-- <div id="cname" class="hidden px-2 py-1 bg-gray-800 text-white absolute border border-red overflow-hidden">Test</div> --}}
+    <!--div id="world_wrapper" class="h-[870px] w-screen bg-zinc-700 flex items-center justify-center ">
             <svg id="world-map"  xmlns="http://www.w3.org/2000/svg" baseprofile="tiny" fill="#ececec" width="1500" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width=".2" version="1.2" viewbox="0 0 2000 857" width="2000" style="fill: #ececec">
                 <path d="M1383 261.6l1.5 1.8-2.9 0.8-2.4 1.1-5.9 0.8-5.3 1.3-2.4 2.8 1.9 2.7 1.4 3.2-2 2.7 0.8 2.5-0.9 2.3-5.2-0.2 3.1 4.2-3.1 1.7-1.4 3.8 1.1 3.9-1.8 1.8-2.1-0.6-4 0.9-0.2 1.7-4.1 0-2.3 3.7 0.8 5.4-6.6 2.7-3.9-0.6-0.9 1.4-3.4-0.8-5.3 1-9.6-3.3 3.9-5.8-1.1-4.1-4.3-1.1-1.2-4.1-2.7-5.1 1.6-3.5-2.5-1 0.5-4.7 0.6-8 5.9 2.5 3.9-0.9 0.4-2.9 4-0.9 2.6-2-0.2-5.1 4.2-1.3 0.3-2.2 2.9 1.7 1.6 0.2 3 0 4.3 1.4 1.8 0.7 3.4-2 2.1 1.2 0.9-2.9 3.2 0.1 0.6-0.9-0.2-2.6 1.7-2.2 3.3 1.4-0.1 2 1.7 0.3 0.9 5.4 2.7 2.1 1.5-1.4 2.2-0.6 2.5-2.9 3.8 0.5 5.4 0z" id="AF" name="Afghanistan">
                 </path>
@@ -962,7 +984,7 @@
                 <circle cx="1798.2" cy="719.3" id="2">
                 </circle>
             </svg>
-    </div>    
+    </div-->    
 
         <!--div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3">
             <div class="overflow-hidden h-full sm:rounded-lg">
@@ -980,147 +1002,296 @@
         </div>
     </div-->
 
-    <script>
-        let svg = document.getElementById("world-map");
-        let visited = <?php echo $visited_countries; ?>;
-        let current = null;
-        let paths = svg.querySelectorAll('#VN');
-        console.log(paths);
-        $(function(){
-            document.getElementById("world-map").addEventListener("load", function() {
-
-                // set attributes for visited countries
-                visited.forEach(function(index, value){
-                    svg.querySelector("#"+index).setAttribute('style', 'fill: #f97316');
-                    svg.querySelector("#"+index).setAttribute('visited', 'true');
-                    svg.querySelector("#"+index).setAttribute('href', index);
-                    svg.querySelector("#"+index).setAttribute('class', 'country_visited');
-                });
-
-                svg.style.height = $('#world_wrapper').outerHeight();
-                $(svg).mousemove(function(e){
-                    p = e.target.closest('path');
-                    if (p!=null){
-                        name  = $(p).attr('id')!=undefined ? $(p).attr('name') : $(p).attr('class');
-                        if (name=="undefined") {
-                            name="none"; 
-                        }    
-                        if (name!=current ){
-                            current=name;
-                            console.log('Current:'+current);
-                            //reset all visited
-                            //svg.querySelector('.visited').setAttribute('style', 'fill: #f97316');
-                            //set bg color for hover element
-                            //p.setAttribute('style', 'fill:red');
-                        }
-
-                        // Tooltip for country
-                        $("#cname").css('top',e.pageY-30);
-                        $("#cname").css('left',e.pageX+30);
-                        $("#cname").text(name).show();
-                    }
-                    else{
-                        $("#cname").text('').hide();
-                    }
-                });  
-                
-                $(svg).click(function(e){
-                    p = e.target.closest('path');
-                    if (p!=null){
-                        var href = $(p).attr('href');
-                        if (href!=undefined){
-                            window.location.href = '/gallery/show/'+href; 
-                        }
-                    }    
-                });    
-            });
-        });        
-        /* svg.getElementById("DE").setAttribute("fill", "blue"); 
-        let c = document.getElementsByClassName('United States')
-        Array.from(document.getElementsByClassName("United States")).forEach(
-            function(element, index, array) {
-                element.setAttribute('fill', 'green');
-                element.setAttribute('visited', 'true');
-            }
-        ); */
-    </script>    
-
-
-    {{-- <script type="module">
-
-        
-
-        
-    
 
     <script>
+
+        am5.ready(function() {
         
-
-        /* let svg = document.getElementById("world-map");
-        svg.onwheel = function (event) {
-        event.preventDefault();
-
-        // set the scaling factor (and make sure it's at least 10%)
-        let scale = event.deltaY / 1000;
-        scale = Math.abs(scale) < .1 ? .1 * event.deltaY / Math.abs(event.deltaY) : scale;
-
-        // get point in SVG space
-        let pt = new DOMPoint(event.clientX, event.clientY);
-        pt = pt.matrixTransform(svg.getScreenCTM().inverse());
-
-        // get viewbox transform
-        let [x, y, width, height] = svg.getAttribute('viewBox').split(' ').map(Number);
-
-        // get pt.x as a proportion of width and pt.y as proportion of height
-        let [xPropW, yPropH] = [(pt.x - x) / width, (pt.y - y) / height];
+        // Create root element
+        // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+        var root = am5.Root.new("chartdiv");
         
-        // calc new width and height, new x2, y2 (using proportions and new width and height)
-        let [width2, height2] = [width + width * scale, height + height * scale];
-        let x2 = pt.x - xPropW * width2;
-        let y2 = pt.y - yPropH * height2;        
-
-        svg.setAttribute('viewBox', `${x2} ${y2} ${width2} ${height2}`); 
-    }
-    
-
-    $(function(){
-    document.getElementById("world-map").addEventListener("load", function() {
-       
+        var myTheme = am5.Theme.new(root);
+        
+        myTheme.rule("am5map").setAll({
+          fontSize: "1.0em"
+        });
         
         
-        $(svg).mousemove(function(e){
-            p =e.target.closest('path');
-            var selected = svg.querySelector(".selected");
-            if (selected) {
-            var oldColor = selected.getAttribute("style");
-            console.log("oldColor:"+ oldColor);
-            //console.log(selected);
-            selected.removeAttribute("class", "selected");
-            selected.setAttribute('style', 'fill: #ececec');
-            selected.setAttribute("stroke-width", "0.2");
-            selected.setAttribute("stroke", "#000");
-        }
-    
-        if (p!=null) {
-            var name = e.target.getAttribute("name");
-            var myclass = $(e.target).attr('class');
-            console.log("class:"+ myclass);
-            $("#cname").text(name).show();
-            var myclass = e.target.getAttribute("className");
-            if (name == null){
-                name = myclass;
+        
+        // Set themes
+        // https://www.amcharts.com/docs/v5/concepts/themes/
+        root.setThemes([
+          am5themes_Animated.new(root),
+        ]);
+        
+        // Create the map chart
+        // https://www.amcharts.com/docs/v5/charts/map-chart/
+        var chart = root.container.children.push(am5map.MapChart.new(root, {
+          panX: "translateX",
+          panY: "translateY",
+          //projection: am5map.geoMercator(),
+          projection: am5map.geoNaturalEarth1(),
+        }));
+        
+        
+        // Create main polygon series for countries
+        // https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
+        var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+          geoJSON: am5geodata_worldLow,
+          exclude: ["AQ"],
+          geodataNames: am5geodata_lang_DE,
+         
+          //fill: am5.color(0x999999)
+          templateField: "polygonSettings"
+        }));
+        
+        var countries = polygonSeries.mapPolygons;
+        var countryTemplate = polygonSeries.mapPolygons.template;
+        
+        countryTemplate.events.on("click", function(event){
+            var countryCode = event.target.dataItem.dataContext.id;
+            console.log(countryCode);
+            console.log(event);
+        });  
+        
+        
+        
+        
+        polygonSeries.mapPolygons.template.setAll({
+          tooltipText: "{name}",
+          toggleKey: "active",
+          templateField: "polygonSettings",
+          fill: am5.color(0x3f3f46),
+          interactive: true,
+          text: "hallo"
+        });
+        
+        polygonSeries.mapPolygons.template.states.create("hover", {
+          fill: am5.color(0x00ff00) // grün
+        });
+        
+        polygonSeries.mapPolygons.template.states.create("active", {
+          fill: am5.color(0xed8936)
+        });
+        
+        var previousPolygon;
+        
+        polygonSeries.mapPolygons.template.on("active", function (active, target) {
+          if (previousPolygon && previousPolygon != target) {
+            previousPolygon.set("active", false);
+          }
+          if (target.get("active")) {
+            polygonSeries.zoomToDataItem(target.dataItem );
+          }
+          else {
+            chart.goHome();
+          }
+          previousPolygon = target;
+        });
+        
+        
+        
+        <?php
+        
+         foreach ($countries as $country){
+         echo '
+          var polygonSeries'.$country['code'].' = chart.series.push(am5map.MapPolygonSeries.new(root, {
+            geoJSON: am5geodata_'.$country['name'].'Low
+          }));
+        
+          polygonSeries'.$country['code'].'.mapPolygons.template.setAll({
+            tooltipText: "{name}",
+            toggleKey: "active",
+            interactive: true,
+            geodataNames: am5geodata_lang_DE,
+            fill: am5.color(0xed8936)
+          });
+        
+          polygonSeries'.$country["code"].'.mapPolygons.template.on("active", function (active, target) {
+            if (previousPolygon && previousPolygon != target) {
+              previousPolygon.set("active", false);
+          }
+         
+          if (target.get("active")) {
+            polygonSeries.zoomToDataItem(target.dataItem );
+          }
+          else {
+            chart.goHome();
+          }
+          previousPolygon = target;
+        });';
+         }
+        ?>
+        
+        polygonSeriesCO.mapPolygons.template.on("active", function (active, target) {
+          if (previousPolygon && previousPolygon != target) {
+            previousPolygon.set("active", false);
+          }
+          if (target.get("active")) {
+            polygonSeries.zoomToDataItem(target.dataItem );
+          }
+          else {
+            chart.goHome();
+          }
+          previousPolygon = target;
+        });
+        
+        
+        polygonSeries.mapPolygons.template.on("click", function(event){
+            chart.zoomToMapObject(event.target);
+            var countryCode = event.target.dataItem.dataContext.id;
+            console.log(countryCode);
+        });
+        
+        // Add zoom control
+        // https://www.amcharts.com/docs/v5/charts/map-chart/map-pan-zoom/#Zoom_control
+        chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
+        
+        
+        // Set clicking on "water" to zoom out
+        chart.chartContainer.get("background").events.on("click", function () {
+          chart.goHome();
+        })
+        
+        
+        
+        
+        
+        
+        
+        // Make stuff animate on load
+        chart.appear(1000, 100);
+        
+        var polygonTemplate = polygonSeries.mapPolygons.template;
+        
+        polygonSeries.data.setAll([
+            {
+                id: "VN",
+                polygonSettings: {
+                    fill: am5.color(0x3f3f46),
+                    cursorOverStyle: "pointer",
+                    //tooltipHTML : '<b>{name}</b><br><a href="https://en.wikipedia.org/wiki/{name.urlEncode()}">More info</a>',
+                    href: '<a href="https://en.wikipedia.org/wiki/{name.urlEncode()}">More info</a>'
+                }
+            },
+            {
+                id: "CO",
+                polygonSettings: {
+                    fill: am5.color(0x3f3f46)
+                }
+                },
+            {
+                id: "DE",
+                polygonSettings: {
+                    fill: am5.color(0x3f3f46) // 0xed8936  orange
+                }
+        }]);
+        
+        
+        
+        var pointSeries = chart.series.push(am5map.ClusteredPointSeries.new(root, {}));
+        
+        // Create regular bullets
+        pointSeries.bullets.push(function() {
+            var container = am5.Container.new(root, {
+            cursorOverStyle:"pointer",
+            tooltipText : "{title}",
+            href: "{country}"
+          });
+        
+          var circle1 = container.children.push(am5.Circle.new(root, {
+            radius: 6,
+            tooltipY: 0,
+            fill: am5.color(0x00ff00)
+          }));
+        
+          var circle2 = container.children.push(am5.Circle.new(root, {
+            radius: 10,
+            fillOpacity: 0.3,
+            tooltipY: 0,
+            fill: am5.color(0x00ff00)
+          }));
+        
+          var circle3 = container.children.push(am5.Circle.new(root, {
+            radius: 14,
+            fillOpacity: 0.3,
+            tooltipY: 0,
+            fill: am5.color(0x00ff00)
+          }));
+        
+          var label = container.children.push(am5.Label.new(root, {
+            centerX: am5.p50,
+            centerY: am5.p50,
+            //fill: am5.color(0xff0000),
+            populateText: true,
+            fontSize: "8",
+         
+          }));
+        
+          circle2.events.on("inited", function(event){
+            animateBullet(event.target);
+          });
+        
+          container.events.on("click", function(e) {
+            console.log(chart._settings.zoomLevel);
+            let zoom_level = chart._settings.zoomLevel;
+            if (zoom_level>1){
+              var href="/gallery/show/"+ e.target.dataItem.dataContext.href;
+              window.location.href = href;
             }
-            e.target.setAttribute("stroke", "#999");
-            e.target.setAttribute("stroke-width", "1px");
-            e.target.setAttribute('style', 'fill: #333');
-            e.target.setAttribute('class', 'selected');
+            else{  
+              pointSeries.zoomToCluster(e.target.dataItem);
+            }  
+          });
+        
+          return am5.Bullet.new(root, {
+            sprite: container
+          });
+        });
+        
+        
+        // Set data
+        var cities = [
+          { title: 'Munich', latitude: 48.1371, longitude: 11.5761, country: "DE" },
+          { title: "Vienna", latitude: 48.2092, longitude: 16.3728, country: "AT" },
+          { title: "Bogota",latitude: 4.6473, longitude: -74.0962, country: "CO" },
+          { title: "Medellin",latitude: 6.2308, longitude: -75.5905, country: "CO" },
+          { title: "Hanoi", latitude: 21.0341, longitude: 105.8372, country: "VN" },
+          { title: 'Hoi An', latitude: 15.87944, longitude: 108.335, country: "VN" },
+          { title: 'Lima', latitude: -12.0463, longitude: -77.0427, country: "PE"},      
+          { title: 'Panama City', latitude: 8.983333, longitude: -79.5166, country: "PE"}  
+        ];
+        
+        for (var i = 0; i < cities.length; i++) {
+          var city = cities[i];
+          addCity(city.longitude, city.latitude, city.title, city.country);
         }
-        else{
-            $("#cname").hide();
+        
+        function addCity(longitude, latitude, title, country) {
+          pointSeries.data.push({
+            geometry: { type: "Point", coordinates: [longitude, latitude] },
+            title: title,
+            tooltipText : title,
+            href: country
+          });
         }
-    });
-    });
+        
+        function animateBullet(circle) {
+            var animation = circle.animate([{ property: "scale", from: 1 / chart.zoomLevel, to: 5 / chart.zoomLevel }, { property: "opacity", from: 1, to: 0 }], 1000, am4core.ease.circleOut);
+            animation.events.on("animationended", function(event){
+              animateBullet(event.target.object);
+            })
+        }
+        
+        
+        }); // end am5.ready()
+        
+        
+        
+        
+        
+        </script>
+
     
-    })
-    </script> --}}
 </x-gallery-layout>
