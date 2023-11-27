@@ -13,17 +13,24 @@
                     <div class="p-5 border-green-900 bg-green-300 text-black rounded-xl mb-5">
                         <strong>{{ $message }}</strong>
                     </div>
+                    @elseif (($message = Session::get('error')))
+                    <div class="p-5 border-red-900 bg-red-300 text-black rounded-xl mb-5">
+                    <strong>{{ $message }}</strong>
+                    </div>
                     @endif
                     
                     <div>
                         <div class="text-xl font-extrabold py-5 pl-1">Gallery Name</div>
                         <input type="text" name="name" class="p-5 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
+                        <div class="text-xl font-extrabold py-5 pl-1">Country Map Name</div>
+                        <input type="text" name="country_map_name" class="p-5 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
                         <div class="text-xl font-extrabold py-5 pl-1">Country</div>
-                        <select name="code" class="mt-2 p-5 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
+                        <select name="code" class="mt-2 p-5 w-full bg-zinc-900 border border-zinc-900 rounded-xl focus:outline-none focus:ring-0 focus:border-zinc-900">
+                            <option value="">-- select --</option>
                             <option value="BR">Brazil</option>
                             <option value="CO">Colombia</option>
                             <option value="VN">Vietnam</option>
-                            
+                            <option value="DE">Deutschland</option>
                         </select>    
                     </div>
                     <div class="py-5">

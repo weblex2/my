@@ -59,7 +59,7 @@
                                 {{ __('Arcade Project') }}
                             </x-jet-dropdown-link>
                             <x-jet-dropdown-link href="/gallery1">
-                                {{ __('Gallery') }}
+                                {{ __('Reise Blog') }}
                             </x-jet-dropdown-link>
     
                         </x-slot>

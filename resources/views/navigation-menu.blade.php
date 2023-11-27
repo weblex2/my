@@ -11,7 +11,7 @@
     } 
 @endphp
 
-<nav x-data="{ open: false }" class="{{$bgColor}} border-b {{$bgBorder}}">
+<nav id="nav" x-data="{ open: false }" class="{{$bgColor}} border-b {{$bgBorder}}">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -112,17 +112,22 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-jet-dropdown-link href="{{ route('gallery.create') }}">
+                            <x-jet-dropdown-link class="text-white" href="{{ route('gallery.create') }}">
                                 Create Blog/ Gallery 
+                            </x-jet-dropdown-link>
+
+                            <x-jet-dropdown-link class="text-white" href="{{ route('gallery.edit') }}">
+                                Edit Blog/ Gallery 
                             </x-jet-dropdown-link>
 
                             @if (Route::is('gallery.showGallery*'))
                             @php
                                 $gal_id = Route::current()->id;
                             @endphp
-                            <x-jet-dropdown-link href="{{ route('gallery.upload', ['gallery_id'=> $gal_id ]) }}">
+                            <x-jet-dropdown-link class="text-white" href="{{ route('gallery.upload', ['gallery_id'=> $gal_id ]) }}">
                                 Create Blog Entry ({{Route::current()->id}})
                             </x-jet-dropdown-link>
+                            
                             @endif
                             
                         </x-slot>

@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
 use App\Models\GalleryPics;
+use App\Models\GalleryMappoint;
 use PhpParser\Node\Expr\AssignOp\Concat;
 use App\Traits\ImageTrait;
+use Illuminate\Support\Facades\Validator;
 use File;
+use Session;
 
 class GalleryController extends Controller
 {
@@ -19,14 +22,33 @@ class GalleryController extends Controller
 
     public function index(){
         $galleries = Gallery::all();
-        return view('gallery.index', compact('galleries'));
+        //$galleries->load('GalleryMappoint');
+        $mappoints = GalleryMappoint::all();
+        return view('gallery.index', compact('galleries', 'mappoints'));
     }
 
     public function create(){
         return view('gallery.create');
     }
 
+    public function edit(){
+        $galleries = Gallery::select('*')->orderBy('code')->get();
+        return view('gallery.edit', compact('galleries'));
+    }
+
     public function store(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'country_map_name' => 'required',
+            'code' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->messages());
+            return redirect()->back();
+        }
+
         $gal  = new Gallery();
         $req = $request->all();
         unset($req['_token']);
@@ -41,9 +63,17 @@ class GalleryController extends Controller
         }    
     }
 
+    public function delete(Request $request){
+        $gallery = Gallery::find($request->id);
+        $gallery->load('GalleryPics');
+        $gallery->delete();
+        $galleries = Gallery::select('*')->orderBy('code')->get();
+        return view('gallery.edit', compact('galleries'));
+    }
+
     public function showGallery($code, $offset=0){
-        $gal = Gallery::where('code', "=", $code)->get();
-        $gal_id = $gal[0]->id; 
+        $gallery = Gallery::where('code', "=", $code)->get();
+        $gal_id = $gallery[0]->id; 
         $limit  = 2;
         $gc = new GalleryPics();
         $pics = $gc->select("*")
@@ -51,7 +81,7 @@ class GalleryController extends Controller
         ->offset(0)
         ->limit($this->reloadItems)
         ->get();
-        return view('gallery.showGallery', compact('gal_id','pics','offset'));
+        return view('gallery.showGallery', compact('gallery','pics','offset'));
     }
 
     public function showMore($gallery_id, $offset=0){
@@ -136,5 +166,37 @@ class GalleryController extends Controller
         return 'Jupp';
         /* return back()
         ->with('success','File successfully deleted.'); */
+    }
+
+    public function createGalleryMappoint(){
+        $gallery = Gallery::select('*')->orderBy('code')->get();
+        return view('gallery.createMapPoint', compact('gallery'));
+    }
+    
+    public function storeGalleryMappoint(Request $request){
+        $validator = Validator::make($request->all(), [
+            'mappoint_name' => 'required',
+            'lon' => 'required',
+            'lat' => 'required',
+            'country_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', $validator->messages());
+            return redirect()->back()->withInput();
+        }
+
+        $req  = $request->all();
+        $mapPoint  = new GalleryMappoint();
+        $mapPoint->fill($req);
+        $mapPoint->save();
+        $res = $mapPoint->save();
+        if ($res){
+            return back()->with('success','Map Point successfully created.');
+        }
+        else{
+            return back()->with('error','Problem...');
+        }    
+
     }
 }

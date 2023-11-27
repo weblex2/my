@@ -3,7 +3,7 @@
     <div id="debug2" class="hidden fixed top-0 right-0 bg-gray-900 p-10 z-10 text-white">debug2</div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight text-orange-500">
-            <a href="/gallery1">{{ __('Gallery') }}</a>
+            <a href="/gallery1">{{ __('Blog') }}</a> / {{$gallery[0]->name}}
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
@@ -13,6 +13,9 @@
                     <x-gallery-item :pic="$pic" content="{{$pic->text}}" />
                 </div> 
             @endforeach 
+            @if (count($pics)==0)
+                <div class="bg-zinc-800"> sorry, noch keine pics hier...</div>
+            @endif
             </div>    
     </div>  
     <div id="deletePopup" class=" fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-80 invisible">
@@ -30,7 +33,7 @@
         </div>    
     </div>  
     <script>
-        var gallery_id = <?php echo $gal_id; ?>;
+        var gallery_id = {{$gallery[0]->id}}; 
         var top=0;
         var noMore = false;
         var lastpictop=0;
