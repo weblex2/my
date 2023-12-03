@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Gallery;
 use App\Models\GalleryPics;
 use App\Models\GalleryMappoint;
+use App\Models\GalleryText;
 use PhpParser\Node\Expr\AssignOp\Concat;
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\Validator;
 use File;
+use Illuminate\Contracts\Session\Session as SessionSession;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
+
 
 class GalleryController extends Controller
 {
@@ -19,12 +23,28 @@ class GalleryController extends Controller
     use ImageTrait;
     var $reloadItems = 3;
     var $img_base_path =  "gallery/";
+    var $lang; 
+
 
     public function index(){
+        $lang =  session('lang');
+        if (!$lang){
+            session(['lang' => 'DE']);
+        }
+        //echo $lang = $lang;
         $galleries = Gallery::all();
-        //$galleries->load('GalleryMappoint');
+        $galleries->load('GalleryMappoint');
         $mappoints = GalleryMappoint::all();
         return view('gallery.index', compact('galleries', 'mappoints'));
+    }
+
+    public function index2(){
+        return view('gallery.index2');
+    }
+
+    public function setLang($route, $lang){
+        session(['lang' => $lang]);
+        return redirect()->route('gallery.index');
     }
 
     public function create(){
@@ -81,6 +101,7 @@ class GalleryController extends Controller
         ->offset(0)
         ->limit($this->reloadItems)
         ->get();
+        $pics->load('GalleryText');
         return view('gallery.showGallery', compact('gallery','pics','offset'));
     }
 
@@ -106,8 +127,11 @@ class GalleryController extends Controller
     }
 
     
-    public function upload($gal_id){
-        return view('gallery.upload', compact('gal_id'));
+    public function upload($country_code, $map_point_id){
+        
+        //$country = Gallery
+        $mappoints = GalleryMappoint::where('country_id', '=', $country_code)->orderBy('mappoint_name')->get();
+        return view('gallery.upload', compact('country_code', 'map_point_id', 'mappoints'));
     }
 
     public function getGalIdFromCode($code){
@@ -145,11 +169,28 @@ class GalleryController extends Controller
                 $thumpsCreatedSuccsess =  $this->createImgSourceSet($path, $fileName);
                 if ($thumpsCreatedSuccsess){
                     // Save to DB
+                    $gal_id = $this->getGalIdFromCode($request->country_code);
                     $gp  = new GalleryPics();
-                    $gp->gallery_id = $this->getGalIdFromCode($request->country_code);
+                    $gp->gallery_id = $gal_id;
                     $gp->pic = $path."/srcset/".$fileName."/".$fname."_768.".$extension;
-                    $gp->text = $request->content;
-                    $res = $gp->save();    
+                    //$gp->text = $request->content;
+                    $gp->mappoint_id = $request->mappoint_id;
+                    $res = $gp->save();  
+                    $pic_id = $gp->id;
+                    $galText  = new GalleryText();
+                    $galText->pic_id = $pic_id;
+                    $galText->gallery_id = $gal_id;
+                    $galText->mappoint_id = $request->mappoint_id;
+                    $galText->text =  $request->contentDE;
+                    $galText->language =  'DE';
+                    $galText->save();
+                    $galText  = new GalleryText();
+                    $galText->pic_id = $pic_id;
+                    $galText->gallery_id = $gal_id;
+                    $galText->mappoint_id = $request->mappoint_id;
+                    $galText->text =  $request->contentES;
+                    $galText->language =  'ES';
+                    $galText->save();
                 } 
             }
         }
@@ -172,6 +213,11 @@ class GalleryController extends Controller
         $gallery = Gallery::select('*')->orderBy('code')->get();
         return view('gallery.createMapPoint', compact('gallery'));
     }
+
+    public function editGalleryMappoints(){
+        $mappoints = GalleryMappoint::select('*')->orderBy('country_id')->orderBy('mappoint_name')->get();
+        return view('gallery.editMapPoints', compact('mappoints'));
+    }
     
     public function storeGalleryMappoint(Request $request){
         $validator = Validator::make($request->all(), [
@@ -189,7 +235,6 @@ class GalleryController extends Controller
         $req  = $request->all();
         $mapPoint  = new GalleryMappoint();
         $mapPoint->fill($req);
-        $mapPoint->save();
         $res = $mapPoint->save();
         if ($res){
             return back()->with('success','Map Point successfully created.');
@@ -197,6 +242,23 @@ class GalleryController extends Controller
         else{
             return back()->with('error','Problem...');
         }    
+    }
 
+    public function deleteGalleryMappoint(Request $request){
+        $gm = GalleryMappoint::find($request->id);
+        $res = $gm->delete();
+        if ($res){
+            return back()->with('success','Map Point successfully deleted.');
+        }
+        else{
+            return back()->with('error','Problem...');
+        }  
+
+    }
+
+    public function smaller(){
+        $path = "gallery/test";
+        $fileName="test.jpg";
+        $thumpsCreatedSuccsess =  $this->createImgSourceSet($path, $fileName);
     }
 }

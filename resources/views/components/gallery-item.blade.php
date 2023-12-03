@@ -26,5 +26,5 @@
             <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true"></i>            
         </div>
     </div>
-    <div class="p-4 block w-[768px] text-white">{!!$pic->text!!}</div>
+    <div class="p-4 block w-[768px] text-white">{!!$pic->GalleryText[0]->text!!}</div>
 </div>

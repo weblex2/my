@@ -47,6 +47,9 @@
 
             <!-- Page Content -->
             <main id="main" class="overflow-hidden">
+                <div id="busy" class="invisible modal">
+                    <img src="{{ asset('img/gallery_processing.gif') }}" class="w-24">
+                </div>
                 {{ $slot }}
             </main>
         </div>
@@ -55,4 +58,7 @@
 
         @livewireScripts
     </body>
+    <script>
+        $('#main').css('height', $(window).height() - ($('nav').outerHeight() + $('header').outerHeight() +1));
+    </script>    
 </html>

@@ -31,19 +31,25 @@ Route::get('/arcade', function () {
 }); 
 
 Route::controller(GalleryController::class)->group(function () {
-    Route::get('/gallery1', 'index')->name('gallery.index');
-    Route::get('/gallery/create', 'create')->name('gallery.create');
-    Route::get('/gallery/edit', 'edit')->name('gallery.edit');
-    Route::post('/gallery/store', 'store')->name('gallery.store');
-    Route::post('/gallery/delete', 'delete')->name('gallery.delete');
-    Route::get('/gallery/show/{id}', 'showGallery')->name('gallery.showGallery');
+    Route::get('/travel-blog', 'index')->name('gallery.index');
+    Route::get('/travel-blog/index2', 'index2')->name('gallery.create');
+    Route::get('/travel-blog/create', 'create')->name('gallery.create');
+
+    Route::get('/travel-blog/edit', 'edit')->name('gallery.edit');
+    Route::post('/travel-blog/store', 'store')->name('gallery.store');
+    Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
+    Route::get('/travel-blog/show/{id}/{mappoint_id?}', 'showGallery')->name('gallery.showGallery');
     Route::get('/showMore/{gallery_id}/{offset?}', 'showMore')->name('gallery.showMore');
-    Route::get('/gallery/upload/{gallery_id}', 'upload')->name('gallery.upload');
-    Route::post('/gallery/storepic', 'storepic')->name('gallery.storepic');
-    Route::post('/gallery/deletepic', 'deletePic')->name('gallery.deleteBlog');
-    Route::post('/gallery/delete', 'delete')->name('gallery.delete');
-    Route::get('/gallery/createMapPoint', 'createGalleryMappoint')->name('gallery.createMappoint');
-    Route::post('/gallery/storeMapPoint', 'storeGalleryMappoint')->name('gallery.storeMappoint');
+    Route::get('/travel-blog/upload/{gallery_id}/{mappoint_id?}', 'upload')->name('gallery.upload');
+    Route::post('/travel-blog/storepic', 'storepic')->name('gallery.storepic');
+    Route::post('/travel-blog/deletepic', 'deletePic')->name('gallery.deleteBlog');
+    Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
+    Route::get('/travel-blog/createMapPoint', 'createGalleryMappoint')->name('gallery.createMappoint');
+    Route::get('/travel-blog/editMapPoint', 'editGalleryMappoints')->name('gallery.editMappoint');
+    Route::post('/travel-blog/storeMapPoint', 'storeGalleryMappoint')->name('gallery.storeMappoint');
+    Route::post('/travel-blog/deleteMapPoint', 'deleteGalleryMappoint')->name('gallery.deleteMappoint');
+    Route::get('/travel-blog/setLang/{currentRoute}/{lang}', 'setLang')->name('gallery.setLang');
+    Route::get('/travel-blog/test', 'smaller')->name('gallery.smaller');
 
 });    
 

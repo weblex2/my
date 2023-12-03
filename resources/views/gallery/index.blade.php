@@ -9,6 +9,7 @@
 <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
 <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
 <script src="https://cdn.amcharts.com/lib/5/geodata/lang/DE.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/geodata/lang/ES.js"></script>
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <x-gallery-layout>
@@ -48,7 +49,7 @@
     </div>
 
     <!-- create Map Point Modal -->
-    <div id="create-mappoint-modal" class="{{$cg_invisible}} absolute z-10 bg-zinc-900 bg-opacity-80 top-0 left-0 w-screen h-screen flex items-center justify-center">
+    <div id="create-mappoint-modal" class="{{$cg_invisible}} modal">
       <div class="bg-zinc-800 rounded px-10 py-10 relative w-[500px]">
         <div class="absolute top-0 right-0 cursor-pointer m-3 shadow-xl" onclick="$('#create-mappoint-modal').css('visibility', 'hidden')"><i class="fa-solid fa-xmark text-orange-500"></i></div>
         <h1>Create gallery</h1>
@@ -88,7 +89,10 @@
     
 
     <script>
-
+        <?php 
+            echo "var lang ='" .session('lang')."';"; 
+            echo "var geo_lang = 'am5geodata_lang_".session('lang')."';";
+        ?>
         am5.ready(function() {
         
         // Create root element
@@ -127,8 +131,8 @@
         var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
           geoJSON: am5geodata_worldLow,
           exclude: ["AQ"],
-          geodataNames: am5geodata_lang_DE,
-         
+          //geodataNames: am5geodata_lang_ES, //am5geodata_lang_DE,
+          <?php echo "geodataNames: am5geodata_lang_".session('lang').","; ?>
           //fill: am5.color(0x999999)
           templateField: "polygonSettings"
         }));
@@ -314,7 +318,7 @@
           container.events.on("click", function(e) {
             console.log(chart._settings.zoomLevel);
             let zoom_level = chart._settings.zoomLevel;
-            var href="/gallery/show/"+ e.target.dataItem.dataContext.href;
+            var href="/travel-blog/show/"+ e.target.dataItem.dataContext.href + "/" +e.target.dataItem.dataContext.id;
             window.location.href = href;
             //alert(e.target.dataItem.dataContext.href+"/"+e.target.dataItem.dataContext.id);
             if (zoom_level>1){

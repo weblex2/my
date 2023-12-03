@@ -10,7 +10,7 @@
             <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
             @foreach ($pics as $i => $pic)
                 <div class="flex justify-center bg-zinc-900 p-5 w-fit">
-                    <x-gallery-item :pic="$pic" content="{{$pic->text}}" />
+                    <x-gallery-item :pic="$pic" content="{{$pic->GalleryText[0]->text}}" />
                 </div> 
             @endforeach 
             @if (count($pics)==0)
@@ -61,6 +61,11 @@
         });
         
         $(function () {
+
+            //Resize Main content
+            var navHead = $('nav').outerHeight() + $('header').outerHeight();
+            $('#main').css('height', $(window).height() - ($('nav').outerHeight() + $('header').outerHeight() +1));    
+
             var img  = $('#scroll img').eq(-2);
             if (img.length > 0){
                 var top = parseInt(img.offset().top); 
