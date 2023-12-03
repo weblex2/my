@@ -12,10 +12,18 @@ class GalleryPics extends Model
     protected $guarded = ['id'];
 
     public function gallery(){
-        return $this->belongsTo(Gallery::Class, 'gal_id', 'id');
+        return $this->belongsTo(Gallery::Class, 'gallery_id', 'id');
     }
 
     public function GalleryText(){
         return $this->hasMany(GalleryText::Class, 'pic_id', 'id')->where('language','=', session('lang'));
+    }
+
+    public function GalleryTextAll(){
+        return $this->hasMany(GalleryText::Class, 'pic_id', 'id');
+    }
+
+    public function GalleryMappoint(){
+        return $this->belongsTo(GalleryMappoint::Class, 'mappoint_id', 'id');
     }
 }

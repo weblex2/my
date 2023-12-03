@@ -66,7 +66,7 @@
               <label for="mp_country_code">Country</label>
               <div><input type="text" id="mp_country_code" name="country_id" value="" class="w-full"></div>
           </div>
-          <button type="submit" class="my-4 rounded-xl px-5 py-3 bg-zinc-700 border border-zinc-900">Create</button>
+          <button type="submit" class="mt-3 btn-submit">Create</button>
 
           @if (($message = Session::get('error')))
             <div class="p-5 border-red-900 bg-red-300 text-black rounded-xl mb-5">

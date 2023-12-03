@@ -15,4 +15,5 @@ class GalleryText extends Model
     public function galleryPics(){
         return $this->belongsTo(GalleryPics::Class, 'id', 'pic_id');
     }
+
 }

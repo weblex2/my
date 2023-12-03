@@ -4,8 +4,10 @@
 @endphp
 <div id="{{$pic->id}}" class="p-5 w-fit">
     <div class="p-4 flex justify-between">
-        <a href=""><i class="fas fa-edit gallery-edit-icon"></i> Edit</a>
+        @if (Auth::user())
+        <a href="{{route('gallery.editPic', ['pic_id' => $pic->id])}}"><i class="fas fa-edit gallery-edit-icon"></i> Edit</a>
         <a href="javascript:void(0)" onclick="showDeletePopup({{$pic->id}})"><i class="deleteBlog fa-solid fa-trash gallery-delete-icon"></i> Delete</a>
+        @endif
     </div>    
     <div id="file_{{$pic}}" class="p-4 bg-zinc-900 flex items-center ">
         @if (in_array(strtoupper(substr($pic,-3)), ['MOV']))

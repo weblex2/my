@@ -154,6 +154,8 @@ class GalleryController extends Controller
             #'file' => 'required|max:2048',
             'file' => 'required',
             'country_code' => 'required',
+            'contentDE' => 'required',
+            'mappoint_id' => 'required',
         ]);
         
         
@@ -206,9 +208,44 @@ class GalleryController extends Controller
         $picTexts = GalleryText::where('pic_id', "=", $pic_id);
         $picTexts->delete();
         $pic->delete();
-         return back()
-        ->with('success','File successfully deleted.'); 
+        return back()->with('success','File successfully deleted.'); 
     }
+
+    public function editPic($id){
+        $pic  = GalleryPics::find($id);
+        $pic->load('Gallery');
+        $pic->load('GalleryTextAll');
+        $mappoints = GalleryMappoint::all();
+        //dump($pic->GalleryTextAll);
+        return view('gallery.editPic', compact('pic','mappoints'));
+    } 
+
+    public function updatePic(Request $request){
+        $error = 0;
+        $gt = GalleryText::where('pic_id',"=",$request->id)->get();
+        $pic = GalleryPics::find($request->id);
+        //$pic->fill($request->all());
+        //dump($request);
+        foreach($gt as $i =>  $gtl){
+            if ($gtl->language=="DE"){
+                $gt[$i]->text = $request->contentDE;
+            }
+            if ($gtl->language=="ES"){
+                $gt[$i]->text = $request->contentES;
+            }
+            $res = $gt[$i]->save();
+            if (!$res){
+                $error++;
+            }
+        }
+        
+        if ($error == 0){
+            return back()->with('success','File successfully updated.'); 
+        }
+        else{
+             return back()->with('error','Problem...'); 
+        }    
+    } 
 
     public function createGalleryMappoint(){
         $gallery = Gallery::select('*')->orderBy('code')->get();

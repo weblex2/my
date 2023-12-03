@@ -43,7 +43,7 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-zinc-800 border-b border-zinc-900" id="galheader">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-gray-200">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-orange-500">
                         {{ $header }}
                     </div>
                 </header>
