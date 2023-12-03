@@ -14,6 +14,7 @@ use File;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
+use DB;
 
 
 class GalleryController extends Controller
@@ -226,18 +227,27 @@ class GalleryController extends Controller
         $pic = GalleryPics::find($request->id);
         //$pic->fill($request->all());
         //dump($request);
-        foreach($gt as $i =>  $gtl){
-            if ($gtl->language=="DE"){
-                $gt[$i]->text = $request->contentDE;
-            }
-            if ($gtl->language=="ES"){
-                $gt[$i]->text = $request->contentES;
-            }
-            $res = $gt[$i]->save();
-            if (!$res){
-                $error++;
+        DB::beginTransaction();
+        try {
+            foreach($gt as $i =>  $gtl){
+                if ($gtl->language=="DE"){
+                    $gt[$i]->text = $request->contentDE;
+                }
+                if ($gtl->language=="ES"){
+                    $gt[$i]->text = $request->contentES;
+                }
+                $res = $gt[$i]->save();
+                if (!$res){
+                    $error++;
+                }
             }
         }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            throw $e;
+        }
+        DB::commit();
         
         if ($error == 0){
             return back()->with('success','File successfully updated.'); 
