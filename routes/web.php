@@ -42,15 +42,13 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/showMore/{gallery_id}/{offset?}', 'showMore')->name('gallery.showMore');
     Route::get('/travel-blog/upload/{gallery_id}/{mappoint_id?}', 'upload')->name('gallery.upload');
     Route::post('/travel-blog/storepic', 'storepic')->name('gallery.storepic');
-    Route::post('/travel-blog/deletepic', 'deletePic')->name('gallery.deleteBlog');
+    Route::post('/travel-blog/deletepic', 'deletePic')->name('gallery.deleteBlogItem');
     Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
     Route::get('/travel-blog/createMapPoint', 'createGalleryMappoint')->name('gallery.createMappoint');
     Route::get('/travel-blog/editMapPoint', 'editGalleryMappoints')->name('gallery.editMappoint');
     Route::post('/travel-blog/storeMapPoint', 'storeGalleryMappoint')->name('gallery.storeMappoint');
     Route::post('/travel-blog/deleteMapPoint', 'deleteGalleryMappoint')->name('gallery.deleteMappoint');
     Route::get('/travel-blog/setLang/{currentRoute}/{lang}', 'setLang')->name('gallery.setLang');
-    Route::get('/travel-blog/test', 'smaller')->name('gallery.smaller');
-
 });    
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 

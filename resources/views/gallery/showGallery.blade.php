@@ -7,6 +7,17 @@
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
+
+            @if ($message = Session::get('success'))
+                <div class="p-5 border-green-900 bg-green-300 text-black rounded-xl mb-5">
+                    <strong>{{ $message }}</strong>
+                </div>
+            @elseif (($message = Session::get('error')))
+                <div class="p-5 border-red-900 bg-red-300 text-black rounded-xl mb-5">
+                    <strong>{{ $message }}</strong>
+                </div>
+            @endif    
+
             <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
             @foreach ($pics as $i => $pic)
                 <div class="flex justify-center bg-zinc-900 p-5 w-fit">
@@ -23,13 +34,16 @@
             <div class="p-5 font font-extrabold text-orange-500">
                 <i class="fa-solid fa-trash gallery-delete-icon"></i> Really delete this blog item?
             </div>
-                <input type="hidden" id="delete_id" name="id" value="" />
-                <div class="float-left">
-                    <a href="javascript:void(0)" onclick="deleteBlogItem()" class="mt-5 my-5 px-5 py-2 bg-zinc-900 border border-zinc-900 rounded-xl">Yes! Delete it!</a>
-                </div> 
-                <div class="float-right">
-                    <a href="javascript:void(0)" onclick="closeDeletePopup()" class="mt-5 my-5 px-5 py-2 bg-zinc-900 border border-zinc-900 rounded-xl">No! I think about it...</a>
-                </div> 
+                <form id="frmDeleteBlogItem" action="{{route('gallery.deleteBlogItem')}}" method="POST">
+                    @csrf
+                    <input type="hidden" id="pic_id" name="id" value="" />
+                    <div class="float-left mr-3">
+                        <button type="submit" class="mt-5 my-5 px-5 py-2 bg-zinc-900 border border-zinc-900 rounded-xl">Yes! Delete it!</button>
+                    </div> 
+                    <div class="float-right">
+                        <button onclick="closeDeletePopup()" class="mt-5 my-5 px-5 py-2 bg-zinc-900 border border-zinc-900 rounded-xl">No! I think about it...</button>
+                    </div> 
+                </form>    
         </div>    
     </div>  
     <script>
@@ -91,7 +105,7 @@
         });
 
        function showDeletePopup(id){
-            $('#delete_id').val(id) ;
+            $('#pic_id').val(id) ;
             $('#deletePopup').css('visibility', 'visible');
        }
 

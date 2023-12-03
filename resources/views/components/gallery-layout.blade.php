@@ -11,6 +11,10 @@
             @php
                 $title = "Noppals Blog";     
             @endphp
+        @elseif (request()->is('travel-blog*'))
+            @php
+                $title = "Noppals Blog";     
+            @endphp    
         @else
             @php
                 $title = "Noppals Laravel";     

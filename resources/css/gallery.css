@@ -82,3 +82,7 @@ input[type=text], input[type=submit], select{
 .modal{
     @apply absolute z-10 bg-zinc-900 bg-opacity-80 top-0 left-0 w-screen h-screen flex items-center justify-center
 }
+
+.gallery-text a{
+    @apply text-orange-300
+}

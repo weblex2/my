@@ -201,12 +201,13 @@ class GalleryController extends Controller
     }
 
     public function deletePic(Request $request ){
-        $id = $request->item_id;
-        $galPics = GalleryPics::find($id);
-        $galPics->delete();
-        return 'Jupp';
-        /* return back()
-        ->with('success','File successfully deleted.'); */
+        $pic_id = $request->id;
+        $pic = GalleryPics::find($pic_id);
+        $picTexts = GalleryText::where('pic_id', "=", $pic_id);
+        $picTexts->delete();
+        $pic->delete();
+         return back()
+        ->with('success','File successfully deleted.'); 
     }
 
     public function createGalleryMappoint(){
@@ -256,9 +257,4 @@ class GalleryController extends Controller
 
     }
 
-    public function smaller(){
-        $path = "gallery/test";
-        $fileName="test.jpg";
-        $thumpsCreatedSuccsess =  $this->createImgSourceSet($path, $fileName);
-    }
 }
