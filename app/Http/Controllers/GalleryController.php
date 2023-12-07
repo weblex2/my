@@ -184,7 +184,8 @@ class GalleryController extends Controller
                     $galText->pic_id = $pic_id;
                     $galText->gallery_id = $gal_id;
                     $galText->mappoint_id = $request->mappoint_id;
-                    $galText->text =  $request->contentDE;
+                    $text = str_replace('<a ', '<a target="_blank" ',$request->contentDE);
+                    $galText->text =  $text;
                     $galText->language =  'DE';
                     $galText->save();
                     $galText  = new GalleryText();
@@ -231,7 +232,8 @@ class GalleryController extends Controller
         try {
             foreach($gt as $i =>  $gtl){
                 if ($gtl->language=="DE"){
-                    $gt[$i]->text = $request->contentDE;
+                    $text = str_replace('<a ', '<a target="_blank" ',$request->contentDE);
+                    $gt[$i]->text = $text;
                 }
                 if ($gtl->language=="ES"){
                     $gt[$i]->text = $request->contentES;
