@@ -45,15 +45,11 @@ h1{
 }
 
 .ck-toolbar{
-    @apply border-0 bg-zinc-700 rounded-t-lg !important
+    @apply border-0 bg-zinc-700 !important
 }
 
 .ck-editor{
-    @apply rounded-lg p-2 bg-zinc-700 !important
-}
-
-.ck-toolbar_grouping{
-    @apply  !important
+    @apply rounded-lg  bg-zinc-800 !important
 }
 
 .ck-toolbar__items{
@@ -69,14 +65,14 @@ h1{
 }
 
 .ck-content{
-    @apply border-0 rounded-lg px-4 py-3  bg-zinc-900 !important
+    @apply border border-zinc-900 px-4 py-3  bg-zinc-800 !important
 }
 .ck-button__icon{
     @apply bg-orange-500 bg-zinc-700 !important
 }
 
 input[type=text], input[type=submit], select{
-    @apply rounded-xl bg-zinc-900 border border-zinc-900 rounded-xl focus:outline-none focus:ring-0 focus:border-zinc-900 text-orange-500
+    @apply rounded-xl bg-zinc-800 border border-zinc-900  focus:outline-none focus:ring-0 focus:border-zinc-900 text-orange-500
 }
 
 .modal{
@@ -89,4 +85,12 @@ input[type=text], input[type=submit], select{
 
 .btn-submit{
     @apply px-6 py-3 border border-zinc-900 bg-zinc-700 hover:bg-zinc-800 text-orange-500 rounded-xl
+}
+
+.mappoint-header{
+    @apply w-full p-10 font-extrabold text-2xl text-orange-500 text-left border-b border-t bg-zinc-900 border-zinc-700 w-[880px] ;
+}    
+
+.spacer{
+    @apply p-20 bg-zinc-700
 }

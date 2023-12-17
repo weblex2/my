@@ -39,7 +39,7 @@ Route::controller(GalleryController::class)->group(function () {
     Route::post('/travel-blog/store', 'store')->name('gallery.store');
     Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
     Route::get('/travel-blog/show/{id}/{mappoint_id?}', 'showGallery')->name('gallery.showGallery');
-    Route::get('/showMore/{gallery_id}/{offset?}', 'showMore')->name('gallery.showMore');
+    Route::get('/showMore/{offset?}', 'showMore')->name('gallery.showMore');
     Route::get('/travel-blog/upload/{gallery_id}/{mappoint_id?}', 'upload')->name('gallery.upload');
     Route::get('/travel-blog/editpic/{pic_id}', 'editpic')->name('gallery.editPic');
     Route::post('/travel-blog/updatepic', 'updatepic')->name('gallery.updatePic');

@@ -3,7 +3,11 @@
     <div id="debug2" class="hidden fixed top-0 right-0 bg-gray-900 p-10 z-10 text-white">debug2</div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight text-orange-500">
-            <a href="/gallery1">{{ __('Blog') }}</a> / {{$gallery[0]->name}}
+            @if(count($pics) > 0)
+            <a href="/travel-blog">{{ __('Blog') }}</a> / {{$gallery[0]->name}} / <span id="mp-name">{{$pics[0]->Mappoint->mappoint_name}}</span>
+            @else
+                <a href="/travel-blog">{{ __('Blog') }}</a> / {{$gallery[0]->name}} / <span id="mp-name">{{$mp->mappoint_name}}</span>
+            @endif
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
@@ -17,14 +21,18 @@
                     <strong>{{ $message }}</strong>
                 </div>
             @endif    
-
-            <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
-            @foreach ($pics as $i => $pic)
-                <div class="flex justify-center bg-zinc-900 p-5 w-fit">
-                    <x-gallery-item :pic="$pic" content="{{$pic->GalleryText[0]->text}}" />
-                </div> 
-            @endforeach 
-            @if (count($pics)==0)
+            
+            @if (count($pics)>0)
+                <div class="mappoint-header">{{$pics[0]->Mappoint->mappoint_name}}</div>    
+                <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
+                @foreach ($pics as $i => $pic)
+                    <div class="flex justify-center bg-zinc-900 p-5 w-fit">
+                        <x-gallery-item :pic="$pic" content="{{$pic->GalleryText[0]->text}}" />
+                    </div> 
+                @endforeach 
+            @else
+                <div class="mappoint-header">{{$mp->mappoint_name}}</div>    
+                <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
                 <div class="bg-zinc-800"> sorry, noch keine pics hier...</div>
             @endif
             </div>    
@@ -46,6 +54,11 @@
                 </form>    
         </div>    
     </div>  
+
+    <div id="nextBlog" class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-90 invisible">
+    </div>  
+
+
     <script>
         var gallery_id = {{$gallery[0]->id}}; 
         var top=0;
@@ -53,7 +66,9 @@
         var lastpictop=0;
         var scrolled = 0;
         var offset = 1;
+        var noscroll = false;
         $('#scroll').scroll(function(lastPictop) {
+            if (noscroll) return false;
             var alreadyScrolled = parseInt($('#scroll').scrollTop());
             var img  = $('#scroll img').eq(-2);
             if (img.length==0){
@@ -67,10 +82,22 @@
             //$('#debug').append("<div>scroll &  height : "+ scrollAndTop + "</div>");
             
             if (scrollAndTop > this.lastpictop){
-                console.log("jezte");  
-                if (noMore==false){
+                 
+                if (noMore!=true){
+                    console.log("jezte");
                     more();
-                }    
+                } 
+                else{
+                    console.log("nix mehr");
+                }   
+            }
+        });
+
+        $('#scroll').scroll(function() {
+            if (noscroll) return false; 
+            if( Math.round($('#scroll').scrollTop() + $('#scroll').height(),2) >= $('#gallery_content').height()) {
+                $('#nextBlog').css('visibility', 'visible');
+                noscroll = true;
             }
         });
         
@@ -142,16 +169,25 @@
         function more(){
             $.ajax({
                 type: 'GET',
-                url: '/showMore/'+gallery_id+"/"+offset,
+                url: '/showMore/'+offset,
                 async: false,
                 success: function (data){
                     console.log("Data loaded");
-                    if (data == -1){
+                    console.log("Gallery End:" + data.gallery_end);
+                    console.log("Gallery Mappoint:" + data.mp_name);
+                    if (data.mp_name) {
+                        $('#mp-name').text(data.mp_name);
+                    }    
+                    if (data.gallery_end == true){
+                        console.log('End of Gallery');
+                        console.log(data.alternatives);
+                        $('#nextBlog').html(data.alternatives);
+                        //$('#gallery_content').append("<div>End Of Mappoint (" + data.current_mappoint + ")</div>");
                         noMore=true;
                         $('#debug').html("<div>no More!</div>");
-                        return;
+                        return false;
                     }
-                    $('#gallery_content').append(data);
+                    $('#gallery_content').append(data.html);
                     $('#scroll img').css('border', 'none');
                     var img  = $('#scroll img').eq(-2);
                     lastpictop = parseInt(img.offset().top); 

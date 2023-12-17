@@ -1,5 +1,4 @@
 @php
-    //dump ($mappoints);
     foreach ($galleries as $country){
         echo '<script src="https://cdn.amcharts.com/lib/5/geodata/'.$country['country_map_name'].'High.js"></script>';
     }
@@ -52,7 +51,7 @@
     <div id="create-mappoint-modal" class="{{$cg_invisible}} modal">
       <div class="bg-zinc-800 rounded px-10 py-10 relative w-[500px]">
         <div class="absolute top-0 right-0 cursor-pointer m-3 shadow-xl" onclick="$('#create-mappoint-modal').css('visibility', 'hidden')"><i class="fa-solid fa-xmark text-orange-500"></i></div>
-        <h1>Create gallery</h1>
+        <h1>Create Map Point</h1>
         
         <form id="frmCreateMapPoint" action="{{route('gallery.storeMappoint')}}" method="post">
           @csrf
@@ -211,7 +210,6 @@
           states'.$country['code'].'.mapPolygons.template.events.on("rightclick", function(ev) {
               
               var id= ev.target.dataItem.dataContext.id.substr(0,2);
-              alert("create Image on Mappoint on :" + id);
               $("#mp_country_code").val(id);
               $("#create-mappoint-modal").css("visibility","visible");
           });
@@ -278,7 +276,7 @@
         pointSeries.bullets.push(function() {
             var container = am5.Container.new(root, {
             cursorOverStyle:"pointer",
-            tooltipText : "{title} {id}",
+            tooltipText : "{title}",
             href: "{country}"
           });
         
@@ -336,8 +334,8 @@
         
         
         // Set data
-        var cities = [
-          /* { title: 'Munich', latitude: 48.1371, longitude: 11.5761, country: "DE" }, */
+        /* var cities = [
+          /* { title: 'Munich', latitude: 48.1371, longitude: 11.5761, country: "DE" }, 
           { title: "Vienna", latitude: 48.2092, longitude: 16.3728, country: "AT" },
           { title: "Bogota",latitude: 4.6473, longitude: -74.0962, country: "CO" },
           { title: "Medellin",latitude: 6.2308, longitude: -75.5905, country: "CO" },
@@ -345,18 +343,18 @@
           { title: 'Hoi An', latitude: 15.87944, longitude: 108.335, country: "VN" },
           { title: 'Lima', latitude: -12.0463, longitude: -77.0427, country: "PE"},      
           { title: 'Panama City', latitude: 8.983333, longitude: -79.5166, country: "PE"}  
-        ];
+        ]; */
         
       
         @foreach ($mappoints as $city)
-            addCity({{$city->lon}}, {{$city->lat}}, '{{$city->mappoint_name}}', '{{$city->country_id}}', '{{$city->id}}');        
+            addCity({{$city->lon}}, {{$city->lat}}, '{{$city->mappoint_name}}', '{{$city->country_id}}', '{{$city->id}}', {{$city->gallery_pics_count}});        
         @endforeach 
         
-        function addCity(longitude, latitude, title, country, id) {
+        function addCity(longitude, latitude, title, country, id, pic_count) {
           pointSeries.data.push({
             geometry: { type: "Point", coordinates: [longitude, latitude] },
-            title: title,
-            tooltipText : title,
+            title: title +" - ( " + pic_count + " Pics )" ,
+            tooltipText : title ,
             href: country,
             id: id
           });

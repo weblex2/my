@@ -35,19 +35,24 @@
                     </tr>
                 @endforeach
                 </table> --}}
-                <div class="grid grid-cols-5">
+                @php
+                    $country_id = "#$";
+                @endphp
+                <div class="grid grid-cols-6 sortable">
                     <div class="text-orange-500">COUNTRY</div>
                     <div class="text-orange-500">NAME</div>
                     <div class="text-orange-500">LONGITUDE</div>
                     <div class="text-orange-500">LATITUDE</div>
+                    <div class="text-orange-500">ORDER</div>
                     <div class="text-orange-500"><i class="fa fa-trash"></i></div>
 
-                    @foreach ($mappoints as $mp)
-                     <div class="contents bg-green-500 hover:bg-yellow-500">
+                    @foreach ($mappoints as $i => $mp)
+                        <div class="contents bg-green-500 hover:bg-yellow-500">
                         <div><i class="mr-2 fa-solid fa-earth-americas"></i>&nbsp; {{$mp->country_id}}</div>
                         <div><i class="fa-sharp fa-solid fa-city"></i> {{$mp->mappoint_name}}</div>
                         <div>{{$mp->lon}}</div>
                         <div>{{$mp->lat}}</div>
+                        <div>{{$mp->ord}}</div>
                         <div>
                             <form method="post" action="{{route("gallery.deleteMappoint")}}">
                                 @csrf
@@ -57,10 +62,16 @@
                         </div>
                      </div>
                 @endforeach
-
+                
 
                 </div>
             </div>
         </div>
     </div>
+        <script>
+        $( function() {
+            $( ".sortable" ).sortable();
+        } );
+        </script>
+
 </x-gallery-layout>

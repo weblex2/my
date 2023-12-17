@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('gallery_pics', function (Blueprint $table) {
-            $table->integer("mappoint_id")->after('text')->nullable();
+        Schema::table('gallery_mappoint', function (Blueprint $table) {
+            $table->integer("ord")->after('lon');
         });
+        
     }
 
     /**

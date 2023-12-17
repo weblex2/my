@@ -15,6 +15,7 @@ use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
 use DB;
+use Response;
 
 
 class GalleryController extends Controller
@@ -25,17 +26,19 @@ class GalleryController extends Controller
     var $reloadItems = 3;
     var $img_base_path =  "gallery/";
     var $lang; 
-
+    var $mappoint_name;
+    var $alterviveGalleries;
 
     public function index(){
         $lang =  session('lang');
         if (!$lang){
             session(['lang' => 'DE']);
         }
-        //echo $lang = $lang;
         $galleries = Gallery::all();
         $galleries->load('GalleryMappoint');
         $mappoints = GalleryMappoint::all();
+        $mappoints->load('GalleryPics');
+        $mappoints->loadCount('GalleryPics');
         return view('gallery.index', compact('galleries', 'mappoints'));
     }
 
@@ -92,58 +95,110 @@ class GalleryController extends Controller
         return view('gallery.edit', compact('galleries'));
     }
 
-    public function showGallery($code, $offset=0){
+    public function showGallery($code, $mappoint_id=-1, $offset=0){
         $gallery = Gallery::where('code', "=", $code)->get();
-        $gal_id = $gallery[0]->id; 
-        $limit  = 2;
+        $gallery_id = $gallery[0]->id; 
+
+        if ($mappoint_id==-1){
+            $mp  = GalleryMappoint::where('gallery_id','=',$gallery_id)->orderBy('ord')->first();
+            $mappoint_id = $mp->id;
+        }
+
+        $mp = GalleryMappoint::find($mappoint_id);
+        $used_mappoints = [0 => $mappoint_id];
+        session(['blog_current_gallery' => $gallery_id]);
+        session(['blog_current_mappoint_id' => $mappoint_id]);
+        session(['used_mappoints' => $used_mappoints]); 
         $gc = new GalleryPics();
         $pics = $gc->select("*")
-        ->where('gallery_id', '=', $gal_id)
+        ->where('gallery_id', '=', $gallery_id)
+        ->where('mappoint_id', '=', $mappoint_id)
         ->offset(0)
         ->limit($this->reloadItems)
         ->get();
         $pics->load('GalleryText');
-        return view('gallery.showGallery', compact('gallery','pics','offset'));
+        $pics->load('Mappoint');
+        return view('gallery.showGallery', compact('gallery','pics','offset','mp'));
     }
 
-    public function showMore($gallery_id, $offset=0){
+    public function showMore($offset=0){
+        $gallery_end = false;
+        $mappoint_id = session('blog_current_mappoint_id');
         $offset = $offset*$this->reloadItems;
         $gc = new GalleryPics();
         $pics = $gc->select("*")
-        ->where('gallery_id', '=', $gallery_id)
+        ->where('mappoint_id', '=', $mappoint_id)
         ->offset($offset)
         ->limit($this->reloadItems)
         ->get();
         $pics->load('gallery');
+        $pics->load('Mappoint');
         $html="";
-        if (count($pics)>0){
+        $alt_blogs = "";
+        $mp_end=false;
+        if (count($pics)== $this->reloadItems){
             foreach ($pics as $pic){
                 $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
             }
         }
         else{
-            $html="-1";
-        }    
+            $alternatives = [];
+            $current_gallery[0] = session('blog_current_gallery');
+            $morePicsCnt = $this->reloadItems - count($pics);
+            $moreHtml = $this->getImagesFromNextMapPoint($morePicsCnt); 
+            if (!$moreHtml){
+                $gallery_end = true;
+                $alt_blog = "";
+                $alternatives = Gallery::whereNotIn('id', $current_gallery)->orderBy('id')->limit(6)->get();
+                $alt_blogs.= view('components.gallery.show-alternative-blog', ['alternativeBlogs' => $alternatives]);
+            }
+            else{
+                $html .= $moreHtml;
+            }
+        }
+        return Response::json([
+            'html' => $html,
+            'offset' => $offset,
+            'mp_end' => $mp_end,
+            'mp_name' => $this->mappoint_name,
+            'gallery_end' => $gallery_end,
+            'alternatives' => $alt_blogs,
+            'current_mappoint' => session('blog_current_mappoint_id'),
+        ], 201);
+    }
+
+    public function getImagesFromNextMapPoint($morePicsCnt){
+        $gallery_id = session('blog_current_gallery');
+        $used_mappoints = session('used_mappoints');
+        $nextMapPoint = GalleryMappoint::where('gallery_id', "=", $gallery_id) 
+                        ->whereNotIn('id', $used_mappoints)->orderBy('ord')->first();
+        if (!$nextMapPoint){
+            return false;
+        }                
+        $mappoint_id = $nextMapPoint->id;
+        $used_mappoints[] = $mappoint_id;  
+        $this->mappoint_name = $nextMapPoint->mappoint_name;              
+        session(['blog_current_mappoint_id' => $mappoint_id]);
+        session(['used_mappoints' => $used_mappoints]);    
+        $gc = new GalleryPics();
+        $pics = $gc->select("*")
+            ->where('mappoint_id', '=', $mappoint_id)
+            ->limit($morePicsCnt)
+            ->get();
+        $pics->load('gallery');
+        $html="<div class='spacer'></div><div class='mappoint-header'>".$pics[0]->Mappoint->mappoint_name."</div>";
+        foreach ($pics as $pic){
+            $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
+        }
         return $html;
     }
 
     
     public function upload($country_code, $map_point_id){
-        
-        //$country = Gallery
         $mappoints = GalleryMappoint::where('country_id', '=', $country_code)->orderBy('mappoint_name')->get();
         return view('gallery.upload', compact('country_code', 'map_point_id', 'mappoints'));
     }
 
-    public function getGalIdFromCode($code){
-        $gal = Gallery::where('code','=', $code)->get();
-        if (isset($gal[0]->id)){
-            return $gal[0]->id;
-        }
-        else {
-            return false;
-        }    
-    }
 
     public function storepic(Request $request){
         
@@ -204,6 +259,11 @@ class GalleryController extends Controller
             ->with('file', $fileName);
     }
 
+    public function getGalIdFromCode($code){
+        $gal  = Gallery::where('code', "=", $code)->first();
+        return $gal->id;
+    }
+
     public function deletePic(Request $request ){
         $pic_id = $request->id;
         $pic = GalleryPics::find($pic_id);
@@ -218,7 +278,6 @@ class GalleryController extends Controller
         $pic->load('Gallery');
         $pic->load('GalleryTextAll');
         $mappoints = GalleryMappoint::all();
-        //dump($pic->GalleryTextAll);
         return view('gallery.editPic', compact('pic','mappoints'));
     } 
 
@@ -270,6 +329,8 @@ class GalleryController extends Controller
     }
     
     public function storeGalleryMappoint(Request $request){
+        $gallery_id = $this->getGalIdFromCode($request->country_id);
+        $request->gallery_id = $gallery_id;
         $validator = Validator::make($request->all(), [
             'mappoint_name' => 'required',
             'lon' => 'required',
@@ -283,6 +344,16 @@ class GalleryController extends Controller
         }
 
         $req  = $request->all();
+       
+        $mp = GalleryMappoint::where('gallery_id','=',$gallery_id)->get();
+        if (count($mp)==0){
+            $ord=1;
+        }
+        else{
+            $ord=count($mp)+1;
+        }
+        $req['gallery_id'] = $gallery_id;
+        $req['ord'] = $ord;
         $mapPoint  = new GalleryMappoint();
         $mapPoint->fill($req);
         $res = $mapPoint->save();

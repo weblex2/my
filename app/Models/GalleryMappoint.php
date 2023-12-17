@@ -15,4 +15,7 @@ class GalleryMappoint extends Model
         return $this->belongsTo(Gallery::Class, 'country_id', 'code');
     }
 
+    public function GalleryPics(){
+        return $this->hasMany(GalleryPics::Class, 'mappoint_id', 'id');
+    }
 }
