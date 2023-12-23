@@ -31,10 +31,9 @@ Route::get('/arcade', function () {
 }); 
 
 Route::controller(GalleryController::class)->group(function () {
-    Route::get('/travel-blog', 'index')->name('gallery.index');
-    Route::get('/travel-blog/index2', 'index2')->name('gallery.create');
+    Route::get('/travel-blog','index')->name('gallery.index');
+    Route::get('/travel-blog/index2', 'index2')->name('gallery.index2');
     Route::get('/travel-blog/create', 'create')->name('gallery.create');
-
     Route::get('/travel-blog/edit', 'edit')->name('gallery.edit');
     Route::post('/travel-blog/store', 'store')->name('gallery.store');
     Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
@@ -51,6 +50,8 @@ Route::controller(GalleryController::class)->group(function () {
     Route::post('/travel-blog/storeMapPoint', 'storeGalleryMappoint')->name('gallery.storeMappoint');
     Route::post('/travel-blog/deleteMapPoint', 'deleteGalleryMappoint')->name('gallery.deleteMappoint');
     Route::get('/travel-blog/setLang/{currentRoute}/{lang}', 'setLang')->name('gallery.setLang');
+    Route::get('/travel-blog/editMappointPics/{mp_id}', 'editMappointPics')->name('gallery.editMappointPics');
+    Route::post('/travel-blog/updatePicOrder', 'updatePicOrder')->name('gallery.updatePicOrder');
 });    
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 

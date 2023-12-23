@@ -148,9 +148,10 @@ class GalleryController extends Controller
             $moreHtml = $this->getImagesFromNextMapPoint($morePicsCnt); 
             if (!$moreHtml){
                 $gallery_end = true;
-                $alt_blog = "";
+                $alt_blogs = "";
                 $alternatives = Gallery::whereNotIn('id', $current_gallery)->orderBy('id')->limit(6)->get();
                 $alt_blogs.= view('components.gallery.show-alternative-blog', ['alternativeBlogs' => $alternatives]);
+                $moreHtml.="<div class='h-50'>spacer</div>";
             }
             else{
                 $html .= $moreHtml;
@@ -193,6 +194,11 @@ class GalleryController extends Controller
         return $html;
     }
 
+    public function editMappointPics($mappoint_id){
+        $mp  = GalleryMappoint::find($mappoint_id);
+        $mp->load('GalleryPics');
+        return view('gallery.editMappointPics', compact('mp'));
+    }
     
     public function upload($country_code, $map_point_id){
         $mappoints = GalleryMappoint::where('country_id', '=', $country_code)->orderBy('mappoint_name')->get();
@@ -375,6 +381,11 @@ class GalleryController extends Controller
             return back()->with('error','Problem...');
         }  
 
+    }
+
+    public function updatePicOrder(Request $request){
+        $data  = $request->all();
+        dump($request->all());
     }
 
 }

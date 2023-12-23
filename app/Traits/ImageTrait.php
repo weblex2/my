@@ -30,8 +30,12 @@ trait ImageTrait {
         $imgSmall  = $newDir.'/'.$filename."_s.".$extension;
         $imgMedium = $newDir.'/'.$filename."_m.".$extension;
         $imgLarge  = $newDir.'/'.$filename."_768.".$extension;
-        $img = Image::make($file);
-
+        try{
+            $img = Image::make($file);
+        }
+        catch(\Exception $e){
+            dump($e);
+        }
         // resize the image to a width of 768 and constrain aspect ratio (auto height)
         $img->orientate();
         $img->fit(768, null, function($constraint){

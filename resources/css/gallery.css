@@ -94,3 +94,8 @@ input[type=text], input[type=submit], select{
 .spacer{
     @apply p-20 bg-zinc-700
 }
+
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
+#sortable li { 
+    @apply m-1 p-1 float-left w-[100px] h-[90px]  
+}

@@ -49,7 +49,9 @@
                     @foreach ($mappoints as $i => $mp)
                         <div class="contents bg-green-500 hover:bg-yellow-500">
                         <div><i class="mr-2 fa-solid fa-earth-americas"></i>&nbsp; {{$mp->country_id}}</div>
-                        <div><i class="fa-sharp fa-solid fa-city"></i> {{$mp->mappoint_name}}</div>
+                        <div>
+                            <a href="/travel-blog/editMappointPics/{{$mp->id}}"><i class="fa-sharp fa-solid fa-city"></i> {{$mp->mappoint_name}}</a>
+                        </div>
                         <div>{{$mp->lon}}</div>
                         <div>{{$mp->lat}}</div>
                         <div>{{$mp->ord}}</div>
@@ -62,7 +64,10 @@
                         </div>
                      </div>
                 @endforeach
-                
+                <ul class="sortable">
+                    <li>abc</li>
+                    <li>def</li>
+                </ul>
 
                 </div>
             </div>

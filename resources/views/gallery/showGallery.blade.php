@@ -24,7 +24,7 @@
             
             @if (count($pics)>0)
                 <div class="mappoint-header">{{$pics[0]->Mappoint->mappoint_name}}</div>    
-                <div id="gallery_content" class="content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
+                <div id="gallery_content" class="content-center md:max-w-[80%] rounded bg-zinc-900">
                 @foreach ($pics as $i => $pic)
                     <div class="flex justify-center bg-zinc-900 p-5 w-fit">
                         <x-gallery-item :pic="$pic" content="{{$pic->GalleryText[0]->text}}" />
