@@ -54,11 +54,13 @@ class BlogController extends Controller
 
         $posts->load('user');
         $posts->load('comments');
-        foreach ($posts as $i => $post) {
+        $posts->load('comments.comment_user');
+        //dump($posts);
+        /* foreach ($posts as $i => $post) {
             foreach ($post->comments as $j => $comment ) {
                 $posts[$i]->comments[$j]->load('comment_user');
             }
-        }
+        } */
      
         return view('blog.index', compact('posts'));
     }
