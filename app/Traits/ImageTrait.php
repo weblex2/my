@@ -10,6 +10,11 @@ use function PHPUnit\Framework\fileExists;
 
 trait ImageTrait {
 
+
+    public function uploadFile($file, $destination){
+        $successfullyUploaded = $file->move($destination, $file);
+        return $successfullyUploaded; 
+    }
     /**
      * @param Request $request
      * @return $this|false|string

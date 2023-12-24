@@ -16,6 +16,6 @@ class GalleryMappoint extends Model
     }
 
     public function GalleryPics(){
-        return $this->hasMany(GalleryPics::Class, 'mappoint_id', 'id');
+        return $this->hasMany(GalleryPics::Class, 'mappoint_id', 'id')->orderBy('ord');
     }
 }

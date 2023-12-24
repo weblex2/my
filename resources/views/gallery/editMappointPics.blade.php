@@ -26,6 +26,13 @@
         $( "#sortable" ).sortable();
         $( "#sortable" ).disableSelection();
         $('#save').click(function(){
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             var data = [];
             var row = [];
             $('#sortable li').each(function(index, element){
@@ -33,22 +40,19 @@
                 row = {'id' : id, 'ord' : (index+1)};
                 data[index] = row;
             });    
+            data = JSON.stringify(data);
             console.log(data);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            
             $.ajax({
                 url: '/travel-blog/updatePicOrder',
-                type: 'post',
+                type: 'POST',
                 dataType: 'json',
-                data: data,
+                data: {'data': data},
                 success: function(resp){
                     console.log(resp);
                 },
                 error: function(resp){
-                    console.log(resp);
+                    console.log('error');
                 }
             });
         });

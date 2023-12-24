@@ -115,6 +115,7 @@ class GalleryController extends Controller
         ->where('mappoint_id', '=', $mappoint_id)
         ->offset(0)
         ->limit($this->reloadItems)
+        ->orderBy('ord')
         ->get();
         $pics->load('GalleryText');
         $pics->load('Mappoint');
@@ -129,6 +130,7 @@ class GalleryController extends Controller
         $pics = $gc->select("*")
         ->where('mappoint_id', '=', $mappoint_id)
         ->offset($offset)
+        ->orderBy('ord')
         ->limit($this->reloadItems)
         ->get();
         $pics->load('gallery');
@@ -142,6 +144,9 @@ class GalleryController extends Controller
             }
         }
         else{
+            foreach ($pics as $pic){
+                $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
+            }
             $alternatives = [];
             $current_gallery[0] = session('blog_current_gallery');
             $morePicsCnt = $this->reloadItems - count($pics);
@@ -220,7 +225,8 @@ class GalleryController extends Controller
             'mappoint_id' => 'required',
         ]);
         
-        
+        $fileName = $request->file->getClientOriginalName(); 
+        //$successfullyMoved = $this->uploadFile($request->file, $path);
         $fileName = $request->file->getClientOriginalName();  
         $successfullyMoved = $request->file->move($path, $fileName);
         if ($successfullyMoved){
@@ -235,10 +241,13 @@ class GalleryController extends Controller
                     // Save to DB
                     $gal_id = $this->getGalIdFromCode($request->country_code);
                     $gp  = new GalleryPics();
+                    $ord = GalleryPics::where('mappoint_id' ,"=" ,$request->mappoint_id)->max('ord') + 1;
+                    $ord = isset($ord) ? $ord : 0;
                     $gp->gallery_id = $gal_id;
+                    $gp->ord= $ord;
                     $gp->pic = $path."/srcset/".$fileName."/".$fname."_768.".$extension;
-                    //$gp->text = $request->content;
                     $gp->mappoint_id = $request->mappoint_id;
+
                     $res = $gp->save();  
                     $pic_id = $gp->id;
                     $galText  = new GalleryText();
@@ -385,7 +394,23 @@ class GalleryController extends Controller
 
     public function updatePicOrder(Request $request){
         $data  = $request->all();
-        dump($request->all());
+        $data  = json_decode($data['data'], true);
+        $err=0;
+        foreach ($data as $i => $row){
+            $pic = GalleryPics::find($row['id']);
+            $pic->ord = $row['ord'];
+            $res = $pic->save();
+            if (!$res){
+                return Response::json([
+                    'data' => print_r($data,1),
+                    'status' => 'error',
+                ], 400);
+            }
+        }
+        return Response::json([
+            'data' => print_r($data,1),
+            'status' => 'success',
+        ], 200);
     }
 
 }
