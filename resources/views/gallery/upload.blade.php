@@ -4,7 +4,7 @@
             <a href="/travel-blog">Travel Blog</a> / <a href="{{route('gallery.showGallery',['id' => $country_code])}}">{{$country_code}}</a> / Upload
         </h2>
     </x-slot>
-    <div class="py-12 h-screen overflow-auto">
+    <div class="py-12 h-full overflow-auto">
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3">
             <div class="overflow-hidden h-full sm:rounded-lg p-10 text-orange-500">
                 <form id="frmGalleryPicUpload" action="{{route('gallery.storepic')}}" method="post" enctype="multipart/form-data">
@@ -37,8 +37,7 @@
                     <div>
                         <label class="block mb-2 text-sm font-medium text-orange-500" for="file_input">Text DE</label>
                         <textarea name="contentDE" id="blog-content-de" rows="10" class="rounded-xl border border-gray-300 rounded-lg dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 p-10 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
-                            {{ date('Y-m-d H:i:s') }}
-                            „Der Schmerz selbst ist Liebe, der Schmerz des Kunden. Aeneas braucht Schmerz. Aeneas Masse Wenn die Berge, deine Heimat und deine Verbündeten und die großen Götter arbeiten werden, wird eine lächerliche Maus geboren. Solange die Katzen noch den Ausgleich haben, die Kids eu, um jeden Preis, sem. Keine Folgen für Masse. Bis der Fuß eben ist, unsere Kunden oder, Bananen oder Denn im Gerechten, im Zen, das, von der Frisur, das giftige Leben, gerecht. Über den weichen Preis des Fußballfußes wurde kein Wort verloren. Ganzzahl Cras dapibus Das Live-Element immer speichern.„
+                           
                         </textarea>
                         <input type="hidden" name="country_code" value="{{ $country_code }}" />
                     </div>
@@ -46,8 +45,7 @@
                     <div class="mt-2">
                         <label class="block mb-2 text-sm font-medium text-orange-500" for="file_input">Text ES</label>
                         <textarea name="contentES" id="blog-content-es" rows="10" class="rounded-xl border border-gray-300 rounded-lg dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 p-10 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
-                            {{ date('Y-m-d H:i:s') }}
-                            Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
+                            
                         </textarea>
                         <input type="hidden" name="country_code" value="{{ $country_code }}" />
                     </div>
