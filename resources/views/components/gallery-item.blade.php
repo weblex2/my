@@ -10,7 +10,7 @@
                 Your browser does not support the video tag.
             </video>
         @else
-            <img src="{{asset($pic->pic)}}" alt="Image" class="img w-[768px] rounded-xl shadow-xl">
+            <img src="{{asset($pic->pic)}}" alt="Image" class="img w-full rounded-xl shadow-xl">
         @endif   
     </div>
     <div class="flex justify-between">
@@ -27,5 +27,5 @@
                   
         </div>
     </div>
-    <div class="gallery-text p-4 block w-[768px] text-white">{!!$pic->GalleryText[0]->text!!}</div>
+    <div class="gallery-text p-4 block full text-white">{!!$pic->GalleryText[0]->text!!}</div>
 </div>

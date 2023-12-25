@@ -35,7 +35,7 @@
 }
 
 #gallery_content{
-    @apply rounded-xl content-center bg-zinc-800;
+    @apply rounded-xl content-center bg-zinc-800 w-full md:w-[768px];
 }    
 
  #scroll::-webkit-scrollbar{
