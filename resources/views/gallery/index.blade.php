@@ -83,8 +83,8 @@
         </h2>
     </x-slot>
 
-    <div id="chartdiv" class="hidden md:block w-full h-[880px]"></div> 
-    <div class="block sd:hidden w-full">
+    <div id="chartdiv" class="hidden md:block w-full h-[850px] pt-2 "></div> 
+    <div class="block sm:hidden w-full">
       @foreach ($galleries as $gallery )
         <a href="{{route('gallery.showGallery', ['id' => $gallery->code] ) }}"><div>{{ $gallery->name }}</div></a>
       @endforeach 
