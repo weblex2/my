@@ -53,7 +53,7 @@
                     </div>
 
                     <div class="py-5">
-                        <button id="submit" type="button" class="btn-submit">Submit</button>
+                        <button id="submit" type="submit" class="btn-submit">Submit</button>
                     </div>
                 </form>    
             </div>
@@ -75,13 +75,13 @@
         console.error( error );
         } );
 
-        $(document).ready(function(){
+        /* $(document).ready(function(){
             $('#submit').click(function(e){
                 //e.preventDefault();
                 //alert("Click");
                 //$('#busy').css('visibility', 'visible');
                 $('#frmGalleryPicUpload').submit();
             }); 
-        });    
+        });    */ 
     </script>
 </x-gallery-layout>
