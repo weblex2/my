@@ -4,7 +4,8 @@ namespace App\Traits;
 
 use Illuminate\Http\Request;
 use File;
-use Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 use function PHPUnit\Framework\fileExists;
 
@@ -31,36 +32,23 @@ trait ImageTrait {
         }
         $filename = pathinfo($file, PATHINFO_FILENAME);
         $extension = pathinfo($file, PATHINFO_EXTENSION);
-
-        $imgSmall  = $newDir.'/'.$filename."_s.".$extension;
-        $imgMedium = $newDir.'/'.$filename."_m.".$extension;
-        $imgLarge  = $newDir.'/'.$filename."_768.".$extension;
+        $img_org = $newDir.'/'.$filename.".".$extension;
+        $img_s   = $newDir.'/'.$filename."_s.".$extension;
+        $img_m  = $newDir.'/'.$filename."_m.".$extension;
+        $img_l   = $newDir.'/'.$filename."_l.".$extension;
+        $img_xl  = $newDir.'/'.$filename."_xl.".$extension;
+       
         try{
-            $img = Image::make($file);
+            $manager = new ImageManager(new Driver());
+            $img = $manager->read($file);
         }
         catch(\Exception $e){
             dump($e);
         }
         // resize the image to a width of 768 and constrain aspect ratio (auto height)
-        $img->orientate();
-        $img->fit(768, null, function($constraint){
-            $constraint->upsize();
-            $constraint->aspectRatio();
-        });
-        $img->save($imgLarge);
-        /* $img->resize(1024, 768, function ($constraint) {
-            $constraint->aspectRatio();
-        })->save($imgLarge); */
-        $img->fit(640, null, function($constraint){
-            $constraint->upsize();
-            $constraint->aspectRatio();
-        });
-        $img->save($imgMedium);
-        $img->fit(320, null, function($constraint){
-            $constraint->upsize();
-            $constraint->aspectRatio();
-        });
-        $img->save($imgSmall);
+        //$img->orientate();
+        $img->scale(768)->save($img_l);
+        $img->resize(4096, 800)->save($img_xl);
         return true;
     }
 

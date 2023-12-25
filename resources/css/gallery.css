@@ -61,7 +61,7 @@ h1{
 }
 
 .ck-editor{
-    @apply rounded-lg  bg-zinc-800 !important
+    @apply rounded-lg  bg-zinc-900 !important
 }
 
 .ck-toolbar__items{

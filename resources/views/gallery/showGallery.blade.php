@@ -135,7 +135,8 @@
             $('#deletePopup').css('visibility', 'visible');
        }
 
-        function closeDeletePopup(){
+        function closeDeletePopup(e){
+            e.preventDefault();
             $('#deletePopup').css('visibility', 'hidden');;
         }
        

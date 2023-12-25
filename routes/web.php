@@ -52,6 +52,7 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog/setLang/{currentRoute}/{lang}', 'setLang')->name('gallery.setLang');
     Route::get('/travel-blog/editMappointPics/{mp_id}', 'editMappointPics')->name('gallery.editMappointPics');
     Route::post('/travel-blog/updatePicOrder', 'updatePicOrder')->name('gallery.updatePicOrder');
+    Route::get('/travel-blog/picTest', 'picTest')->name('gallery.picTest');
 });    
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 

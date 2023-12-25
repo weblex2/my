@@ -230,12 +230,11 @@ class GalleryController extends Controller
         $fileName = $request->file->getClientOriginalName();  
         $successfullyMoved = $request->file->move($path, $fileName);
         if ($successfullyMoved){
-                // Create smaller pics
-                // Trait
             $file  = $path."/".$fileName;
             $fname = strtoupper(pathinfo($file, PATHINFO_FILENAME));
             $extension = strtoupper(pathinfo($file, PATHINFO_EXTENSION));
-            if (in_array($extension,['JPG', 'JPEG'])){
+            if (!in_array(strtoupper($extension),['MOV', ''])){
+                // Trait / Create smaller pics
                 $thumpsCreatedSuccsess =  $this->createImgSourceSet($path, $fileName);
                 if ($thumpsCreatedSuccsess){
                     // Save to DB
@@ -245,7 +244,7 @@ class GalleryController extends Controller
                     $ord = isset($ord) ? $ord : 0;
                     $gp->gallery_id = $gal_id;
                     $gp->ord= $ord;
-                    $gp->pic = $path."/srcset/".$fileName."/".$fname."_768.".$extension;
+                    $gp->pic = $path."/srcset/".$fileName."/".$fname."_l.".$extension;
                     $gp->mappoint_id = $request->mappoint_id;
 
                     $res = $gp->save();  
@@ -264,14 +263,26 @@ class GalleryController extends Controller
                     $galText->mappoint_id = $request->mappoint_id;
                     $galText->text =  $request->contentES;
                     $galText->language =  'ES';
-                    $galText->save();
+                    $res = $galText->save();
                 } 
             }
+            else{
+                $res = false;
+            }
+
         }
         
-        return back()
+        if ($res){
+            return back()
             ->with('success','File successfully uploaded.')
             ->with('file', $fileName);
+        }
+        else{
+            return back()
+            ->with('error','Videos are not supported.')
+            ->with('file', $fileName);
+        }
+        
     }
 
     public function getGalIdFromCode($code){
@@ -415,8 +426,11 @@ class GalleryController extends Controller
 
     public function picTest(){
         $img="IMG_6913.JPG";
+        //$img="noppal.jpg";
         $path = "img";
         $this->createImgSourceSet($path, $img);
+        //$data  = file_get_contents($path."/".$img);
+        //dump(base64_encode($data));
     }
 
 }
