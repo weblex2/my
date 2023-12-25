@@ -14,7 +14,7 @@
             @endforeach
         </div> 
     </div>   
-    <a class="mt-5" href="/travel-blog"> or go back to the world..</a>
+    <a class="mt-5" href="/travel-blog"> <i class="mr-2 fa-solid fa-earth-americas"></i> Back to the world</a>
 </div>
 
     

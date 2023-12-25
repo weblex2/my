@@ -84,7 +84,6 @@
             if (scrollAndTop > this.lastpictop){
                  
                 if (noMore!=true){
-                    console.log("jezte");
                     more();
                 } 
                 else{
@@ -95,8 +94,8 @@
 
         $('#scroll').scroll(function() {
             if (noscroll) return false; 
-            if( Math.round($('#scroll').scrollTop() + $('#scroll').height(),2) >= $('#gallery_content').height()) {
-                $('#nextBlog').css('visibility', 'visible');
+            if( Math.round($('#scroll').scrollTop() + $('#scroll').height(),2) >= $('#gallery_content').height()-10) {
+                //$('#nextBlog').css('visibility', 'visible');
                 noscroll = true;
             }
         });
@@ -183,6 +182,7 @@
                         console.log(data.alternatives);
                         $('#nextBlog').html(data.alternatives);
                         //$('#gallery_content').append("<div>End Of Mappoint (" + data.current_mappoint + ")</div>");
+                        $('#gallery_content').append(data.html);
                         noMore=true;
                         $('#debug').html("<div>no More!</div>");
                         return false;

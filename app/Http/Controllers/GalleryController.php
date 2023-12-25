@@ -156,7 +156,7 @@ class GalleryController extends Controller
                 $alt_blogs = "";
                 $alternatives = Gallery::whereNotIn('id', $current_gallery)->orderBy('id')->limit(6)->get();
                 $alt_blogs.= view('components.gallery.show-alternative-blog', ['alternativeBlogs' => $alternatives]);
-                $moreHtml.="<div class='h-50'>spacer</div>";
+                $html.=$alt_blogs;
             }
             else{
                 $html .= $moreHtml;
