@@ -79,12 +79,16 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight text-orange-500">
-            {{ __('Gallery') }}
+            {{ __('Travel Blog') }}
         </h2>
     </x-slot>
 
-    <div id="chartdiv" class="w-full h-[880px]"></div> 
-
+    <div id="chartdiv" class="hidden md:block w-full h-[880px]"></div> 
+    <div class="block sd:hidden w-full">
+      @foreach ($galleries as $gallery )
+        <a href="show/{{$gallery->code}}"><div>{{ $gallery->name }}</div></a>
+      @endforeach 
+    </div>
     
 
     <script>

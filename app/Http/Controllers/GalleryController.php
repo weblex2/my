@@ -34,7 +34,7 @@ class GalleryController extends Controller
         if (!$lang){
             session(['lang' => 'DE']);
         }
-        $galleries = Gallery::all();
+        $galleries = Gallery::orderBy('name')->get();
         $galleries->load('GalleryMappoint');
         $mappoints = GalleryMappoint::all();
         $mappoints->load('GalleryPics');
