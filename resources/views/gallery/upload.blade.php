@@ -7,7 +7,7 @@
     <div class="py-12 h-screen overflow-auto">
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3">
             <div class="overflow-hidden h-full sm:rounded-lg p-10 text-orange-500">
-                <form id="frmGalleryUpload" action="{{route('gallery.storepic')}}" method="post" enctype="multipart/form-data">
+                <form id="frmGalleryPicUpload" action="{{route('gallery.storepic')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     @if ($message = Session::get('success'))
                     <div class="p-5 border-green-900 bg-green-300 text-black rounded-xl mb-5">
@@ -53,13 +53,16 @@
                     </div>
 
                     <div class="py-5">
-                        <input type="submit" class="btn-submit">
+                        <button id="submit" type="button" class="btn-submit">Submit</button>
                     </div>
                 </form>    
             </div>
         </div>
     </div>
     <script>
+
+        
+
         ClassicEditor
         .create( document.querySelector( '#blog-content-de' ) )
         .catch( error => {
@@ -71,5 +74,14 @@
         .catch( error => {
         console.error( error );
         } );
+
+        $(document).ready(function(){
+            $('#submit').click(function(e){
+                //e.preventDefault();
+                //alert("Click");
+                //$('#busy').css('visibility', 'visible');
+                $('#frmGalleryPicUpload').submit();
+            }); 
+        });    
     </script>
 </x-gallery-layout>

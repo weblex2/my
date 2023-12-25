@@ -2,14 +2,8 @@
     $picname  = explode("/", $pic->pic);
     $picname = $picname[count($picname)-1];
 @endphp
-<div id="{{$pic->id}}" class="p-5 w-fit">
-    <div class="p-4 flex justify-between">
-        @if (Auth::user())
-        <a href="{{route('gallery.editPic', ['pic_id' => $pic->id])}}"><i class="fas fa-edit gallery-edit-icon"></i> Edit</a>
-        <a href="javascript:void(0)" onclick="showDeletePopup({{$pic->id}})"><i class="deleteBlog fa-solid fa-trash gallery-delete-icon"></i> Delete</a>
-        @endif
-    </div>    
-    <div id="file_{{$pic}}" class="p-4 bg-zinc-900 flex items-center ">
+<div id="{{$pic->id}}" class="w-full">
+    <div id="file_{{$pic}}" class="p-4 bg-zinc-800 flex items-center relative">
         @if (in_array(strtoupper(substr($pic,-3)), ['MOV']))
             <video class="img w-[756px] rounded-xl shadow-xl" controls>
                 <source src="{{ Storage::url("gallery/test/") }}{{$pic->pic}}" type="video/mp4">
@@ -24,8 +18,13 @@
             {{$picname}}
         </div>
         <div class="p-4 text-xs font-extrabold">
+            @if (Auth::user())
+                <a href="{{route('gallery.editPic', ['pic_id' => $pic->id])}}"><i class="fas mr-1 fa-edit gallery-edit-icon"></i></a>
+                <a href="javascript:void(0)" onclick="showDeletePopup({{$pic->id}})"><i class="deleteBlog mr-1 fa-solid fa-trash gallery-delete-icon"></i></a>
+            @endif 
             <i class="gallery-comment-icon fa fa-comment mt-[1px]"></i>&nbsp;
-            <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true"></i>            
+            <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true"></i>     
+                  
         </div>
     </div>
     <div class="gallery-text p-4 block w-[768px] text-white">{!!$pic->GalleryText[0]->text!!}</div>

@@ -26,6 +26,18 @@
     @apply hover:text-blue-500 cursor-pointer;
 }
 
+.mappoint-header{
+    @apply w-full p-10 font-extrabold text-xl text-orange-500 text-center bg-zinc-800 border-zinc-700 ;
+} 
+
+.spacer{
+    @apply p-20 bg-zinc-800
+}
+
+#gallery_content{
+    @apply rounded-xl content-center bg-zinc-800;
+}    
+
  #scroll::-webkit-scrollbar{
     width: 12px;               /* width of the entire scrollbar */
 } 
@@ -87,13 +99,13 @@ input[type=text], input[type=submit], select{
     @apply px-6 py-3 border border-zinc-900 bg-zinc-700 hover:bg-zinc-800 text-orange-500 rounded-xl
 }
 
-.mappoint-header{
-    @apply w-full p-10 font-extrabold text-2xl text-orange-500 text-left border-b border-t bg-zinc-900 border-zinc-700 w-[880px] ;
-}    
-
-.spacer{
-    @apply p-20 bg-zinc-700
+.btn{
+    @apply px-6 py-3 border border-zinc-900 bg-zinc-700 hover:bg-zinc-800 text-orange-500 rounded-xl
 }
+
+   
+
+
 
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
 #sortable li { 

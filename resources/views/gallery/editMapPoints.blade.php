@@ -38,10 +38,11 @@
                 @php
                     $country_id = "#$";
                 @endphp
-                <div class="grid grid-cols-6 sortable">
+                <div class="grid grid-cols-7 sortable">
                     <div class="text-orange-500">COUNTRY</div>
                     <div class="text-orange-500">NAME</div>
                     <div class="text-orange-500">LONGITUDE</div>
+                    <div>&nbsp;</div>
                     <div class="text-orange-500">LATITUDE</div>
                     <div class="text-orange-500">ORDER</div>
                     <div class="text-orange-500"><i class="fa fa-trash"></i></div>
@@ -53,6 +54,7 @@
                             <a href="/travel-blog/editMappointPics/{{$mp->id}}"><i class="fa-sharp fa-solid fa-city"></i> {{$mp->mappoint_name}}</a>
                         </div>
                         <div>{{$mp->lon}}</div>
+                        <div> <a href="javascript_void(0)" onclick="swapLatLong({{$mp->id}})"><i class="fa-solid fa-arrows-left-right"></i></a></div>
                         <div>{{$mp->lat}}</div>
                         <div>{{$mp->ord}}</div>
                         <div>

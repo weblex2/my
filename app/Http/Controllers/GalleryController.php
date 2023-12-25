@@ -413,4 +413,10 @@ class GalleryController extends Controller
         ], 200);
     }
 
+    public function picTest(){
+        $img="IMG_6913.JPG";
+        $path = "img";
+        $this->createImgSourceSet($path, $img);
+    }
+
 }
