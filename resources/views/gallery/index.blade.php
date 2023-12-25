@@ -86,7 +86,7 @@
     <div id="chartdiv" class="hidden md:block w-full h-[880px]"></div> 
     <div class="block sd:hidden w-full">
       @foreach ($galleries as $gallery )
-        <a href="show/{{$gallery->code}}"><div>{{ $gallery->name }}</div></a>
+        <a href="{{route('gallery.showGallery', ['id' => $gallery->code] ) }}"><div>{{ $gallery->name }}</div></a>
       @endforeach 
     </div>
     
