@@ -49,10 +49,12 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog/editMapPoint', 'editGalleryMappoints')->name('gallery.editMappoint');
     Route::post('/travel-blog/storeMapPoint', 'storeGalleryMappoint')->name('gallery.storeMappoint');
     Route::post('/travel-blog/deleteMapPoint', 'deleteGalleryMappoint')->name('gallery.deleteMappoint');
-    Route::get('/travel-blog/setLang/{currentRoute}/{lang}', 'setLang')->name('gallery.setLang');
+    Route::post('/travel-blog/setLang', 'setLang')->name('gallery.setLang');
     Route::get('/travel-blog/editMappointPics/{mp_id}', 'editMappointPics')->name('gallery.editMappointPics');
     Route::post('/travel-blog/updatePicOrder', 'updatePicOrder')->name('gallery.updatePicOrder');
     Route::get('/travel-blog/picTest', 'picTest')->name('gallery.picTest');
+    Route::get('/travel-blog/config', 'config')->name('gallery.config');
+    Route::get('/travel-blog/getBigPic/{id}', 'getBigPic')->name('gallery.getBigPic');
 });    
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 

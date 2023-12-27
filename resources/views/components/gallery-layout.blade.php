@@ -65,5 +65,25 @@
     </body>
     <script>
         $('#main').css('height', $(window).height() - ($('nav').outerHeight() + $('header').outerHeight() +1));
+
+        function setLanguage(language) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "{{route('gallery.setLang')}}",
+                data: {'lang' : language},
+                success: function(){
+                    location.reload();
+                },
+                error: function(resp){
+                    console.log(resp);
+                }
+            });
+        }
+
     </script>    
 </html>

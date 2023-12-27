@@ -3,11 +3,9 @@
     <div id="debug2" class="hidden fixed top-0 right-0 bg-gray-900 p-10 z-10 text-white">debug2</div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight text-orange-500">
-            @if(count($pics) > 0)
-            <a href="/travel-blog">{{ __('Blog') }}</a> / {{$gallery[0]->name}} / <span id="mp-name">{{$pics[0]->Mappoint->mappoint_name}}</span>
-            @else
-                <a href="/travel-blog">{{ __('Blog') }}</a> / {{$gallery[0]->name}} / <span id="mp-name">{{$mp->mappoint_name}}</span>
-            @endif
+            <a href="/travel-blog">{{ __('Blog') }}</a> / 
+            <a href="/travel-blog/show/{{$gallery[0]->code}}"> {{$gallery[0]->name}} </a> / 
+            <span id="mp-name">{{$mp->mappoint_name}}</span>
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
@@ -27,7 +25,7 @@
                 <div class="mappoint-header">{{$pics[0]->Mappoint->mappoint_name}}</div>
                 @foreach ($pics as $i => $pic)
                     
-                        <x-gallery-item :pic="$pic" content="{{$pic->GalleryText[0]->text}}" />
+                        <x-gallery-item :pic="$pic" />
                      
                 @endforeach 
             @else
@@ -55,7 +53,12 @@
         </div>    
     </div>  
 
-    <div id="nextBlog" class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-90 invisible">
+    <div id="bigPicModal" class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-100 invisible">
+        <div class="absolute top-0 right-0 cursor-pointer m-3 shadow-xl" onclick="$('#bigPicModal').css('visibility', 'hidden')"><i class="fa-solid fa-xmark text-orange-500"></i></div>
+        <div id="loaderBigPic">
+            <img src="{{asset('img/loading2.webp')}}" class="w-20">
+        </div>
+        <div id="bigPic" class="hidden"></div>
     </div>  
 
 
@@ -81,7 +84,7 @@
             //$('#debug').append("<div>img height : "+ imgHeight + "</div>");
             //$('#debug').append("<div>scroll &  height : "+ scrollAndTop + "</div>");
             
-            if (scrollAndTop > this.lastpictop){
+            if (scrollAndTop > this.lastpictop - 100){
                  
                 if (noMore!=true){
                     more();
@@ -94,8 +97,8 @@
 
         $('#scroll').scroll(function() {
             if (noscroll) return false; 
-            if( Math.round($('#scroll').scrollTop() + $('#scroll').height(),2) >= $('#gallery_content').height()-10) {
-                //$('#nextBlog').css('visibility', 'visible');
+            if( Math.round($('#scroll').scrollTop() + $('#scroll').height(),2) >= $('#gallery_content').height()) {
+                console.log("no mor scrolling...");
                 noscroll = true;
             }
         });

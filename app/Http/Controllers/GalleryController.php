@@ -7,15 +7,21 @@ use App\Models\Gallery;
 use App\Models\GalleryPics;
 use App\Models\GalleryMappoint;
 use App\Models\GalleryText;
+use App\Models\GalleryConfig;
 use PhpParser\Node\Expr\AssignOp\Concat;
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\Validator;
 use File;
-use Illuminate\Contracts\Session\Session as SessionSession;
+//use Illuminate\Contracts\Session\Session as Session;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
+use Route;
 use DB;
 use Response;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use App\MyClasses\BlogCreator;
+
 
 
 class GalleryController extends Controller
@@ -23,7 +29,7 @@ class GalleryController extends Controller
    
     
     use ImageTrait;
-    var $reloadItems = 3;
+    var $reloadItems = 5;
     var $img_base_path =  "gallery/";
     var $lang; 
     var $mappoint_name;
@@ -46,9 +52,10 @@ class GalleryController extends Controller
         return view('gallery.index2');
     }
 
-    public function setLang($route, $lang){
-        session(['lang' => $lang]);
-        return redirect()->route('gallery.index');
+    public function setLang(Request $request){
+        session(['lang' => $request->lang]);
+        return true;
+        //return redirect()->route('gallery.index');
     }
 
     public function create(){
@@ -118,6 +125,7 @@ class GalleryController extends Controller
         ->orderBy('ord')
         ->get();
         $pics->load('GalleryText');
+        $pics->load('GalleryPicContent');
         $pics->load('Mappoint');
         return view('gallery.showGallery', compact('gallery','pics','offset','mp'));
     }
@@ -201,7 +209,7 @@ class GalleryController extends Controller
 
     public function editMappointPics($mappoint_id){
         $mp  = GalleryMappoint::find($mappoint_id);
-        $mp->load('GalleryPics');
+        $mp->load('GalleryPics.Thumbnail');
         return view('gallery.editMappointPics', compact('mp'));
     }
     
@@ -210,62 +218,55 @@ class GalleryController extends Controller
         return view('gallery.upload', compact('country_code', 'map_point_id', 'mappoints'));
     }
 
+    public static function getPicOrder($mappoint_id){
+        $ord = GalleryPics::where('mappoint_id' ,"=" ,$mappoint_id)->max('ord') + 1;
+        $ord = isset($ord) ? $ord : 0;
+        return $ord;
+    }
+
+    public function getBigPic($id){
+        $pic = GalleryPics::find($id);
+        $pic->load('PicXl');
+        return Response::json([
+                    'data' => $pic->PicXl->filecontent,
+                    'status' => 'ok',
+        ], 200);
+    }
 
     public function storepic(Request $request){
-        
-        $path = $this->img_base_path.$request->country_code;
-        if (!file_exists($path)) {
-            File::makeDirectory($path, 0777, true, true);
-        }    
+         
         $request->validate([
             #'file' => 'required|max:2048',
             'file' => 'required',
             'country_code' => 'required',
-            'contentDE' => 'required',
             'mappoint_id' => 'required',
         ]);
+
+        $gallery_id = $this->getGalIdFromCode($request->country_code);
+        $ord= $this->getPicOrder($request->mappoint_id);
         
+        $path = $this->img_base_path.$request->country_code;
+        if (!file_exists($path)) {
+            File::makeDirectory($path, 0777, true, true);
+        }
+
         $fileName = $request->file->getClientOriginalName(); 
-        //$successfullyMoved = $this->uploadFile($request->file, $path);
-        $fileName = $request->file->getClientOriginalName();  
         $successfullyMoved = $request->file->move($path, $fileName);
+
         if ($successfullyMoved){
+            
             $file  = $path."/".$fileName;
             $fname = strtoupper(pathinfo($file, PATHINFO_FILENAME));
             $extension = strtoupper(pathinfo($file, PATHINFO_EXTENSION));
-            if (!in_array(strtoupper($extension),['MOV', ''])){
-                // Trait / Create smaller pics
-                $thumpsCreatedSuccsess =  $this->createImgSourceSet($path, $fileName);
-                if ($thumpsCreatedSuccsess){
-                    // Save to DB
-                    $gal_id = $this->getGalIdFromCode($request->country_code);
-                    $gp  = new GalleryPics();
-                    $ord = GalleryPics::where('mappoint_id' ,"=" ,$request->mappoint_id)->max('ord') + 1;
-                    $ord = isset($ord) ? $ord : 0;
-                    $gp->gallery_id = $gal_id;
-                    $gp->ord= $ord;
-                    $gp->pic = $path."/srcset/".$fileName."/".$fname."_l.".$extension;
-                    $gp->mappoint_id = $request->mappoint_id;
 
-                    $res = $gp->save();  
-                    $pic_id = $gp->id;
-                    $galText  = new GalleryText();
-                    $galText->pic_id = $pic_id;
-                    $galText->gallery_id = $gal_id;
-                    $galText->mappoint_id = $request->mappoint_id;
-                    $text = str_replace('<a ', '<a target="_blank" ',$request->contentDE);
-                    $galText->text =  $text;
-                    $galText->language =  'DE';
-                    $galText->save();
-                    $galText  = new GalleryText();
-                    $galText->pic_id = $pic_id;
-                    $galText->gallery_id = $gal_id;
-                    $galText->mappoint_id = $request->mappoint_id;
-                    $galText->text =  $request->contentES;
-                    $galText->language =  'ES';
-                    $res = $galText->save();
-                } 
-            }
+            if (!in_array(strtoupper($extension),['MOV', ''])){
+                $bc = new BlogCreator();
+                $bc->loadImage($path, $fileName, $gallery_id, $request->mappoint_id, $request->content);
+                $bc->createThumbs();
+                $bc->saveThumbsToDb();
+                $res = true;
+                
+            } 
             else{
                 $res = false;
             }
@@ -302,46 +303,34 @@ class GalleryController extends Controller
     public function editPic($id){
         $pic  = GalleryPics::find($id);
         $pic->load('Gallery');
-        $pic->load('GalleryTextAll');
+        $pic->load('GalleryText');
+        $pic->load('Thumbnail');
         $mappoints = GalleryMappoint::all();
         return view('gallery.editPic', compact('pic','mappoints'));
     } 
 
     public function updatePic(Request $request){
-        $error = 0;
-        $gt = GalleryText::where('pic_id',"=",$request->id)->get();
-        $pic = GalleryPics::find($request->id);
-        //$pic->fill($request->all());
-        //dump($request);
         DB::beginTransaction();
+        $lang  = session('lang');
+        $text = str_replace('<a ', '<a target="_blank" ',$request->content);
         try {
-            foreach($gt as $i =>  $gtl){
-                if ($gtl->language=="DE"){
-                    $text = str_replace('<a ', '<a target="_blank" ',$request->contentDE);
-                    $gt[$i]->text = $text;
-                }
-                if ($gtl->language=="ES"){
-                    $gt[$i]->text = $request->contentES;
-                }
-                $res = $gt[$i]->save();
-                if (!$res){
-                    $error++;
-                }
+            $picText = GalleryText::where('pic_id',"=",$request->id)->where('language','=', session('lang'))->first();
+            if (!$picText){
+                $picText = new GalleryText();
+                $picText->pic_id = $request->id;
+                $picText->gallery_id = $this->getGalIdFromCode($request->country_code);
+                $picText->language = session('lang');
             }
+            $picText->text = $text;
+            $res = $picText->save();
         }
         catch(\Exception $e)
         {
             DB::rollback();
-            throw $e;
+            return back()->with('error','Problem...'. $e->getMessage()); 
         }
         DB::commit();
-        
-        if ($error == 0){
-            return back()->with('success','File successfully updated.'); 
-        }
-        else{
-             return back()->with('error','Problem...'); 
-        }    
+        return back()->with('success','File successfully updated.');  
     } 
 
     public function createGalleryMappoint(){
@@ -425,12 +414,46 @@ class GalleryController extends Controller
     }
 
     public function picTest(){
+
+
+
         $img="IMG_6913.JPG";
-        //$img="noppal.jpg";
+        //$img="IMG_5141.JPG";
         $path = "img";
-        $this->createImgSourceSet($path, $img);
-        //$data  = file_get_contents($path."/".$img);
-        //dump(base64_encode($data));
+        $fullPathFile = $path."/".$img;
+        
+        $gallery_id = 1;
+        $mappoint_id = 15;
+        $content = "Test";
+
+        try{
+            $bc = new BlogCreator();
+            $bc->loadImage($path, $img, $gallery_id, $mappoint_id, $content);
+            //$bc->createThumbs();
+            $bc->saveThumbsToDb();
+        }
+        catch( \Exception $e){
+            dump ($e);
+        }        
+        
+        #$pic = GalleryPics::find(167);
+        #echo '<img src="'.$pic->filecontent.'">';
+        die();
+
+        
+        
+        
+
+        
+        
+
     }
+
+    public function config(){
+        $config  = GalleryConfig::all();
+        return view('gallery.config', compact('config'));
+    }
+
+   
 
 }

@@ -11,7 +11,7 @@
             <ul id="sortable">
                 @foreach ($mp->GalleryPics as $i => $pic)
                     <li>    
-                        <div class="portlet-header"><img id="{{$pic->id}}" src="{{asset($pic->pic)}}" class="w-25 h-25"></div>
+                        <div class="portlet-header"><img id="{{$pic->id}}" src="{{$pic->Thumbnail->filecontent}}" class="w-25 h-25"></div>
                     </li>
                 @endforeach
             </ul>

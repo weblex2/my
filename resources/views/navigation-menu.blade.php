@@ -142,6 +142,9 @@
                         <x-slot name="trigger">
                             <span class="inline-flex rounded-md">
                                 <button type="button" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 {{$bgColor}} hover:text-gray-700 focus:outline-none transition">
+                               
+                                    <img src="{{asset('img/flag'.session('lang').'4.png')}}" class="rounded-full w-4 mr-2">
+                                
                                 Language
                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -150,16 +153,16 @@
                             </span>
                         </x-slot>   
                         <x-slot name="content">
-                            <div class="w-full p-2">
-                                <a href="{{route('gallery.setLang', ['currentRoute'=> Route::currentRouteName(), 'lang' => 'ES'])}}">
-                                    <img class="w-5 float-right" src="{{asset('img/flagES4.png')}}" onclick="setLanguage('ES')">ES
-                                </a>
-                            </div>
-                            <div class="w-full p-2">
-                                <a href="{{route('gallery.setLang', ['currentRoute'=> Route::currentRouteName(), 'lang' => 'DE'])}}">
-                                <img class="w-5 float-right" src="{{asset('img/flagDE4.png')}}" onclick="setLanguage('DE')">DE
-                                </a>
-                            </div>
+                            <a href="javascript:void(0)" onclick="setLanguage('ES')">    
+                                <div class="w-full p-2 hover:bg-slate-600">
+                                    <img class="w-4 float-right text-sm" src="{{asset('img/flagES4.png')}}" onclick="setLanguage('ES')">Español
+                                </div>
+                            </a>
+                            <a href="javascript:void(0)" onclick="setLanguage('DE')">    
+                                <div class="w-full p-2 hover:bg-slate-600">
+                                    <img class="w-4 float-right text-sm" src="{{asset('img/flagDE4.png')}}" >Deutsch
+                                </div>
+                            </a>    
                         </x-slot>
                 </x-jet-dropdown>
                 </div>   

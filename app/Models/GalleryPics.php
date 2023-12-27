@@ -15,6 +15,18 @@ class GalleryPics extends Model
         return $this->belongsTo(Gallery::Class, 'gallery_id', 'id');
     }
 
+    public function GalleryPicContent(){
+        return $this->hasOne(GalleryPicContent::Class, 'pic_id', 'id')->where('size','=', 'L');
+    }
+
+    public function Thumbnail(){
+        return $this->hasOne(GalleryPicContent::Class, 'pic_id', 'id')->where('size','=', 'TN');
+    }
+
+    public function PicXl(){
+        return $this->hasOne(GalleryPicContent::Class, 'pic_id', 'id')->where('size','=', 'XL');
+    }
+
     public function Mappoint(){
         return $this->belongsTo(GalleryMappoint::Class, 'mappoint_id', 'id');
     }

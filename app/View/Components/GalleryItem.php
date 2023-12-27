@@ -13,12 +13,10 @@ class GalleryItem extends Component
      */
 
     public $pic;
-    public $content;
      
-    public function __construct($pic, $content)
+    public function __construct($pic)
     {
         $this->pic = $pic;
-        $this->content = $content;
     }
 
     /**
