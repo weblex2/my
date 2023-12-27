@@ -29,7 +29,7 @@ class GalleryController extends Controller
    
     
     use ImageTrait;
-    var $reloadItems = 5;
+    var $reloadItems = 3;
     var $img_base_path =  "gallery/";
     var $lang; 
     var $mappoint_name;
