@@ -2,6 +2,7 @@
 namespace App\MyClasses;
 
 use DB;
+use File;
 use App\MyClasses\Misc as Misc;
 use App\Models\GalleryPics;
 use App\Models\GalleryText;
@@ -35,6 +36,9 @@ class BlogCreator{
         $this->manager = new ImageManager(new Driver());
         $this->misc = new Misc();
         $this->tmpPath = Misc::getConfig('tmp_path')[0]->value;
+        if (!is_dir($this->tmpPath)){
+            File::makeDirectory($this->tmpPath, $mode = 0777, true, true);
+        }
         $this->status = 'INIT';
     }
 
@@ -65,14 +69,15 @@ class BlogCreator{
             
             // Create squared image
             if ($size->value2!="") {
-                $res = $this->img->resize($size->value, $size->value2)->save('img/tmp/'.$name);  
+                $res = $this->img->resize($size->value, $size->value2)->save($this->tmpPath."/".$name);  
             }
             
             // Create scaled width image
             else{
-                $res = $this->img->scale(width: $size->value)->save('img/tmp/'.$name);
+                $res = $this->img->scale(width: $size->value)->save($this->tmpPath."/".$name);
             }    
         }
+        
         return true;
     }
 
@@ -111,6 +116,7 @@ class BlogCreator{
                 $pic->size = $size;
                 $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($file));
                 $res = $pic->save();
+                unlink($file);
             }
         }
         catch(\Exception $e){

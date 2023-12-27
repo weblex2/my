@@ -228,8 +228,8 @@ class GalleryController extends Controller
         $pic = GalleryPics::find($id);
         $pic->load('PicXl');
         return Response::json([
-                    'data' => $pic->PicXl->filecontent,
-                    'status' => 'ok',
+            'data' => $pic->PicXl->filecontent,
+            'status' => 'ok',
         ], 200);
     }
 
