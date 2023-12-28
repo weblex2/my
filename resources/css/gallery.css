@@ -2,6 +2,10 @@
     @apply border border-white p-5 rounded-xl  h-48 flex items-center justify-center hover:drop-shadow-lg hover:shadow-orange-500
 }
 
+.img{
+    @apply w-full rounded-xl shadow-[0_5px_100px_5px_rgba(255,255,255,0.5)]
+}
+
 .gallery-item span{
     @apply text-4xl font-extrabold text-black
 }    

@@ -17,7 +17,7 @@
             </video>
         @else
             <a href="javascript:void(0)" onclick="showBigPic({{$pic->id}})">
-                <img src="{{$pic->GalleryPicContent->filecontent}}" alt="Image" class="img w-full rounded-xl shadow-xl">
+                <img src="{{$pic->GalleryPicContent->filecontent}}" alt="Image" class="img">
             </a>
         @endif   
     </div>
@@ -30,7 +30,8 @@
                 <a href="{{route('gallery.editPic', ['pic_id' => $pic->id])}}"><i class="fas mr-1 fa-edit gallery-edit-icon"></i></a>
                 <a href="javascript:void(0)" onclick="showDeletePopup({{$pic->id}})"><i class="deleteBlog mr-1 fa-solid fa-trash gallery-delete-icon"></i></a>
             @endif 
-            <i class="gallery-comment-icon fa fa-comment mt-[1px]"></i>&nbsp;
+            <i class="gallery-comment-icon fa-solid fa-camera mr-1"></i>
+            <i class="gallery-comment-icon fa fa-comment mt-[1px]"></i>
             <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true"></i>     
                   
         </div>
