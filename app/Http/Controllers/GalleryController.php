@@ -427,7 +427,7 @@ class GalleryController extends Controller
             die();
         } */
 
-        $files  = glob('ffmpeg/*.*');
+        $files  = glob('./*.*');
         dump($files);
         die();
         
