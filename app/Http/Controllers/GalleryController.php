@@ -199,11 +199,16 @@ class GalleryController extends Controller
             ->limit($morePicsCnt)
             ->get();
         $pics->load('gallery');
-        $html="<div class='spacer'></div><div class='mappoint-header'>".$pics[0]->Mappoint->mappoint_name."</div>";
-        foreach ($pics as $pic){
-            $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
+        if (count($pics)==0) {
+            return false;
         }
-        return $html;
+        else{
+            $html="<div class='spacer'></div><div class='mappoint-header'>".$pics[0]->Mappoint->mappoint_name."</div>";
+            foreach ($pics as $pic){
+                $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
+            }
+            return $html;
+        }    
     }
 
     public function editMappointPics($mappoint_id){

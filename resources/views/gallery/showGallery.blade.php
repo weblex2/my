@@ -51,12 +51,11 @@
         </div>    
     </div>  
 
-    <div id="bigPicModal" class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-100 invisible">
-        <div class="absolute top-0 right-0 cursor-pointer m-3 shadow-xl" onclick="$('#bigPicModal').css('visibility', 'hidden')"><i class="fa-solid fa-xmark text-orange-500"></i></div>
+    <div id="bigPicModal" class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-zinc-900 bg-opacity-100 invisible" onclick="$('#bigPicModal').css('visibility', 'hidden')">
         <div id="loaderBigPic">
             <img src="{{asset('img/loading2.webp')}}" class="w-20">
         </div>
-        <div id="bigPic" class="hidden"></div>
+        <div id="bigPic" class="hidden max-w-[90%] max-h-[90%]"></div>
     </div>  
 
 
