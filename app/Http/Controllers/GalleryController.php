@@ -12,6 +12,7 @@ use PhpParser\Node\Expr\AssignOp\Concat;
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\Validator;
 use File;
+use FFMpeg;
 //use Illuminate\Contracts\Session\Session as Session;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
@@ -421,38 +422,12 @@ class GalleryController extends Controller
 
     public function picTest(){
 
-
-
-        $img="IMG_6913.JPG";
-        //$img="IMG_5141.JPG";
-        $path = "img";
-        $fullPathFile = $path."/".$img;
-        
-        $gallery_id = 1;
-        $mappoint_id = 15;
-        $content = "Test";
-
-        try{
-            $bc = new BlogCreator();
-            $bc->loadImage($path, $img, $gallery_id, $mappoint_id, $content);
-            //$bc->createThumbs();
-            $bc->saveThumbsToDb();
-        }
-        catch( \Exception $e){
-            dump ($e);
-        }        
-        
-        #$pic = GalleryPics::find(167);
-        #echo '<img src="'.$pic->filecontent.'">';
-        die();
-
-        
-        
-        
-
-        
-        
-
+        FFMpeg::fromDisk('gallery')
+            ->open('IMG_6959.MOV')
+            ->getFrameFromSeconds(1)
+            ->export()
+            ->toDisk('gallery')
+            ->save('FrameAt10sec.png');
     }
 
     public function config(){

@@ -46,7 +46,7 @@
                 type: "GET",
                 url: "/travel-blog/getBigPic/"+id,
                 success: function(data){
-                    $('#bigPic').html('<img src="' + data.data + '">');
+                    $('#bigPic').html('<img class="max-h-screen" src="' + data.data + '">');
                     $('#bigPic').show();
                     $('#loaderBigPic').hide();
                     console.log(data);

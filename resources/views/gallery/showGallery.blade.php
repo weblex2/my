@@ -55,7 +55,7 @@
         <div id="loaderBigPic">
             <img src="{{asset('img/loading2.webp')}}" class="w-20">
         </div>
-        <div id="bigPic" class="hidden max-w-[90%] max-h-[90%]"></div>
+        <div id="bigPic" class="p-10 hidden max-h-screen"></div>
     </div>  
 
 
