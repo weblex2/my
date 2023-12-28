@@ -421,8 +421,11 @@ class GalleryController extends Controller
     }
 
     public function picTest(){
-        echo env('FFPROBE_BINARIES', 'ffprobe');
-        die();
+        $fp =  env('FFPROBE_BINARIES', 'ffprobe');
+        if (!file_exists($fp)) {
+            echo $fp;
+            die();
+        }
         FFMpeg::fromDisk('gallery')
             ->open('IMG_6959.MOV')
             ->getFrameFromSeconds(1)
