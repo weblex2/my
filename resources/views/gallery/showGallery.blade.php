@@ -2,7 +2,7 @@
     <div id="debug" class="hidden fixed top-0 left-0 bg-gray-900 p-10 z-10 text-white">debug</div>
     <div id="debug2" class="hidden fixed top-0 right-0 bg-gray-900 p-10 z-10 text-white">debug2</div>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight text-orange-500">
+        <h2 class="font-semibold leading-tight text-orange-500">
             <a href="/travel-blog">{{ __('Blog') }}</a> / 
             <a href="/travel-blog/show/{{$gallery[0]->code}}"> {{$gallery[0]->name}} </a> / 
             <span id="mp-name">{{$mp->mappoint_name}}</span>

@@ -78,7 +78,7 @@
     </div>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight text-orange-500">
+        <h2 class="font-semibold leading-tight text-orange-500">
             {{ __('Travel Blog') }}
         </h2>
     </x-slot>

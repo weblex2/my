@@ -44,7 +44,7 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-zinc-800 border-b border-zinc-900" id="galheader">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-orange-500">
+                    <div class="font-sm max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-orange-500">
                         {{ $header }}
                     </div>
                 </header>
@@ -52,11 +52,12 @@
 
             <!-- Page Content -->
             <main id="main" class="overflow-hidden">
-                <div id="busy" class="invisible modal">
-                    <img src="{{ asset('img/gallery_processing.gif') }}" class="w-24">
-                </div>
+                
                 {{ $slot }}
             </main>
+            <div id="busy" class="invisible modal">
+                    <img src="{{ asset('img/gallery_processing.gif') }}" class="w-24">
+            </div>
         </div>
 
         @stack('modals')
