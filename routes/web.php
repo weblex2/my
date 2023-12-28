@@ -42,7 +42,7 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog/upload/{gallery_id}/{mappoint_id?}', 'upload')->name('gallery.upload');
     Route::get('/travel-blog/editpic/{pic_id}', 'editpic')->name('gallery.editPic');
     Route::post('/travel-blog/updatepic', 'updatepic')->name('gallery.updatePic');
-    Route::post('/travel-blog/storepic', 'storepic')->name('gallery.storepic');
+    Route::post('/travel-blog/storepic', 'storePic')->name('gallery.storepic');
     Route::post('/travel-blog/deletepic', 'deletePic')->name('gallery.deleteBlogItem');
     Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
     Route::get('/travel-blog/createMapPoint', 'createGalleryMappoint')->name('gallery.createMappoint');
@@ -54,6 +54,7 @@ Route::controller(GalleryController::class)->group(function () {
     Route::post('/travel-blog/updatePicOrder', 'updatePicOrder')->name('gallery.updatePicOrder');
     Route::get('/travel-blog/picTest', 'picTest')->name('gallery.picTest');
     Route::get('/travel-blog/config', 'config')->name('gallery.config');
+    Route::post('/travel-blog/storeConfig', 'storeConfig')->name('gallery.storeConfig');
     Route::get('/travel-blog/getBigPic/{id}', 'getBigPic')->name('gallery.getBigPic');
 });    
 

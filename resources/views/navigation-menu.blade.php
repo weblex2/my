@@ -112,6 +112,10 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <x-jet-dropdown-link class="text-white" href="{{ route('gallery.config') }}">
+                                Configuration 
+                            </x-jet-dropdown-link>
+
                             <x-jet-dropdown-link class="text-white" href="{{ route('gallery.create') }}">
                                 Create Blog/ Gallery 
                             </x-jet-dropdown-link>

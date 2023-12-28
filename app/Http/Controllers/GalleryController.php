@@ -21,8 +21,7 @@ use Response;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\MyClasses\BlogCreator;
-
-
+use Illuminate\Database\Events\TransactionBeginning;
 
 class GalleryController extends Controller
 {
@@ -233,7 +232,7 @@ class GalleryController extends Controller
         ], 200);
     }
 
-    public function storepic(Request $request){
+    public function storePic(Request $request){
          
         $request->validate([
             #'file' => 'required|max:2048',
@@ -268,19 +267,21 @@ class GalleryController extends Controller
                 
             } 
             else{
-                $res = false;
+                $bc = new BlogCreator();
+                $bc->loadImage($path, $fileName, $gallery_id, $request->mappoint_id, $request->content);
+                $res = $bc->saveVideoToDb();
             }
 
         }
         
-        if ($res){
+        if ($res===true){
             return back()
             ->with('success','File successfully uploaded.')
             ->with('file', $fileName);
         }
         else{
             return back()
-            ->with('error','Videos are not supported.')
+            ->with('error',$res)
             ->with('file', $fileName);
         }
         
@@ -454,6 +455,27 @@ class GalleryController extends Controller
         return view('gallery.config', compact('config'));
     }
 
-   
-
+    public function storeConfig(Request $request){
+        $req = $request->all();
+        unset($req['_token']);
+        DB::beginTransaction();
+        try{
+            foreach($req as $key => $values){
+                $conf = GalleryConfig::where('option', '=', $key)->first();
+                if (!isset($conf)){
+                    $conf = new GalleryConfig();
+                    $conf->option = $key;
+                }
+                $conf->value = $values['value'];
+                $conf->value2 = $values['value2'];
+                $conf->save();
+            }
+        }
+        catch(\Exception $e){
+            DB::rollback();
+            return back()->with('error', $e->getMessage()); 
+        }    
+        DB::commit();
+        return back()->with('success','Configuration successfully stored.'); 
+    }
 }

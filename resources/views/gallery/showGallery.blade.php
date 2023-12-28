@@ -24,9 +24,7 @@
                 <div id="gallery_content">
                 <div class="mappoint-header">{{$pics[0]->Mappoint->mappoint_name}}</div>
                 @foreach ($pics as $i => $pic)
-                    
                         <x-gallery-item :pic="$pic" />
-                     
                 @endforeach 
             @else
                 <div class="mappoint-header">{{$mp->mappoint_name}}</div>    

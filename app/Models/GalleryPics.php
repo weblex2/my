@@ -16,7 +16,7 @@ class GalleryPics extends Model
     }
 
     public function GalleryPicContent(){
-        return $this->hasOne(GalleryPicContent::Class, 'pic_id', 'id')->where('size','=', 'L');
+        return $this->hasOne(GalleryPicContent::Class, 'pic_id', 'id')->whereIn('size',['L','MOV']);
     }
 
     public function Thumbnail(){

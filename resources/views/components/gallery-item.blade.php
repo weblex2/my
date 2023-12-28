@@ -10,9 +10,9 @@
 @endphp
 <div id="{{$pic->id}}" class="w-full">
     <div id="file_{{$pic}}" class="p-4 bg-zinc-800 flex items-center relative">
-        @if (in_array(strtoupper(substr($pic,-3)), ['MOV']))
+        @if (in_array(strtoupper(substr($picname,-3)), ['MOV']))
             <video class="img w-[756px] rounded-xl shadow-xl" controls>
-                <source src="{{ Storage::url("gallery/test/") }}{{$pic->pic}}" type="video/mp4">
+                <source src="{{$pic->GalleryPicContent->filecontent}}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         @else

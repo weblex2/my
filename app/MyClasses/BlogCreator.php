@@ -15,12 +15,10 @@ class BlogCreator{
     var $manager;
     private $org;
     private $img;
-    private $misc;
     private $status;
     private $filename;
     private $extention;
     private $imgPath;
-    private $text;
     private $thumbs = [];
     private $tmpPath;
     private $mimeType;
@@ -34,7 +32,6 @@ class BlogCreator{
 
     function __construct() {
         $this->manager = new ImageManager(new Driver());
-        $this->misc = new Misc();
         $this->tmpPath = Misc::getConfig('tmp_path')[0]->value;
         if (!is_dir($this->tmpPath)){
             File::makeDirectory($this->tmpPath, $mode = 0777, true, true);
@@ -42,25 +39,33 @@ class BlogCreator{
         $this->status = 'INIT';
     }
 
+    
     public function loadImage($path, $image, $gallery_id, $mappoint_id, $content){
         $fullpath = $path."/".$image;
         $this->fullname  = $image;
-        $this->img = $this->manager->read($fullpath);
-        $this->org = $this->img;
-        $this->filename = pathinfo($fullpath,  PATHINFO_FILENAME);
-        $this->extention = pathinfo($fullpath, PATHINFO_EXTENSION);
-        $this->imgPath = $path;
-        $this->mimeType = $this->img->origin()->mediaType();
-        $this->size = $this->img->size();
-        $this->ratio = $this->size->aspectRatio();
         $this->gallery_id = $gallery_id; 
         $this->mappoint_id = $mappoint_id; 
         $this->content = $content;
+        $this->filename = pathinfo($fullpath,  PATHINFO_FILENAME);
+        $this->extention = pathinfo($fullpath, PATHINFO_EXTENSION);
+        $this->imgPath = $path;
+        if (!in_array(strtoupper($this->extention),['MOV']) ){  // Images
+            $this->img = $this->manager->read($fullpath);
+            $this->mimeType = $this->img->origin()->mediaType();
+            $this->size = $this->img->size();
+            $this->ratio = $this->size->aspectRatio();
+        }
+        else{   // Videos
+            // move File to tmp folder
+            rename($fullpath, $this->tmpPath."/".$this->fullname);
+            $this->filename = $this->tmpPath."/".$this->fullname;
+            $this->mimeType = mime_content_type($this->filename);
+        } 
     }
 
     public function createThumbs(){
         
-        $thumbsizes = $this->misc->getConfig('pic_size%', 'value', 'DESC');
+        $thumbsizes = Misc::getConfig('pic_size%', 'value', 'DESC');
         $thumbsizes = $thumbsizes->sortByDesc('value');
         
         foreach ($thumbsizes as $size){
@@ -72,7 +77,7 @@ class BlogCreator{
                 $res = $this->img->resize($size->value, $size->value2)->save($this->tmpPath."/".$name);  
             }
             
-            // Create scaled width image
+            // Create scaled image
             else{
                 $res = $this->img->scale(width: $size->value)->save($this->tmpPath."/".$name);
             }    
@@ -81,67 +86,92 @@ class BlogCreator{
         return true;
     }
 
-    public function saveThumbsToDb(){
-        // Start transaction!
-        DB::beginTransaction();
-        try {
-            
-            $this->pic_id = Misc::getPicId();
-            
-            $pic = new GalleryPics;
-            $pic->gallery_id = $this->gallery_id;
-            $pic->mappoint_id = $this->mappoint_id;
-            $pic->pic = $this->fullname;
-            $pic->pic_id = 1;
-            $pic->ord = Misc::getPicOrder($this->mappoint_id);
-            $res = $pic->save();
-            $pic_id = $pic->id;
-
-            // Save Text in language
-            $galText  = new GalleryText();
-            $galText->pic_id = $pic_id;
-            $galText->gallery_id = $this->gallery_id;
-            $galText->mappoint_id = $this->mappoint_id;
-            $content = str_replace('<a ', '<a target="_blank" ',$this->content);
-            $galText->text =  $content;
-            $galText->language = session('lang');
-            $galText->save();
-
-            $files = glob($this->tmpPath.'/'.$this->filename."*");
-            foreach ($files as $file){
-                $fileName = pathinfo($file)['filename'];
-                $size = strtoupper(substr($fileName, strrpos( $fileName, '_' ) + 1 ));
-                $pic  = new GalleryPicContent();
-                $pic->pic_id = $pic_id;
-                $pic->size = $size;
-                $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($file));
-                $res = $pic->save();
-                unlink($file);
-            }
-        }
-        catch(\Exception $e){
-            DB::rollback();
-	        return $e;
-        } 
-
-        /* --------------------------------
-                $galText  = new GalleryText();
-                $galText->pic_id = $pic_id;
-                $galText->gallery_id = $gallery_id;
-                $galText->mappoint_id = $request->mappoint_id;
-                $text = str_replace('<a ', '<a target="_blank" ',$request->content);
-                $galText->text =  $text;
-                $galText->language =  'DE'; 
-        --- */
-
-        DB::commit();
-
-        return true;
-
+    private function savePic(){
+        $this->pic_id = Misc::getPicId();
+        $pic = new GalleryPics;
+        $pic->gallery_id = $this->gallery_id;
+        $pic->mappoint_id = $this->mappoint_id;
+        $pic->pic = $this->fullname;
+        $pic->pic_id = 1;
+        $pic->ord = Misc::getPicOrder($this->mappoint_id);
+        $res = $pic->save();
+        $this->pic_id = $pic->id;
+        return $res;
         //$lon = $this->getGps($img->exif('GPS')["GPSLongitude"], $img->exif('GPS')['GPSLongitudeRef']);
         //$lat = $this->getGps($img->exif('GPS')["GPSLatitude"], $img->exif('GPS')['GPSLatitudeRef']);
         //var_dump($lat, $lon);
     }
+
+    private function savePicText(){
+        $galText  = new GalleryText();
+        $galText->pic_id = $this->pic_id;
+        $galText->gallery_id = $this->gallery_id;
+        $galText->mappoint_id = $this->mappoint_id;
+        $content = str_replace('<a ', '<a target="_blank" ',$this->content);
+        $galText->text =  $content;
+        $galText->language = session('lang');
+        $galText->save();
+    }
+
+    private function savePicContent($files){
+        foreach ($files as $file){
+            $fileName = pathinfo($file)['filename'];
+            $size = strtoupper(substr($fileName, strrpos( $fileName, '_' ) + 1 ));
+            $pic  = new GalleryPicContent();
+            $pic->pic_id = $this->pic_id;
+            $pic->size = $size;
+            $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($file));
+            $res = $pic->save();        
+        }
+    }
+
+    private function saveVideoContent(){
+        $pic  = new GalleryPicContent();
+        $pic->pic_id = $this->pic_id;
+        $pic->size = 'MOV';
+        $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($this->filename));
+        $res = $pic->save();
+    }
+
+    public function saveThumbsToDb(){
+        // Start transaction!
+        DB::beginTransaction();
+        try {
+            $this->savePic();
+            $this->savePicText();
+            $tmpFiles = glob($this->tmpPath.'/'.$this->filename."*");
+            $this->savePicContent($tmpFiles);
+            
+            // Cleanup temporary files
+            foreach ($tmpFiles as $file){
+                unlink($file);
+            }    
+        }
+        catch(\Exception $e){
+            DB::rollback();
+	        return $e->getMessage();
+        } 
+        DB::commit();
+        return true;
+    }
+
+
+    public function saveVideoToDb(){
+        DB::beginTransaction();
+        try{
+            $this->savePic();
+            $this->savePicText();
+            $this->saveVideoContent();
+            unlink($this->filename);
+        }
+        catch(\Exception $e){
+            DB::rollback();
+            return $e->getMessage();
+        }
+        DB::commit();
+        return true;
+    }
+
 }
 
 ?>
