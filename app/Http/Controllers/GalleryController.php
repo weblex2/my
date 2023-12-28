@@ -429,6 +429,7 @@ class GalleryController extends Controller
 
         $files  = glob('ffmpeg/*.*');
         dump($files);
+        die();
         
         FFMpeg::fromDisk('gallery')
             ->open('IMG_6959.MOV')
