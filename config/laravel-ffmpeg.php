@@ -1,7 +1,4 @@
 <?php
-echo getcwd();
-die();
-
 return [
     'ffmpeg' => [
         'binaries' => env('FFMPEG_BINARIES', '/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffmpeg'),
