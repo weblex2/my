@@ -1,4 +1,6 @@
 <?php
+echo getcwd();
+die();
 
 return [
     'ffmpeg' => [
