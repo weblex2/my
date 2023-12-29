@@ -434,7 +434,7 @@ class GalleryController extends Controller
             ->export()
             ->toDisk('gallery')
             ->save('FrameAt10sec.png');
-        } catch (EncodingException $exception) {
+        } catch (\EncodingException $exception) {
             $command = $exception->getCommand();
             $errorLog = $exception->getErrorOutput();
             dump($command);
