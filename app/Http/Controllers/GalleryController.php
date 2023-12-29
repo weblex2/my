@@ -427,13 +427,19 @@ class GalleryController extends Controller
             die();
         } */
 
-        
+        try{
         FFMpeg::fromDisk('gallery')
             ->open('IMG_6959.MOV')
             ->getFrameFromSeconds(1)
             ->export()
             ->toDisk('gallery')
             ->save('FrameAt10sec.png');
+        } catch (EncodingException $exception) {
+            $command = $exception->getCommand();
+            $errorLog = $exception->getErrorOutput();
+            dump($command);
+            dump($errorLog);
+        }    
     }
 
     public function config(){
