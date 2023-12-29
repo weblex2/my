@@ -425,7 +425,11 @@ class GalleryController extends Controller
         if (!file_exists($fp)) {
             echo $fp;
             die();
-        } */
+        } 
+        
+        FFMPEG_BINARIES=/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffmpeg
+        FFPROBE_BINARIES=/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffprobe
+        */
 
         try{
         FFMpeg::fromDisk('gallery')
