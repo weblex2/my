@@ -32,7 +32,7 @@ return [
 
         'gallery' => [
             'driver' => 'local',
-            'root' => public_path('img/tmp'),
+            'root' => public_path(),
             'throw' => false,
         ],
 

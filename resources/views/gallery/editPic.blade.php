@@ -8,8 +8,10 @@
 @endphp
 <x-gallery-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight ">
-            <a href="/travel-blog">Travel Blog</a> / <a href="{{route('gallery.showGallery',['id' => $pic->Gallery->code])}}">{{$pic->Gallery->code}}</a> / {{$pic->GalleryMappoint->mappoint_name}} /  Edit
+        <h2 class="font-semibold leading-tight ">
+            <a href="/travel-blog">Travel Blog</a> / 
+            <a href="{{route('gallery.showGallery',['id' => $pic->Gallery->code])}}">{{$pic->Gallery->name}}</a> / 
+            <a href="{{route('gallery.showGallery',['id' => $pic->Gallery->code, 'mappoint_id' => $pic->GalleryMappoint->id])}}">{{$pic->GalleryMappoint->mappoint_name}}</a> /  Edit
         </h2>
     </x-slot>
     <div class="py-12 h-screen overflow-auto">

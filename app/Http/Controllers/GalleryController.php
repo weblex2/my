@@ -12,7 +12,7 @@ use PhpParser\Node\Expr\AssignOp\Concat;
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\Validator;
 use File;
-use FFMpeg;
+
 //use Illuminate\Contracts\Session\Session as Session;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
@@ -40,6 +40,9 @@ class GalleryController extends Controller
         if (!$lang){
             session(['lang' => 'DE']);
         }
+        session(['blog_current_gallery' => ""]);
+        session(['blog_current_mappoint_id' => ""]);
+        session(['used_mappoints' => [] ]); 
         $galleries = Gallery::orderBy('name')->get();
         $galleries->load('GalleryMappoint');
         $mappoints = GalleryMappoint::all();
@@ -250,7 +253,7 @@ class GalleryController extends Controller
         $gallery_id = $this->getGalIdFromCode($request->country_code);
         $ord= $this->getPicOrder($request->mappoint_id);
         
-        $path = $this->img_base_path.$request->country_code;
+        $path = 'img';
         if (!file_exists($path)) {
             File::makeDirectory($path, 0777, true, true);
         }
@@ -264,18 +267,30 @@ class GalleryController extends Controller
             $fname = strtoupper(pathinfo($file, PATHINFO_FILENAME));
             $extension = strtoupper(pathinfo($file, PATHINFO_EXTENSION));
 
+            $data = [
+                'path' => $path, 
+                'image' => $fileName, 
+                'gallery_id' => $gallery_id, 
+                'mappoint_id' => $request->mappoint_id, 
+                'content' => $request->content
+            ];   
+
             if (!in_array(strtoupper($extension),['MOV', ''])){
-                $bc = new BlogCreator();
-                $bc->loadImage($path, $fileName, $gallery_id, $request->mappoint_id, $request->content);
+
+                $bc = new BlogCreator($data);
+                $bc->loadImage();
                 $bc->createThumbs();
                 $bc->saveThumbsToDb();
+                $bc->cleanUp();
                 $res = true;
                 
             } 
             else{
-                $bc = new BlogCreator();
-                $bc->loadImage($path, $fileName, $gallery_id, $request->mappoint_id, $request->content);
-                $res = $bc->saveVideoToDb();
+                $bc = new BlogCreator($data);
+                $bc->loadImage();
+                $bc->saveVideoToDb();
+                $bc->cleanup();
+                $res = true;
             }
 
         }

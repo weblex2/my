@@ -3,6 +3,7 @@ namespace App\MyClasses;
 
 use DB;
 use File;
+use FFMpeg;
 use App\MyClasses\Misc as Misc;
 use App\Models\GalleryPics;
 use App\Models\GalleryText;
@@ -29,37 +30,64 @@ class BlogCreator{
     private $content;
     private $ratio;
     private $size;
+    private $fullpath;
+    private $originalName;
+    private $tmpFileName;
+    private $fileId;
+    private $isVideo = false;
 
-    function __construct() {
-        $this->manager = new ImageManager(new Driver());
+    function __construct($data) {
+
+        // get the temp folder
         $this->tmpPath = Misc::getConfig('tmp_path')[0]->value;
-        if (!is_dir($this->tmpPath)){
-            File::makeDirectory($this->tmpPath, $mode = 0777, true, true);
+
+        // Image with full path
+        $this->fullpath = $data['path']."/".$data['image'];
+
+        // Filename
+        $this->filename = pathinfo($this->fullpath,  PATHINFO_FILENAME);
+
+        // Extention
+        $this->extention = pathinfo($this->fullpath, PATHINFO_EXTENSION);
+
+        // set Video flag
+        if (in_array($this->extention, ['MOV'])){
+            $this->isVideo = true;
         }
+
+        // Save Original Name for later
+        $this->originalName = $data['image'];
+        
+        // rename File 
+        $this->fileId = uniqid();
+        $this->tmpFileName = $this->tmpPath."/".$this->fileId.".".$this->extention;
+        rename($this->fullpath, $this->tmpFileName);
+
+        $this->fullname  = $data['image'];
+        $this->gallery_id = $data['gallery_id']; 
+        $this->mappoint_id = $data['mappoint_id']; 
+        $this->content = $data['content'];
+        $this->imgPath = $data['path'];
+        $this->manager = new ImageManager(new Driver());
+        
+        /* if (!is_dir($this->tmpPath)){
+            File::makeDirectory($this->tmpPath, $mode = 0777, true, true);
+        } */
         $this->status = 'INIT';
     }
 
     
-    public function loadImage($path, $image, $gallery_id, $mappoint_id, $content){
-        $fullpath = $path."/".$image;
-        $this->fullname  = $image;
-        $this->gallery_id = $gallery_id; 
-        $this->mappoint_id = $mappoint_id; 
-        $this->content = $content;
-        $this->filename = pathinfo($fullpath,  PATHINFO_FILENAME);
-        $this->extention = pathinfo($fullpath, PATHINFO_EXTENSION);
-        $this->imgPath = $path;
+    public function loadImage(){
+        
         if (!in_array(strtoupper($this->extention),['MOV']) ){  // Images
-            $this->img = $this->manager->read($fullpath);
+            $this->img = $this->manager->read($this->tmpFileName);
             $this->mimeType = $this->img->origin()->mediaType();
             $this->size = $this->img->size();
             $this->ratio = $this->size->aspectRatio();
         }
         else{   // Videos
-            // move File to tmp folder
-            rename($fullpath, $this->tmpPath."/".$this->fullname);
-            $this->filename = $this->tmpPath."/".$this->fullname;
-            $this->mimeType = mime_content_type($this->filename);
+           //$this->filename = $this->tmpPath."/".$this->fullname;
+            $this->mimeType = mime_content_type($this->tmpFileName);
         } 
     }
 
@@ -70,7 +98,7 @@ class BlogCreator{
         
         foreach ($thumbsizes as $size){
             $type = explode('_', $size->option)[2];
-            $name = $this->filename."_".$type.".".$this->extention;
+            $name = $this->fileId."_".$type.".".$this->extention;
             
             // Create squared image
             if ($size->value2!="") {
@@ -115,12 +143,20 @@ class BlogCreator{
 
     private function savePicContent($files){
         foreach ($files as $file){
-            $fileName = pathinfo($file)['filename'];
-            $size = strtoupper(substr($fileName, strrpos( $fileName, '_' ) + 1 ));
+             $fileName = pathinfo($file,  PATHINFO_FILENAME);
+             $extention = pathinfo($file, PATHINFO_EXTENSION);
+        
+            if (in_array($extention, ['MOV'])){
+                $size = 'MOV';
+            }
+            else{
+                $size = strtoupper(substr($fileName, strrpos( $fileName, '_' ) + 1 ));
+            }    
+            $mimeType = mime_content_type($file);
             $pic  = new GalleryPicContent();
             $pic->pic_id = $this->pic_id;
             $pic->size = $size;
-            $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($file));
+            $pic->filecontent = "data:".$mimeType.";base64,".base64_encode(file_get_contents($file));
             $res = $pic->save();        
         }
     }
@@ -139,13 +175,13 @@ class BlogCreator{
         try {
             $this->savePic();
             $this->savePicText();
-            $tmpFiles = glob($this->tmpPath.'/'.$this->filename."*");
+            if ($this->isVideo==false){
+                //delete original file 
+                unlink($this->tmpFileName);
+            }
+            // save the rest
+            $tmpFiles = glob($this->tmpPath.'/'.$this->fileId."*");
             $this->savePicContent($tmpFiles);
-            
-            // Cleanup temporary files
-            foreach ($tmpFiles as $file){
-                unlink($file);
-            }    
         }
         catch(\Exception $e){
             DB::rollback();
@@ -155,14 +191,30 @@ class BlogCreator{
         return true;
     }
 
+    public function createThumbnail(){
+        try{
+        FFMpeg::fromDisk('gallery')
+            ->open($this->tmpFileName)
+            ->getFrameFromSeconds(1)
+            ->export()
+            ->toDisk('gallery')
+            ->save($this->tmpPath."/".$this->filename."_tn.JPG");
+        } catch (\EncodingException $exception) {
+            $command = $exception->getCommand();
+            $errorLog = $exception->getErrorOutput();
+            dump($command);
+            dump($errorLog);
+        }    
+    }
 
     public function saveVideoToDb(){
         DB::beginTransaction();
         try{
             $this->savePic();
+            $this->createThumbnail();
             $this->savePicText();
-            $this->saveVideoContent();
-            unlink($this->filename);
+            $tmpFiles = glob($this->tmpPath.'/*');
+            $this->savePicContent($tmpFiles);
         }
         catch(\Exception $e){
             DB::rollback();
@@ -170,6 +222,14 @@ class BlogCreator{
         }
         DB::commit();
         return true;
+    }
+
+    public function cleanup(){
+        // Cleanup temporary files
+        $tmpFiles = glob($this->tmpPath.'/*');
+        foreach ($tmpFiles as $file){
+            unlink($file);
+        } 
     }
 
 }
