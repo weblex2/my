@@ -1,15 +1,14 @@
 <?php
+
 return [
     'ffmpeg' => [
-        #'binaries' => env('FFMPEG_BINARIES', '/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffmpeg'),
-        'binaries' => '/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffmpeg',
+        'binaries' => env('FFMPEG_BINARIES', 'ffmpeg'),
 
         'threads' => 12,   // set to false to disable the default 'threads' filter
     ],
 
     'ffprobe' => [
-        #'binaries' => env('FFPROBE_BINARIES', '/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffprobe'),
-        'binaries' => '/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffprobe',
+        'binaries' => env('FFPROBE_BINARIES', 'ffprobe'),
     ],
 
     'timeout' => 3600,
