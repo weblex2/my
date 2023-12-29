@@ -1,7 +1,8 @@
 <x-gallery-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl leading-tight ">
-            <a href="/travel-blog">Travel Blog</a> / <a href="{{route('gallery.showGallery',['id' => $country_code])}}">{{$country_code}}</a> / Upload
+        <h2 class="font-semibold  leading-tight ">
+            <a href="/travel-blog">Travel Blog</a> / 
+            <a href="{{route('gallery.showGallery',['id' => $country_code])}}">{{$country_code}}</a> / Upload
         </h2>
     </x-slot>
     <div class="py-12 h-full overflow-auto">

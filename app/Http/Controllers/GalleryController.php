@@ -130,6 +130,11 @@ class GalleryController extends Controller
         $pics->load('GalleryText');
         $pics->load('GalleryPicContent');
         $pics->load('Mappoint');
+        if (count($pics)<$this->reloadItems){
+            $picCnt = $this->reloadItems-count($pics);
+            $morePics = $this->getImagesFromNextMapPoint($picCnt, true);
+            $pics = $pics->merge($morePics);
+        }
         return view('gallery.showGallery', compact('gallery','pics','offset','mp'));
     }
 
@@ -184,7 +189,7 @@ class GalleryController extends Controller
         ], 201);
     }
 
-    public function getImagesFromNextMapPoint($morePicsCnt){
+    public function getImagesFromNextMapPoint($morePicsCnt, $picsOnly=false){
         $gallery_id = session('blog_current_gallery');
         $used_mappoints = session('used_mappoints');
         $nextMapPoint = GalleryMappoint::where('gallery_id', "=", $gallery_id) 
@@ -207,6 +212,9 @@ class GalleryController extends Controller
             return false;
         }
         else{
+            if ($picsOnly){
+                return $pics;
+            }
             $html="<div class='spacer'></div><div class='mappoint-header'>".$pics[0]->Mappoint->mappoint_name."</div>";
             foreach ($pics as $pic){
                 $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
@@ -435,32 +443,6 @@ class GalleryController extends Controller
         ], 200);
     }
 
-    public function picTest(){
-        /* $fp =  env('FFPROBE_BINARIES', 'ffprobe');
-        if (!file_exists($fp)) {
-            echo $fp;
-            die();
-        } 
-        
-        FFMPEG_BINARIES=/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffmpeg
-        FFPROBE_BINARIES=/mnt/web418/a2/92/52085492/htdocs/my/public/ffmpeg/ffprobe
-        */
-
-        try{
-        FFMpeg::fromDisk('gallery')
-            ->open('IMG_6959.MOV')
-            ->getFrameFromSeconds(1)
-            ->export()
-            ->toDisk('gallery')
-            ->save('FrameAt10sec.png');
-        } catch (\EncodingException $exception) {
-            $command = $exception->getCommand();
-            $errorLog = $exception->getErrorOutput();
-            dump($command);
-            dump($errorLog);
-        }    
-    }
-
     public function config(){
         $config  = GalleryConfig::all();
         return view('gallery.config', compact('config'));
@@ -489,4 +471,34 @@ class GalleryController extends Controller
         DB::commit();
         return back()->with('success','Configuration successfully stored.'); 
     }
+
+    public function picTest(){
+        $img = "img/IMG_6961.MOV";
+        $exif = exif_read_data($img);
+        $latitude = $this->gps($exif["GPSLatitude"], $exif['GPSLatitudeRef']);
+        $longitude = $this->gps($exif["GPSLongitude"], $exif['GPSLongitudeRef']);
+        echo $latitude . "," . $longitude;
+    }
+
+    public function gps($coordinate, $hemisphere) {
+        if (is_string($coordinate)) {
+            $coordinate = array_map("trim", explode(",", $coordinate));
+        }
+        for ($i = 0; $i < 3; $i++) {
+            $part = explode('/', $coordinate[$i]);
+            if (count($part) == 1) {
+            $coordinate[$i] = $part[0];
+            } else if (count($part) == 2) {
+            $coordinate[$i] = floatval($part[0])/floatval($part[1]);
+            } else {
+            $coordinate[$i] = 0;
+            }
+        }
+        list($degrees, $minutes, $seconds) = $coordinate;
+        $sign = ($hemisphere == 'W' || $hemisphere == 'S') ? -1 : 1;
+        return $sign * ($degrees + $minutes/60 + $seconds/3600);
+    }
+    
+
+    
 }
