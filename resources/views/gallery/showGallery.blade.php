@@ -22,9 +22,6 @@
                 </div>
             @endif    
             
-            @isset(!$mp->mappoint_name)
-                no pics so far...
-            @endisset    
             @if (count($pics)>0)
                 <div id="gallery_content">
                 <div class="mappoint-header">{{$pics[0]->Mappoint->mappoint_name}}</div>
