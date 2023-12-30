@@ -39,8 +39,11 @@ class BlogCreator{
     private $isVideo = false;
     private $request;
     private $tmpFolder;
+    private $videos;
 
     function __construct($request) {
+
+        $this->videos =['MOV','MP4'];
 
         $this->request = $request;
         // get the temp folder
@@ -53,7 +56,7 @@ class BlogCreator{
         $this->extention = pathinfo( $this->fileName, PATHINFO_EXTENSION);
 
         // set Video flag
-        if (in_array($this->extention, ['MOV'])){
+        if (in_array(strtoupper($this->extention), $this->videos)){
             $this->isVideo = true;
         }
 
@@ -73,7 +76,7 @@ class BlogCreator{
     public function loadMedia(){
         
         if ($this->isVideo ){   // Videos
-            $this->mimeType = mime_content_type($this->tmpFileName);
+            $this->mimeType = mime_content_type($this->fullPathName);
         }
         else{                   // Images
             $this->manager = new ImageManager(new Driver());
@@ -92,12 +95,12 @@ class BlogCreator{
             File::makeDirectory($this->tmpFolder, 0777, true, true);
         }
 
-            if (!$this->isVideo){
-            // Get file zizes from config
-            $thumbsizes = Misc::getConfig('pic_size%', 'value', 'DESC');
-            $thumbsizes = $thumbsizes->sortByDesc('value');
+        // Get file zizes from config
+        $thumbsizes = Misc::getConfig('pic_size%', 'value', 'DESC');
+        $thumbsizes = $thumbsizes->sortByDesc('value');
 
-
+        if (!$this->isVideo){   // Image
+            
             foreach ($thumbsizes as $size){
                 $type = explode('_', $size->option)[2];
                 $name = $type.".".$this->extention;
@@ -112,8 +115,11 @@ class BlogCreator{
                     $res = $this->img->scale(width: $size->value)->save($this->tmpFolder."/".$name);
                 }    
             }
-        } else{
-
+        } 
+        else {   // Video 
+            $this->createVideoThumbnail();
+            foreach ($thumbsizes as $size){
+            }        
         }    
         
         return true;
@@ -125,7 +131,6 @@ class BlogCreator{
         $ext  = strtolower($this->extention); 
         $lon = null;
         $lat = null;
-
 
         if (isset($meta[$ext]['exif']['GPS']["GPSLongitude"]) && isset($meta[$ext]['exif']['GPS']["GPSLongitudeRef"])){
             $lon  = $this->gps($meta[$ext]['exif']['GPS']["GPSLongitude"], $meta[$ext]['exif']['GPS']["GPSLongitudeRef"]);
@@ -167,7 +172,7 @@ class BlogCreator{
              $fileName = pathinfo($file,  PATHINFO_FILENAME);
              $extention = pathinfo($file, PATHINFO_EXTENSION);
         
-            if (in_array($extention, ['MOV'])){
+            if (in_array($extention, $this->videos)){
                 $size = 'MOV';
             }
             else{
@@ -194,6 +199,9 @@ class BlogCreator{
         // Start transaction!
         DB::beginTransaction();
         try {
+            if ($this->isVideo){
+                $vtn = $this->createVideoThumbnails();
+            }
             $this->savePic();
             $this->savePicText();
             $tmpFiles = glob($this->tmpFolder."/*");
@@ -208,36 +216,20 @@ class BlogCreator{
         return true;
     }
 
-    public function createVideoThumbnail(){
+    public function createVideoThumbnails(){
         try{
         FFMpeg::fromDisk('gallery')
             ->open($this->fullPathName)
             ->getFrameFromSeconds(1)
             ->export()
             ->toDisk('gallery')
-            ->save($this->tmp."/".$this->fileName."_tn.JPG");
+            ->save($this->tmpFolder."/videotn.JPG");
         } catch (\EncodingException $exception) {
             $command = $exception->getCommand();
             $errorLog = $exception->getErrorOutput();
         }    
     }
 
-    public function saveVideoToDb(){
-        DB::beginTransaction();
-        try{
-            $this->savePic();
-            $this->createThumbnail();
-            $this->savePicText();
-            $tmpFiles = glob($this->tmpPath.'/*');
-            $this->savePicContent($tmpFiles);
-        }
-        catch(\Exception $e){
-            DB::rollback();
-            return $e->getMessage();
-        }
-        DB::commit();
-        return true;
-    }
 
     public function cleanup(){
         // Cleanup temporary files

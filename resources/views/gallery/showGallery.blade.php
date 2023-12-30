@@ -4,8 +4,10 @@
     <x-slot name="header">
         <h2 class="font-semibold leading-tight text-orange-500">
             <a href="/travel-blog">{{ __('Blog') }}</a> / 
-            <a href="/travel-blog/show/{{$gallery[0]->code}}"> {{$gallery[0]->name}} </a> / 
-            <span id="mp-name">{{$mp->mappoint_name}}</span>
+            <a href="/travel-blog/show/{{$gallery[0]->code}}"> {{$gallery[0]->name}} </a>  
+            @isset($mp->mappoint_name)
+                / <span id="mp-name">{{$mp->mappoint_name}}</span>
+            @endisset    
         </h2>
     </x-slot>
     <div id="scroll" class="flex flex-col w-full h-[872px] bg-zinc-800 items-center overflow-auto p-4">
@@ -20,6 +22,9 @@
                 </div>
             @endif    
             
+            @isset($mp->mappoint_name)
+                no pics so far...
+            @endisset    
             @if (count($pics)>0)
                 <div id="gallery_content">
                 <div class="mappoint-header">{{$pics[0]->Mappoint->mappoint_name}}</div>
@@ -27,9 +32,15 @@
                         <x-gallery-item :pic="$pic" />
                 @endforeach 
             @else
-                <div class="mappoint-header">{{$mp->mappoint_name}}</div>    
+                <div class="mappoint-header">
+                    @isset($mp->mappoint_name)
+                        {{isset($mp->mappoint_name)}}
+                    @else
+                        No Map Points..
+                    @endisset 
+                </div>    
                 <div id="gallery_content" class="bg-green-200 content-center lg:max-w-[40%] md:max-w-[80%] rounded bg-zinc-900">
-                <div class="bg-zinc-800"> sorry, noch keine pics hier...</div>
+                <div class="bg-zinc-800 flex justify-center"> sorry, noch keine pics hier...</div>
             @endif
             </div>    
     </div>  
@@ -55,7 +66,7 @@
         <div id="loaderBigPic">
             <img src="{{asset('img/loading2.webp')}}" class="w-20">
         </div>
-        <div id="bigPic" class="p-10 hidden max-h-screen"></div>
+        <div id="bigPic" class="hidden max-h-screen"></div>
     </div>  
 
 
@@ -85,8 +96,10 @@
                  
                 if (noMore!=true){
                     more();
+                    $('#busy').css('visibility', 'hidden');
                 } 
                 else{
+                    $('#busy').css('visibility', 'hidden');
                     console.log("nix mehr");
                 }   
             }
@@ -170,6 +183,7 @@
         }
 
         function more(){
+            $('#busy').css('visibility', 'visible');
             $.ajax({
                 type: 'GET',
                 url: '/showMore/'+offset,
@@ -199,9 +213,11 @@
                     lastpictop = img.offset().top + imgHeight ;
                     offset++;
                     $('#debug').html("<div>lastpictop set to : "+ lastpictop + "</div>");
+                    $('#busy').css('visibility', 'hidden');
                 },
                 error: function(data) {
                     console.log(data);
+                    $('#busy').css('visibility', 'hidden');
                 }
             });
         }

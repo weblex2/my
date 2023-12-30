@@ -112,34 +112,41 @@ class GalleryController extends Controller
 
         if ($mappoint_id==-1){
             $mp  = GalleryMappoint::where('gallery_id','=',$gallery_id)->orderBy('ord')->first();
-            $mappoint_id = $mp->id;
-        }
-
-        $mp = GalleryMappoint::find($mappoint_id);
-        $used_mappoints = [0 => $mappoint_id];
-        session(['blog_current_gallery' => $gallery_id]);
-        session(['blog_current_mappoint_id' => $mappoint_id]);
-        session(['used_mappoints' => $used_mappoints]); 
-        $gc = new GalleryPics();
-        $pics = $gc->select("*")
-        ->where('gallery_id', '=', $gallery_id)
-        ->where('mappoint_id', '=', $mappoint_id)
-        ->offset(0)
-        ->limit($this->reloadItems)
-        ->orderBy('ord')
-        ->get();
-
-        $pics->load('GalleryText');
-        $pics->load('GalleryPicContent');
-        $pics->load('Mappoint');
-        if (count($pics)<$this->reloadItems){
-            $picCnt = $this->reloadItems-count($pics);
-            $morePics = $this->getImagesFromNextMapPoint($picCnt, true);
-            if ($morePics) {
-                $pics = $pics->merge($morePics);
+            if ($mp){
+                $mappoint_id = $mp->id;
             }    
         }
+        if ($mappoint_id){
+            $mp = GalleryMappoint::find($mappoint_id);
+            $used_mappoints = [0 => $mappoint_id];
+            session(['blog_current_gallery' => $gallery_id]);
+            session(['blog_current_mappoint_id' => $mappoint_id]);
+            session(['used_mappoints' => $used_mappoints]); 
+            $gc = new GalleryPics();
+            $pics = $gc->select("*")
+                ->where('gallery_id', '=', $gallery_id)
+                ->where('mappoint_id', '=', $mappoint_id)
+                ->offset(0)
+                ->limit($this->reloadItems)
+                ->orderBy('ord')
+                ->get();
+
+            $pics->load('GalleryText');
+            $pics->load('GalleryPicContent');
+            $pics->load('Mappoint');
+            if (count($pics)<$this->reloadItems){
+                $picCnt = $this->reloadItems-count($pics);
+                $morePics = $this->getImagesFromNextMapPoint($picCnt, true);
+                if ($morePics) {
+                    $pics = $pics->merge($morePics);
+                }    
+            }
+        }
+        else{
+            $pics = new GalleryPics();
+        }    
         return view('gallery.showGallery', compact('gallery','pics','offset','mp'));
+        
     }
 
     public function showMore($offset=0){
