@@ -22,7 +22,7 @@
                 </div>
             @endif    
             
-            @isset($mp->mappoint_name)
+            @isset(!$mp->mappoint_name)
                 no pics so far...
             @endisset    
             @if (count($pics)>0)
