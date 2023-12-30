@@ -10,6 +10,8 @@ use App\Models\GalleryText;
 use App\Models\GalleryPicContent;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Owenoj\LaravelGetId3\GetId3;
+use App\Http\Controllers\GalleryController;
 
 class BlogCreator{
     
@@ -17,7 +19,7 @@ class BlogCreator{
     private $org;
     private $img;
     private $status;
-    private $filename;
+    private $fileName;
     private $extention;
     private $imgPath;
     private $thumbs = [];
@@ -26,7 +28,7 @@ class BlogCreator{
     private $gallery_id;
     private $mappoint_id;
     private $pic_id;
-    private $fullname;
+    private $fullPathName;
     private $content;
     private $ratio;
     private $size;
@@ -35,92 +37,111 @@ class BlogCreator{
     private $tmpFileName;
     private $fileId;
     private $isVideo = false;
+    private $request;
+    private $tmpFolder;
 
-    function __construct($data) {
+    function __construct($request) {
 
+        $this->request = $request;
         // get the temp folder
         $this->tmpPath = Misc::getConfig('tmp_path')[0]->value;
 
-        // Image with full path
-        $this->fullpath = $data['path']."/".$data['image'];
-
         // Filename
-        $this->filename = pathinfo($this->fullpath,  PATHINFO_FILENAME);
+        $this->fileName = $request->file->getClientOriginalName();
 
         // Extention
-        $this->extention = pathinfo($this->fullpath, PATHINFO_EXTENSION);
+        $this->extention = pathinfo( $this->fileName, PATHINFO_EXTENSION);
 
         // set Video flag
         if (in_array($this->extention, ['MOV'])){
             $this->isVideo = true;
         }
 
-        // Save Original Name for later
-        $this->originalName = $data['image'];
-        
-        // rename File 
-        $this->fileId = uniqid();
-        $this->tmpFileName = $this->tmpPath."/".$this->fileId.".".$this->extention;
-        rename($this->fullpath, $this->tmpFileName);
-
-        $this->fullname  = $data['image'];
-        $this->gallery_id = $data['gallery_id']; 
-        $this->mappoint_id = $data['mappoint_id']; 
-        $this->content = $data['content'];
-        $this->imgPath = $data['path'];
-        $this->manager = new ImageManager(new Driver());
-        
-        /* if (!is_dir($this->tmpPath)){
-            File::makeDirectory($this->tmpPath, $mode = 0777, true, true);
-        } */
+        // Set Full Path & Name
+        $this->fullPathName  = $this->tmpPath."/".$this->fileName;
+        $this->gallery_id = GalleryController::getGalIdFromCode($request->country_code); 
+        $this->mappoint_id = $request->mappoint_id; 
+        $this->content = $request->content;
         $this->status = 'INIT';
     }
 
+    public function uploadFile(){
+        $successfullyMoved = $this->request->file->move($this->tmpPath, $this->fileName);
+        return $successfullyMoved;
+    }
     
-    public function loadImage(){
+    public function loadMedia(){
         
-        if (!in_array(strtoupper($this->extention),['MOV']) ){  // Images
-            $this->img = $this->manager->read($this->tmpFileName);
+        if ($this->isVideo ){   // Videos
+            $this->mimeType = mime_content_type($this->tmpFileName);
+        }
+        else{                   // Images
+            $this->manager = new ImageManager(new Driver());
+            $this->img = $this->manager->read($this->fullPathName);
             $this->mimeType = $this->img->origin()->mediaType();
             $this->size = $this->img->size();
-            $this->ratio = $this->size->aspectRatio();
-        }
-        else{   // Videos
-           //$this->filename = $this->tmpPath."/".$this->fullname;
-            $this->mimeType = mime_content_type($this->tmpFileName);
+            $this->ratio = $this->size->aspectRatio(); 
         } 
     }
 
-    public function createThumbs(){
+    public function createThumbNails(){
         
-        $thumbsizes = Misc::getConfig('pic_size%', 'value', 'DESC');
-        $thumbsizes = $thumbsizes->sortByDesc('value');
-        
-        foreach ($thumbsizes as $size){
-            $type = explode('_', $size->option)[2];
-            $name = $this->fileId."_".$type.".".$this->extention;
-            
-            // Create squared image
-            if ($size->value2!="") {
-                $res = $this->img->resize($size->value, $size->value2)->save($this->tmpPath."/".$name);  
-            }
-            
-            // Create scaled image
-            else{
-                $res = $this->img->scale(width: $size->value)->save($this->tmpPath."/".$name);
-            }    
+        // create a temporary folder for the thumbnails
+        $this->tmpFolder = $this->tmpPath."/".pathinfo( $this->fileName, PATHINFO_FILENAME);
+        if (!file_exists($this->tmpFolder)) {
+            File::makeDirectory($this->tmpFolder, 0777, true, true);
         }
+
+            if (!$this->isVideo){
+            // Get file zizes from config
+            $thumbsizes = Misc::getConfig('pic_size%', 'value', 'DESC');
+            $thumbsizes = $thumbsizes->sortByDesc('value');
+
+
+            foreach ($thumbsizes as $size){
+                $type = explode('_', $size->option)[2];
+                $name = $type.".".$this->extention;
+                
+                // Create squared image
+                if ($size->value2!="") {
+                    $res = $this->img->resize($size->value, $size->value2)->save($this->tmpFolder."/".$name);  
+                }
+                
+                // Create scaled image
+                else{
+                    $res = $this->img->scale(width: $size->value)->save($this->tmpFolder."/".$name);
+                }    
+            }
+        } else{
+
+        }    
         
         return true;
     }
 
     private function savePic(){
+        $track = new GetId3($this->fullPathName);
+        $meta = $track->extractInfo();
+        $ext  = strtolower($this->extention); 
+        $lon = null;
+        $lat = null;
+
+
+        if (isset($meta[$ext]['exif']['GPS']["GPSLongitude"]) && isset($meta[$ext]['exif']['GPS']["GPSLongitudeRef"])){
+            $lon  = $this->gps($meta[$ext]['exif']['GPS']["GPSLongitude"], $meta[$ext]['exif']['GPS']["GPSLongitudeRef"]);
+        }
+        if (isset($meta[$ext]['exif']['GPS']["GPSLatitude"]) && isset($meta[$ext]['exif']['GPS']["GPSLatitudeRef"])){
+            $lat  = $this->gps($meta[$ext]['exif']['GPS']["GPSLatitude"], $meta[$ext]['exif']['GPS']["GPSLatitudeRef"]);
+        }
+        
         $this->pic_id = Misc::getPicId();
         $pic = new GalleryPics;
         $pic->gallery_id = $this->gallery_id;
         $pic->mappoint_id = $this->mappoint_id;
-        $pic->pic = $this->fullname;
-        $pic->pic_id = 1;
+        $pic->pic = $this->fileName;
+        $pic->meta = json_encode($meta)!=null ? $meta : null;
+        $pic->lon = $lon;
+        $pic->lat = $lat;
         $pic->ord = Misc::getPicOrder($this->mappoint_id);
         $res = $pic->save();
         $this->pic_id = $pic->id;
@@ -150,13 +171,13 @@ class BlogCreator{
                 $size = 'MOV';
             }
             else{
-                $size = strtoupper(substr($fileName, strrpos( $fileName, '_' ) + 1 ));
+                $size = $fileName;
             }    
             $mimeType = mime_content_type($file);
             $pic  = new GalleryPicContent();
             $pic->pic_id = $this->pic_id;
-            $pic->size = $size;
-            $pic->filecontent = "data:".$mimeType.";base64,".base64_encode(file_get_contents($file));
+            $pic->size = strtoupper($size);
+            $pic->filecontent = "data:".$mimeType.";base64,".base64_encode(file_get_contents($this->fullPathName));
             $res = $pic->save();        
         }
     }
@@ -165,45 +186,39 @@ class BlogCreator{
         $pic  = new GalleryPicContent();
         $pic->pic_id = $this->pic_id;
         $pic->size = 'MOV';
-        $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($this->filename));
+        $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($this->fullPathName));
         $res = $pic->save();
     }
 
-    public function saveThumbsToDb(){
+    public function createBlog(){
         // Start transaction!
         DB::beginTransaction();
         try {
             $this->savePic();
             $this->savePicText();
-            if ($this->isVideo==false){
-                //delete original file 
-                unlink($this->tmpFileName);
-            }
-            // save the rest
-            $tmpFiles = glob($this->tmpPath.'/'.$this->fileId."*");
+            $tmpFiles = glob($this->tmpFolder."/*");
             $this->savePicContent($tmpFiles);
         }
         catch(\Exception $e){
             DB::rollback();
-	        return $e->getMessage();
+            throw new \Exception($e->getMessage());
         } 
         DB::commit();
+        $this->cleanup();
         return true;
     }
 
-    public function createThumbnail(){
+    public function createVideoThumbnail(){
         try{
         FFMpeg::fromDisk('gallery')
-            ->open($this->tmpFileName)
+            ->open($this->fullPathName)
             ->getFrameFromSeconds(1)
             ->export()
             ->toDisk('gallery')
-            ->save($this->tmpPath."/".$this->filename."_tn.JPG");
+            ->save($this->tmp."/".$this->fileName."_tn.JPG");
         } catch (\EncodingException $exception) {
             $command = $exception->getCommand();
             $errorLog = $exception->getErrorOutput();
-            dump($command);
-            dump($errorLog);
         }    
     }
 
@@ -226,10 +241,14 @@ class BlogCreator{
 
     public function cleanup(){
         // Cleanup temporary files
-        $tmpFiles = glob($this->tmpPath.'/*');
+        $tmpFiles = glob($this->tmpFolder.'/*');
         foreach ($tmpFiles as $file){
             unlink($file);
         } 
+        // remove folder
+        File::deleteDirectory($this->tmpFolder);
+        // remove original file
+        unlink($this->fullPathName);
     }
 
     public function gps($coordinate, $hemisphere) {

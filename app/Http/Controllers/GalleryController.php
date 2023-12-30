@@ -8,10 +8,11 @@ use App\Models\GalleryPics;
 use App\Models\GalleryMappoint;
 use App\Models\GalleryText;
 use App\Models\GalleryConfig;
+use App\Models\GalleryPicContent;
 use PhpParser\Node\Expr\AssignOp\Concat;
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\Validator;
-use File;
+use Owenoj\LaravelGetId3\GetId3;
 
 //use Illuminate\Contracts\Session\Session as Session;
 use Illuminate\Support\Facades\Session as FacadesSession;
@@ -127,13 +128,16 @@ class GalleryController extends Controller
         ->limit($this->reloadItems)
         ->orderBy('ord')
         ->get();
+
         $pics->load('GalleryText');
         $pics->load('GalleryPicContent');
         $pics->load('Mappoint');
         if (count($pics)<$this->reloadItems){
             $picCnt = $this->reloadItems-count($pics);
             $morePics = $this->getImagesFromNextMapPoint($picCnt, true);
-            $pics = $pics->merge($morePics);
+            if ($morePics) {
+                $pics = $pics->merge($morePics);
+            }    
         }
         return view('gallery.showGallery', compact('gallery','pics','offset','mp'));
     }
@@ -250,83 +254,54 @@ class GalleryController extends Controller
     }
 
     public function storePic(Request $request){
-         
+        $max_upload = 65536; 
         $request->validate([
-            #'file' => 'required|max:2048',
+            'file' => 'required|max:'. $max_upload,
             'file' => 'required',
             'country_code' => 'required',
             'mappoint_id' => 'required',
         ]);
-
-        $gallery_id = $this->getGalIdFromCode($request->country_code);
-        $ord= $this->getPicOrder($request->mappoint_id);
         
-        $path = 'img';
-        if (!file_exists($path)) {
-            File::makeDirectory($path, 0777, true, true);
+        try{
+            $bc = new BlogCreator($request);
+            $bc->uploadFile();
+            $bc->loadMedia();
+            $bc->createThumbNails();
+            $bc->createBlog();
         }
-
-        $fileName = $request->file->getClientOriginalName(); 
-        $successfullyMoved = $request->file->move($path, $fileName);
-
-        if ($successfullyMoved){
-            
-            $file  = $path."/".$fileName;
-            $fname = strtoupper(pathinfo($file, PATHINFO_FILENAME));
-            $extension = strtoupper(pathinfo($file, PATHINFO_EXTENSION));
-
-            $data = [
-                'path' => $path, 
-                'image' => $fileName, 
-                'gallery_id' => $gallery_id, 
-                'mappoint_id' => $request->mappoint_id, 
-                'content' => $request->content
-            ];   
-
-            if (!in_array(strtoupper($extension),['MOV', ''])){
-
-                $bc = new BlogCreator($data);
-                $bc->loadImage();
-                $bc->createThumbs();
-                $bc->saveThumbsToDb();
-                $bc->cleanUp();
-                $res = true;
-                
-            } 
-            else{
-                $bc = new BlogCreator($data);
-                $bc->loadImage();
-                $bc->saveVideoToDb();
-                $bc->cleanup();
-                $res = true;
-            }
-
-        }
-        
-        if ($res===true){
+        catch(\Exception $e){
+            dump($e);
+            // Error returned
             return back()
-            ->with('success','File successfully uploaded.')
-            ->with('file', $fileName);
-        }
-        else{
-            return back()
-            ->with('error',$res)
-            ->with('file', $fileName);
+                ->with('error',$e->getMessage());
         }
         
+        // All good
+        return back()
+            ->with('success','File successfully uploaded.');
     }
 
-    public function getGalIdFromCode($code){
+    public static function getGalIdFromCode($code){
         $gal  = Gallery::where('code', "=", $code)->first();
         return $gal->id;
     }
 
     public function deletePic(Request $request ){
         $pic_id = $request->id;
-        $pic = GalleryPics::find($pic_id);
-        $picTexts = GalleryText::where('pic_id', "=", $pic_id);
-        $picTexts->delete();
-        $pic->delete();
+        DB::beginTransaction();
+        try{
+            $pic = GalleryPics::find($pic_id);
+            $picTexts = GalleryText::where('pic_id', "=", $pic_id);
+            $picTexts->delete();
+            $pic->delete();
+            $picContent = GalleryPicContent::where('pic_id', "=", $pic_id);
+            $picContent->delete();
+        }
+        catch(\Exception $e){
+            DB::rollback();
+            return back()->with('error',$e->getMessage()); 
+        }    
+        DB::commit();
         return back()->with('success','File successfully deleted.'); 
     }
 
@@ -473,7 +448,19 @@ class GalleryController extends Controller
     }
 
     public function picTest(){
+        
+        
         $img = "img/IMG_6961.MOV";
+        $track = new GetId3($img);
+
+        dump($track->extractInfo());
+
+        $img="img/IMG_6913.JPG";
+        $track = new GetId3($img);
+
+        dump($track->extractInfo());    
+
+        die();
         $exif = exif_read_data($img);
         $latitude = $this->gps($exif["GPSLatitude"], $exif['GPSLatitudeRef']);
         $longitude = $this->gps($exif["GPSLongitude"], $exif['GPSLongitudeRef']);

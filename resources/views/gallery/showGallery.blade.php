@@ -141,6 +141,7 @@
         }
        
         function deleteBlogItem(){
+            $('#busy').css('visibility', 'visible');
             var id = $('#delete_id').val();
             $.ajaxSetup({
                 headers: {
@@ -159,9 +160,11 @@
                     console.log("Data " + id+ " deleted");
                     $('#'+id).remove();
                     closeDeletePopup();
+                    $('#busy').css('visibility', 'hidden');
                 },
                 error: function(data) {
                     console.log(data);
+                    $('#busy').css('visibility', 'hidden');
                 }
             });
         }

@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('gallery_pics', function (Blueprint $table) {
-            $table->dropColumn('UserDomainName');
+            $table->text('lon')->nullable()->change();
+            $table->text('lat')->nullable()->change();
         });
     }
 

@@ -11,6 +11,10 @@ class GalleryPics extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'meta' => 'array'
+    ];
+
     public function gallery(){
         return $this->belongsTo(Gallery::Class, 'gallery_id', 'id');
     }
@@ -42,5 +46,7 @@ class GalleryPics extends Model
     public function GalleryMappoint(){
         return $this->belongsTo(GalleryMappoint::Class, 'mappoint_id', 'id');
     }
+
+
 
 }

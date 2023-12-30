@@ -9,7 +9,7 @@
     }
 @endphp
 <div id="{{$pic->id}}" class="w-full">
-    <div id="file_{{$pic}}" class="p-4 bg-zinc-800 flex items-center relative">
+    <div id='file_{{$pic->id}}' class="p-4 bg-zinc-800 flex items-center relative">
         @if (in_array(strtoupper(substr($picname,-3)), ['MOV']))
             <video class="img w-[756px] rounded-xl shadow-xl" controls>
                 <source src="{{$pic->GalleryPicContent->filecontent}}" type="video/mp4">
@@ -21,6 +21,24 @@
             </a>
         @endif   
     </div>
+    <div id="exif_{{$pic->id}}" class="hidden gallery-meta h-20 overflow-auto text-sm">
+        Lat : {{ $pic->lat }}    <br>
+        Lon : {{ $pic->lon }}    <br>
+        
+        @isset ($pic->meta['error'])
+            <div> Meta error</div>
+        @else
+            <pre>
+            @php 
+                print_r($pic->meta);        
+            @endphp
+            </pre>    
+        @endisset    
+            
+        {{-- @foreach ($pic->meta as $key => $value)
+            <div> {{$key}} => {{$value}}</div>   
+        @endforeach --}}
+    </div>
     <div class="flex justify-between">
         <div class="p-4 text-xs font-extrabold">
             {{$picname}}
@@ -30,9 +48,12 @@
                 <a href="{{route('gallery.editPic', ['pic_id' => $pic->id])}}"><i class="fas mr-1 fa-edit gallery-edit-icon"></i></a>
                 <a href="javascript:void(0)" onclick="showDeletePopup({{$pic->id}})"><i class="deleteBlog mr-1 fa-solid fa-trash gallery-delete-icon"></i></a>
             @endif 
-            <i class="gallery-comment-icon fa-solid fa-camera mr-1"></i>
-            <i class="gallery-comment-icon fa fa-comment mt-[1px]"></i>
-            <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true"></i>     
+            <a href="https://www.google.com/maps?q={{$pic->lat}},{{$pic->lon}}" target="_blank">    
+                <i class="gallery-comment-icon fa-solid fa-globe mr-1" title="Google Maps"></i>
+            </a>
+            <i class="gallery-comment-icon fa-solid fa-camera mr-1" title="Exif Data" onclick="$('#exif_{{$pic->id}}').toggle()"></i>
+            <i class="gallery-comment-icon fa fa-comment mt-[1px] mr-1" title="Comment"></i>
+            <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true" title="Like!"></i>     
                   
         </div>
     </div>
