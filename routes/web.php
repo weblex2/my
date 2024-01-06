@@ -134,5 +134,6 @@ Route::controller(FriesenController::class)->group(function(){
 
 
 Route::controller(NtfyController::class)->group(function () {
-    Route::GET('/notify/{msg}', 'index')->name('ntfy.index');   
+    Route::GET('/notify/getDates/{date?}', 'getDates')->name('ntfy.getDates');  
+    Route::GET('/notify/{msg}', 'index')->name('ntfy.index');    
 });

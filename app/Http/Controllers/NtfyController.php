@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\MyDates;
 
 class NtfyController extends Controller
 {
@@ -40,5 +41,21 @@ class NtfyController extends Controller
 
         $statusCode = $response->getStatusCode();
         */
+    }
+
+    private function sendNotifications($date='0000-00-00'){
+        if ($date==null) {
+            $date = date('Y-m-d');
+        }
+    }
+
+    public function getDates($date=null){
+        if ($date==null){
+            $date=date('Y-m-d');
+        }
+        $res = MyDates::where('date' ,">=", $date)->get();
+        foreach ($res as $notify){
+            $this->sendMessage($notify->topic);
+        }
     }
 }
