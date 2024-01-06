@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class NtfyController extends Controller
 {
-    public function index(){
+    public function index($msg){
         
         $endpoint = "https://f180-88-70-254-60.ngrok-free.app/noppal";
 
@@ -15,7 +15,7 @@ class NtfyController extends Controller
         curl_setopt($ch, CURLOPT_URL, $endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "Work Harder");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $msg);
 
         $headers = array();
         $headers[] = 'Content-Type: application/x-www-form-urlencoded';
