@@ -6,10 +6,14 @@ use Illuminate\Http\Request;
 
 class NtfyController extends Controller
 {
+    private $endpoint = "https://bluebird-adapted-drake.ngrok-free.app/";
+    private $channel = "noppal";
     public function index($msg){
-        
-        $endpoint = "https://f180-88-70-254-60.ngrok-free.app/noppal";
+        $this->sendMessage($msg);
+    }
 
+    public function sendMessage($msg){
+        $endpoint = $this->endpoint.$this->channel;
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $endpoint);
