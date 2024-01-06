@@ -10,6 +10,7 @@ use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\FriesenController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\NtfyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,4 +130,9 @@ Route::controller(FriesenController::class)->group(function(){
     Route::get('/friese', 'index')->name('friese.index');
     Route::get('getFriesen/{plz?}', 'getFriesen')->name('getfriesen');  
     //Route::post('createFriese', 'createFriese')->name('firese.create');
+});
+
+
+Route::controller(NtfyController::class)->group(function () {
+    Route::GET('/notify', 'index')->name('ntfy.index');   
 });
