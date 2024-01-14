@@ -20,3 +20,7 @@ yarn-error.log
 /tmp
 /.vscode
 public/Vietnam Aleman.docx
+*.pem
+*.ppk
+*.cmd
+js.html
