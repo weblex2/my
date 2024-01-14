@@ -11,6 +11,7 @@ use App\Http\Controllers\QueueController;
 use App\Http\Controllers\FriesenController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NtfyController;
+use App\Http\Controllers\KnowledgeBaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -135,5 +136,11 @@ Route::controller(FriesenController::class)->group(function(){
 
 Route::controller(NtfyController::class)->group(function () {
     Route::GET('/notify/getDates/{date?}', 'getDates')->name('ntfy.getDates');  
-    Route::GET('/notify/{msg}', 'index')->name('ntfy.index');    
+    Route::GET('/notify/msg/{msg}', 'index')->name('ntfy.index');    
+    Route::GET('/notify/create', 'createNotification')->name('ntfy.create'); 
+    Route::GET('/notify/store', 'storeNotification')->name('ntfy.store');
+});
+
+Route::controller(KnowledgeBaseController::class)->group(function () {
+    Route::GET('/kb/test', 'kbtest')->name('kb.test');
 });

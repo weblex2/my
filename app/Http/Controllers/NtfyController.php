@@ -10,7 +10,7 @@ class NtfyController extends Controller
     private $endpoint = "https://bluebird-adapted-drake.ngrok-free.app/";
     private $channel = "noppal";
     public function index($msg){
-        $this->sendMessage($msg);
+        //$this->sendMessage($msg);
     }
 
     public function sendMessage($msg){
@@ -51,11 +51,32 @@ class NtfyController extends Controller
 
     public function getDates($date=null){
         if ($date==null){
-            $date=date('Y-m-d');
+            $date=date('Y-m-d H:i:s');
         }
-        $res = MyDates::where('date' ,">=", $date)->get();
+        $res = MyDates::where('date' ,"<=", $date)->get();
         foreach ($res as $notify){
+            if ($notify->recurring){
+                if ($notify->recurring_interval=="D")
+                    $new_notify = MyDates::find($notify->id);
+                    $new_notify->date = date('Y-m-d',strtotime($notify->date) + 86400);
+                    $new_notify->save();
+            }
             $this->sendMessage($notify->topic);
         }
     }
+
+    public function createNotification(){
+        return view('ntfy.create');
+    }
+
+    public function store(Request $request){
+        $req = $request->all();
+        $mydate = new MyDates();
+        $mydate->load($req);
+        $mydate->save();
+        return back()->with('success','Date successfully stored.'); 
+    }
+
+    
+
 }

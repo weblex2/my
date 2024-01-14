@@ -1,0 +1,93 @@
+<script>
+
+
+const url = 'http://127.0.0.1:8000/oauth/token';
+// The data we are going to send in our request
+let data = {
+     username: 'alex@noppenberger.org',
+      password: 'hotl!ne03',
+      client_id: 2,
+      client_secret: 'KesiV88IWB7QPj5OfI7FmTJPZZtvoJ6BP009cJCZ',
+      grant_type: 'password',
+      scope: ''
+}
+// The parameters we are gonna pass to the fetch function
+let fetchData = { 
+    method: 'POST', 
+    body: data,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+}
+fetch(url, fetchData)
+.then(function(resp) {
+    // Handle response you get from the server
+    console.log(resp);
+});
+
+
+/* async function getToken() {
+  const tokenUrl = 'http://127.0.0.1:8000/oauth/token'; // Replace with the actual token endpoint
+
+  const response = await fetch(tokenUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+      // Include any additional headers required for token request
+    },
+    body: JSON.stringify({
+      // Include any credentials required for token request
+      username: 'alex@noppenberger.org',
+      password: 'hotl!ne03',
+      client_id: 2,
+      client_secret: 'KesiV88IWB7QPj5OfI7FmTJPZZtvoJ6BP009cJCZ',
+      grant_type: 'password',
+      scope: ''
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to obtain Bearer token');
+  }
+
+  const tokenData = await response.json();
+  return tokenData.access_token;
+}
+
+async function makePostRequest() {
+  try {
+    const bearerToken = await getToken();
+
+    const apiUrl = 'http://127.0.0.1:8000/api/v1/knowledgeBase/';
+    const postData = {
+      // Include your POST data here
+      key1 : 'abc',
+      key2 : 'def',
+    };
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${bearerToken}`
+      },
+      body: JSON.stringify(postData)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to make POST request');
+    }
+
+    const responseData = await response.json();
+    console.log(responseData);
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
+
+// Call the function to make the POST request
+makePostRequest(); */
+
+</script>

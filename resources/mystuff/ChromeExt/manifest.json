@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Text Extractor",
+  "version": "1.0",
+  "description": "Extracts text from a webpage and sends it to an API.",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "Text Extractor"
+  },
+  "icons": {
+    "48": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
