@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('gallery_pics', function (Blueprint $table) {
-            $table->dropColumn('UserDomainName');
+            $table->integer('mappoint_id')->after('text');
         });
     }
 
