@@ -26,7 +26,7 @@
     @apply cursor-pointer;
 }
 
-.gallery-comment-icon{
+.gallery-comment-icon{ 
     @apply hover:text-blue-500 cursor-pointer;
 }
 
