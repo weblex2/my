@@ -3,7 +3,7 @@
         <div class="grid grid-cols-12 gap-2 pb-3">
             {{-- // row 1 --}}
             <div class="col-span-11 header">
-                <!--img src="{{ $post->user->profile_photo_url }}" class="avatar"-->
+                {{-- <img src="{{ $post->user->profile_photo_url }}" class="avatar"> --}}
                 <div class="text-align-left">{{ $post->user->name }}</div> 
             </div>    
             <div class="col-span-1">
