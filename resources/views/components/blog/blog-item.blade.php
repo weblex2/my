@@ -4,7 +4,7 @@
             {{-- // row 1 --}}
             <div class="col-span-11 header">
                 {{-- <img src="{{ $post->user->profile_photo_url }}" class="avatar"> --}}
-                <div class="text-align-left">{{ $post->user->name }}</div> 
+                {{-- <div class="text-align-left">{{ $post->user->name }}</div>  --}}
             </div>    
             <div class="col-span-1">
                 <div class="text-right text-orange-500 font-bold text-xs">{{ \Carbon\Carbon::parse($post->created_at)->format('d.m.Y')}}</div>   
