@@ -142,5 +142,11 @@ Route::controller(NtfyController::class)->group(function () {
 });
 
 Route::controller(KnowledgeBaseController::class)->group(function () {
-    Route::GET('/kb/test', 'kbtest')->name('kb.test');
+    Route::GET('/kb', 'all')->middleware(['auth'])->name('knowledeBase.index');
+    Route::GET('/kb/add', 'addWeb')->middleware(['auth'])->name('knowledeBase.add');
+    Route::POST('/kb/store', 'storeWeb')->middleware(['auth'])->name('knowledeBase.store');
+    Route::POST('/kb/delete', 'deleteWeb')->middleware(['auth'])->name('knowledeBase.delete');
+    Route::GET('/kb/show/{id}', 'showWeb')->middleware(['auth'])->name('knowledgeBase.show');
 });
+
+

@@ -6,7 +6,7 @@ use App\Models\KnowledgeBase;
 use App\Http\Requests\StoreKnowledgeBaseRequest;
 use App\Http\Requests\UpdateKnowledgeBaseRequest;
 use App\Http\Resources\KnowledgeBaseResource;
-use Request;
+use Illuminate\Http\Request;
 
 class KnowledgeBaseController extends Controller
 {
@@ -21,6 +21,37 @@ class KnowledgeBaseController extends Controller
         return KnowledgeBaseResource::collection(
             KnowledgeBase::all()
         );
+    }
+
+    public function all()
+    {
+        $kbs = KnowledgeBase::paginate(15);
+        return view('knowledgebase.index', ["kbs" => $kbs]);
+    }
+
+    public function deleteWeb(Request $request){
+        $id = $request->id;
+        $kb = KnowledgeBase::find($id);
+        $kb->delete();
+        return redirect("/kb");
+    }
+
+    public function showWeb($id){
+         $kb = KnowledgeBase::find($id);
+         return view('knowledgeBase.view', ["kb" => $kb]);
+    }
+
+    public function addWeb(){
+         return view('knowledgeBase.add');
+    }
+
+    public function storeWeb(Request $request){
+        $kb = new KnowledgeBase();
+        $kb->fill($request->all());
+        $kb->save(); 
+        $kbs = KnowledgeBase::paginate(2);
+        return redirect("/kb");
+        
     }
 
     /**

@@ -1,5 +1,5 @@
 <x-blog.blog-layout>
-       <div class="py-12 h-full">
+      <div class="py-12 h-full"> 
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
             <div class="overflow-hidden sm:rounded-lg h-full">
                 <div class="p-3 m-5">
