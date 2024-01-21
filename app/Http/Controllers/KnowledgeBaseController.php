@@ -26,7 +26,7 @@ class KnowledgeBaseController extends Controller
     public function all()
     {
         $kbs = KnowledgeBase::paginate(15);
-        return view('knowledgebase.index', ["kbs" => $kbs]);
+        return view('knowledgeBase.index', ["kbs" => $kbs]);
     }
 
     public function deleteWeb(Request $request){
