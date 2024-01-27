@@ -146,7 +146,7 @@ Route::controller(KnowledgeBaseController::class)->group(function () {
     Route::GET('/kb/add', 'addWeb')->middleware(['auth'])->name('knowledeBase.add');
     Route::POST('/kb/store', 'storeWeb')->middleware(['auth'])->name('knowledeBase.store');
     Route::POST('/kb/delete', 'deleteWeb')->middleware(['auth'])->name('knowledeBase.delete');
-    Route::GET('/kb/show/{id}', 'showWeb')->middleware(['auth'])->name('knowledgeBase.show');
+    Route::GET('/kb/show/{id}', 'showWeb')->middleware(['auth'])->name('knowledgeBase.webshow');
 });
 
 
