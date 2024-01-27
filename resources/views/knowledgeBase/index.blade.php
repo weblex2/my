@@ -6,7 +6,7 @@
                     @foreach ($kbs as $kb)
                     <div class="grid grid-cols-5 ">
                         <div>{{$kb->id}}</div>
-                        <div><a href="{{route('knowledgeBase.show', $kb->id)}}"> {{$kb->topic}}</a></div>
+                        <div><a href="{{route('knowledgeBase.webshow', $kb->id)}}"> {{$kb->topic}}</a></div>
                         <div>{{$kb->description}}</div>
                         <div>
                             <form method="POST" action="{{ route('knowledeBase.delete', ['id' => $kb->id] )}}"> 
