@@ -4,8 +4,7 @@
             <div class="overflow-hidden sm:rounded-lg h-full flex justify-center">
                 <div class="pt-10  w-[80%] text-white">
                     @foreach ($kbs as $kb)
-                    <div class="grid grid-cols-5 ">
-                        <div>{{$kb->id}}</div>
+                    <div class="grid grid-cols-3 ">
                         <div><a href="{{route('knowledgeBase.webshow', $kb->id)}}"> {{$kb->topic}}</a></div>
                         <div>{{$kb->description}}</div>
                         <div>
@@ -15,8 +14,6 @@
                             <button type="submit" class="cursor-pointer" ><i class="fa-solid fa-trash"></i></button>
                             </form>
                         </div>
-                        <div><a href="{{ route('knowledeBase.add') }}"><i class="fa-solid fa-plus"></i></a></div>
-
                     </div>
                     @endforeach 
                 </div>  
