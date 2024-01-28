@@ -12,4 +12,4 @@ input[type=text], input[type=submit], select{
 
 .kb-grid div {
     @apply py-2 px-3
-}
+} 
