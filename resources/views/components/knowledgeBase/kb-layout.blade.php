@@ -38,7 +38,7 @@
 
         <div class="min-h-screen bg-slate-900">
             
-            <x-blog.blog-navigation />
+            <x-knowledgeBase.kb-navigation />
 
             <!-- Page Heading -->
             @if (isset($header))
