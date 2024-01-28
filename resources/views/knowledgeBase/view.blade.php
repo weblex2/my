@@ -19,11 +19,14 @@
                         {{-- <div class="w-full h-20 text-white">{!!$kb->text!!}</div> --}}
                     <div>
                     <div>
-                        <form method="POST" action="{{ route('knowledeBase.delete')}}"> 
+                        <button type="submit" class="btn float-left mr-3" >Save</button>
+                        
+                        <form class="float-left" method="POST" action="{{ route('knowledeBase.delete')}}"> 
                             @csrf
                             <input type="hidden" name="id" value="{{ $kb->id }}">
-                            <button type="submit" class="cursor-pointer" >löschen</button>
+                            <button type="submit" class="btn btn-delete " >Löschen</button>
                         </form>
+                        <button type="button" class="btn ml-3" >Zurück</button>
                     </div>
                 </div>
                 </div>

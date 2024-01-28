@@ -13,7 +13,7 @@
                             <form method="POST" action="{{ route('knowledeBase.delete', ['id' => $kb->id] )}}"> 
                             @csrf
                             <input type="hidden" name="id" value="{{ $kb->id }}">
-                            <button type="submit" class="cursor-pointer" ><i class="fa-solid fa-trash"></i></button>
+                            <button type="submit" class="cursor-pointer" ><i class="fa-solid fa-trash float-left"></i></button>
                             </form>
                         </div>
                     </div>
