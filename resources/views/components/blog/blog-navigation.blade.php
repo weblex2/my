@@ -26,6 +26,14 @@
                     </x-jet-nav-link>
                     @endif
 
+                     @if (Auth()->check())
+                    <x-jet-nav-link 
+                        class="text-gray-200 hover:text-zinc-400"
+                        href="{{ route('blog.create') }}" :active="request()->routeIs('blog.create')">
+                        <i class="fa-solid fa-circle-plus"></i> &nbsp; {{ __('Yupp') }}
+                    </x-jet-nav-link>
+                    @endif
+
                     @if (Auth()->check())
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <x-jet-dropdown align="left" width="48">
@@ -42,12 +50,14 @@
                         </x-slot>
     
                         <x-slot name="content">
-                            <x-jet-dropdown-link href="{{ route('knowledeBase.index') }}">
-                                {{ __('View') }}
-                            </x-jet-dropdown-link>
+    
                             <!-- User Management -->
                             <x-jet-dropdown-link href="{{ route('knowledeBase.add') }}">
                                 {{ __('Add Entry') }}
+                            </x-jet-dropdown-link>
+    
+                            <x-jet-dropdown-link href="{{ route('knowledeBase.index') }}">
+                                {{ __('View') }}
                             </x-jet-dropdown-link>
     
                         </x-slot>
