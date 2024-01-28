@@ -1,78 +1,128 @@
 <script>
+/*
+const getTokenUrl = 'https://your-auth-api.com/token';
+const apiUrl = 'https://your-api.com/data';
 
-const url = 'http://127.0.0.1:8000/oauth/token'
-//const url = ""; // API URL
-const token = ""; // API Token
-const method = "GET"; // Request method, change for what's needed
+const credentials = {
+  username: 'your_username',
+  password: 'your_password',
+};
 
-fetch(url, {
-    method,
-    headers: {
-        "Authorization": `Bearer ${token}` // This is the important part, the auth header
+// Step 1: Get Bearer Token
+fetch(getTokenUrl, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    // Add any additional headers if needed
+  },
+  body: new URLSearchParams({
+    grant_type: 'password',
+    username: credentials.username,
+    password: credentials.password,
+  }),
+})
+  .then(response => response.json())
+  .then(tokenData => {
+    if (tokenData.access_token) {
+      const accessToken = tokenData.access_token;
+
+      // Step 2: Send POST request to API with Bearer Token
+      const postData = {
+        key1: 'value1',
+        key2: 'value2',
+      };
+
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+          // Add any additional headers if needed
+        },
+        body: JSON.stringify(postData),
+      })
+        .then(apiResponse => apiResponse.json())
+        .then(data => {
+          console.log('API Response:', data);
+          // Handle API response
+        })
+        .catch(error => {
+          console.error('Error sending data to API:', error);
+        });
+    } else {
+      console.error('Error fetching access token:', tokenData);
     }
-}).then(res => res.json().then(console.log)).catch(console.error); 
-
-/* async function getToken() {
-  const tokenUrl = 'http://127.0.0.1:8000/oauth/token'; // Replace with the actual token endpoint
-
-  const response = await fetch(tokenUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-      // Include any additional headers required for token request
-    },
-    body: JSON.stringify({
-      // Include any credentials required for token request
-      username: 'alex@noppenberger.org',
-      password: 'hotl!ne03',
-      client_id: 2,
-      client_secret: 'KesiV88IWB7QPj5OfI7FmTJPZZtvoJ6BP009cJCZ',
-      grant_type: 'password',
-      scope: ''
-    })
+  })
+  .catch(error => {
+    console.error('Error fetching access token:', error);
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to obtain Bearer token');
-  }
+*/
 
-  const tokenData = await response.json();
-  return tokenData.access_token;
-}
 
-async function makePostRequest() {
-  try {
-    const bearerToken = await getToken();
+function addKb(topic, desc, text){
 
-    const apiUrl = 'http://127.0.0.1:8000/api/v1/knowledgeBase/';
-    const postData = {
-      // Include your POST data here
-      key1 : 'abc',
-      key2 : 'def',
-    };
+  let token  = "";
+  var myHeaders = new Headers();
+  myHeaders.append("Accept", "application/json");
 
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${bearerToken}`
-      },
-      body: JSON.stringify(postData)
-    });
+  var formdata = new FormData();
+  formdata.append("username", "noppenbe@gmx.de");
+  formdata.append("password", "hotl!ne03");
+  formdata.append("client_id", "2");
+  formdata.append("client_secret", "KesiV88IWB7QPj5OfI7FmTJPZZtvoJ6BP009cJCZ");
+  formdata.append("grant_type", "password");
+  formdata.append("scope", "");
 
-    if (!response.ok) {
-      throw new Error('Failed to make POST request');
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    //redirect: 'follow',
+    type: 'json',
+  };
+
+  fetch("http://localhost:8000/oauth/token", requestOptions)
+    .then(response => response.json())
+    .then(tokenData => {
+      if (tokenData.access_token) {
+      const accessToken = tokenData.access_token;
+
+      // Step 2: Send POST request to API with Bearer Token
+      const postData = {
+        topic: topic,
+        description: desc,
+        text: text,
+      };
+
+      fetch('http://localhost:8000/api/v1/knowledgeBase', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+          // Add any additional headers if needed
+        },
+        body: JSON.stringify(postData),
+      })
+        .then(apiResponse => apiResponse.json())
+        .then(data => {
+          console.log('API Response:', data);
+          // Handle API response
+        })
+        .catch(error => {
+          console.error('Error sending data to API:', error);
+        });
+    } else {
+      console.error('Error fetching access token:', tokenData);
     }
-
-    const responseData = await response.json();
-    console.log(responseData);
-  } catch (error) {
-    console.error('Error:', error.message);
-  }
+    })    
+    .catch(error => console.log('error', error));
 }
 
-// Call the function to make the POST request
-makePostRequest(); */
+addKb('My Topic 1','Description',' Text');
+
+//var token  = getToken();
+
 
 </script>

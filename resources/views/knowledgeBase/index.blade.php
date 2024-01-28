@@ -1,10 +1,10 @@
-<x-blog.blog-layout>
+<x-knowledgeBase.kb-layout>
  <div class="py-12 h-full"> 
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
             <div class="overflow-hidden sm:rounded-lg h-full flex justify-center">
                 <div class="pt-10  w-[80%] text-white">
                     @foreach ($kbs as $kb)
-                    <div class="grid grid-cols-3 ">
+                    <div class="kb-grid">
                         <div><a href="{{route('knowledgeBase.webshow', $kb->id)}}"> {{$kb->topic}}</a></div>
                         <div>{{$kb->description}}</div>
                         <div>
@@ -27,4 +27,4 @@
         </div>
  </div>    
 
-</x-blog.blog-layout>
+</x-knowledgeBase.kb-layout>

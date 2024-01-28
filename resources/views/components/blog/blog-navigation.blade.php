@@ -42,21 +42,12 @@
                         </x-slot>
     
                         <x-slot name="content">
-    
-                            <!-- User Management -->
-                            <x-jet-dropdown-link href="{{ route('knowledeBase.add') }}">
-                                {{ __('Add Entry') }}
-                            </x-jet-dropdown-link>
-    
                             <x-jet-dropdown-link href="{{ route('knowledeBase.index') }}">
                                 {{ __('View') }}
                             </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="/arcade">
-                                {{ __('Arcade Project') }}
-                            </x-jet-dropdown-link>
-                            <x-jet-dropdown-link href="/travel-blog">
-                                {{ __('Reise Blog') }}
+                            <!-- User Management -->
+                            <x-jet-dropdown-link href="{{ route('knowledeBase.add') }}">
+                                {{ __('Add Entry') }}
                             </x-jet-dropdown-link>
     
                         </x-slot>

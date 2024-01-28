@@ -5,3 +5,11 @@
 input[type=text], input[type=submit], select{
     @apply rounded-xl bg-zinc-800 border border-zinc-900  focus:outline-none focus:ring-0 focus:border-zinc-900 text-orange-500
 }
+
+.kb-grid{
+    @apply grid grid-cols-3 auto-cols-max hover:bg-green-500 rounded-md
+}
+
+.kb-grid div {
+    @apply py-2 px-3
+}

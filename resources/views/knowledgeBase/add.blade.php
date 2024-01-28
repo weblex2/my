@@ -1,4 +1,4 @@
-<x-blog.blog-layout>
+<x-knowledgebase.kb-layout>
  <div class="py-12 h-full"> 
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
             <div class="overflow-hidden sm:rounded-lg h-full flex justify-center">
@@ -22,4 +22,4 @@
         </div>
  </div>    
 
-</x-blog.blog-layout>
+</x-knowledgebase.kb-layout>
