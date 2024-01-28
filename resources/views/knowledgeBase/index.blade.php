@@ -5,9 +5,11 @@
                 <div class="pt-10  w-[80%] text-white">
                     @foreach ($kbs as $kb)
                     <div class="kb-grid">
-                        <div><a href="{{route('knowledgeBase.webshow', $kb->id)}}"> {{$kb->topic}}</a></div>
-                        <div>{{$kb->description}}</div>
-                        <div>
+                        <div class="topic">
+                            <a href="{{route('knowledgeBase.webshow', $kb->id)}}"> {{$kb->topic}}</a>
+                        </div>
+                        <div class="description">{{$kb->description}}</div>
+                        <div class="text">
                             <form method="POST" action="{{ route('knowledeBase.delete', ['id' => $kb->id] )}}"> 
                             @csrf
                             <input type="hidden" name="id" value="{{ $kb->id }}">

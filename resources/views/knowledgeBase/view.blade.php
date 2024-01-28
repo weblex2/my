@@ -4,10 +4,19 @@
             <div class="overflow-hidden sm:rounded-lg h-full flex justify-center">
                 <div class="pt-10  w-[80%] text-white">
                     
-                    <div>{{$kb->topic}}</div>
-                    <div>{{$kb->description}}</div>
-                    <div>
-                        <div class="w-full h-20 text-white">{!!$kb->text!!}</div>
+
+                    <div class="kb-topic">
+                        <h1>Topic</h1>
+                        <h2>{{$kb->topic}}</h2>
+                    </div>
+                    <div class="kb-description">
+                        <h1>Description</h1>
+                        <h2>{{$kb->description}}</h2>
+                    </div>
+                    <div class="kb-text">
+                        <h1>Text</h1>
+                        <textarea >{!!$kb->text!!}</textarea>
+                        {{-- <div class="w-full h-20 text-white">{!!$kb->text!!}</div> --}}
                     <div>
                     <div>
                         <form method="POST" action="{{ route('knowledeBase.delete')}}"> 
