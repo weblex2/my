@@ -179,3 +179,19 @@
 .friese #friesenSearchTbl .plz {
     @apply w-20
 }
+
+
+
+ ::-webkit-scrollbar{
+    width: 12px;               /* width of the entire scrollbar */
+} 
+  
+ ::-webkit-scrollbar-track {
+    background: #18181b;        /* color of the tracking area */
+  }
+  
+::-webkit-scrollbar-thumb {
+    background-color: #18181b;    /* color of the scroll thumb */
+    border-radius: 0px;       /* roundness of the scroll thumb */
+    border: 1px solid #3f3f46;  /* creates padding around scroll thumb */
+}

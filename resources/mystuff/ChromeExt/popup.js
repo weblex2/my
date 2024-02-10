@@ -1,10 +1,15 @@
-document.addEventListener('DOMContentLoaded', function () {
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { action: 'extractText' }, function(response) {
-      console.log('Received Response:', response);
-      if (response && response.selectedText) {
-        document.getElementById('selectedText').innerText = response.selectedText;
-      }
+$(function(){
+  $('#paste').click(function(){pasteSelection();});
+});
+function pasteSelection() {
+  chrome.tabs.query({active:true, windowId: chrome.windows.WINDOW_ID_CURRENT}, 
+  function(tab) {
+    chrome.tabs.sendMessage(tab[0].id, {method: "getSelection"}, 
+    function(response){
+      var text = document.getElementById('text'); 
+      alert(response);
+      text.innerHTML = response.data;
     });
   });
-});
+}
+

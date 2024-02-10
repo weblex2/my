@@ -88,8 +88,8 @@ class BlogController extends Controller
         $post->fill($request->all());
         $post->slug = $post->title;
         $post->save();
-        $wa = new TwilioController();
-        $wa->sendWhatsApp('+491722044069', 'New Blog was created.');
+        //$wa = new TwilioController();
+        //$wa->sendWhatsApp('+491722044069', 'New Blog was created.');
         return redirect()->route('blog.index');
     }
 
