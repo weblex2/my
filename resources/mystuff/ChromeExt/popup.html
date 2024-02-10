@@ -1,10 +1,15 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
-<head>
-  <title>Text Extractor</title>
-  <script type="module" src="popup.js"></script>
-</head>
-<body>
-  <div id="selectedText"></div>
-</body>
+  <head>
+    <script src="jquery.js"></script>
+    <script src="popup.js"></script>
+    <style>
+      body { width: 300px; }
+      textarea { width: 250px; height: 100px;}
+    </style>
+  </head>
+  <body>
+    <textarea id="text"> </textarea>
+    <button id="paste">Paste Selection</button>
+  </body>
 </html>

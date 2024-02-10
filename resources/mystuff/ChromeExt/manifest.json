@@ -1,25 +1,23 @@
 {
-  "manifest_version": 3,
-  "name": "Text Extractor",
-  "version": "1.0",
-  "description": "Extracts and displays selected text in a popup",
-  "action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
-  },
-  "permissions": ["activeTab"],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ]
+ "name": "Selected Text",
+ "version": "0.1",
+ "description": "Selected Text",
+ "manifest_version": 2,
+ "browser_action": {
+   "default_title": "Selected Text",
+   "default_icon": "icon.png",
+   "default_popup": "popup.html" 
+ },
+ "permissions": [
+   "tabs",
+   "<all_urls>"
+ ],
+ "content_scripts": [
+   {
+     "matches": ["<all_urls>"],
+     "js": ["selection.js"],
+     "run_at": "document_start",
+     "all_frames": true
+   }
+ ]
 }

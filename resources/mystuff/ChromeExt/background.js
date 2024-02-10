@@ -1,8 +1,6 @@
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'extractText') {
-    console.log('Text extraction requested');
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { action: 'extractText' });
-    });
-  }
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+    if (request.method == "getSelection")
+      sendResponse({data: window.getSelection().toString()});
+    else
+      sendResponse({}); // snub them.
 });
