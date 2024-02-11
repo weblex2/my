@@ -5,4 +5,4 @@
     </svg> --}}
     
 </a>
-<img src="img/me.png" class="rounded-full w-20">
+<img src="img/noppal1.jpg" class="rounded-full w-20 h-20">

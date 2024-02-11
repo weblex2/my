@@ -5,13 +5,17 @@
                 <div class="pt-10  w-[80%] text-black">
                     <form method="POST" action="{{ route('knowledeBase.store')}}"> 
                         @csrf
-                        <div>Topic: <input type="text" name="topic"></div>
-                        <div>Description <input type="text" name="description"></div>
+                        <div class="grid grid-cols-12">
+                        <div>Topic</div><div class="col-span-11"><input type="text" name="topic"></div>
+                        <div>Description</div><div class="col-span-11"><input type="text" name="description"></div>
+                        <div>Text</div>
+                        <div class="col-span-11">
+                            <textarea name="text"></textarea>
                         <div>
-                            Text: <textarea name="text"></textarea>
-                        <div>
-                        <div>
+                        
+                        <div class="col-span-2">
                             <button type="submit" class="cursor-pointer" >Add</button>
+                        </div>
                         </div>
                     </form>    
                 </div>

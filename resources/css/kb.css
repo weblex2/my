@@ -2,8 +2,8 @@
     @apply px-6 py-3 border border-zinc-900 bg-zinc-700 hover:bg-zinc-800 text-orange-500 rounded-xl
 }
 
-input[type=text], input[type=submit], select{
-    @apply rounded-xl bg-zinc-800 border border-zinc-900  focus:outline-none focus:ring-0 focus:border-zinc-900 text-orange-500
+input[type=text], input[type=submit], select, textarea{
+    @apply mt-3 rounded-xl bg-zinc-800 border border-zinc-900  focus:outline-none focus:ring-0 focus:border-zinc-900 text-orange-500 w-full
 }
 
 .kb-grid{

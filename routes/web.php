@@ -140,6 +140,7 @@ Route::controller(NtfyController::class)->group(function () {
     Route::GET('/notify/create', 'createNotification')->name('ntfy.create'); 
     Route::GET('/notify/store', 'storeNotification')->name('ntfy.store');
     Route::GET('/notify/test', 'test')->name('ntfy.test');
+    Route::GET('/notify/sendNotifications', 'sendNotifications')->name('ntfy.sendNotifications');
 });
 
 Route::controller(KnowledgeBaseController::class)->group(function () {
