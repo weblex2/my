@@ -84,6 +84,7 @@ class NtfyController extends Controller
         $myDates = MyDates::where('reminder','<', date('Y-m-d H:i:s'))
                           ->where('reminder','!=','0000-00-00 00:00:00')
                           ->get();
+        dump($myDates);                          
         foreach ($myDates as $notification){
             $text = $notification->topic;
             if ($notification->recurring == 1){
