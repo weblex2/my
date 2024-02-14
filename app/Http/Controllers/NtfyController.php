@@ -86,7 +86,6 @@ class NtfyController extends Controller
                           ->get();
         dump($myDates);                          
         foreach ($myDates as $notification){
-            $text = $notification->topic;
             if ($notification->recurring == 1){
                 switch ($notification->recurring_interval){
                     case "H":
@@ -109,8 +108,8 @@ class NtfyController extends Controller
             else{
                 $notification->reminder   = "0000-00-00 00:00:00";
             }
+            $this->sendMessage($notification);
             $res = $notification->update();
-            $this->sendMessage($text);
         }  
         
     }
