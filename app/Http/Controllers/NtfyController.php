@@ -49,7 +49,7 @@ class NtfyController extends Controller
     }
 
    public function show(){
-       $notifications = MyDates::orderBy('reminder')->get();
+       $notifications = MyDates::orderBy('reminder', 'DESC')->get();
        foreach ($notifications as $i =>  $notification){
             $reminder = Carbon::parse($notification->reminder)->format('d.m.Y H:i');
             $date = Carbon::parse($notification->date)->format('d.m.Y H:i');
