@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MyDates;
+use Carbon\Carbon;
 
 class NtfyController extends Controller
 {
@@ -49,6 +50,12 @@ class NtfyController extends Controller
 
    public function show(){
        $notifications = MyDates::orderBy('reminder')->get();
+       foreach ($notifications as $i =>  $notification){
+            $reminder = Carbon::parse($notification->reminder)->format('d.m.Y H:i');
+            $date = Carbon::parse($notification->date)->format('d.m.Y H:i');
+            $notifications[$i]->reminder = $reminder;
+            $notifications[$i]->date = $date;
+       }
        return view('ntfy.show', compact('notifications'));
    }
 
