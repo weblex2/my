@@ -51,6 +51,20 @@
                                     <option value="M">Minute</option>
                                </select>
                             </div>
+                            <div class="col-span-12">Tags</div>
+                            <div class="col-span-12"><div id="usedTags"></div></div>
+                            <div class="col-span-12">
+                                <span class="ntfy-tag" id="skull">💀</span>
+                                <span class="ntfy-tag" id="bomb">💣</span>
+                                <span class="ntfy-tag" id="grinning">😀</span>
+                                <span class="ntfy-tag" id="rotating_light">️🚨</span>
+                                <span class="ntfy-tag" id="birthday">🎂</span>
+                                <span class="ntfy-tag" id="cake">🍰</span>
+                                <span class="ntfy-tag" id="warning">⚠️</span>
+                                <span class="ntfy-tag" id="cricket">🦗</span>
+                                <span class="ntfy-tag" id="four_leaf_clover">🍀</span>
+                            </div>    
+                            <input type="hidden" id="frmUsedTags" name="tags" value="" />
                             <input type="submit" name="Save" class="btn"> 
                    </form>
                 </div>
@@ -58,6 +72,13 @@
         </div>
     </div>
     <script>
-        $('#ntfy-date').datetimepicker();
+        var frmUsedTags=""; 
+        $('.ntfy-tag').click(function(){
+            $('#usedTags').append($(this).html());
+            frmUsedTags =  $('#frmUsedTags').val();
+            frmUsedTags = frmUsedTags + $(this).attr('id')+","; 
+            $('#frmUsedTags').val(frmUsedTags);
+        });
+
     </script>
 </x-blog.blog-layout>
