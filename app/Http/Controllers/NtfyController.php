@@ -47,7 +47,10 @@ class NtfyController extends Controller
        dump($res);
     }
 
-   
+   public function show(){
+       $notifications = MyDates::orderBy('reminder')->get();
+       return view('ntfy.show', compact('notifications'));
+   }
 
     public function getDates($date=null){
         if ($date==null){

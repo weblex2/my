@@ -19,7 +19,7 @@
                                 Description:
                             </div>    
                             <div class="col-span-12">
-                               <input type="text" id="ntfy-topic" name="description"> 
+                               <textarea id="ntfy-topic" name="description"></textarea> 
                             </div>
 
                             <div class="col-span-4">
