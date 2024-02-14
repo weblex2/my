@@ -16,17 +16,40 @@
                             </div>
 
                             <div class="col-span-12">
-                                Topic:
+                                Description:
                             </div>    
                             <div class="col-span-12">
-                               <input type="text" id="ntfy-topic" name="topic"> 
+                               <input type="text" id="ntfy-topic" name="description"> 
                             </div>
 
-                            <div class="col-span-12">
+                            <div class="col-span-4">
                                 Date:
                             </div>    
-                            <div class="col-span-12">
-                               <input type="text" id="ntfy-date" name="date"> 
+                            <div class="col-span-4">
+                                Reminder:
+                            </div> 
+
+                            <div class="col-span-4">
+                                Reoccurance:
+                            </div> 
+
+                            <div class="col-span-4">
+                               <input type="datetime-local" id="ntfy-date" name="date"> 
+                            </div>
+  
+                            <div class="col-span-4">
+                               <input type="datetime-local" id="ntfy-date" name="reminder"> 
+                            </div>
+
+                            <div class="col-span-4">
+                               <select name="recurring_interval">
+                                    <option value="">none</option>
+                                    <option value="D">Day</option>
+                                    <option value="M">Month</option>
+                                    <option value="Y">Year</option>
+                                    <option value="H">Hour</option>
+                                    <option value="M">Minute</option>
+                               </select>
                             </div>
                             <input type="submit" name="Save" class="btn"> 
                    </form>

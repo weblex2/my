@@ -93,21 +93,47 @@ class NtfyController extends Controller
         return view('ntfy.create');
     }
 
-    public function store(Request $request){
+    public function storeNotification(Request $request){
         $req = $request->all();
+        $req['recurring'] = $req['recurring_interval']!="" ? 1 : 0;
         $mydate = new MyDates();
-        $mydate->load($req);
+        $mydate->fill($req);
         $mydate->save();
         return back()->with('success','Date successfully stored.'); 
     }
 
     public function sendNotifications(){
+        date_default_timezone_set('Europe/Berlin');
+        $now=date('Y-m-d H:i:s');
         $myDates = MyDates::where('reminder','<', date('Y-m-d H:i:s'))->get();
         foreach ($myDates as $notification){
             $text = $notification->topic;
+            if ($notification->recurring == 1){
+                switch ($notification->recurring_interval){
+                    case "H":
+                        $notification->reminder  = date('Y-m-d H:i:s',strtotime("+1 hour", strtotime($notification->reminder)));
+                        break;
+                    case "D":
+                        $notification->reminder  = date('Y-m-d H:i:s',strtotime("+1 day", strtotime($notification->reminder)));
+                        break;
+                    case "M": 
+                        $notification->reminder  = date('Y-m-d H:i:s',strtotime("+1 month", strtotime($notification->reminder)));
+                        break;
+                    case "Y": 
+                        $notification->reminder  = date('Y-m-d H:i:s',strtotime("+1 year", strtotime($notification->reminder)));
+                        break;
+                    default: 
+                        $notification->reminder   = "0000-00-00 00:00:00";
+                        break;
+                }
+            }
+            else{
+                $notification->reminder   = "0000-00-00 00:00:00";
+            }
+            $res = $notification->update();
             $this->sendMessage($text);
         }  
-        dump($myDates);
+        
     }
 
 }

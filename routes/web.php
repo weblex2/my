@@ -138,7 +138,7 @@ Route::controller(NtfyController::class)->group(function () {
     Route::GET('/notify/getDates/{date?}', 'getDates')->name('ntfy.getDates');  
     Route::GET('/notify/msg/{msg}', 'index')->name('ntfy.index');    
     Route::GET('/notify/create', 'createNotification')->name('ntfy.create'); 
-    Route::GET('/notify/store', 'storeNotification')->name('ntfy.store');
+    Route::POST('/notify/store', 'storeNotification')->name('ntfy.store');
     Route::GET('/notify/test', 'test')->name('ntfy.test');
     Route::GET('/notify/sendNotifications', 'sendNotifications')->name('ntfy.sendNotifications');
 });
