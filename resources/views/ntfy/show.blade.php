@@ -1,27 +1,73 @@
-<x-blog.blog-layout>
+<x-ntfy.layout>
        <div class="py-12 h-full">
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
-            <div class="overflow-hidden sm:rounded-lg h-full p-10">
-                <a href="{{route("ntfy.create")}}" class="blog-button">New</a>
-                <div class="grid grid-cols-12 text-white">
-                  <div class="col-span-4 font-extrabold">Topic</div>
-                  <div class="col-span-3 font-extrabold">Date</div>
-                  <div class="col-span-2 font-extrabold">Reminder</div>
-                  <div class="col-span-2 font-extrabold">Recurring_interval</div> 
-                  <div class="col-span-1 font-extrabold">Delete</div>
-                   @foreach($notifications as $notification)
-                        <div class="col-span-4">{{$notification->topic}}</div>
-                        <div class="col-span-3">{{$notification->date}}</div>
-                        <div class="col-span-2">{{$notification->reminder}}</div>
-                        <div class="col-span-2">{{$notification->recurring_interval}}</div>
-                        <div class="col-span-1 text-red-300">Delete</div>
-                   @endforeach
+            <div class="notification-list">
+                <div class="flex mb-3">
+                    <a id="newNotification" class="btn cursor-pointer"><i class=" fa-solid fa-star text-yellow-500"></i> New</a>
                 </div>
-
+                 @foreach($notifications as $notification)
+                    <x-ntfy.notification 
+                        :notification=$notification
+                        mode='show'
+                    ></x-ntfy.notification>  
+                @endforeach
             </div>
         </div>
     </div>
     <script>
-        
+
+        $('.notification-list').on('click','.editNtfy', function(){
+            var id = $(this).closest('.notification').attr('ntfy_id');
+            $.get('/notify/edit/'+id, function(response){
+                el = $('#ntfy_'+id); 
+                $('#ntfy_'+id).before(response);
+                el.remove();
+            });
+        });
+
+        $('.notification-list').on('click','.btn-cancel', function(){
+            var id = $(this).closest('.notification').attr('ntfy_id');
+            $.get('/notify/show/'+id, function(response){
+                el = $('#ntfy_'+id); 
+                $('#ntfy_'+id).before(response);
+                el.remove();
+            });
+        });
+
+        $('#newNotification').click(function(){
+            $.get('/notify/new', function(response){
+                $('.notification').eq(0).before(response);
+            });
+        });
+
+        $('.notification-list').on('click','.btn-save', function(){
+            
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $(this).closest('.notification ').find('select, textarea, input').each(function(index, el){
+                console.log(el);
+            })
+
+            values = $(this).closest('.notification ').find(':input').serialize();
+            var id = $(this).closest('.notification').attr('ntfy_id');
+            $.ajax({
+                url: "/notify/save",
+                type: "post",
+                data: values ,
+                success: function (response) {
+                    el = $('#ntfy_'+id); 
+                    $('#ntfy_'+id).before(response);
+                    el.remove();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+
     </script>
-</x-blog.blog-layout>
+</x-ntfy.layout>

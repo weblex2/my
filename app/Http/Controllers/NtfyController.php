@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MyDates;
 use Carbon\Carbon;
+use Response;
 
 class NtfyController extends Controller
 {
@@ -48,15 +49,35 @@ class NtfyController extends Controller
        dump($res);
     }
 
-   public function show(){
+   public function showAll(){
        $notifications = MyDates::orderBy('reminder', 'DESC')->get();
-       foreach ($notifications as $i =>  $notification){
-            $reminder = $notification->reminder!="0000-00-00 00:00:00" ? Carbon::parse($notification->reminder)->format('d.m.Y H:i') : "-";
-            $date = $notification->date!="0000-00-00 00:00:00" ? Carbon::parse($notification->date)->format('d.m.Y H:i') : "-";
-            $notifications[$i]->reminder = $reminder;
-            $notifications[$i]->date = $date;
-       }
+       /* foreach ($notifications as $i =>  $notification){
+            //$reminder = $notification->reminder!="0000-00-00 00:00:00" ? Carbon::parse($notification->reminder)->format('d.m.Y H:i') : "-";
+            //$date = $notification->date!="0000-00-00 00:00:00" ? Carbon::parse($notification->date)->format('d.m.Y H:i') : "-";
+            $notifications[$i]->reminder = $notification->reminder;
+            $notifications[$i]->date = $notification->date;
+       } */
        return view('ntfy.show', compact('notifications'));
+   }
+
+   public function editNotification($id){
+        $myNotification = MyDates::find($id);
+        $html = view('components.ntfy.notification', ['notification' => $myNotification, 'mode' => 'edit']);
+        echo $html;
+   }
+
+   public function show($id){
+        $myNotification = MyDates::find($id);
+        $html = view('components.ntfy.notification', ['notification' => $myNotification, 'mode' => 'show']);
+        echo $html;
+   }
+
+   public function new(){
+        $myNotification = new MyDates();
+        $myNotification->date = gmdate('Y-m-d H:i:s');
+        $myNotification->reminder = gmdate('Y-m-d H:i:s');
+        $html = view('components.ntfy.notification', ['notification' => $myNotification, 'mode' => 'edit']);
+        echo $html;
    }
 
     public function getDates($date=null){
@@ -77,6 +98,31 @@ class NtfyController extends Controller
 
     public function createNotification(){
         return view('ntfy.create');
+    }
+
+    public function save(Request $request){
+        $id = $request->id;
+        $req = $request->all();
+        $req['recurring'] = $req['recurring_interval']!="" ? 1 : 0;
+        if ($id){
+            $notification = MyDates::find($id);
+        }
+        else{
+            $notification = new MyDates();
+        }        
+        $notification->fill($req);
+        $res = $notification->save();
+        if ($res){
+            $html = view('components.ntfy.notification', ['notification' => $notification, 'mode' => 'show']);
+            echo $html;
+        }
+        else{
+           return Response::json([
+                'data' => $data,
+                'status' => $httpcode,
+            ], 200);
+        }    
+        
     }
 
     public function storeNotification(Request $request){

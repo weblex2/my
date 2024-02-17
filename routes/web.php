@@ -140,7 +140,11 @@ Route::controller(NtfyController::class)->group(function () {
     Route::GET('/notify/create', 'createNotification')->middleware(['auth'])->name('ntfy.create'); 
     Route::POST('/notify/store', 'storeNotification')->middleware(['auth'])->name('ntfy.store');
     Route::GET('/notify/test', 'test')->middleware(['auth'])->name('ntfy.test');
-    Route::GET('/notify/show', 'show')->middleware(['auth'])->name('ntfy.show');
+    Route::GET('/notify/show', 'showAll')->middleware(['auth'])->name('ntfy.showAll');
+    Route::GET('/notify/show/{id}', 'show')->middleware(['auth'])->name('ntfy.show');
+    Route::GET('/notify/new', 'new')->middleware(['auth'])->name('ntfy.new');
+    Route::POST('/notify/save', 'save')->middleware(['auth'])->name('ntfy.save');
+    Route::GET('/notify/edit/{id}', 'editNotification')->middleware(['auth'])->name('ntfy.editNotification');
     Route::GET('/notify/sendNotifications', 'sendNotifications')->name('ntfy.sendNotifications');
 });
 

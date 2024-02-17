@@ -1,4 +1,4 @@
-<x-blog.blog-layout>
+<x-ntfy.layout>
        <div class="py-12 h-full">
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
             <div class="overflow-hidden sm:rounded-lg h-full">
@@ -52,7 +52,7 @@
                                </select>
                             </div>
                             <div class="col-span-12">Tags</div>
-                            <div class="col-span-12"><div id="usedTags"></div></div>
+                            
                             <div class="col-span-12">
                                 <span class="ntfy-tag" id="skull">💀</span>
                                 <span class="ntfy-tag" id="bomb">💣</span>
@@ -63,7 +63,8 @@
                                 <span class="ntfy-tag" id="warning">⚠️</span>
                                 <span class="ntfy-tag" id="cricket">🦗</span>
                                 <span class="ntfy-tag" id="four_leaf_clover">🍀</span>
-                            </div>    
+                            </div> 
+                            <div class="col-span-12"><div id="usedTags"></div></div>  
                             <input type="hidden" id="frmUsedTags" name="tags" value="" />
                             <input type="submit" name="Save" class="btn"> 
                    </form>
@@ -81,4 +82,4 @@
         });
 
     </script>
-</x-blog.blog-layout>
+</x-ntfy.layout>
