@@ -28,23 +28,23 @@
     </div>
     <div class="grid sm:grid-cols-1 md:grid-cols-3">
         <div class="grid-col md:col-span-1 mt-3">
-            <div>Datum</div>
+            <div><i class="fa-regular fa-clock"></i> Datum</div>
             @if ($mode=='edit')
                 <input type="datetime-local" name="date" class="ntfyDate" value="{{$notification->date}}">
             @else
-                <div class="ntfyDate header">{{$notification->date}}</div>
+                <div class="ntfyDate header"> {{$notification->date}}</div>
             @endif
         </div>    
         <div class="grid-col md:col-span-1 mt-3">
-            <div >Erinnerung</div>
+            <div><i class="fa-regular fa-bell"></i> Erinnerung</div>
             @if ($mode=='edit')
                 <input type="datetime-local" name="reminder" class="ntfyDate" value="{{$notification->reminder}}">
             @else
-                <div class="ntfyDate header">{{$notification->reminder}}</div>
+                <div class="ntfyDate header"><i class="fa-sharp fa-regular fa-alarm-clock"></i></i> {{$notification->reminder}}</div>
             @endif
         </div>    
         <div class="grid-col md:col-span-1 mt-3">
-            <div >Wiederholung</div>
+            <div><i class="fa-solid fa-arrow-rotate-right"></i> Wiederholung</div>
             @if ($mode=='edit')
                 <select  name="recurring_interval" class="recurring_interval" value="{{$notification->recurring_interval}}">
                     <option value=""> - </option>
@@ -60,7 +60,7 @@
     </div>  
 
     <div class="grid-col col-span-4 mt-3">
-        <div >Tags</div>
+        <div><i class="fa-solid fa-tags"></i> Tags</div>
         <div class="ntfyTags header">{{trim($notification->tags,',')}}</div>
     </div>  
 
