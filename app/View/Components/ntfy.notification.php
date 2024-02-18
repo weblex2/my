@@ -13,10 +13,11 @@ class ntfy.notification extends Component
      *
      * @return void
      */
-    public function __construct($notification, $mode)
+    public function __construct($notification, $mode, $emoticons)
     {
         $this->mode = $mode;
         $this->notification = $notification;
+        $this->$emoticons  = $emoticons;
     }
 
     /**

@@ -28,7 +28,7 @@
     </div>
     <div class="grid sm:grid-cols-1 md:grid-cols-3">
         <div class="grid-col md:col-span-1 mt-3">
-            <div><i class="fa-regular fa-clock"></i> Datum</div>
+            <div><i class="icon fa-regular fa-clock"></i> Datum</div>
             @if ($mode=='edit')
                 <input type="datetime-local" name="date" class="ntfyDate" value="{{$notification->date}}">
             @else
@@ -36,7 +36,7 @@
             @endif
         </div>    
         <div class="grid-col md:col-span-1 mt-3">
-            <div><i class="fa-regular fa-bell"></i> Erinnerung</div>
+            <div><i class="icon fa-regular fa-bell"></i> Erinnerung</div>
             @if ($mode=='edit')
                 <input type="datetime-local" name="reminder" class="ntfyDate" value="{{$notification->reminder}}">
             @else
@@ -44,7 +44,7 @@
             @endif
         </div>    
         <div class="grid-col md:col-span-1 mt-3">
-            <div><i class="fa-solid fa-arrow-rotate-right"></i> Wiederholung</div>
+            <div><i class="icon fa-solid fa-arrow-rotate-right"></i> Wiederholung</div>
             @if ($mode=='edit')
                 <select  name="recurring_interval" class="recurring_interval" value="{{$notification->recurring_interval}}">
                     <option value=""> - </option>
@@ -59,9 +59,34 @@
         </div>    
     </div>  
 
-    <div class="grid-col col-span-4 mt-3">
-        <div><i class="fa-solid fa-tags"></i> Tags</div>
-        <div class="ntfyTags header">{{trim($notification->tags,',')}}</div>
+    <div class="tags-wrapper">
+        <div><i class="icon fa-solid fa-tags"></i> Tags</div>
+        @if ($mode=='edit')
+        <div class="usable-tags">
+            @foreach ($emoticons as $emoji)
+                <div class="usable-tag ntfy-tag" name="{{$emoji->xname}}">{!!$emoji->xdec!!}</div>
+            @endforeach
+        </div>
+        <div class="flex">
+            <input type="text" class="new-tag" id="new-tag">
+            <button class="add-tag btn float-left">Add</button>
+        </div>    
+        <div class="usedTags border border-black">
+            <div class="ntfyTags header">
+                @foreach ($notification->tags2 as $tag)
+                    {!!$tag!!}
+                @endforeach 
+            </div>
+        </div>
+        <input type="hidden"  name="tags" id="tags" value="{{$notification->tags}}">
+        @else
+                <div class="ntfyTags header">
+                @foreach ($notification->tags2 as $tag)
+                    {!!$tag!!}
+                @endforeach 
+                </div>
+        @endif
+        
     </div>  
 
     @if ($mode=='edit')

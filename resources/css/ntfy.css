@@ -48,15 +48,25 @@
 .notification input, .notification text, .notification textarea, .notification select{
     @apply p-2
            text-black
-           focus:ring-0 
-           focus:ring-offset-0
-           outline-none
-           border-slate-800 
+           
+           border-slate-500 
            rounded-lg 
            shadow-sm 
            w-full
            bg-transparent
            border
+}
+
+.notification .icon{
+    @apply text-yellow-600
+}
+
+.tags-wrapper{
+    @apply grid-col md:col-span-1 mt-3
+}
+
+.tags-wrapper .new-tag{
+    @apply w-[75%] my-2
 }
 
 .notification .grid-col{
@@ -65,7 +75,7 @@
 
 
 .ntfy-tag{
-    @apply m-1 bg-red-300 text-blue-300  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400
+    @apply mr-1 bg-red-300 text-blue-300  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400
 } 
 
 #blog-content{

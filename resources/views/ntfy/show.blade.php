@@ -3,10 +3,10 @@
         <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
             <div class="notification-list">
                 <div class="flex mb-3">
-                    <a id="newNotification" class="btn cursor-pointer"><i class=" fa-solid fa-star text-yellow-500"></i> New</a>
+                    <a id="newNotification" class="btn cursor-pointer align-left"><i class=" fa-solid fa-star text-yellow-500"></i> New</a>
                 </div>
                 <div class="flex">
-               {{--  @foreach ($emoticons as $emoji)
+                {{-- @foreach ($emoticons as $emoji)
                      <div class="ntfy-tag {{$emoji->xname}}">{!!$emoji->xdec!!}</div>
                 @endforeach --}}
                 </div>
@@ -25,6 +25,7 @@
 
     <script>
 
+        // Edit Notification
         $('.notification-list').on('click','.editNtfy', function(){
             var id = $(this).closest('.notification').attr('ntfy_id');
             $.get('/notify/edit/'+id, function(response){
@@ -34,6 +35,7 @@
             });
         });
 
+        // Cancel Edit
         $('.notification-list').on('click','.btn-cancel', function(){
             var id = $(this).closest('.notification').attr('ntfy_id');
             $.get('/notify/show/'+id, function(response){
@@ -43,14 +45,15 @@
             });
         });
 
+        // new Notification
         $('#newNotification').click(function(){
             $.get('/notify/new', function(response){
                 $('.notification').eq(0).before(response);
             });
         });
 
+        // save Notification
         $('.notification-list').on('click','.btn-save', function(){
-            
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -78,12 +81,14 @@
             });
         });
 
+        // Delete Notification (opens Modal)
         $('.notification-list').on('click','.deleteNotification', function(){
             var id = $(this).closest('.notification').attr('ntfy_id');
             $('#delete-notification-id').val(id);
             $('#delete-notification-modal').css('visibility', 'visible');
         });
 
+        // Confirm Deletion
         $('#delete-notification-modal').on('click','.deleteConfim', function(){
             $.ajaxSetup({
                 headers: {
@@ -107,6 +112,22 @@
                 }
             });
         });
+
+        // Click on a predefined Tag
+        $('.notification-list').on('click','.usable-tag', function(){
+            $(this).closest('.notification').find('.usedTags').append('<div class="ntfy-tag">'+$(this).html()+'</div>');
+            var val = $('#tags').val() +$(this).attr('name')+",";
+            $('#tags').val(val);
+        });
+
+        // Add a custom tag
+        $('.notification-list').on('click','.add-tag', function(){
+            var val = $('#new-tag').val();
+            $(this).closest('.notification').find('.usedTags').append('<div class="ntfy-tag">'+val+'</div>');
+            var val = $('#tags').val() +val+",";
+            $('#tags').val(val);
+        });
+       
 
     </script>
 </x-ntfy.layout>
