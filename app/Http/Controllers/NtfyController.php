@@ -75,9 +75,10 @@ class NtfyController extends Controller
    }
 
    public function new(){
+        date_default_timezone_set('Europe/Berlin');
         $myNotification = new MyDates();
-        $myNotification->date = gmdate('Y-m-d H:i:s');
-        $myNotification->reminder = gmdate('Y-m-d H:i:s');
+        $myNotification->date = date('Y-m-d H:i:s');
+        $myNotification->reminder = date('Y-m-d H:i:s');
         $html = view('components.ntfy.notification', ['notification' => $myNotification, 'mode' => 'edit']);
         echo $html;
    }
