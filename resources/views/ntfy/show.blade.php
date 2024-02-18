@@ -5,6 +5,12 @@
                 <div class="flex mb-3">
                     <a id="newNotification" class="btn cursor-pointer"><i class=" fa-solid fa-star text-yellow-500"></i> New</a>
                 </div>
+                <div class="flex">
+               {{--  @foreach ($emoticons as $emoji)
+                     <div class="ntfy-tag {{$emoji->xname}}">{!!$emoji->xdec!!}</div>
+                @endforeach --}}
+                </div>
+                
                  @foreach($notifications as $notification)
                     <x-ntfy.notification 
                         :notification=$notification
@@ -14,6 +20,9 @@
             </div>
         </div>
     </div>
+
+    <x-ntfy.modal/>
+
     <script>
 
         $('.notification-list').on('click','.editNtfy', function(){
@@ -62,6 +71,36 @@
                     el = $('#ntfy_'+id); 
                     $('#ntfy_'+id).before(response);
                     el.remove();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+
+        $('.notification-list').on('click','.deleteNotification', function(){
+            var id = $(this).closest('.notification').attr('ntfy_id');
+            $('#delete-notification-id').val(id);
+            $('#delete-notification-modal').css('visibility', 'visible');
+        });
+
+        $('#delete-notification-modal').on('click','.deleteConfim', function(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            var id = $('#delete-notification-id').val();
+            $.ajax({
+                url: "/notify/delete",
+                type: "post",
+                data: 'id='+id ,
+                success: function (response) {
+                    el = $('#ntfy_'+id); 
+                    $('#ntfy_'+id).before(response);
+                    el.remove();
+                    $('#delete-notification-modal').css('visibility', 'hidden');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);

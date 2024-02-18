@@ -195,7 +195,4 @@
     border-radius: 0px;       /* roundness of the scroll thumb */
     border: 1px solid #3f3f46;  /* creates padding around scroll thumb */
 }
-
-.ntfy-tag{
-    @apply bg-blue-100 text-blue-800  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400
-}    
+  

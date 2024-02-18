@@ -14,14 +14,14 @@
             <h1 class="ntfyTopic">
                 <i class="editNtfy fa-regular fa-pen-to-square cursor-pointer text-blue-500"></i>
                 {{$notification->topic}} 
-                <div class="float-right"><i class="fa-solid fa-xmark"></i></div>
+                <div class="float-right"><i class="deleteNotification fa-solid fa-xmark cursor-pointer"></i></div>
             </h1>
         @endif
         
     </div>
     <div class="grid-col ntfyDesc col-span-4">
         @if ($mode=='edit')
-            <input type="text" name="description" value="{{$notification->description}}">
+            <textarea rows="7" name="description" >{{$notification->description}}</textarea>
         @else
             <h2>{{$notification->description}}</h2>
         @endif    

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MyDates;
+use App\Models\Emoticons;
 use Carbon\Carbon;
 use Response;
 
@@ -50,6 +51,7 @@ class NtfyController extends Controller
     }
 
    public function showAll(){
+       $emoticons = Emoticons::all(); 
        $notifications = MyDates::orderBy('reminder', 'DESC')->get();
        /* foreach ($notifications as $i =>  $notification){
             //$reminder = $notification->reminder!="0000-00-00 00:00:00" ? Carbon::parse($notification->reminder)->format('d.m.Y H:i') : "-";
@@ -57,7 +59,7 @@ class NtfyController extends Controller
             $notifications[$i]->reminder = $notification->reminder;
             $notifications[$i]->date = $notification->date;
        } */
-       return view('ntfy.show', compact('notifications'));
+       return view('ntfy.show', compact('notifications','emoticons'));
    }
 
    public function editNotification($id){
@@ -80,7 +82,24 @@ class NtfyController extends Controller
         echo $html;
    }
 
-    public function getDates($date=null){
+   public function deleteNotification(Request $request){
+        $id = $request->id;
+        $notification = MyDates::find($id);
+        $res = $notification->delete();
+        if ($res){
+            return Response::json([
+                'status' => 'ok',
+            ], 200);
+        }
+        else{
+           return Response::json([
+                'data' => $res,
+                'status' => 'error',
+            ], 500);
+        }    
+   }
+
+   public function getDates($date=null){
         if ($date==null){
             $date=date('Y-m-d H:i:s');
         }

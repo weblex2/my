@@ -145,6 +145,7 @@ Route::controller(NtfyController::class)->group(function () {
     Route::GET('/notify/new', 'new')->middleware(['auth'])->name('ntfy.new');
     Route::POST('/notify/save', 'save')->middleware(['auth'])->name('ntfy.save');
     Route::GET('/notify/edit/{id}', 'editNotification')->middleware(['auth'])->name('ntfy.editNotification');
+    Route::POST('/notify/delete', 'deleteNotification')->middleware(['auth'])->name('ntfy.deleteNotification');
     Route::GET('/notify/sendNotifications', 'sendNotifications')->name('ntfy.sendNotifications');
 });
 

@@ -63,6 +63,11 @@
     @apply m-2
 }
 
+
+.ntfy-tag{
+    @apply m-1 bg-red-300 text-blue-300  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400
+} 
+
 #blog-content{
     @apply text-black
 }
@@ -87,21 +92,6 @@
     scrollbar-width: thin;
   }
 
-  .blog .ck .ck-editor, .blog .ck .ck-reset, .blog .ck-sticky-panel{
-    @apply rounded border-slate-600
-  }
-  .blog .ck .ck-editor__top, .blog .ck .ck-editor__main, .blog .ck .ck-content{
-    @apply bg-slate-800 rounded
-  }
-
-
-  
-
-
-
-
-
-
  ::-webkit-scrollbar{
     width: 12px;               /* width of the entire scrollbar */
 } 
@@ -116,6 +106,4 @@
     border: 1px solid #3f3f46;  /* creates padding around scroll thumb */
 }
 
-.ntfy-tag{
-    @apply bg-blue-100 text-blue-800  font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400
-}    
+   
