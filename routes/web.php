@@ -135,7 +135,8 @@ Route::controller(FriesenController::class)->group(function(){
 });
 
 Route::controller(yt2mp3::class)->group(function () {
-    Route::GET('/yt2mp3/get/{url}', 'getmp3')->name('yt2mp3.getMp3'); 
+    Route::GET('/yt2mp3', 'index')->name('yt2mp3.index');
+    Route::POST('/yt2mp3/get', 'getmp3')->name('yt2mp3.getMp3'); 
 });
 
 Route::controller(NtfyController::class)->group(function () {

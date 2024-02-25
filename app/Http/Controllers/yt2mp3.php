@@ -44,7 +44,12 @@ class yt2mp3 extends Controller
         }
     }  
 
-    public function getmp3(){
-        $this->download();
+    public function getmp3(Request $request){
+        $url = $request->url;
+        $this->download($url);
+    }
+
+    public function index(){
+        return view('yt2mp3.index');
     }
 }
