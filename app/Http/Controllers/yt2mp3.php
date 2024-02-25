@@ -28,6 +28,7 @@ class yt2mp3 extends Controller
             Options::create()
                 ->downloadPath('mp3')
                 ->extractAudio(true)
+                ->verbose(true)
                 ->audioFormat('mp3')
                 ->audioQuality('0') // best
                 ->output('%(title)s.%(ext)s')
