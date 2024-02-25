@@ -37,8 +37,9 @@
         <x-jet-banner />
 
         <div class="min-h-screen bg-white">
-            
+            @if (!Route::is('yt2mp3*'))
             <x-blog.blog-navigation />
+            @endif
 
             <!-- Page Heading -->
             @if (isset($header))

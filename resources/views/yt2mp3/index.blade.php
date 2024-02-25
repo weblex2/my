@@ -1,19 +1,26 @@
 <x-ntfy.layout>
+<div id="processing" class="hidden fixed top-0 left-0 w-screen h-screen">
+    <div class="flex items-center justify-center w-full h-full">
+    <img src={{asset('img/loading4.gif')}} class="">
+    </div>
+</div>    
 <div class="py-12 h-full">
     <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
-        <div class="mt-20">
-                URL: <input type="text" id="yturl" value="https://www.youtube.com/watch?v=G1G9D8A4Fiw"> <button id="submit">Convert</button>
-        <div id="result">result</div>
+        <div class="">
+                <label for="yturl">Youtube URL:</label>
+                <input type="text" class="w-full rounded-md mb-2" id="yturl" value="https://www.youtube.com/watch?v=Qq4j1LtCdww"> 
+                <button id="submit" class="btn">Convert</button>
+        <div id="result"></div>
     </div>
 </div>
 </div>
 <script>
     $('#submit').click(function(){
+        $('#processing').show();
         convert();
     });
     function convert(){
         var url = $('#yturl').val();
-        alert(url);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -29,10 +36,11 @@
             async: true,
             success: function (resp){
                 $('#result').html(resp);
-                console.log(error);
+                console.log(resp);
+                $('#processing').hide();
             },
             error: function(data) {
-                console.log('error');
+                console.log(resp);
             }
         });
     }
