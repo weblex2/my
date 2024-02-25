@@ -34,13 +34,19 @@
                 url: url,
             },
             async: true,
+            dataType: "json",
             success: function (resp){
+                debugger;
+                resp = resp.parse(resp);
                 $('#result').html(resp);
                 console.log(resp);
                 $('#processing').hide();
             },
-            error: function(data) {
+            error: function(resp) {
+                debugger;
                 console.log(resp);
+                console.log(status);
+                console.log(error);
             }
         });
     }
