@@ -70,12 +70,7 @@ class yt2mp3 extends Controller
             $extpos = strpos($log,'.mp3');
             $file = substr($log,0,$extpos+4);
             $filename = basename($file);
-            $filename="Alice Cooper - Poison.mp3";
-            $file="E:\web\my\mp3\Alice Cooper - Poison.mp3";
-            //echo $filename;
-            //$headers = array('Content-Type'=> 'audio/mpeg');
             echo "<a href='download/".urlencode($file)."'>$filename</a>";
-            //return response()->download($file, $filename, $headers);
         }
         else{
           $x=1;  
