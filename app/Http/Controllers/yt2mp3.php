@@ -8,7 +8,7 @@ use YoutubeDl\YoutubeDl;
 
 class yt2mp3 extends Controller
 {
-    public function download(){    
+    public function download($url){    
 
         $yt = new YoutubeDl();
         //$yt->setBinPath("C:\Python27\yt-dlp.exe");
@@ -32,7 +32,7 @@ class yt2mp3 extends Controller
                 ->audioFormat('mp3')
                 ->audioQuality('0') // best
                 ->output('%(title)s.%(ext)s')
-                ->url('https://www.youtube.com/watch?v=oDAw7vW7H0c')
+                ->url($url)
         );
 
         foreach ($collection->getVideos() as $video) {
