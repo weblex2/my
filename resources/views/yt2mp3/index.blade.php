@@ -5,7 +5,7 @@
     </div>
 </div>    
 <div class="py-12 h-full">
-    <div class="w-7/8 mx-auto sm:px-6 lg:px-8 p-3 h-full">
+    <div class="w-[50%] mx-auto sm:px-6 lg:px-8 p-3 h-full">
         <div class="">
                 <label for="yturl">Youtube URL:</label>
                 <input type="text" class="w-full rounded-md mb-2" id="yturl" value="https://www.youtube.com/watch?v=Qq4j1LtCdww"> 
@@ -34,14 +34,12 @@
                 url: url,
             },
             async: true,
-            dataType: "json",
+            //dataType: "json",
             success: function (resp){
-                debugger;
-                resp = resp.parse(resp);
                 $('#result').html(resp);
-                console.log(resp);
                 $('#processing').hide();
             },
+            
             error: function(resp) {
                 debugger;
                 console.log(resp);

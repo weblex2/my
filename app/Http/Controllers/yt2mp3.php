@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use YoutubeDl\Options;
 use YoutubeDl\YoutubeDl;
-use Response;
+//use Response;
 
 class yt2mp3 extends Controller
 {
@@ -64,15 +64,22 @@ class yt2mp3 extends Controller
         if (!strpos($log,'[ExtractAudio] Destination: ')) {
             $error = 1;
         }
+        $error=0;
         if ($error==0) {
             $log=substr($log,strpos($log,'[ExtractAudio] Destination: ')+28, strlen($log));
             $extpos = strpos($log,'.mp3');
             $file = substr($log,0,$extpos+4);
             $filename = basename($file);
-            return response()->download($file, $filename);
+            $filename="Alice Cooper - Poison.mp3";
+            $file="E:\web\my\mp3\Alice Cooper - Poison.mp3";
+            //echo $filename;
+            //$headers = array('Content-Type'=> 'audio/mpeg');
+            echo "<a href='download/".urlencode($file)."'>$filename</a>";
+            //return response()->download($file, $filename, $headers);
         }
         else{
           $x=1;  
+          return "Error: ". $log;
           return Response::json([
                 'data' => $log,
                 'status' => 'error',
@@ -89,4 +96,10 @@ class yt2mp3 extends Controller
     public function index(){
         return view('yt2mp3.index');
     }
+
+    public function downloadFile($file){
+        $file = urldecode($file);
+        $filename=basename($file);
+        return response()->download($file, $filename);
+    } 
 }
