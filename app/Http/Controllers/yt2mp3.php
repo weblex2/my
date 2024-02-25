@@ -25,7 +25,7 @@ class yt2mp3 extends Controller
         });
         $collection = $yt->download(
             Options::create()
-                ->downloadPath('storage/Downloads')
+                ->downloadPath('mp3')
                 ->extractAudio(true)
                 ->audioFormat('mp3')
                 ->audioQuality('0') // best
