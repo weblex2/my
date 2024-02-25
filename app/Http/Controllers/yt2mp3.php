@@ -26,10 +26,10 @@ class yt2mp3 extends Controller
         });
         $collection = $yt->download(
             Options::create()
-                ->downloadPath('mp3')
+                ->downloadPath('/var/www/html/my/mp3')
                 ->extractAudio(true)
                 ->verbose(true)
-                ->audioFormat('/var/www/html/my/mp3')
+                ->audioFormat('mp3')
                 ->audioQuality('0') // best
                 ->output('%(title)s.%(ext)s')
                 ->url('https://www.youtube.com/watch?v=oDAw7vW7H0c')
