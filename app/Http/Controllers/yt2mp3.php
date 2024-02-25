@@ -96,6 +96,6 @@ class yt2mp3 extends Controller
         $file = urldecode($file);
         $filename=basename($file);
         echo $file;
-        return response()->download('mp3/'.$file, $filename);
+        return response()->download('../mp3/'.$file, $filename);
     } 
 }
