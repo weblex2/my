@@ -12,6 +12,7 @@ use App\Http\Controllers\FriesenController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NtfyController;
 use App\Http\Controllers\KnowledgeBaseController;
+use App\Http\Controllers\yt2mp3;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,6 +134,9 @@ Route::controller(FriesenController::class)->group(function(){
     //Route::post('createFriese', 'createFriese')->name('firese.create');
 });
 
+Route::controller(yt2mp3::class)->group(function () {
+    Route::GET('/yt2mp3/get', 'getmp3')->name('yt2mp3.getMp3'); 
+});
 
 Route::controller(NtfyController::class)->group(function () {
     Route::GET('/notify/getDates/{date?}', 'getDates')->name('ntfy.getDates');  
