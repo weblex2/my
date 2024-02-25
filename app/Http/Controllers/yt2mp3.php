@@ -14,6 +14,7 @@ class yt2mp3 extends Controller
         //$yt->setBinPath("C:\Python27\yt-dlp.exe");
         //$yt->setPythonPath("C:\Python311\python.exe");
         //$yt->setBinPath('C:\Python311\yt-dlp.exe');
+        $yt->setBinPath('/home/ec2-user/.local/bin/yt-dlp');
         //$yt->setBinPath('C:\Python311\yt-dlp.exe');
          // Enable debugging
         $yt->debug(function ($type, $buffer) {
