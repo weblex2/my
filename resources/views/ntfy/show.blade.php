@@ -24,7 +24,7 @@
     <x-ntfy.modal/>
 
     <script>
-
+        
         // Edit Notification
         $('.notification-list').on('click','.editNtfy', function(){
             var id = $(this).closest('.notification').attr('ntfy_id');

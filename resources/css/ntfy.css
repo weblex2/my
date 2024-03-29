@@ -13,9 +13,9 @@
           rounded-md
           mb-10
           bg-gradient-to-b 
-          from-zinc-200 
-          via-zinc-300 
-          to-zinc-200 
+          from-zinc-400 
+          via-zinc-200 
+          to-zinc-400 
           max-w-[1000px]
           w-full
 }
@@ -45,10 +45,22 @@
            to-zinc-200
 }
 
+.btn-add-tag{
+    @apply px-2 py-1 mt-2  ml-3 h-10 bg-green-500 rounded-lg border-slate-800 
+           rounded text-xs font-bold 
+           bg-gradient-to-b 
+           from-zinc-200 
+           via-zinc-300 
+           to-zinc-200
+}
+
+.usedTags{
+    @apply border border-slate-800 p-2 rounded-lg
+}
+
 .notification input, .notification text, .notification textarea, .notification select{
     @apply p-2
            text-black
-           
            border-slate-500 
            rounded-lg 
            shadow-sm 

@@ -70,7 +70,7 @@ class yt2mp3 extends Controller
             $extpos = strpos($log,'.mp3');
             $file = substr($log,0,$extpos+4);
             $filename = basename($file);
-            echo "<a href='yt2mp3/download/".$filename."'>$filename</a>";
+            echo "<a href='yt2mp3/download/".$filename."'><img src='public/img/download.png'> $filename</a>";
         }
         else{
           $x=1;  

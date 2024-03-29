@@ -69,7 +69,7 @@
         </div>
         <div class="flex">
             <input type="text" class="new-tag" id="new-tag">
-            <button class="add-tag btn float-left">Add</button>
+            <button class=" add-tag  float-left btn-add-tag">Add</button>
         </div>    
         <div class="usedTags border border-black">
             <div class="ntfyTags header">

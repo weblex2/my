@@ -39,7 +39,7 @@
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-medium text-orange-500" for="file_input">Text</label>
-                        <textarea name="content" id="blog-content-de" rows="10" class="rounded-xl border border-gray-300 rounded-lg dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 p-10 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
+                        <textarea name="content" id="blog-content-de" rows="10" class="rounded-xl border border-gray-300 rounded-lg focus:outline-none p-10 w-full bg-zinc-900 border border-zinc-900 rounded-xl">
                             {{$pic_text}}
                         </textarea>
                         <input type="hidden" name="country_code" value="{{ $country_code }}" />

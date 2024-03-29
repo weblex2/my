@@ -13,6 +13,8 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\NtfyController;
 use App\Http\Controllers\KnowledgeBaseController;
 use App\Http\Controllers\yt2mp3;
+use App\Http\Controllers\VideoController;
+use App\Events\Hallo;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,10 +26,9 @@ use App\Http\Controllers\yt2mp3;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-/* Route::get('/', function () {
+ Route::get('/welcome', function () {
     return view('welcome');
-}); */
+}); 
 
 Route::get('/arcade', function () {
     return view('arcade.index');
@@ -163,4 +164,13 @@ Route::controller(KnowledgeBaseController::class)->group(function () {
     Route::GET('/kb/show/{id}', 'showWeb')->middleware(['auth'])->name('knowledgeBase.webshow');
 });
 
+Route::controller(VideoController::class)->group(function () {
+    Route::GET('/video', 'index')->name('video.index');
+    Route::GET('/video/create', 'create')->name('video.create');
+});
 
+
+Route::get('/broadcast', function(){
+    Hallo::dispatch();
+    return "sent";
+});

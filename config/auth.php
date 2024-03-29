@@ -46,6 +46,14 @@ return [
             'provider' => 'users',
             'hash' => true,
         ], 
+
+        /*  should be like this after upgrade to Laravel 10 but works anway
+        'api' => [
+        'driver' => 'token',
+        'provider' => 'users',
+        'hash' => false,
+        ],
+        */
     ],
 
     /*

@@ -1,6 +1,7 @@
 import './bootstrap';
 import React from 'react';
 
+import flatpickr from "flatpickr";
 import './components/HelloReact.jsx';
 import './components/HelloTable.jsx';
 import './components/Friseur.jsx';

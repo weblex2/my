@@ -38,7 +38,7 @@
                             </div>
   
                             <div class="col-span-4">
-                               <input type="datetime-local" id="ntfy-date" name="reminder"> 
+                               <input type="datetime-local" id="ntfy-reminder" name="reminder"> 
                             </div>
 
                             <div class="col-span-4">
@@ -73,6 +73,8 @@
         </div>
     </div>
     <script>
+
+        flatpickr("#ntfy-reminder", {});
         var frmUsedTags=""; 
         $('.ntfy-tag').click(function(){
             $('#usedTags').append($(this).html());

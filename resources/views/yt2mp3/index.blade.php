@@ -1,4 +1,4 @@
-<x-ntfy.layout>
+<x-yt2mp3.layout>
 <div id="processing" class="hidden fixed top-0 left-0 w-screen h-screen">
     <div class="flex items-center justify-center w-full h-full">
     <img src={{asset('img/loading4.gif')}} class="">
@@ -49,4 +49,4 @@
         });
     }
 </script>
-</x-ntfy.layout>
+</x-yt2mp3.layout>

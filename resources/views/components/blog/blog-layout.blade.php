@@ -34,7 +34,7 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <x-jet-banner />
+        {{-- <x-jet-banner /> --}}
 
         <div class="min-h-screen bg-slate-900">
             

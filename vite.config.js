@@ -1,21 +1,15 @@
 import { defineConfig } from 'vite';
-import laravel, { refreshPaths } from 'laravel-vite-plugin';
-import reactRefresh from '@vitejs/plugin-react-refresh';
+import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
     plugins: [
+        react(),
         laravel({
             input: [
                 'resources/css/app.css',
-                'resources/css/ntfy.css',
-                'resources/css/gallery.css',
                 'resources/js/app.js',
             ],
-            refresh: [
-                ...refreshPaths,
-                'app/Http/Livewire/**',
-            ],
+            refresh: true,
         }),
-        reactRefresh(),
     ],
 });
