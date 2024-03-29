@@ -6,6 +6,7 @@ import './components/HelloReact.jsx';
 import './components/HelloTable.jsx';
 import './components/Friseur.jsx';
 import Alpine from 'alpinejs';
+import './websocket';
 
 window.Alpine = Alpine;
 

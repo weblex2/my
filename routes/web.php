@@ -15,6 +15,8 @@ use App\Http\Controllers\KnowledgeBaseController;
 use App\Http\Controllers\yt2mp3;
 use App\Http\Controllers\VideoController;
 use App\Events\Hallo;
+use App\Http\Controllers\WebsocketController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -170,7 +172,17 @@ Route::controller(VideoController::class)->group(function () {
 });
 
 
-Route::get('/broadcast', function(){
-    Hallo::dispatch();
-    return "sent";
+Route::controller(WebsocketController::class)->group(function () {
+    Route::GET('/message', 'message')->name('message.send');
+    Route::POST('/message/send-message', 'store')->name('message.send');
 });
+
+
+
+
+Route::get('/chat', function () {
+    return view('websocket.index');
+});
+
+Route::post('/chat/send-message', [ChatController::class, 'store'])->name('chat.send');
+Route::get('/chat/test', [ChatController::class, 'test'])->name('chat.test');
