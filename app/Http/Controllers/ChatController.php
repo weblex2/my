@@ -17,9 +17,11 @@ class ChatController extends Controller
 
     public function test()
     {
-        $message = "hallo Alex :". date('H:i:s');
-
-        MessageSent::dispatch($message);
+        for ($i=0; $i< 11; $i++){
+            $message = "hallo Alex :". date('H:i:s');
+            MessageSent::dispatch($message);
+            sleep(1);
+        }
         return response()->json(['success' => true, 'message' => 'Message sent successfully']);
     }
 }

@@ -36,7 +36,7 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <x-jet-banner />
+        <x-banner />
 
         <div class="min-h-screen bg-zinc-800 text-white">
             @livewire('navigation-menu')

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use YoutubeDl\Options;
 use YoutubeDl\YoutubeDl;
+use Config; 
+use App\Http\Controllers\VideoProcessBuilder;
+
 //use Response;
 
 class yt2mp3 extends Controller
@@ -21,8 +24,15 @@ class yt2mp3 extends Controller
     }
 
     public function download($url){    
+        //dump(phpinfo());
+        $processBuilder = new VideoProcessBuilder();
 
-        $yt = new YoutubeDl();
+        //$processBuilder = new ProcessBuilder();
+
+        // Provide your custom process builder as the first argument.
+        $yt = new YoutubeDl($processBuilder);
+
+        //$yt = new YoutubeDl();
         //$yt->setBinPath("C:\Python27\yt-dlp.exe");
         //$yt->setPythonPath("C:\Python311\python.exe");
         //$yt->setBinPath('C:\Python311\yt-dlp.exe');
@@ -30,6 +40,7 @@ class yt2mp3 extends Controller
         //$yt->setBinPath('C:\Python311\yt-dlp.exe');
          // Enable debugging
         $this->log = ""; 
+        $downloadLocation = storage_path("\\").\Config('video.downloadLocation');
         $yt->debug(function ($type, $buffer) {
             if (!isset($this->log)){
                 $this->log="";
@@ -42,7 +53,7 @@ class yt2mp3 extends Controller
         });
         $collection = $yt->download(
             Options::create()
-                ->downloadPath('/var/www/html/my/mp3')
+                ->downloadPath($downloadLocation)
                 ->extractAudio(true)
                 ->verbose(true)
                 ->audioFormat('mp3')

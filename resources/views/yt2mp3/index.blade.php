@@ -41,10 +41,9 @@
             },
             
             error: function(resp) {
-                debugger;
                 console.log(resp);
-                console.log(status);
-                console.log(error);
+                //console.log(status);
+                //console.log(error);
             }
         });
     }
