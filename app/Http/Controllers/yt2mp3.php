@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use YoutubeDl\Options;
 use YoutubeDl\YoutubeDl;
 use Config; 
-use App\Http\Controllers\VideoProcessBuilder;
+//use App\Http\Controllers\VideoProcessBuilder;
 
 //use Response;
 
@@ -25,13 +25,13 @@ class yt2mp3 extends Controller
 
     public function download($url){    
         //dump(phpinfo());
-        $processBuilder = new VideoProcessBuilder();
+        //$processBuilder = new VideoProcessBuilder();
 
         //$processBuilder = new ProcessBuilder();
 
         // Provide your custom process builder as the first argument.
-        $yt = new YoutubeDl($processBuilder);
-
+       //$yt = new YoutubeDl($processBuilder);
+        $yt = new YoutubeDl();
         //$yt = new YoutubeDl();
         //$yt->setBinPath("C:\Python27\yt-dlp.exe");
         //$yt->setPythonPath("C:\Python311\python.exe");
