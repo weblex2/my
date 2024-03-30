@@ -173,7 +173,7 @@ Route::controller(VideoController::class)->group(function () {
 
 
 Route::controller(WebsocketController::class)->group(function () {
-    Route::GET('/message', 'message')->name('message.send');
+    Route::GET('/message', 'message')->name('message.view');
     Route::POST('/message/send-message', 'store')->name('message.send');
 });
 
