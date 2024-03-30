@@ -109,6 +109,91 @@ class yt2mp3 extends Controller
         //echo $this->log;
     }  
 
+    public function download2($url){    
+        //dump(phpinfo());
+        //$processBuilder = new VideoProcessBuilder();
+
+        //$processBuilder = new ProcessBuilder();
+
+        // Provide your custom process builder as the first argument.
+       //$yt = new YoutubeDl($processBuilder);
+        $yt = new YoutubeDl();
+        //$yt = new YoutubeDl();
+        //$yt->setBinPath("C:\Python27\yt-dlp.exe");
+        //$yt->setPythonPath("C:\Python311\python.exe");
+        //$yt->setBinPath('C:\Python311\yt-dlp.exe');
+        //$yt->setBinPath('/home/ec2-user/.local/bin/yt-dlp');
+        //$yt->setBinPath('C:\Python311\yt-dlp.exe');
+         // Enable debugging
+        $this->log = ""; 
+        $this->chat = new ChatController(); 
+        $downloadLocation = storage_path("\\").\Config('video.downloadLocation');
+        $yt->debug(function ($type, $buffer) {
+            if (!isset($this->log)){
+                $this->log="";
+            }
+            if (\Symfony\Component\Process\Process::ERR === $type) {
+                $this->log.= 'ERR > ' . $buffer;
+            } else {
+                $this->log.= 'OUT > ' . $buffer;
+            }
+        });
+        $yt->onProgress(static function (?string $progressTarget, string $percentage, string $size, string $speed, string $eta, ?string $totalTime): void {
+            $status = "Download file: $progressTarget; Percentage: $percentage; Size: $size";
+            if ($speed) {
+                $status.= "; Speed: $speed";
+            }
+            if ($eta) {
+                $status.= "; ETA: $eta";
+            }
+            if ($totalTime !== null) {
+                $status.= "; Downloaded in: $totalTime";
+            }
+            $this->chat->sendMessage($status);
+        });
+        $collection = $yt->download(
+            Options::create()
+                ->downloadPath($downloadLocation)
+                ->extractAudio(true)
+                ->verbose(true)
+                ->audioFormat('mp3')
+                ->audioQuality('0') // best
+                ->output('%(title)s.%(ext)s')
+                ->url($url)
+        );
+
+        foreach ($collection->getVideos() as $video) {
+            if ($video->getError() !== null) {
+                echo "Error downloading video: {$video->getError()}.";
+            } else {
+                $video->getFile(); // audio file
+            }
+        }
+        
+        $log  = $this->log;
+        $error=0;
+        if (!strpos($log,'[ExtractAudio] Destination: ')) {
+            $error = 1;
+        }
+        $error=0;
+        if ($error==0) {
+            $log=substr($log,strpos($log,'[ExtractAudio] Destination: ')+28, strlen($log));
+            $extpos = strpos($log,'.mp3');
+            $file = substr($log,0,$extpos+4);
+            $filename = basename($file);
+            echo "<a href='yt2mp3/download/".$filename."'><img src='public/img/download.png'> $filename</a>";
+        }
+        else{
+          $x=1;  
+          return "Error: ". $log;
+          return Response::json([
+                'data' => $log,
+                'status' => 'error',
+            ], 500);
+        }
+        //echo $this->log;
+    }  
+
     public function getmp3(Request $request){
         $url = $request->url;
         $this->download($url);
