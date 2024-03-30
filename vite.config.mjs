@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/css/kb.css',
                 'resources/css/gallery.css',
                 'resources/css/ntfy.css',
+                'resources/css/yt2mp3.css',
                 'resources/js/app.js',
             ],
             refresh: true,
