@@ -10,11 +10,12 @@
                 <label for="yturl">Youtube URL:</label>
                 <input type="text" class="w-full rounded-md mb-2" id="yturl" value="https://www.youtube.com/watch?v=Qq4j1LtCdww"> 
                 <button id="submit" class="btn">Convert</button>
-        <div id="result"></div>
+        <div id="messages"></div>
     </div>
 </div>
 </div>
 <script>
+
     $('#submit').click(function(){
         $('#processing').show();
         convert();
@@ -36,7 +37,7 @@
             async: true,
             //dataType: "json",
             success: function (resp){
-                $('#result').html(resp);
+                $('#messages').append(resp);
                 $('#processing').hide();
             },
             
