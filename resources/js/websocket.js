@@ -38,6 +38,6 @@ window.sendMessage = function() {
             messageInput.value = '';
         })
         .catch(error => console.error(error));
-
+ 
     console.log('sent message');
 };
