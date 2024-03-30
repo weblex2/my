@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use YoutubeDl\Options;
 use YoutubeDl\YoutubeDl;
 use Config; 
+use App\Http\Controllers\ChatController;
 //use App\Http\Controllers\VideoProcessBuilder;
 
 //use Response;
@@ -40,6 +41,7 @@ class yt2mp3 extends Controller
         //$yt->setBinPath('C:\Python311\yt-dlp.exe');
          // Enable debugging
         $this->log = ""; 
+        $this->chat = new ChatController(); 
         $downloadLocation = storage_path("\\").\Config('video.downloadLocation');
         $yt->debug(function ($type, $buffer) {
             if (!isset($this->log)){
@@ -50,6 +52,19 @@ class yt2mp3 extends Controller
             } else {
                 $this->log.= 'OUT > ' . $buffer;
             }
+        });
+        $yt->onProgress(static function (?string $progressTarget, string $percentage, string $size, string $speed, string $eta, ?string $totalTime): void {
+            $status = "Download file: $progressTarget; Percentage: $percentage; Size: $size";
+            if ($speed) {
+                $status.= "; Speed: $speed";
+            }
+            if ($eta) {
+                $status.= "; ETA: $eta";
+            }
+            if ($totalTime !== null) {
+                $status.= "; Downloaded in: $totalTime";
+            }
+            $this->chat->sendMessage($status);
         });
         $collection = $yt->download(
             Options::create()

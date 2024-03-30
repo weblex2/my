@@ -15,6 +15,11 @@ class ChatController extends Controller
         return response()->json(['success' => true, 'message' => 'Message sent successfully']);
     }
 
+    public function sendMessage($message){
+        MessageSent::dispatch($message);
+        return response()->json(['success' => true, 'message' => 'Message sent successfully']);
+    }
+
     public function test()
     {
         for ($i=0; $i< 11; $i++){
