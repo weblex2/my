@@ -150,7 +150,8 @@ class yt2mp3 extends Controller
             if ($totalTime !== null) {
                 $status.= "; Downloaded in: $totalTime";
             }
-            $this->chat->sendMessage($status);
+            echo $status;
+            ChatController::sendMessage($status);
         });
         $collection = $yt->download(
             Options::create()

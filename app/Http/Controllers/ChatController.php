@@ -15,7 +15,7 @@ class ChatController extends Controller
         return response()->json(['success' => true, 'message' => 'Message sent successfully']);
     }
 
-    public function sendMessage($message){
+    public static function sendMessage($message){
         MessageSent::dispatch($message);
         return response()->json(['success' => true, 'message' => 'Message sent successfully']);
     }
