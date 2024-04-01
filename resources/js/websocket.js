@@ -36,9 +36,8 @@ window.Echo = new Echo({
 
 window.Echo.channel('message')
     .listen('.message.sent', (e) => {
-        console.log(import.meta.env.VITE_REVERB_APP_KEY);
-        console.log(e);
         // Append the new message to the chatroom
+        console.log(e.message);
         const msg = JSON.parse(e.message); 
         if (msg){
             console.log(msg);
