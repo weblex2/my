@@ -18,10 +18,7 @@ window.Echo = new Echo({
 */
 
 //document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-window.axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-};
+
 
 console.log(import.meta.env.VITE_REVERB_PORT);
 window.Echo.channel('message')
@@ -36,6 +33,10 @@ window.Echo.channel('message')
 
 // Function to send a new message
 window.sendMessage = function() {
+    window.axios.defaults.headers.common = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    };
     const messageInput = document.getElementById('messageInput');
     console.log(messageInput.value);
     const message = messageInput.value;
