@@ -38,10 +38,16 @@ window.Echo.channel('message')
     .listen('.message.sent', (e) => {
         console.log(e);
         // Append the new message to the chatroom
-        const messages = document.getElementById('messages');
-        const messageElement = document.createElement('p');
-        messageElement.innerText = e.message;
-        messages.appendChild(messageElement);
+        const msg = JSON.parse(e.message); 
+        if (msg){
+            console.log(msg);
+        }
+        else{
+            const messages = document.getElementById('messages');
+            const messageElement = document.createElement('p');
+            messageElement.innerText = e.message;
+            messages.appendChild(messageElement);
+        }
     });
 
 // Function to send a new message

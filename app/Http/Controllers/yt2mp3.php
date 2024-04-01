@@ -142,16 +142,15 @@ class yt2mp3 extends Controller
         $yt->onProgress(static function (?string $progressTarget, string $percentage, string $size, string $speed, string $eta, ?string $totalTime): void {
             $status = "Download file: $progressTarget; Percentage: $percentage; Size: $size";
             if ($speed) {
-                $status.= "; Speed: $speed";
+                $status['Speed'] =  $speed;
             }
             if ($eta) {
-                $status.= "; ETA: $eta";
+                $status['ETA'] =  $eta;
             }
             if ($totalTime !== null) {
-                $status.= "; Downloaded in: $totalTime";
+                $status['TotalTime'] = $totalTime;
             }
-            echo $status;
-            ChatController::sendMessage($status);
+            ChatController::sendMessage(json_encode($status));
         });
         $collection = $yt->download(
             Options::create()
