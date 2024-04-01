@@ -185,6 +185,6 @@ Route::get('/chat', function () {
     return view('websocket.index');
 });
 
-Route::post('/chat/send-message2', [ChatController::class, 'store'])->name('chat.send');
+Route::post('/chat/send-message', [ChatController::class, 'store'])->name('chat.send');
 Route::get('/chat/test', [ChatController::class, 'test'])->name('chat.test');
 Route::get('/chat/send/{msg}', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');

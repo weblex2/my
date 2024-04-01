@@ -29,10 +29,9 @@ window.Echo.channel('message')
 
 // Function to send a new message
 window.sendMessage2 = function() {
-    console.log("Sent message");
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value;
-    axios.post('/chat/send-message2/', { message: message })
+    axios.post('/chat/send-message', { message: message })
         .then(response => {
             console.log(response.data);
             // Clear the input field after sending
