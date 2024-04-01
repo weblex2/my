@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Chatroom</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -10,7 +11,7 @@
 </head>
 <body>
 <div id="app" class="p-6">
-    
+    @csrf
     <div id="chatroom" class="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="p-4 bg-gray-200">
             <div class="text-lg font-semibold">Chatroom</div>

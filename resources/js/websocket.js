@@ -16,6 +16,13 @@ window.Echo = new Echo({
 });
 
 */
+
+//document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+window.axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+};
+
 console.log(import.meta.env.VITE_REVERB_PORT);
 window.Echo.channel('message')
     .listen('.message.sent', (e) => {
