@@ -19,7 +19,7 @@ window.Echo = new Echo({
 
 //document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-
+console.log("websocket am start");
 
 import Echo from 'laravel-echo';
 window.Echo = new Echo({
