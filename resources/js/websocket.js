@@ -28,7 +28,8 @@ window.Echo.channel('message')
     });
 
 // Function to send a new message
-window.sendMessage = function() {
+window.sendMessage2 = function() {
+    console.log("Sent message");
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value;
     axios.post('/chat/send-message2/', { message: message })

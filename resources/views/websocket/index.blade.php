@@ -24,7 +24,7 @@
             </div>
             <div class="mt-4">
                 <input type="text" id="messageInput" class="w-full p-2 border rounded" placeholder="Type your message here...">
-                <button onclick="sendMessage()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition ease-in-out duration-150">Send Message</button>
+                <button onclick="sendMessage2()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition ease-in-out duration-150">Send Message</button>
             </div>
         </div>
     </div>

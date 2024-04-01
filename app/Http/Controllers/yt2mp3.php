@@ -109,7 +109,8 @@ class yt2mp3 extends Controller
         //echo $this->log;
     }  
 
-    public function download2($url){    
+    public function download2(){    
+        $url="https://www.youtube.com/watch?v=Qq4j1LtCdww";
         //dump(phpinfo());
         //$processBuilder = new VideoProcessBuilder();
 
@@ -175,7 +176,6 @@ class yt2mp3 extends Controller
         if (!strpos($log,'[ExtractAudio] Destination: ')) {
             $error = 1;
         }
-        $error=0;
         if ($error==0) {
             $log=substr($log,strpos($log,'[ExtractAudio] Destination: ')+28, strlen($log));
             $extpos = strpos($log,'.mp3');
