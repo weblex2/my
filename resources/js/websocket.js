@@ -20,7 +20,20 @@ window.Echo = new Echo({
 //document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 
-console.log(import.meta.env.VITE_REVERB_PORT);
+
+import Echo from 'laravel-echo';
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    wsHost: window.location.hostname,
+    wsPort: 8080,
+    forceTLS: false,
+    disableStats: true,
+    enabledTransports: ['ws', 'wss'],
+    encrypted: true,
+});
+
 window.Echo.channel('message')
     .listen('.message.sent', (e) => {
         console.log(e);
