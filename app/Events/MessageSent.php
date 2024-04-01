@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class MessageSent implements ShouldBroadcastNow
 {
@@ -20,6 +21,7 @@ class MessageSent implements ShouldBroadcastNow
     public function __construct($message)
     {
         $this->message = $message;
+        Log::channel('mylog')->info($message);
     }
 
     /**
