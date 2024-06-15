@@ -17,6 +17,8 @@ use App\Http\Controllers\VideoController;
 use App\Events\Hallo;
 use App\Http\Controllers\WebsocketController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CvController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,13 +30,25 @@ use App\Http\Controllers\ChatController;
 | contains the "web" middleware group. Now create something great!
 |
 */
- Route::get('/welcome', function () {
+Route::get('/welcome', function () {
     return view('welcome');
+}); 
+
+Route::get('/', function () {
+    return view('index');
+}); 
+
+Route::get('/cv', function () {
+    return view('cv');
 }); 
 
 Route::get('/arcade', function () {
     return view('arcade.index');
 }); 
+
+Route::controller(CvController::class)->group(function () {
+    Route::get('/cv','index')->name('cv.index');
+});
 
 Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog','index')->name('gallery.index');
@@ -78,7 +92,7 @@ Route::controller(TwilioController::class)->group(function () {
 });    
 
 Route::controller(BlogController::class)->group(function () {
-    Route::get('/', 'index')->name('blog.index');
+    Route::get('/blog', 'index')->name('blog.index');
     //Route::get('/blog', 'index')->name('blog.index');
     Route::get('/blog/cat/{id}', 'showcat')->name('blog.showcat');
     Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
