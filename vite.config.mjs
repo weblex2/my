@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/css/yt2mp3.css',
                 'resources/js/app.js',
                 'resources/js/noppal.js',
+                'resources/js/noppal.css',
             ],
             refresh: true,
         }),
