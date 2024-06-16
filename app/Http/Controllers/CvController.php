@@ -12,6 +12,7 @@ class CvController extends Controller
     public function index(){
         $cv_data = Cv::orderBy('type')->orderBy('date_from', 'desc')->get();
         Carbon::setLocale('de');
+        $data = [];
         foreach ($cv_data as $i => $dat){
             $data[$dat->type][] = $dat;
             // Format Dates
