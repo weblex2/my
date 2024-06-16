@@ -11,7 +11,7 @@
         <div class="box"><a href="/travel-blog">Reise Blog</a></div>
     </div>
     <div class="my-flex-box">
-        <div class="box"><a href="/blog">Lebenslauf</a></div>
+        <div class="box"><a href="/cv">Lebenslauf</a></div>
     </div>    
 </div>
 
