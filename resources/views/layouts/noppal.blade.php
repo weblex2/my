@@ -22,7 +22,7 @@
 
         <!-- Scripts -->
         @vite(['resources/js/noppal.js','resources/css/noppal.css'])
-
+ 
         <!-- Styles -->
         @livewireStyles
     </head>
