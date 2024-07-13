@@ -18,29 +18,24 @@
         <div class="grid grid-cols-3 w-full mb-4 nobr items-justify text-center">
             <div class="col-span-3">
                 <div class="justify-center items-center"> 
-                    <div class="mb-5">{{$futter[0]->name}}</div>
-                    <div class="flex justify-center items-center">
-                        <img src='{{url('storage/futter/'.$futter[0]->img)}}' class="rounded-full w-52 h-52">
-                    </div>
+                    <div class="justify-center items-center"> 
+                    <x-futter.food :food="$futter[0]" />
+                </div>
                 </div>   
                 
             </div>
             <div class="">
                 <div class="justify-center items-center"> 
-                    <div class="mb-5">{{$futter[1]->name}}</div>
-                    <div class="flex justify-center items-center">
-                        <img src='{{url('storage/futter/'.$futter[1]->img)}}' class="rounded-full w-52 h-52">
-                    </div>
+                    <x-futter.food :food="$futter[1]" />
                 </div>
 
             </div>
             <div class="">&nbsp;</div>
             <div class="">
                 <div class="justify-center items-center"> 
-                    <div class="mb-5">{{$futter[2]->name}}</div>
-                    <div class="flex justify-center items-center">
-                        <img src='{{url('storage/futter/'.$futter[2]->img)}}' class="rounded-full w-52 h-52">
-                    </div>
+                    <div class="justify-center items-center"> 
+                    <x-futter.food :food="$futter[2]" />
+                </div>
                 </div>
             </div>
             <div class="col-span-3"><a href="futter"><button class="btn">Nööö, gib mir mehr Vorschläge...</button></a></div>
