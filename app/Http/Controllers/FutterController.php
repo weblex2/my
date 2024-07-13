@@ -46,9 +46,14 @@ class FutterController extends Controller
             $files = scandir(public_path('images/tmp'));
             $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
             $pic_name = array_values($files)[0];
-            File::move(public_path('images/tmp/').$pic_name, storage_path('app/public/futter/'.$pic_name));
+            $pic_name_to = array_values($files)[0];
+            if (substr($pic_name,0,8)=='download'){
+                $ext = substr($pic_name,8);
+                $pic_name_to = $data['name'].$ext; 
+            }
+            File::move(public_path('images/tmp/').$pic_name, storage_path('app/public/futter/'.$pic_name_to));
             
-            $data['img'] = $pic_name;
+            $data['img'] = $pic_name_to;
             $futter = new Futter();    
             $futter->fill($data);
             $futter->save();

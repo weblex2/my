@@ -1,7 +1,9 @@
 <x-noppal>
-       
-
-Futter! Add
+<x-slot name="header">
+    <h2 class="font-semibold text-xl text-center text-gray-100 leading-tight">
+        {{ __('Na Mäusschen, was essen wir heute?') }}
+    </h2>
+</x-slot>
 <div class="container mx-auto flex-auto pt-20">
 <div id="dropzone">
         <form action="{{ route('futter.save') }}" method="POST" class="dropzone" id="file-upload" enctype="multipart/form-data">

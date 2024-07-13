@@ -46,6 +46,8 @@
             <div class="col-span-3"><a href="futter"><button class="btn">Nööö, gib mir mehr Vorschläge...</button></a></div>
             <div class="col-span-3">&nbsp;</div>
             <div class="col-span-3"><button class="btn">Ach was solls.., ich will alles sehen!!</button></div>
+            <div class="col-span-3">&nbsp;</div>
+            <div class="col-span-3"><a href="futter/new"><button class="btn">Yeah - Hab was Neues!!!</button></a></div>
         </div>
     </div>
     
