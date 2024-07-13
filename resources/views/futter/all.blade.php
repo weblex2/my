@@ -23,22 +23,21 @@
     </div>
 </div>
 <script type="text/javascript">
+    // Send ntfy message
     $('.check').click(function(){
         var foodname = $(this).closest('.food').text();
-        alert(foodname);
         var url = "{{ route('ntfy.index', ":foodname") }}";
         url = url.replace(':foodname', foodname);
-        alert(url);
         $.ajax({
-                type: 'GET',
-                url: url,
-                success: function (data){
-                    console.log("message sent.");
-                },
-                error: function( data) {
-                    console.log(data);
-                }
-            });
+            type: 'GET',
+            url: url,
+            success: function (data){
+                console.log("message sent.");
+            },
+            error: function( data) {
+                console.log(data);
+            }
+        });
     });
 </script>
 </x-noppal>
