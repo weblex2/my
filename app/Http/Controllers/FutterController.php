@@ -26,6 +26,11 @@ class FutterController extends Controller
         return view('futter.new');
     } 
 
+    public function showAll(){
+        $futter = Futter::all();
+        return view('futter.all', compact('futter'));
+    }
+
     public function save(Request  $request){
         $image = $request->file('file');
         $data = $request->all();
