@@ -27,7 +27,7 @@
         alert("Ho");
         $.ajax({
                 type: 'GET',
-                url: '{{route("notify.msg"), ["msg" => "Hi2"]}}',
+                url: '{{route("ntfy.index"), ["msg" => "Hi2"]}}',
                 success: function (data){
                     console.log("message sent.");
                 },
