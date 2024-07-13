@@ -19,7 +19,7 @@ class TestController extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
         $headers = array();
         $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: Bearer sk-proj-jEryE44TryO1Pq5R7IaRT3BlbkFJCoWVSoX4qzJSQvv6tT8s';
+        
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
