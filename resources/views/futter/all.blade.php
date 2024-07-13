@@ -26,16 +26,10 @@
     $('.check').click(function(){
         alert("Ho");
         $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },        
-                type: 'POST',
-                url: '{{ url("blog/makeComment") }}',
-                data: data,
+                type: 'GET',
+                url: 'http://localhost:8000/notify/msg/Hi2',
                 success: function (data){
-                    var blog_id = data.blog_id;
-                    $('#frmtmp').after(data);
-                    $('#frmtmp').remove();
+                    console.log("message sent.");
                 },
                 error: function( data) {
                     console.log(data);
