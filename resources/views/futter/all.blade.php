@@ -5,30 +5,42 @@
     </h2>
 </x-slot>
 <div class="container mx-auto flex-auto pt-20">
-<div class="container futter">
-    {{-- @foreach($futter as $f)
-        <div class="grid grid-col-1 w-full mb-4 nobr">
-            <div class="text-center items-justify"><h1>{{$f->name}}</h1></div>
-            <div class="flex justify-center items-center">
-                <img src='{{url('storage/futter/'.$f->img)}}' class="rounded-full w-52 h-52 text-center">
-            </div>
-        </div>
-    @endforeach --}}
-    <div class="container mx-auto flex-auto pt-20 items-justify text-center">
-        <div class="grid grid-cols-3 w-full mb-4 nobr items-justify text-center">
-               @foreach ($futter as $f)
-                    <div class="justify-center items-center mb-5"> 
+    <div class="container futter">
+        <div class="container mx-auto flex-auto pt-20 items-justify text-center">
+            <a href="{{route('futter.index')}}"><button class="btn mb-24">Home</button></a> 
+            <div class="grid grid-cols-3 w-full mb-4 nobr items-justify text-center">
+                @foreach ($futter as $f)
+                    <div class="food justify-center items-center mb-5" id={{$f->id}}> 
                         <div class="mb-5">{{$f->name}}</div>
-                        <div class="flex justify-center items-center">
+                        <div class="relative flex justify-center items-center">
+                            <div class="check absolute top-0 right-28 text-grey-500 hover:text-green-500"><i class="fa-solid fa-check"></i></div>
                             <img src='{{url('storage/futter/'.$f->img)}}' class="rounded-full w-52 h-52">
                         </div>
                     </div>
-                @endforeach
-            
-            
+                 @endforeach
+            </div>
         </div>
     </div>
-    
 </div>
-</div>
+<script type="text/javascript">
+    $('.check').click(function(){
+        alert("Ho");
+        $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },        
+                type: 'POST',
+                url: '{{ url("blog/makeComment") }}',
+                data: data,
+                success: function (data){
+                    var blog_id = data.blog_id;
+                    $('#frmtmp').after(data);
+                    $('#frmtmp').remove();
+                },
+                error: function( data) {
+                    console.log(data);
+                }
+            });
+    });
+</script>
 </x-noppal>

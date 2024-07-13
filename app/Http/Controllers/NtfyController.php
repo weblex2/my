@@ -14,7 +14,12 @@ class NtfyController extends Controller
     private $channel = "ntfy";
     private $emoticons =[];
     public function index($msg){
-        //$this->sendMessage($msg);
+        $o_msg = (object)$msg;
+        $o_msg->priority = 1;
+        $o_msg->topic=$msg;
+        $o_msg->tags="";
+        $o_msg->description=$msg;
+        $this->sendMessage($o_msg);
     }
 
     public function __construct(){
