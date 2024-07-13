@@ -48,4 +48,21 @@
     
 </div>
 </div>
+<script type="text/javascript">
+$('.check').click(function(){
+        var foodname = $(this).closest('.food').text();
+        var url = "{{ route('ntfy.index', ":foodname") }}";
+        url = url.replace(':foodname', foodname);
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (data){
+                console.log("message sent.");
+            },
+            error: function( data) {
+                console.log(data);
+            }
+        });
+    });
+</script>    
 </x-noppal>
