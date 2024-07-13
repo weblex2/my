@@ -11,7 +11,7 @@ class FutterController extends Controller
 {
     public function index(){
         $futter = Futter::inRandomOrder()->limit(3)->get();
-        $futter = Futter::all();
+        //$futter = Futter::all();
         return view('futter.index', compact('futter'));
     }
 
