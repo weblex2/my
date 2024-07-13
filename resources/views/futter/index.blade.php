@@ -17,30 +17,33 @@
     <div class="container mx-auto flex-auto pt-20 items-justify text-center">
         <div class="grid grid-cols-3 w-full mb-4 nobr items-justify text-center">
             <div class="col-span-3">
-                <div class="flex justify-center items-center"> 
-                    {{-- <h2>{{$futter[0]->name}}</h2> --}}
-                    <img src='{{url('storage/futter/'.$futter[0]->img)}}' class="rounded-full w-52 h-52">
-                    <br>
-                </div>    
+                <div class="justify-center items-center"> 
+                    <div class="mb-5">{{$futter[0]->name}}</div>
+                    <div class="flex justify-center items-center">
+                        <img src='{{url('storage/futter/'.$futter[0]->img)}}' class="rounded-full w-52 h-52">
+                    </div>
+                </div>   
                 
             </div>
             <div class="">
-                <div class="flex justify-center items-center"> 
-                    {{-- <h2>{{$futter[1]->name}}</h2> --}}
-                    <img src='{{url('storage/futter/'.$futter[1]->img)}}' class="rounded-full w-52 h-52">
-                    <br>
+                <div class="justify-center items-center"> 
+                    <div class="mb-5">{{$futter[1]->name}}</div>
+                    <div class="flex justify-center items-center">
+                        <img src='{{url('storage/futter/'.$futter[1]->img)}}' class="rounded-full w-52 h-52">
+                    </div>
                 </div>
 
             </div>
             <div class="">&nbsp;</div>
             <div class="">
-                <div class="flex justify-center items-center"> 
-                    {{-- <div>{{$futter[2]->name}}</div> --}}
-                    <img src='{{url('storage/futter/'.$futter[2]->img)}}' class="rounded-full w-52 h-52">
-                    <br>
+                <div class="justify-center items-center"> 
+                    <div class="mb-5">{{$futter[2]->name}}</div>
+                    <div class="flex justify-center items-center">
+                        <img src='{{url('storage/futter/'.$futter[2]->img)}}' class="rounded-full w-52 h-52">
+                    </div>
                 </div>
             </div>
-            <div class="col-span-3"><button class="btn">Nööö, gib mir mehr Vorschläge...</button></div>
+            <div class="col-span-3"><a href="futter"><button class="btn">Nööö, gib mir mehr Vorschläge...</button></a></div>
             <div class="col-span-3">&nbsp;</div>
             <div class="col-span-3"><button class="btn">Ach was solls.., ich will alles sehen!!</button></div>
         </div>
