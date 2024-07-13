@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Cv;
 use Collections\Collection;
 use Carbon\Carbon;
+use Route;
+
 
 class CvController extends Controller
 {
-    public function index(){
+    public function index($name='', $edit=0){
+        
         $cv_data = Cv::orderBy('type')->orderBy('date_from', 'desc')->get();
         Carbon::setLocale('de');
         $data = [];
@@ -19,6 +22,15 @@ class CvController extends Controller
             $x= Carbon::parse($dat['date_from'])->format('Y-F');
             //echo $x."<br>";
         }
-        return view('cv', compact('data'));
+        return view('cv', compact('data', 'edit'));
+    }
+
+    public function indexm(){
+    
+        return "yoooo";
+    }
+
+    public function edit(){
+        return $this->index('', 1);
     }
 }

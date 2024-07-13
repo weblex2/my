@@ -18,6 +18,8 @@ use App\Events\Hallo;
 use App\Http\Controllers\WebsocketController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CvController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\FutterController;
 
 
 /*
@@ -46,8 +48,20 @@ Route::get('/arcade', function () {
     return view('arcade.index');
 }); 
 
+Route::controller(TestController::class)->group(function () {
+    Route::get('/gpt','chatGptApi')->name('cv.index');
+});
+
+Route::controller(FutterController::class)->group(function () {
+    Route::get('/futter','index')->name('futter.index');
+    Route::get('/futter/new','new')->name('futter.new');
+    Route::post('/futter/save','save')->name('futter.save');
+});
+
 Route::controller(CvController::class)->group(function () {
     Route::get('/cv','index')->name('cv.index');
+    Route::get('/cv/edit','edit')->name('cv.edit');
+    Route::get('/manu/cv','indexm')->name('cv.indexm');
 });
 
 Route::controller(GalleryController::class)->group(function () {
@@ -120,6 +134,7 @@ Route::controller(FacebookController::class)->group(function(){
 
 Route::get('/home', [FileUploadController::class, 'index']);
 Route::post('/upload', [FileUploadController::class, 'uploadToServer']);
+Route::post('/FileUpload', [FileUploadController::class, 'FileUpload'])->name('FileUpload');
 
 
 //Queue Test

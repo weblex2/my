@@ -3,7 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.dropzone, .dz-preview, .dz-image-preview, .dz-image, .dz-success, .dz-complete{
+    @apply bg-transparent
+}
+ 
 
 body{
     font-family: "Urbanist", sans-serif; font-style: normal;
@@ -12,6 +15,14 @@ body{
 
 .btn{
     @apply py-3 px-8 border rounded-xl text-xs
+}
+
+input[type="text"], input[type="date"]{
+    @apply rounded-xl bg-zinc-600 w-full
+}
+
+textarea{
+    @apply rounded-xl bg-zinc-600 w-full
 }
 
 a{
@@ -85,4 +96,9 @@ a:hover{
 
 .cv .header{
     @apply text-blue-500
+}
+
+/* Futter */
+.futter h1{
+    @apply text-4xl m-5
 }

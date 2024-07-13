@@ -28,4 +28,14 @@ class FileUploadController extends Controller
   
         return response()->json(['success'=>'Successfully uploaded.']);
     }
+
+    public  function FileUpload(Request $request)
+    {
+        $image = $request->file('file');
+        $imageName  = $image->getClientOriginalName();
+        //$imageName = time().'.'.$image->extension();
+        
+        $image->move(public_path('images/tmp'),$imageName);
+        return response()->json(['success'=>$imageName]);
+    }
 }

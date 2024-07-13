@@ -4,12 +4,13 @@
 
     <div class="flex justify-center "> 
    
-    <img src="img/noppal3.jpg" class="img-me">
+    <img src="{{asset('img/noppal3.jpg')}}" class="img-me">
     </div>
     <br>
     <br>
         <div class="cv grid grid-cols-2 gap-0 ">
             <h1 class="col-span-2 text-center">Lebenslauf</h1>
+            Edit  = {{$edit}}
             <hr class="col-span-2 mb-10">
             <div class="grid grid-cols-6">
                 <h2 class="col-span-6  border-red-500">Persönliche Daten</h2>
