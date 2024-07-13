@@ -24,11 +24,14 @@
 </div>
 <script type="text/javascript">
     $('.check').click(function(){
-        var foodname = $(this).find('.food-name').val();
+        var foodname = $(this).closest('.food').text();
         alert(foodname);
+        var url = "{{ route('ntfy.index', ":foodname") }}";
+        url = url.replace(':foodname', foodname);
+        alert(url);
         $.ajax({
                 type: 'GET',
-                url: '{{route("ntfy.index",["msg" => '+ foodname+'])}}',
+                url: url,
                 success: function (data){
                     console.log("message sent.");
                 },
