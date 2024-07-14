@@ -16,7 +16,6 @@ class FutterController extends Controller
             unset($futter[$i]['ingredients']);
             $futter[$i]['ingredients']=$ing;
         }
-        //$futter = Futter::all();
         return view('futter.index', compact('futter'));
     }
 
