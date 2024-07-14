@@ -11,6 +11,11 @@ class FutterController extends Controller
 {
     public function index(){
         $futter = Futter::inRandomOrder()->limit(3)->get();
+        foreach ($futter as $i => $f){
+            $ing = implode("<br>",$f->ingredients);
+            unset($futter[$i]['ingredients']);
+            $futter[$i]['ingredients']=$ing;
+        }
         //$futter = Futter::all();
         return view('futter.index', compact('futter'));
     }
