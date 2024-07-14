@@ -30,7 +30,14 @@
                 </div>
 
             </div>
-            <div class="">&nbsp;</div>
+            <div class="pt-10">
+                <div class="col-span-3"><a href="futter"><button class="btn"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button></a></div>
+                <div class="col-span-3">&nbsp;</div>
+                <div class="col-span-3"><a href="futter/all"><button class="btn"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button></a></div>
+                <div class="col-span-3">&nbsp;</div>
+                <div class="col-span-3"><a href="futter/new"><button class="btn"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button></a></div>
+      
+            </div>
             <div class="">
                 <div class="justify-center items-center"> 
                     <div class="justify-center items-center"> 
@@ -38,11 +45,6 @@
                 </div>
                 </div>
             </div>
-            <div class="col-span-3"><a href="futter"><button class="btn">Nööö, gib mir mehr Vorschläge...</button></a></div>
-            <div class="col-span-3">&nbsp;</div>
-            <div class="col-span-3"><a href="futter/all"><button class="btn">Ach was solls.., ich will alles sehen!!</button></a></div>
-            <div class="col-span-3">&nbsp;</div>
-            <div class="col-span-3"><a href="futter/new"><button class="btn">Yeah - Hab was Neues!!!</button></a></div>
         </div>
     </div>
     

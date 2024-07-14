@@ -15,6 +15,9 @@ class Futter extends Model
     /* protected $casts = [
         'img' => 'array'
     ]; */
+    protected $casts = [
+        'ingredients' => 'array'
+    ]; 
 
 
 }

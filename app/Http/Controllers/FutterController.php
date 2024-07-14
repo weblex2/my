@@ -28,6 +28,11 @@ class FutterController extends Controller
 
     public function showAll(){
         $futter = Futter::all();
+        foreach ($futter as $i => $f){
+            $ing = implode("<br>",$f->ingredients);
+            unset($futter[$i]['ingredients']);
+            $futter[$i]['ingredients']=$ing;
+        }
         return view('futter.all', compact('futter'));
     }
 
