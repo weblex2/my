@@ -14,7 +14,7 @@ body{
 }
 
 .btn{
-    @apply py-3 px-8 border rounded-xl text-xs
+    @apply py-3 px-8 border rounded-xl 
 }
 
 input[type="text"], input[type="date"]{

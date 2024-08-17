@@ -56,6 +56,7 @@ Route::controller(FutterController::class)->group(function () {
     Route::get('/futter','index')->name('futter.index');
     Route::get('/futter/new','new')->name('futter.new');
     Route::get('/futter/all','showAll')->name('futter.all');
+    Route::get('/futter/{id}','showDetails')->name('futter.detail');
     Route::post('/futter/save','save')->name('futter.save');
 });
 
