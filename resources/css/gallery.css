@@ -1,3 +1,10 @@
+.grey-qo-regular {
+  font-family: "Grey Qo", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
 .gallery-item{
     @apply border border-white p-5 rounded-xl  h-48 flex items-center justify-center hover:drop-shadow-lg hover:shadow-orange-500
 }
@@ -31,7 +38,7 @@
 }
 
 .mappoint-header{
-    @apply w-full p-10 font-extrabold text-xl text-orange-500 text-center bg-zinc-800 border-zinc-700 ;
+    @apply w-full grey-qo-regular p-10 font-bold font-extrabold text-xl text-orange-500 text-center ;
 } 
 
 .spacer{
