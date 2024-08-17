@@ -55,7 +55,7 @@ class FutterController extends Controller
         
         else{
             if ($data['ingredients']!=""){
-                $data['ingredients'] = json_encode(explode("\r\n",$data['ingredients']));
+                $data['ingredients'] = explode("\r\n",$data['ingredients']);
             }
             else{
                 $data['ingredients'] = [""];
