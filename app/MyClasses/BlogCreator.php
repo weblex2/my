@@ -53,7 +53,7 @@ class BlogCreator{
             $this->tmpPath = $this->tmpPath[0]->value;
         }
         else{
-            $this->tmpPath = "/storage/tmp";
+            $this->tmpPath = storage_path("tmp");
         }
 
         // Filename
