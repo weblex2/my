@@ -36,6 +36,10 @@ Route::get('/welcome', function () {
     return view('welcome');
 }); 
 
+Route::get('/pi', function () {
+    return phpinfo();
+}); 
+
 Route::get('/', function () {
     return view('index');
 }); 
