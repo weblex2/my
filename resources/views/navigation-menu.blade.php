@@ -15,6 +15,20 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if (request()->is('travel-blog/show*') && Auth::check())
+                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                            {{ __('Create Gallery') }}
+                        </x-nav-link>
+
+                        @php
+                            $galleryId = explode("/",request()->getPathInfo())[3];
+                            $mappointId = explode("/",request()->getPathInfo())[4];
+                        @endphp
+                        <x-nav-link href="{{ url('travel-blog/upload/'.$galleryId.'/'.$mappointId) }}" :active="request()->routeIs('dashboard')">
+                            {{ __('Add Pic') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 

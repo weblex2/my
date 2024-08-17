@@ -8,7 +8,7 @@
         $gallery_text = "No text available";
     }
 @endphp
-<div id="{{$pic->id}}" class="w-full">
+<div id="pic_{{$pic->id}}" class="w-full">
     <div id='file_{{$pic->id}}' class="p-4 bg-zinc-800 flex items-center relative">
         @if (in_array(strtoupper(substr($picname,-3)), ['MOV']))
             <video class="img w-[756px] rounded-xl shadow-xl" controls>
@@ -17,7 +17,11 @@
             </video>
         @else
             <a href="javascript:void(0)" onclick="showBigPic({{$pic->id}})">
+                @if ($pic->GalleryPicContent->filecontent!="")
                 <img src="{{$pic->GalleryPicContent->filecontent}}" alt="Image" class="img">
+                @else
+                    Sorry pic is damaged.
+                @endif    
             </a>
         @endif   
     </div>

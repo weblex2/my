@@ -13,6 +13,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Owenoj\LaravelGetId3\GetId3;
 use App\Http\Controllers\GalleryController;
 
+
 class BlogCreator{
     
     var $manager;
@@ -47,7 +48,13 @@ class BlogCreator{
 
         $this->request = $request;
         // get the temp folder
-        $this->tmpPath = Misc::getConfig('tmp_path')[0]->value;
+        $this->tmpPath = Misc::getConfig('tmp_path');#
+        if (isset($this->tmpPath[0]->value)){
+            $this->tmpPath = $this->tmpPath[0]->value;
+        }
+        else{
+            $this->tmpPath = "/storage/tmp";
+        }
 
         // Filename
         $this->fileName = $request->file->getClientOriginalName();
@@ -95,9 +102,12 @@ class BlogCreator{
             File::makeDirectory($this->tmpFolder, 0777, true, true);
         }
 
-        // Get file zizes from config
+        // Get file sizes from config
         $thumbsizes = Misc::getConfig('pic_size%', 'value', 'DESC');
         $thumbsizes = $thumbsizes->sortByDesc('value');
+        #$thumbsizes[0]->option="300_300_small";
+        #$thumbsizes[1]->option="600_600_medium";
+        #$thumbsizes[2]->option="800_800_big";
 
         if (!$this->isVideo){   // Image
             

@@ -11,4 +11,6 @@ class GalleryPicContent extends Model
 
     protected $table = 'gallery_pic_content';
     protected $guarded = ["id"];
+
+   
 }

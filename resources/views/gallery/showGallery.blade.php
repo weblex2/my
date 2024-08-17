@@ -1,4 +1,7 @@
 <x-gallery-layout>
+    {{-- @php
+        dump($pics);
+    @endphp --}}
     <div id="debug" class="hidden fixed top-0 left-0 bg-gray-900 p-10 z-10 text-white">debug</div>
     <div id="debug2" class="hidden fixed top-0 right-0 bg-gray-900 p-10 z-10 text-white">debug2</div>
     <x-slot name="header">
@@ -26,7 +29,7 @@
                 <div id="gallery_content">
                 <div class="mappoint-header">{{$pics[0]->Mappoint->mappoint_name}}</div>
                 @foreach ($pics as $i => $pic)
-                        <x-gallery-item :pic="$pic" />
+                        <x-gallery-item :pic="$pic" /> 
                 @endforeach 
             @else
                 <div class="mappoint-header">
