@@ -261,13 +261,13 @@ class GalleryController extends Controller
     }
 
     public function storePic(Request $request){
-        $max_upload = 65536; 
-        $request->validate([
-            'file' => 'required|max:'. $max_upload,
+        //$max_upload = 65536; 
+        /* $request->validate([
+            //'file' => 'required|max:'. $max_upload,
             'file' => 'required',
             'country_code' => 'required',
             'mappoint_id' => 'required',
-        ]);
+        ]); */
         
         try{
             $bc = new BlogCreator($request);
