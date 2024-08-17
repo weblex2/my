@@ -115,7 +115,6 @@
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}" x-data>
                                 @csrf
-
                                 <x-dropdown-link href="{{ route('logout') }}"
                                          @click.prevent="$root.submit();">
                                     {{ __('Log Out') }}
@@ -156,11 +155,17 @@
                 @endif
 
                 <div>
-                    <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    @if (Auth::check())
+                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    @else
+                        <div class="font-medium text-base text-gray-800">Login</div>
+                    @endif
+
                 </div>
             </div>
             @if (Auth::check()) 
+               
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
                 <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
@@ -216,7 +221,7 @@
                     @endif
                 @endif
             </div>
-        @endif    
+            @endif    
         </div>
     </div>
 </nav>
