@@ -4,7 +4,7 @@
     if (isset($pic->GalleryText[0]->text)){
         $pic_text = $pic->GalleryText[0]->text;
     }
-
+    //dump($pic->GalleryPicContent);
 @endphp
 <x-gallery-layout>
     <x-slot name="header">
@@ -26,7 +26,7 @@
                     </div>
                     @endif
                     <div class="mb-5">
-                        <img src={{$pic->Thumbnail->filecontent}}>
+                        <img class="w-48 h-48 rounded-full" src={{$pic->GalleryPicContent->filecontent}}>
                     </div>
                     <div class="mb-5">
                         <label class="block mb-2  text-sm font-medium text-orange-500" for="file_input">Map Point</label>

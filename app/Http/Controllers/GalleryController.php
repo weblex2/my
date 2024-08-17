@@ -317,6 +317,7 @@ class GalleryController extends Controller
         $pic->load('Gallery');
         $pic->load('GalleryText');
         $pic->load('Thumbnail');
+        $pic->load('GalleryPicContent');
         $mappoints = GalleryMappoint::all();
         return view('gallery.editPic', compact('pic','mappoints'));
     } 
