@@ -253,9 +253,10 @@ class GalleryController extends Controller
 
     public function getBigPic($id){
         $pic = GalleryPics::find($id);
-        $pic->load('PicXl');
+        $pic->load('GalleryPicContent');
+        //$pic->load('PicXl');
         return Response::json([
-            'data' => $pic->PicXl->filecontent,
+            'data' => $pic->GalleryPicContent->filecontent,
             'status' => 'ok',
         ], 200);
     }
