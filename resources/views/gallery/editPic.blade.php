@@ -26,7 +26,7 @@
                     </div>
                     @endif
                     <div class="mb-5">
-                        <img class="w-48 h-48 rounded-full" src={{$pic->GalleryPicContent->filecontent}}>
+                        <img class="w-48 h-48{{--  --}} rounded-full" src={{$pic->GalleryPicContent->filecontent}}>
                     </div>
                     <div class="mb-5">
                         <label class="block mb-2  text-sm font-medium text-orange-500" for="file_input">Map Point</label>
