@@ -14,7 +14,7 @@ class FutterController extends Controller
         foreach ($futter as $i => $f){
             $ing = implode("<br>",$f->ingredients);
             unset($futter[$i]['ingredients']);
-            $futter[$i]['ingredients']=$ing;
+            $futter[$i]['ingredients']= $ing==null ? '' : $ing;
         }
         return view('futter.index', compact('futter'));
     }
@@ -54,7 +54,12 @@ class FutterController extends Controller
         }
         
         else{
-            $data['ingredients'] = json_encode(explode("\r\n",$data['ingredients']));
+            if ($data['ingredients']!=""){
+                $data['ingredients'] = json_encode(explode("\r\n",$data['ingredients']));
+            }
+            else{
+                $data['ingredients'] = [""];
+            }
             //unset($data['_token']);
             //dump($data['ingredients']);
             $files = scandir(public_path('images/tmp'));
