@@ -23,7 +23,7 @@
 
                         @php
                             $galleryId = explode("/",request()->getPathInfo())[3];
-                            $mappointId = explode("/",request()->getPathInfo())[4];
+                            $mappointId = explode("/",request()->getPathInfo())[4] ?? 0;
                         @endphp
                         <x-nav-link href="{{ url('travel-blog/upload/'.$galleryId.'/'.$mappointId) }}" :active="request()->routeIs('dashboard')">
                             {{ __('Add Pic') }}
