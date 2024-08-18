@@ -52,12 +52,17 @@
                 <a href="{{route('gallery.editPic', ['pic_id' => $pic->id])}}"><i class="fas mr-1 fa-edit gallery-edit-icon"></i></a>
                 <a href="javascript:void(0)" onclick="showDeletePopup({{$pic->id}})"><i class="deleteBlog mr-1 fa-solid fa-trash gallery-delete-icon"></i></a>
             @endif 
+            @if ($pic->lat!="" && $pic->lon!="")
             <a href="https://www.google.com/maps?q={{$pic->lat}},{{$pic->lon}}" target="_blank">    
-                <i class="gallery-comment-icon fa-solid fa-globe mr-1" title="Google Maps"></i>
+                <i class="gallery-comment-icon gallyery-google-maps-link fa-solid fa-globe mr-1" title="Google Maps"></i>
             </a>
+            @else
+                <i class="gallery-comment-icon fa-solid fa-globe mr-1" title="Google Maps"></i>
+            @endif
             <i class="gallery-comment-icon fa-solid fa-camera mr-1" title="Exif Data" onclick="$('#exif_{{$pic->id}}').toggle()"></i>
             <i class="gallery-comment-icon fa fa-comment mt-[1px] mr-1" title="Comment"></i>
             <i class="gallery-comment-icon fa fa-thumbs-up" aria-hidden="true" title="Like!"></i>     
+            <i class="gallery-comment-likes" aria-hidden="true">5</i>  
                   
         </div>
     </div>
