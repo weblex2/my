@@ -199,7 +199,7 @@
         
          foreach ($galleries as $country){
          if ($country['color']==""){
-            $country['color'] = "cccccc";
+            $country['color'] = "ed8936";
          }
          echo '
           var states'.$country['code'].' = chart.series.push(am5map.MapPolygonSeries.new(root, {
