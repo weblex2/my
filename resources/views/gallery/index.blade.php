@@ -198,17 +198,20 @@
         <?php
         
          foreach ($galleries as $country){
+         if ($country['color']==""){
+            $country['color'] = "dddddd";
+         }
          echo '
           var states'.$country['code'].' = chart.series.push(am5map.MapPolygonSeries.new(root, {
             geoJSON: am5geodata_'.$country['country_map_name'].'High
           }));
         
           states'.$country['code'].'.mapPolygons.template.setAll({
-            tooltipText: "{name}",
+            tooltipText: "{name} - '.$country['name'].'",
             toggleKey: "active",
             interactive: true,
             geodataNames: am5geodata_lang_DE,
-            fill: am5.color(0xed8936),
+            fill: am5.color(0x'.$country['color'].'),
           });
 
           states'.$country['code'].'.mapPolygons.template.events.on("rightclick", function(ev) {
