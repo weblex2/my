@@ -14,16 +14,12 @@ class FutterController extends Controller
 {
     public function index(){
         $futterToday = FutterPerDay::where('day',">=", date('Y-m-d'))->get();
-        
+        $ft = [];
         foreach ($futterToday as $fday){
             $ft[$fday->day] = [
                 'name' => $fday->futter->name,
                 'img'  => url('storage/futter/'.$fday->futter->img)
             ];
-        }
-
-        if (!$futterToday) {
-            $ft = new FutterPerDay();
         }
 
         $futter = Futter::inRandomOrder()->limit(3)->get();
