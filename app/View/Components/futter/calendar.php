@@ -21,7 +21,7 @@ class calendar extends Component
 
     public function __construct($date, $ft, $datesdb=[])
     {   
-        dd($date);
+        dump($date);
         if (strlen($date)<3){
             echo "Invalid";
         }
