@@ -4,19 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Futter;
+use App\Models\FutterPerDay;
 use File;
+use DB;
+
 
 
 class FutterController extends Controller
 {
     public function index(){
+        $futterToday = FutterPerDay::where('day',">=", date('Y-m-d'))->get();
+        
+        foreach ($futterToday as $fday){
+            $ft[$fday->day] = [
+                'name' => $fday->futter->name,
+                'img'  => url('storage/futter/'.$fday->futter->img)
+            ];
+        }
+
         $futter = Futter::inRandomOrder()->limit(3)->get();
         foreach ($futter as $i => $f){
             $ing = implode("<br>",$f->ingredients);
             unset($futter[$i]['ingredients']);
             $futter[$i]['ingredients']= $ing==null ? '' : $ing;
         }
-        return view('futter.index', compact('futter'));
+        return view('futter.index', compact('futter','ft'));
     }
 
 
@@ -32,12 +44,21 @@ class FutterController extends Controller
 
     public function showAll(){
         $futter = Futter::all();
+        $futterToday = FutterPerDay::where('day',">=", date('Y-m-d'))->get();
+        
+        foreach ($futterToday as $fday){
+            $ft[$fday->day] = [
+                'name' => $fday->futter->name,
+                'img'  => url('storage/futter/'.$fday->futter->img)
+            ];
+        }
+
         foreach ($futter as $i => $f){
             $ing = implode("<br>",$f->ingredients);
             unset($futter[$i]['ingredients']);
             $futter[$i]['ingredients']=$ing;
         }
-        return view('futter.all', compact('futter'));
+        return view('futter.all', compact('futter','ft'));
     }
 
     public function showDetails($id){
@@ -93,5 +114,22 @@ class FutterController extends Controller
         //$imageName  = $image->getClientOriginalName();
         //$imageName = time().'.'.$image->extension();
         //
+    }
+
+    public function saveFutterPerDay(Request  $request){
+        $req = $request->all();
+        $fpd = $model = FutterPerDay::where('day', '=', $request['day'])->get(); 
+        
+        if (count($fpd) > 0){
+            $fpd = $fpd[0];
+            $fpd->fill($req);
+            $res = $fpd->update();
+        }
+        else{
+            $fpd = new FutterPerDay();
+            $fpd->fill($req);
+            $res = $fpd->save();
+        }
+
     }
 }

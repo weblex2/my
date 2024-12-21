@@ -44,29 +44,30 @@
                     </div>
 
                     <div class="py-5">
-                        <button id="submit" type="submit" class="btn-submit">Submit</button>
+                        <button id="submit" type="button" class="btn-submit">Submit</button>
                     </div>
                 </form>    
             </div>
         </div>
     </div>
-    <script>
 
-        
+    <div id="save-modal" class="hidden absolute top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center">
+        <img src="{{asset('img/loading2.webp')}}" class="w-20 h-20">
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#submit').click(function(e){
+                //e.preventDefault();
+                //$('#busy').css('visibility', 'visible');
+                $('#frmGalleryPicUpload').submit();
+            }); 
+        });
 
         ClassicEditor
         .create( document.querySelector( '#blog-content-de' ) )
         .catch( error => {
         console.error( error );
         } );
-
-        /* $(document).ready(function(){
-            $('#submit').click(function(e){
-                //e.preventDefault();
-                //alert("Click");
-                //$('#busy').css('visibility', 'visible');
-                $('#frmGalleryPicUpload').submit();
-            }); 
-        });    */ 
     </script>
 </x-gallery-layout>

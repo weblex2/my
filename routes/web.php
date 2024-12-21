@@ -62,6 +62,7 @@ Route::controller(FutterController::class)->group(function () {
     Route::get('/futter/all','showAll')->name('futter.all');
     Route::get('/futter/{id}','showDetails')->name('futter.detail');
     Route::post('/futter/save','save')->name('futter.save');
+    Route::post('/futter/saveFutterPerDay','saveFutterPerDay')->name('futter.saveFutterPerDay');
 });
 
 Route::controller(CvController::class)->group(function () {

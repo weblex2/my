@@ -102,3 +102,17 @@ a:hover{
 .futter h1{
     @apply text-4xl m-5
 }
+
+
+.futterHoverClass{
+    @apply bg-green-500
+}
+
+
+.day, .day1{
+    @apply p-3 flex items-center justify-center  
+}
+
+.day{
+    @apply border-b border-gray-500
+}

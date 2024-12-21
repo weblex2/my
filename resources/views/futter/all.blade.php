@@ -1,13 +1,18 @@
 <x-noppal>
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-center text-gray-100 leading-tight">
+        <a href="{{route('futter.index')}}">Home</a> 
+        &nbsp;
         {{ __('Na Mäusschen, was essen wir heute?') }}
     </h2>
 </x-slot>
 <div class="container mx-auto flex-auto pt-20">
     <div class="container futter">
-        <div class="container mx-auto flex-auto pt-20 items-justify text-center">
-            <a href="{{route('futter.index')}}"><button class="btn mb-24">Home</button></a> 
+        <div class="container mx-auto flex-auto items-justify text-center">
+            @php
+                $today = date('Y-m-d');
+            @endphp
+            <x-futter.calendar date={{$today}} :ft="$ft" />
             <div class="grid grid-cols-3 w-full mb-4 nobr items-justify text-center">
                 @foreach ($futter as $f)
                     {{-- <div class="food justify-center items-center mb-5" id={{$f->id}}> 
