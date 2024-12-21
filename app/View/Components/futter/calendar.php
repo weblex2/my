@@ -19,7 +19,7 @@ class calendar extends Component
     public $ft;
     
 
-    public function __construct($date, $ft)
+    public function __construct($date, $ft, $datesdb=[])
     {   
         //dd($date);
         $this->ft = $ft;
