@@ -1,7 +1,7 @@
-<div>datesdb
-{{--     @php
+<div>
+<    @php
         dd($datesdb);
-    @endphp --}}
+    @endphp
     
     <div class="grid grid-cols-7 items-justify ">
         <div class="day" date={{$datesdb[0]}}>{{$dates[0]}}</div>
