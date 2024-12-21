@@ -22,6 +22,8 @@ class calendar extends Component
     public function __construct($date, $ft)
     {   
         //dd($date);
+        echo $date;
+        die();
         $this->datesDB = [];
         $this->ft = $ft;
         $startDate = Carbon::createFromFormat('Y-m-d', $date);
