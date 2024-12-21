@@ -1,6 +1,9 @@
 <div>
+    @php
+        dd($datesDB);
+    @endphp
     
-    <div class="grid grid-cols-7 items-justify ">
+    {{-- <div class="grid grid-cols-7 items-justify ">
         <div class="day" date={{$datesDB[0]}}>{{$dates[0]}}</div>
         <div class="day" date={{$datesDB[1]}}>{{$dates[1]}}</div>
         <div class="day" date={{$datesDB[2]}}>{{$dates[2]}}</div>
@@ -44,7 +47,7 @@
                 <img src="{{$ft[$datesDB[6]]['img']}}" class="rounded-full w-full h-full">
             @endisset
         </div>
-    </div>
+    </div> --}}
     @php
         #dump($dates);
     @endphp
