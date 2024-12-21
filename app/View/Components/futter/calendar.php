@@ -26,16 +26,17 @@ class calendar extends Component
             echo "Invalid";
         }
         $this->ft = $ft;
+        
         $startDate = Carbon::createFromFormat('Y-m-d', $date);
         $startDateDb = Carbon::createFromFormat('Y-m-d', $date);
         echo $startDateDb;
         $this->datesdb = $datesdb;
         $this->dates[] = $startDate->format('l d.m.y'); 
-        $this->datesdb[] = $startDateDb->format('Y-m-d'); 
+        /* $this->datesdb[] = $startDateDb->format('Y-m-d'); 
         for ($i=0; $i<6; $i++){
             $this->dates[] = $startDate->addDays(1)->format('l d.m.y');
             $this->datesdb[] = $startDateDb->addDays(1)->format('Y-m-d');
-        }
+        } */
     }
 
     /**
