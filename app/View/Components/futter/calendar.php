@@ -24,7 +24,6 @@ class calendar extends Component
         //dd($date);
         echo $date;
         die();
-        $this->datesDB = [];
         $this->ft = $ft;
         $startDate = Carbon::createFromFormat('Y-m-d', $date);
         $startDateDb = Carbon::createFromFormat('Y-m-d', $date);
@@ -42,6 +41,6 @@ class calendar extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.futter.calendar');
+        return view('components.futter.calendar',compact('date', 'datesDB'));
     }
 }
