@@ -22,6 +22,10 @@ class FutterController extends Controller
             ];
         }
 
+        if (!$futterToday) {
+            $ft = new FutterPerDay();
+        }
+
         $futter = Futter::inRandomOrder()->limit(3)->get();
         foreach ($futter as $i => $f){
             $ing = implode("<br>",$f->ingredients);
