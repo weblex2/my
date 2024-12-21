@@ -116,3 +116,7 @@ a:hover{
 .day{
     @apply border-b border-gray-500
 }
+
+.day1{
+    @apply w-52 h-52
+}
