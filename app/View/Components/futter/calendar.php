@@ -15,25 +15,22 @@ class calendar extends Component
     public $date;
     public $startDate;
     public $dates=[];
-    public $datesDB=[];
+    public $datesdb=[];
     public $ft;
     
 
     public function __construct($date, $ft)
     {   
         //dd($date);
-        echo $date;
-        die();
         $this->ft = $ft;
         $startDate = Carbon::createFromFormat('Y-m-d', $date);
         $startDateDb = Carbon::createFromFormat('Y-m-d', $date);
         $this->dates[] = $startDate->format('l d.m.y'); 
-        $this->datesDB[] = $startDateDb->format('Y-m-d'); 
+        $this->datesdb[] = $startDateDb->format('Y-m-d'); 
         for ($i=0; $i<6; $i++){
             $this->dates[] = $startDate->addDays(1)->format('l d.m.y');
-            $this->datesDB[] = $startDateDb->addDays(1)->format('Y-m-d');
+            $this->datesdb[] = $startDateDb->addDays(1)->format('Y-m-d');
         }
-        dd($this->datesDB);
     }
 
     /**
@@ -41,6 +38,6 @@ class calendar extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.futter.calendar',compact('date', 'datesDB'));
+        return view('components.futter.calendar');
     }
 }
