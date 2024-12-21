@@ -32,7 +32,7 @@ class calendar extends Component
             $this->dates[] = $startDate->addDays(1)->format('l d.m.y');
             $this->datesDB[] = $startDateDb->addDays(1)->format('Y-m-d');
         }
-
+        dd($this->datesDB);
     }
 
     /**
