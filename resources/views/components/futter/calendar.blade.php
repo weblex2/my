@@ -1,5 +1,5 @@
 <div>
-<    @php
+    @php
         dd($datesdb);
     @endphp
     
