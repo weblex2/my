@@ -25,6 +25,18 @@ class FutterController extends Controller
 
         $futter = Futter::inRandomOrder()->limit(3)->get();
 
+        $dates   = $this->getDates()['dates'];
+        $datesdb = $this->getDates()['datesdb'];
+
+        foreach ($futter as $i => $f){
+            $ing = implode("<br>",$f->ingredients);
+            unset($futter[$i]['ingredients']);
+            $futter[$i]['ingredients']= $ing==null ? '' : $ing;
+        }
+        return view('futter.index', compact('futter','ft','dates', 'datesdb'));
+    }
+
+    public function getDates(){
         $date=date('Y-m-d');
         $startDate = Carbon::createFromFormat('Y-m-d', $date);
         $startDateDb = Carbon::createFromFormat('Y-m-d', $date);
@@ -37,15 +49,11 @@ class FutterController extends Controller
             $datesdb[] = $startDateDb->addDays(1)->format('Y-m-d');
         } 
 
-        foreach ($futter as $i => $f){
-            $ing = implode("<br>",$f->ingredients);
-            unset($futter[$i]['ingredients']);
-            $futter[$i]['ingredients']= $ing==null ? '' : $ing;
-        }
-        return view('futter.index', compact('futter','ft','dates', 'datesdb'));
+        $res['dates'] = $dates;
+        $res['datesdb'] = $datesdb;
+        return $res;
+    
     }
-
-
     public function new(){
         $files = scandir(public_path('images/tmp'));
         $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
