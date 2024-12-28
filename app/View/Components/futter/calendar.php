@@ -13,30 +13,26 @@ class calendar extends Component
      * Create a new component instance.
      */
     public $date;
-    public $startDate;
+    #public $startDate;
     public $dates=[];
     public $datesdb=[];
     public $ft;
     
 
-    public function __construct($date, $ft, $datesdb=[])
+    public function __construct($date, $ft)
     {   
-        dump($date);
-        if (strlen($date)<3){
-            echo "Invalid";
-        }
         $this->ft = $ft;
         
         $startDate = Carbon::createFromFormat('Y-m-d', $date);
         $startDateDb = Carbon::createFromFormat('Y-m-d', $date);
         echo $startDateDb;
-        $this->datesdb = $datesdb;
+        //$this->datesdb = $datesdb;
         $this->dates[] = $startDate->format('l d.m.y'); 
-        /* $this->datesdb[] = $startDateDb->format('Y-m-d'); 
+        $this->datesdb[] = $startDateDb->format('Y-m-d'); 
         for ($i=0; $i<6; $i++){
             $this->dates[] = $startDate->addDays(1)->format('l d.m.y');
             $this->datesdb[] = $startDateDb->addDays(1)->format('Y-m-d');
-        } */
+        } 
     }
 
     /**
