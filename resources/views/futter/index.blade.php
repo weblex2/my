@@ -7,7 +7,6 @@
 <div class="container mx-auto flex-auto pt-20">
 @php
     $today = date('Y-m-d');
-    dump($datesdb);
 @endphp
 <x-futter.calendar date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
 <div class="container futter">
