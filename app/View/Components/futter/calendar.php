@@ -40,6 +40,7 @@ class calendar extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.futter.calendar');
+        extract(get_object_vars($this));
+        return view('components.futter.calendar',compact('dates','datesdb'));
     }
 }
