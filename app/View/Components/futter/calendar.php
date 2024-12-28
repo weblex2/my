@@ -42,6 +42,6 @@ class calendar extends Component
     {
         extract(get_object_vars($this));
         dump($dates);
-        return view('components.futter.calendar',[$dates,$datesdb]);
+        return view('components.futter.calendar',['dates' => $dates, 'datesdb' => $datesdb]);
     }
 }
