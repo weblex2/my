@@ -1,5 +1,6 @@
 <div>
     @php
+        dump($dates);
         dd($datesdb);
     @endphp
     
@@ -48,9 +49,6 @@
             @endisset
         </div>
     </div>
-    @php
-        #dump($dates);
-    @endphp
 </div>
 
 <script type="text/javascript">
