@@ -80,7 +80,11 @@ class FutterController extends Controller
             unset($futter[$i]['ingredients']);
             $futter[$i]['ingredients']=$ing;
         }
-        return view('futter.all', compact('futter','ft'));
+
+        $dates   = $this->getDates()['dates'];
+        $datesdb = $this->getDates()['datesdb'];
+
+        return view('futter.all', compact('futter','ft','datesdb','dates'));
     }
 
     public function showDetails($id){
