@@ -1,7 +1,7 @@
 <div>
     @php
         dump($dates);
-        dd($datesdb);
+        dump($datesdb);
     @endphp
     
     <div class="grid grid-cols-7 items-justify ">

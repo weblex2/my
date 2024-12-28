@@ -7,6 +7,7 @@ use App\Models\Futter;
 use App\Models\FutterPerDay;
 use File;
 use DB;
+use Carbon\Carbon;
 
 
 
@@ -23,12 +24,25 @@ class FutterController extends Controller
         }
 
         $futter = Futter::inRandomOrder()->limit(3)->get();
+
+        $date=date('Y-m-d');
+        $startDate = Carbon::createFromFormat('Y-m-d', $date);
+        $startDateDb = Carbon::createFromFormat('Y-m-d', $date);
+        //echo $startDateDb;
+        
+        $dates[] = $startDate->format('l d.m.y'); 
+        $datesdb[] = $startDateDb->format('Y-m-d'); 
+        for ($i=0; $i<6; $i++){
+            $dates[] = $startDate->addDays(1)->format('l d.m.y');
+            $datesdb[] = $startDateDb->addDays(1)->format('Y-m-d');
+        } 
+
         foreach ($futter as $i => $f){
             $ing = implode("<br>",$f->ingredients);
             unset($futter[$i]['ingredients']);
             $futter[$i]['ingredients']= $ing==null ? '' : $ing;
         }
-        return view('futter.index', compact('futter','ft'));
+        return view('futter.index', compact('futter','ft','dates', 'datesdb'));
     }
 
 

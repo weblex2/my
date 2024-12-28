@@ -7,9 +7,9 @@
 <div class="container mx-auto flex-auto pt-20">
 @php
     $today = date('Y-m-d');
-    echo $today;
+    dump($datesdb);
 @endphp
-<x-futter.calendar date={{$today}} :ft="$ft" datesdb />
+<x-futter.calendar date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
 <div class="container futter">
     {{-- @foreach($futter as $f)
         <div class="grid grid-col-1 w-full mb-4 nobr">
