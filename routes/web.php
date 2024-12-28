@@ -20,6 +20,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\FutterController;
+use App\Http\Controllers\reactTutorialController;
 
 
 /*
@@ -173,6 +174,13 @@ Route::controller(FriesenController::class)->group(function(){
     //Route::post('createFriese', 'createFriese')->name('firese.create');
 });
 
+
+Route::controller(reactTutorialController::class)->group(function(){
+    Route::get('/react/Tutorial', 'index')->name('reacttutorial.index');
+    Route::get('/react/Counter', 'counter')->name('reacttutorial.counter');
+    Route::post('/react/getMessage', 'getMessage')->name('reacttutorial.getMessage');
+});
+
 Route::controller(yt2mp3::class)->group(function () {
     Route::GET('/yt2mp3', 'index')->name('yt2mp3.index');
     Route::POST('/yt2mp3/get', 'getmp3')->name('yt2mp3.getMp3'); 
@@ -228,3 +236,5 @@ Route::get('/chat/send/{msg}', [ChatController::class, 'sendMessage'])->name('ch
 Route::get('/logs', function () {
     return view('logs');
 });
+
+

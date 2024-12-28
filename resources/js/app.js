@@ -5,6 +5,7 @@ import flatpickr from "flatpickr";
 import './components/HelloReact.jsx';
 import './components/HelloTable.jsx';
 import './components/Friseur.jsx';
+import './components/ReactTutorial/HelloReact2.jsx';
 import Alpine from 'alpinejs';
 import './websocket';
 
