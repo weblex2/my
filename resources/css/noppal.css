@@ -95,7 +95,7 @@ a:hover{
 }
 
 .cv .header{
-    @apply text-blue-500
+    @apply text-blue-500 float-left w-[40%]
 }
 
 /* Futter */

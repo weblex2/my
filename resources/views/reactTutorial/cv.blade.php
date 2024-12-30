@@ -1,4 +1,5 @@
 @extends('layouts.cv')
-    <div id="cv"></div>
-    {{-- {!! nl2br($file) !!} --}}
+    <div class="container mx-auto flex-auto pt-20" id="cv">
+
+    </div>
 

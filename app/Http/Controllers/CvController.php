@@ -30,13 +30,15 @@ class CvController extends Controller
 
     public function json($name='', $edit=0){
         $cv_data = Cv::orderBy('type')->orderBy('date_from', 'desc')->get();
+        foreach ($cv_data as $i =>  $row){
+            $cv_data[$i]['value'] = str_replace("\n","<br/>", $row['value']);
+        }
+
+
         Carbon::setLocale('de');
         $data = [];
         foreach ($cv_data as $i => $dat){
             $data[$dat->type][] = $dat;
-            // Format Dates
-            $x= Carbon::parse($dat['date_from'])->format('Y-F');
-            //echo $x."<br>";
         }
         //$data = json_encode($data);
         return response()->json($data, 200);

@@ -11,40 +11,48 @@ export default function Cv() {
     const shoot = (a) => {
         console.log(a);
     }
+
+    const addLineBreak = (str) =>
+    str.split('\n').map((subStr) => {
+      return (
+        <>
+          {subStr}
+          <br />
+        </>
+      );
+    });
     
     function CvAusbildung(props) {
         if (props.mykey.type=="AU"){
-            return <tr key={props.mykey.id} mykey={props.mykey.id}>
-                      <td>{props.mykey.value}</td>
-                   </tr>;
+            return <div key={props.mykey.id} mykey={props.mykey.id}>
+                      <div>{parse(props.mykey.value)}</div>
+                   </div>;
         }    
     }
 
     function CvKnowledge(props) {
         if (props.mykey.type=="KN"){
-            return <div className="tag w-fit" key={props.mykey.id} mykey={props.mykey.id}>
-                      {props.mykey.value}
-                   </div>;
+            return <span className="tag w-fit" key={props.mykey.id} mykey={props.mykey.id}>
+                      {parse(props.mykey.value)}
+                   </span>;
         }    
     }
 
     function CvPrivateData(props) {
         if (props.mykey.type=="PD"){
-            return <tr key={props.mykey.id} mykey={props.mykey.id}>
-                      <td>{parse(props.mykey.name)}</td>
-                      <td>{parse(props.mykey.value)}</td>
-                   </tr>;
+            return <div key={props.mykey.id} mykey={props.mykey.id} className="col-span-6">
+                      <div className="header">{parse(props.mykey.name)}</div>
+                      <div className="bl_text mb-5 float-left w-[60%]">{parse(props.mykey.value)}</div>
+                   </div>;
         }      
     }
 
     function CvLaufbahn(props) {
         if (props.mykey.type=="BL"){
-            return <tr key={props.mykey.id} mykey={props.mykey.id}>
-                      <td>
-                      <div className="whitespace-pre h1">{props.mykey.header}</div>
-                      <div className="whitespace-pre">{props.mykey.value}</div>
-                      </td>
-                   </tr>;
+            return <div key={props.mykey.id} mykey={props.mykey.id} className="col-span-6">
+                      <div className="col-span-2 bl"><h3>{props.mykey.header}</h3></div>
+                      <div className="">{parse(props.mykey.value)}</div>
+                   </div>;
         }  
     }
 
@@ -92,82 +100,74 @@ export default function Cv() {
     }, [])
   
   return (
-    <div>
-        <table className="t1">
-         <thead>
-          <tr>
-            <th>Ausbildung</th>
-          </tr>  
-         </thead> 
-         <tbody>
-        { Object.entries(cvdata).map(([k, v]) =>
-            Object.entries(v).map(([i, j]) => 
-                    <CvAusbildung mykey={j} />
-            )
-        )        
-        }
-        </tbody>
-        </table>
+        <div>
+        <div className="container mx-auto flex-auto"> 
+          <div className="flex justify-center">
+            <img src="../img/noppal3.jpg" className="img-me" />
+          </div>
+          
+          <div className="cv grid grid-cols-2 gap-0 ">
+              <h1 className="col-span-2 text-center">Lebenslauf</h1>
+              <hr className="col-span-2 mb-10" />
+              <div className="grid grid-cols-6">
+                  <h2 className="col-span-6  border-red-500">Persönliche Daten</h2>
+                  { Object.entries(cvdata).map(([k, v]) =>
+                    Object.entries(v).map(([i, j]) =>
+                        <CvPrivateData mykey={j} />
+                    )
+                    )        
+                  }
+                  <div className="col-span-6">
+                      <hr className="mb-5" />
+                  </div>    
+
+                  <div className="col-span-6">
+                      <h2>Ausbildung</h2>
+                      { Object.entries(cvdata).map(([k, v]) =>
+                        Object.entries(v).map(([i, j]) => 
+                                <div><CvAusbildung mykey={j} /></div>
+                        )
+                        )        
+                      }
+                  </div>
+                  
+                  <div className="col-span-6">
+                      <hr className="mb-5" />
+                  </div> 
+
+                  <div className="col-span-6">
+                      <h2>Kenntnisse & Fähigkeiten</h2>
+                  </div>  
+
+              
+                  <div className="col-span-6">
+                      <div className="my-10">
+                      { Object.entries(cvdata).map(([k, v]) =>
+                          Object.entries(v).map(([i, j]) => 
+                              <CvKnowledge mykey={j} />
+                          )
+                      )        
+                      }
+                      </div>
+                  </div>
 
 
-        <table className="t2">
-          <thead>
-          <tr>
-          <th>Laufbahn</th>
-          </tr>
-         </thead>
-         <tbody>
-        { Object.entries(cvdata).map(([k, v]) =>
-            Object.entries(v).map(([i, j]) =>
-                <CvLaufbahn mykey={j} /> 
-            )
-        )        
-        }
-        </tbody>
-        </table>
-
-
-        <table className="t2">
-          <thead>
-          <tr>
-            <th>Private Data</th>
-          </tr>
-         </thead>
-         <tbody>
-        { Object.entries(cvdata).map(([k, v]) =>
-            Object.entries(v).map(([i, j]) =>
-                <CvPrivateData mykey={j} /> 
-            )
-        )        
-        }
-        </tbody>
-        </table>
-
-
-        <table className="t1">
-         <thead>
-          <tr>
-            <th>Knowledge</th>
-          </tr>  
-         </thead> 
-         <tbody>
-         <tr><td>
-        { Object.entries(cvdata).map(([k, v]) =>
-            Object.entries(v).map(([i, j]) => 
-                    <CvKnowledge mykey={j} />
-            )
-        )        
-        }
-        </td></tr>
-        </tbody>
-        </table>
-
-        <button className="btn" onClick={() => shoot(cvdata)}></button>
-        <button onClick={() => newAU(au_length)}>Add</button>
-        
-      
-    </div>
-  )
+              </div>
+              <div className="grid grid-cols-1 row-span-12 ml-20">
+                  <h2 className="col-span-2">Berufliche Laufbahn</h2>
+                  { Object.entries(cvdata).map(([k, v]) =>
+                    Object.entries(v).map(([i, j]) =>
+                        <CvLaufbahn mykey={j} />
+                    )
+                  )        
+                  }
+              </div>    
+          </div>
+          </div>
+          <button className="btn" onClick={() => shoot(cvdata)}>Log Data</button>
+          <button onClick={() => newAU(au_length)}>Add</button>
+        </div>
+  );
 }
 
 if (document.getElementById('cv')) {
