@@ -55,7 +55,7 @@ class CvController extends Controller
             ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
             ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')
             ->save(storage_path().'/tmp/cv.pdf');
-        //Pdf::html('<h1>Hello world!!</h1>')->save('/some/directory/invoice.pdf');
+        //Pdf::url('http://noppal.de/cv')->save('cv.pdf');
     }
 
     public function edit(){
