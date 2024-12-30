@@ -68,7 +68,9 @@ Route::controller(FutterController::class)->group(function () {
 
 Route::controller(CvController::class)->group(function () {
     Route::get('/cv','index')->name('cv.index');
+    Route::get('/cv/json','json')->name('cv.json');
     Route::get('/cv/edit','edit')->name('cv.edit');
+    Route::get('/cv/getPdf','pdf')->name('cv.pdf');
     Route::get('/manu/cv','indexm')->name('cv.indexm');
 });
 
@@ -179,6 +181,7 @@ Route::controller(reactTutorialController::class)->group(function(){
     Route::get('/react/Tutorial', 'index')->name('reacttutorial.index');
     Route::get('/react/Counter', 'counter')->name('reacttutorial.counter');
     Route::post('/react/getMessage', 'getMessage')->name('reacttutorial.getMessage');
+    Route::get('/react/cv', 'cv')->name('reacttutorial.cv');
 });
 
 Route::controller(yt2mp3::class)->group(function () {

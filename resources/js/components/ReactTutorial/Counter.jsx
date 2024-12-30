@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import React, { useState } from "react";
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 export default function Counter() {
   // Set the initial count state to zero, 0
@@ -35,10 +35,13 @@ export default function Counter() {
         <button onClick={handleDecrement}>-</button>
         <span> {count} </span>
         <button onClick={handleIncrement}>+</button>
+        <button onClick={() => alert('Du hast geklickt.')}>Hier klicken</button>
     </div>
+    
   );
 }
 
 if (document.getElementById('counter')) {
-    ReactDOM.render(<Counter />, document.getElementById('counter'));
+    const root = createRoot(document.getElementById('counter'));
+    root.render(<Counter />);
 }

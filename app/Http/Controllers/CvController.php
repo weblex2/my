@@ -7,6 +7,9 @@ use App\Models\Cv;
 use Collections\Collection;
 use Carbon\Carbon;
 use Route;
+use Response;
+use Spatie\LaravelPdf\Facades\Pdf;
+use Spatie\Browsershot\Browsershot;
 
 
 class CvController extends Controller
@@ -25,9 +28,30 @@ class CvController extends Controller
         return view('cv', compact('data', 'edit'));
     }
 
+    public function json($name='', $edit=0){
+        $cv_data = Cv::orderBy('type')->orderBy('date_from', 'desc')->get();
+        Carbon::setLocale('de');
+        $data = [];
+        foreach ($cv_data as $i => $dat){
+            $data[$dat->type][] = $dat;
+            // Format Dates
+            $x= Carbon::parse($dat['date_from'])->format('Y-F');
+            //echo $x."<br>";
+        }
+        //$data = json_encode($data);
+        return response()->json($data, 200);
+    }
+
     public function indexm(){
     
         return "yoooo";
+    }
+
+
+    public function pdf(){
+        ini_set('max_execution_time', 300);    
+        Browsershot::url('http://noppal.de/cv')->save('cv.pdf');
+        //Pdf::html('<h1>Hello world!!</h1>')->save('/some/directory/invoice.pdf');
     }
 
     public function edit(){

@@ -11,8 +11,12 @@ class reactTutorialController extends Controller
     }
 
     public function counter(){
-        echo "counter";
         return view('reactTutorial.counter');
+    }
+
+    public function cv(){
+        $file = file_get_contents('E:\web\my\resources\js\components\ReactTutorial\Cv.jsx');
+        return view('reactTutorial.cv',compact('file'));
     }
 
     public function getMessage(){

@@ -120,3 +120,17 @@ a:hover{
 .day1{
     @apply w-52 h-52
 }
+
+
+/* React Tutorials */
+.t1{
+    @apply w-[50%] float-left border border-red-500
+}
+
+.t1 td, .t2 td{
+    @apply border border-green-500
+}
+
+.t2{
+    @apply w-[50%] float-right border border-green-500
+}
