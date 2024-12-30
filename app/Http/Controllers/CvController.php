@@ -54,7 +54,7 @@ class CvController extends Controller
         Browsershot::html('<h1>Hello world!!</h1>')
             ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
             ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')
-            ->save('example.pdf'); 
+            ->save(storage_path().'/tmp/example.pdf'); 
         /* Browsershot::url('http://noppal.de/cv')
             ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
             ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')
