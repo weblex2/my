@@ -15,8 +15,9 @@ class reactTutorialController extends Controller
     }
 
     public function cv(){
-        $file = file_get_contents('E:\web\my\resources\js\components\ReactTutorial\Cv.jsx');
-        return view('reactTutorial.cv',compact('file'));
+        //$file = file_get_contents('E:\web\my\resources\js\components\ReactTutorial\Cv.jsx');
+        //return view('reactTutorial.cv',compact('file'));
+        return view('reactTutorial.cv');
     }
 
     public function getMessage(){
