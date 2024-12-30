@@ -51,7 +51,10 @@ class CvController extends Controller
     public function pdf(){
         //echo public_path().'/cv.pdf';
         ini_set('max_execution_time', 300);   
-        Browsershot::html('<h1>Hello world!!</h1>')->save('example.pdf'); 
+        Browsershot::html('<h1>Hello world!!</h1>')
+            ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
+            ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')
+            ->save('example.pdf'); 
         /* Browsershot::url('http://noppal.de/cv')
             ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
             ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')
