@@ -12,6 +12,7 @@
     </div>
     <div class="my-flex-box">
         <div class="box"><a href="/cv">Lebenslauf</a></div>
+        <div class="box"><a href="/futter">Futter</a></div>
     </div>    
 </div>
 

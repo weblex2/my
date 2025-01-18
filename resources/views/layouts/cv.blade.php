@@ -13,10 +13,11 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <!-- Scripts -->
-        @vite(['resources/js/reactinit.js','resources/css/noppal.css'])
+        @vite(['resources/js/reactinit.js','resources/css/reactcv.css'])
  
         <!-- Styles -->
         @livewireStyles
+        
     </head>
     <body>
 

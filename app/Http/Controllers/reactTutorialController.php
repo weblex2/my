@@ -24,4 +24,8 @@ class reactTutorialController extends Controller
         return "message from ". date("Y-m-d H:i:s");
     }
 
+    public function test(){
+         return view('reactTutorial.cvtest');
+    }
+
 }

@@ -14,6 +14,7 @@ export default defineConfig({
                 'resources/js/noppal.js',
                 'resources/js/reactinit.js',
                 'resources/css/noppal.css',
+                'resources/css/reactcv.css',
             ],
             refresh: true,
         }),
