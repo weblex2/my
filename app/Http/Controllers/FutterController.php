@@ -66,6 +66,7 @@ class FutterController extends Controller
 
     public function showAll(){
         $futter = Futter::all();
+        $ft = [];
         $futterToday = FutterPerDay::where('day',">=", date('Y-m-d'))->get();
         
         foreach ($futterToday as $fday){
