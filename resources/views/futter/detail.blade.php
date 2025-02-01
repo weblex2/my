@@ -31,7 +31,8 @@
             <form method="POST" action="/futter/update">
             @csrf
             <div class="grid grid-cols-12">
-                <div class="col-span-12 m-1">{{$futter->name}}</div>
+                <div class="col-span-2 m-1">Name</div>
+                <div class="col-span-10 m-1"><input type="text" name="name" value="{{$futter->name}}"></div>
 
                 <div class="col-span-2 m-1">Zutaten</div>
                 <div class="col-span-10 m-1"><textarea rows=10 name="ingredients">{!!implode("\n",$futter->ingredients)!!}</textarea></div>
