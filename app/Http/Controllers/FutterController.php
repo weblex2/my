@@ -171,6 +171,11 @@ class FutterController extends Controller
         }    
         $futter->fill($req);
         $res = $futter->update();
-        return redirect()->back();
+        if ($res){
+            return redirect()->back()->with('success', 'Successfully Saved.');
+        }
+        else{
+            return redirect()->back()->with('error', 'Error occured!'); 
+        }    
     }
 }
