@@ -159,4 +159,18 @@ class FutterController extends Controller
         }
 
     }
+
+    public function update(Request $request){
+        $req = $request->all();
+        $futter = Futter::find($req['id']);
+        if ($req['ingredients']!=""){
+            $req['ingredients'] = explode("\r\n",$req['ingredients']);
+        }
+        else {
+            $req['ingredients'] = [""];
+        }    
+        $futter->fill($req);
+        $res = $futter->update();
+        return redirect()->back();
+    }
 }

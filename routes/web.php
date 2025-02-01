@@ -21,7 +21,7 @@ use App\Http\Controllers\CvController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\FutterController;
 use App\Http\Controllers\reactTutorialController;
-
+use App\Http\Controllers\ShowSourcecodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,10 +45,6 @@ Route::get('/', function () {
     return view('index');
 }); 
 
-Route::get('/cv', function () {
-    return view('cv');
-}); 
-
 Route::get('/arcade', function () {
     return view('arcade.index');
 }); 
@@ -63,6 +59,7 @@ Route::controller(FutterController::class)->group(function () {
     Route::get('/futter/all','showAll')->name('futter.all');
     Route::get('/futter/{id}','showDetails')->name('futter.detail');
     Route::post('/futter/save','save')->name('futter.save');
+    Route::post('/futter/update','update')->name('futter.update');
     Route::post('/futter/saveFutterPerDay','saveFutterPerDay')->name('futter.saveFutterPerDay');
 });
 
@@ -245,4 +242,8 @@ Route::get('/logs', function () {
     return view('logs');
 });
 
+
+Route::controller(ShowSourcecodeController::class)->group(function () {
+    Route::get('/ssc/{path?}','index')->name('showSourceCode.index');
+});
 
