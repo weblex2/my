@@ -43,8 +43,8 @@
                 </div>    
 
                 <div class="col-span-12 items-center">
-                    <a href="/futter" type="button" class="btn btn-primary">Back</a>
-                    <button type="submit" class="btn btn-primary float-right">Save</button>
+                    <button type="submit" class="btn btn-primary float-left">Save</button>
+                    <a href="/futter" type="button" class="btn btn-dark float-right">Back</a>
                 </div>
             </div>
             <input type="hidden" name="id" value="{{$futter->id}}">
