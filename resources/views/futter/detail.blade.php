@@ -5,7 +5,7 @@
     </h2>
 </x-slot>
 <div class="container mx-auto flex-auto pt-20">
-        
+            <form method="POST" action="/futter/update">
             @csrf
             <div class="grid grid-cols-12">
                 <div class="col-span-12 m-1">{{$futter->name}}</div>
@@ -20,9 +20,11 @@
 
                 <div class="col-span-12 items-center">
                     <a href="/futter" type="button" class="btn btn-primary">Back</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>
-        
+            <input type="hidden" name="id" value="{{$futter->id}}">
+            </form>
 </div>
 
 
