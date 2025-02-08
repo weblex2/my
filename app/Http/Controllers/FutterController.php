@@ -162,7 +162,7 @@ class FutterController extends Controller
         }
         $ntfy = new NtfyController();
         $msg = "Am ". date('d.m.Y',strtotime($request['day'])). " gibts jetzt " .$fname;
-        $msg .= $ingredients;
+        $msg .= "\n\n".$ingredients;
         $o_msg = (object)$msg;
         $o_msg->priority = 1;
         $o_msg->topic="Neue Futter Nachticht!";
