@@ -76,7 +76,6 @@
             var draggable = ui.draggable;           
             var dragged = draggable.clone(); 
             var futterId = ui.draggable.attr("foodid");
-            console.log( "futter_id = " + futterId) ;
             var img = $('#food_'+futterId).find('img').attr('src');
             $(this).html('<img src="'+img +'" class="rounded-full w-full h-full">');
             var dat = $(this).attr("date");
