@@ -147,7 +147,8 @@ class FutterController extends Controller
     public function saveFutterPerDay(Request  $request){
         $req = $request->all();
         $fpd = $model = FutterPerDay::where('day', '=', $request['day'])->get(); 
-        
+        $futter = Futter::find($req['futter_id']);
+        $fname = $futter->name;
         if (count($fpd) > 0){
             $fpd = $fpd[0];
             $fpd->fill($req);
@@ -159,7 +160,7 @@ class FutterController extends Controller
             $res = $fpd->save();
         }
         $ntfy = new NtfyController();
-        $msg = "new Futter for ". $request['day'];
+        $msg = "Am ". $request['day']. "gibts jetzt " .$fname;
         $o_msg = (object)$msg;
         $o_msg->priority = 1;
         $o_msg->topic="Neue Futter Nachticht!";
