@@ -11,6 +11,7 @@ use Carbon\Carbon;
 
 
 
+
 class FutterController extends Controller
 {
     public function index(){
@@ -157,7 +158,9 @@ class FutterController extends Controller
             $fpd->fill($req);
             $res = $fpd->save();
         }
-
+        $ntfy = new NtfyController();
+        $msg = "new Futter for ". $request['day'];
+        $ntfy->sendMessage($msg);
     }
 
     public function update(Request $request){
