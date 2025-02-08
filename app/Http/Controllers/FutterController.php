@@ -160,7 +160,7 @@ class FutterController extends Controller
             $res = $fpd->save();
         }
         $ntfy = new NtfyController();
-        $msg = "Am ". $request['day']. "gibts jetzt " .$fname;
+        $msg = "Am ". date('d.m.Y',strtotime($request['day'])). " gibts jetzt " .$fname;
         $o_msg = (object)$msg;
         $o_msg->priority = 1;
         $o_msg->topic="Neue Futter Nachticht!";
