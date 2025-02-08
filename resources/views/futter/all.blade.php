@@ -13,7 +13,7 @@
                 $today = date('Y-m-d');
             @endphp
             <x-futter.calendar date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
-            <div class="grid grid-cols-5 w-full mb-4 nobr items-justify text-center">
+            <div class="grid grid-cols-6 w-full mb-4 nobr items-justify text-center">
                 @foreach ($futter as $f)
                     {{-- <div class="food justify-center items-center mb-5" id={{$f->id}}> 
                         <div class="food-name mb-5">{{$f->name}}</div>
