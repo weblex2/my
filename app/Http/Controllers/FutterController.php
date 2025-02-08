@@ -149,6 +149,7 @@ class FutterController extends Controller
         $fpd = $model = FutterPerDay::where('day', '=', $request['day'])->get(); 
         $futter = Futter::find($req['futter_id']);
         $fname = $futter->name;
+        $ingredients = implode("\n", $futter->ingredients);
         if (count($fpd) > 0){
             $fpd = $fpd[0];
             $fpd->fill($req);
@@ -161,6 +162,7 @@ class FutterController extends Controller
         }
         $ntfy = new NtfyController();
         $msg = "Am ". date('d.m.Y',strtotime($request['day'])). " gibts jetzt " .$fname;
+        $msg .= $ingredients;
         $o_msg = (object)$msg;
         $o_msg->priority = 1;
         $o_msg->topic="Neue Futter Nachticht!";
