@@ -159,11 +159,12 @@ class FutterController extends Controller
             $res = $fpd->save();
         }
         $ntfy = new NtfyController();
-        $o_msg = new stdClass();
+        $msg = "new Futter for ". $request['day'];
+        $o_msg = (object)$msg;
         $o_msg->priority = 1;
         $o_msg->topic="Neue Futter Nachticht!";
         $o_msg->tags="";
-        $o_msg->description="new Futter for ". $request['day'];
+        $o_msg->description=$msg;
         $ntfy->sendMessage($o_msg);
     }
 
