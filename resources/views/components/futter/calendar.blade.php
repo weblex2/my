@@ -4,7 +4,7 @@
         #dump($datesdb);
     @endphp
     
-    <div class="grid grid-cols-1 md:grid-cols-7 w-full items-justify ">
+    <div class="grid md:grid-cols-7 w-full items-justify ">
         <div class="day" date={{$datesdb[0]}}>{{$dates[0]}}</div>
         <div class="day" date={{$datesdb[1]}}>{{$dates[1]}}</div>
         <div class="day" date={{$datesdb[2]}}>{{$dates[2]}}</div>
