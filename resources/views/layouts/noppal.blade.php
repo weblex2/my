@@ -11,7 +11,7 @@
                 $title = "Futter"; 
             @endphp
         @else
-            $title = 'Laravel';    
+            $title = "Laravel";    
         @endif
         <title>{{ $title }}</title>
         <!-- Fonts -->
