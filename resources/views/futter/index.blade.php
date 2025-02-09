@@ -63,18 +63,18 @@
             <x-futter.food-mobile :food="$futter[1]" />
             <x-futter.food-mobile :food="$futter[2]" />
             <div>
-            <a href="futter">
-                <button class="text-xl btn border"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
-            </a>
-            </div>
-            <div>
-                <a href="futter/all">
-                    <button class="text-xl btn border"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
+                <a href="futter" class="float-left">
+                    <button class="btn-futter"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
                 </a>
             </div>
             <div>
-                <a href="futter/new">
-                    <button class="text-xl btn border"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
+                <a href="futter/all" class="float-left">
+                    <button class="btn-futter"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
+                </a>
+            </div>
+            <div>
+                <a href="futter/new" class="float-left">
+                    <button class="btn-futter"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
                 </a>
             </div>
 

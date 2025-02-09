@@ -12,7 +12,7 @@
 }
 
 .container-mobile{
-    @apply w-max flex md:hidden inline-grid mb-4 text-center p-3
+    @apply w-max flex md:hidden inline-grid mb-4 text-center
 }
 
 .food-mobile{
@@ -20,5 +20,9 @@
 }
 
 .food-mobile-text{
-    @apply m-auto text-center  w-full align-middle bg-green-200 
+    @apply  w-max 
+}
+
+.btn-futter{
+    @apply text-xs md:text-xl py-3 px-8 rounded border  mt-3 md:mt-0 text-center
 }
