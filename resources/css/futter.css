@@ -16,7 +16,7 @@
 }
 
 .food-mobile{
-    @apply flex w-full 
+    @apply flex w-full my-2
 }
 
 .food-mobile-text{
