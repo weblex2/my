@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="py-5">
-                        <button id="submit" type="button" class="btn-submit">Submit</button>
+                        <button id="submit" type="submit" class="btn-submit">Submit</button>
                     </div>
                 </form>    
             </div>
