@@ -1,0 +1,24 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.calendar-wrapper{
+    @apply grid md:grid-cols-7 w-full hidden md:inline-grid
+}
+
+.container-desktop{
+    @apply grid hidden md:inline-grid grid-cols-3 w-full mb-4 text-center
+}
+
+.container-mobile{
+    @apply w-max flex md:hidden inline-grid mb-4 text-center p-3
+}
+
+.food-mobile{
+    @apply flex w-full 
+}
+
+.food-mobile-text{
+    @apply m-auto text-center  w-full align-middle bg-green-200 
+}

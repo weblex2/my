@@ -3,8 +3,8 @@
         #dump($dates);
         #dump($datesdb);
     @endphp
-    
-    <div class="grid md:grid-cols-7 w-full items-justify ">
+   
+    <div class="calendar-wrapper">
         <div class="day" date={{$datesdb[0]}}>{{$dates[0]}}</div>
         <div class="day" date={{$datesdb[1]}}>{{$dates[1]}}</div>
         <div class="day" date={{$datesdb[2]}}>{{$dates[2]}}</div>
@@ -51,6 +51,3 @@
     </div>
 </div>
 
-<script type="text/javascript">
-   
-</script>

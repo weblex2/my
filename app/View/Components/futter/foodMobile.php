@@ -6,17 +6,13 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class food extends Component
+class foodMobile extends Component
 {
-    /**
-     * Create a new component instance.
-     */
     public $food;
-
-    public function __construct($food, $all=false)
+    
+    public function __construct($food)
     {
         $this->food = $food;
-        $this->all = $all;
     }
 
     /**
@@ -24,6 +20,6 @@ class food extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.futter.food');
+        return view('components.futter.food-mobile');
     }
 }

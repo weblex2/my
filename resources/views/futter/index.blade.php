@@ -8,19 +8,12 @@
 @php
     $today = date('Y-m-d');
 @endphp
-<x-futter.calendar date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
+<x-futter.calendar  date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
 <div class="container futter">
-    {{-- @foreach($futter as $f)
-        <div class="grid grid-col-1 w-full mb-4 nobr">
-            <div class="text-center items-justify"><h1>{{$f->name}}</h1></div>
-            <div class="flex justify-center items-center">
-                <img src='{{url('storage/futter/'.$f->img)}}' class="rounded-full w-52 h-52 text-center">
-            </div>
-        </div>
-    @endforeach --}}
     <div class="container mx-auto flex-auto pt-20 items-justify text-center">
-        <div class="grid grid-cols-3 w-full mb-4 nobr items-justify text-center">
-            <div class="col-span-3">
+        <!-- Desktops -->
+        <div class="container-desktop">
+            <div class="col-span-1 md:col-span-3">
                 <div class="justify-center items-center"> 
                     <div class="justify-center items-center"> 
                     <x-futter.food :food="$futter[0]" />
@@ -62,6 +55,31 @@
                 </div>
             </div>
         </div>
+
+        <!-- mobile -->
+        
+        <div class="container-mobile"> 
+            <x-futter.food-mobile :food="$futter[0]" />
+            <x-futter.food-mobile :food="$futter[1]" />
+            <x-futter.food-mobile :food="$futter[2]" />
+            <div>
+            <a href="futter">
+                <button class="text-xl btn border"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
+            </a>
+            </div>
+            <div>
+                <a href="futter/all">
+                    <button class="text-xl btn border"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
+                </a>
+            </div>
+            <div>
+                <a href="futter/new">
+                    <button class="text-xl btn border"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
+                </a>
+            </div>
+
+        </div>
+
     </div>
     
 </div>

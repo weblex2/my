@@ -94,3 +94,13 @@ a:hover{
 .t2{
     @apply w-[50%] float-right border border-green-500
 }
+
+
+
+.showCodeFiles{
+    @apply w-[20%] h-full bg-gray-700 float-left p-0 m-0
+}
+
+.showCodeContent{
+    @apply w-[80%] h-full bg-gray-500 float-right
+}
