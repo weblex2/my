@@ -12,7 +12,12 @@
             @php
                 $today = date('Y-m-d');
             @endphp
-            <x-futter.calendar date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
+            <div class="hidden md:inline-grid">
+                <x-futter.calendar date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
+            </div>
+            <div class="md:hidden inline-grid">
+                <x-futter.calendar-mobile date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
+            </div>
             <div class="grid grid-cols-6 hidden md:inline-grid w-full mb-4 nobr items-justify text-center">
                 @foreach ($futter as $f)
                      <x-futter.food :food="$f"/> 
