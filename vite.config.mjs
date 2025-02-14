@@ -11,7 +11,6 @@ export default defineConfig({
                 'resources/css/ntfy.css',
                 'resources/css/yt2mp3.css',
                 'resources/js/app.js',
-                'resources/js/ssc.js',
                 'resources/js/noppal.js',
                 'resources/js/reactinit.js',
                 'resources/css/noppal.css',
