@@ -23,7 +23,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
         
         <!-- Scripts -->
-        @vite(['resources/js/ssc.js', 'resources/css/ssc.css'])
+        @vite(['resources/css/ssc.css'])
  
         <!-- Styles -->
         @livewireStyles
