@@ -7,12 +7,12 @@
 /* CV */
 
 body{
-    font-family: "Urbanist", sans-serif; font-style: normal;
+    /* font-family: "Urbanist", sans-serif; font-style: normal; */
     @apply bg-zinc-900 text-blue-200
 }
 
 
-.file, .dir {
+.file, .dir  {
     @apply cursor-pointer 
             px-1  
             text-sm font-medium 
@@ -20,19 +20,16 @@ body{
             transition duration-150 ease-in-out text-gray-200 hover:text-zinc-400
 }
 
+#code-block{
+    @apply  text-sm font-medium 
+}
+
 .dir-icon{
     @apply fa-regular fa-folder text-yellow-500
 }
 
-
-
-
-
-
-
-
 .container{
-    @apply mx-auto flex-auto h-screen bg-green-200 overflow-hidden
+    @apply mx-auto flex-auto h-screen overflow-hidden
 }
 
 .showCodeFiles{
@@ -40,9 +37,13 @@ body{
 }
 
 .showCodeContent{
-    @apply w-[80%] h-screen bg-red-500 float-right
+    @apply w-[80%] h-screen float-right
 }
 
-#ta_content{
-    @apply w-full h-screen border-0 p-0 m-0 bg-gray-200 text-gray-900 p-5
+pre[class*=language-]{
+    @apply w-full mt-[-2px] h-full
+}
+
+.language-css .token.string, .style .token.string, .token.entity, .token.operator, .token.url{
+    background: none;
 }

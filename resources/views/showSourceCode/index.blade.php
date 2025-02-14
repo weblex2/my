@@ -26,11 +26,16 @@
             </div>    
         </div>
         @endforeach
+    
     </div>
 
-    <div class="showCodeContent"><textarea id='ta_content' disabled></textarea></div>
+    <div class="showCodeContent">
+        <pre><code id="code-block" class="language-php"></code></pre>
+    </div>
 </div>
 
+
+    
     <script>
         $().ready(function () {
             $('.file').click(function(){
@@ -43,8 +48,13 @@
                 url: '{{ url("ssc/getCode") }}',
                 data: {'path' : path},
                 success: function (data){
-                    var  content = data.content;
-                    $('#ta_content').text(content);
+                    var  content = '<pre><code class="language-php">'+data.content+'</pre></code>';
+                    //$('#ta_content').text(content);
+                    const codeBlock = document.getElementById('code-block');
+                    codeBlock.textContent = content;
+
+                    // Prism.js Highlighting anwenden
+                    Prism.highlightElement(codeBlock);
                 },
                 error: function( data) {
                     console.log(data);
