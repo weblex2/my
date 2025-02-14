@@ -48,7 +48,7 @@
                 url: '{{ url("ssc/getCode") }}',
                 data: {'path' : path},
                 success: function (data){
-                    var  content = '<pre><code class="language-php">'+data.content+'</pre></code>';
+                    var  content = data.content;
                     //$('#ta_content').text(content);
                     const codeBlock = document.getElementById('code-block');
                     codeBlock.textContent = content;
