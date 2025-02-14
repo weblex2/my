@@ -1,38 +1,59 @@
-@extends('layouts.cv')
-@php
-    dd($files);
-@endphp
-<div class="container mx-auto flex-auto pt-20 " >
-    <div>Show Source Code </div>
-        <div class="showCodeFiles">
-            @foreach($files as $file)    
-                {{$file->dir}}
-            @endforeach
-            {{-- @foreach($files as $file)
-            <div class="p-1 m-0">
-                <div>
-                
-                
-                @if ($file['dir']=="dir")
-                    <span class="dir">
-                        <i class="fa-regular fa-folder text-yellow-500 dir"></i> 
-                        {{ $file['name'] }}  {{$file['dir']}}
-                    </span>
-                @elseif ($file['dir']=="file")
-                    <span>
-                        <i class="fa-regular fa-file text-yellow-100 file"></i>
-                        <a href="{{ base_path()."/".$file['name'] }}">{{ $file['name'] }}</a>  ( {{$file['dir']}} )
-                    </span>
+@extends('layouts.ssc')
+@section('content')
+<div class="container" >
+    <div class="showCodeFiles">
+        
+        @foreach($structure as $item)
+        <div class="p-1 m-0">
+            <div>
+                @if ($item['type']=="folder")
+                    <div class="D">
+                        {!! str_repeat('&nbsp;', $item['depth']*4) !!} 
+                        <span class="dir"> 
+                            <i class="dir-icon"></i>    
+                            {!! $item['file']  !!}
+                        </span>
+                    </div>
+                @elseif ($item['type']=="file")
+                    <div>
+                        <span class="file" path="{{ $item['path']  }}">
+                            {!! str_repeat('&nbsp;', $item['depth']*4) !!} 
+                            <i class="fa-regular fa-file text-gray-300"></i> 
+                            {!! $item['file']  !!}
+                        </span>
+                    </div>
                 @endif
-                
-                </div>    
-            </div>
-            @endforeach --}}
+            </div>    
         </div>
-
-        <div class="showCodeContent">abc</div>
+        @endforeach
     </div>
 
+    <div class="showCodeContent"><textarea id='ta_content' disabled></textarea></div>
+</div>
+
     <script>
+        $().ready(function () {
+            $('.file').click(function(){
+                var path = $(this).attr('path');   
+                $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },        
+                type: 'POST',
+                url: '{{ url("ssc/getCode") }}',
+                data: {'path' : path},
+                success: function (data){
+                    var  content = data.content;
+                    $('#ta_content').text(content);
+                },
+                error: function( data) {
+                    console.log(data);
+                }
+            });
+            });
+        });
+
         
+  
     </script>
+@endsection
