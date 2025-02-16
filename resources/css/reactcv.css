@@ -95,7 +95,17 @@ a:hover{
     @apply w-[50%] float-right border border-green-500
 }
 
+.cv-scc{
+    @apply flex flex-col justify-center  w-fit p-5 
+}
 
+.icon-smily{
+    @apply fa-solid fa-face-smile text-yellow-500
+}
+
+.icon-eye{
+    @apply fa-solid fa-eye mr-2
+}
 
 .showCodeFiles{
     @apply w-[20%] h-full bg-gray-700 float-left p-0 m-0

@@ -4,28 +4,30 @@
     <div class="showCodeFiles">
         
         @foreach($structure as $type => $typeRecords)
-            <div class="laravel-type">{{$type}}</div> 
+            <div class="laravel-type">{{ucfirst($type)}}</div> 
             @foreach ($typeRecords as $item)
-            <div class="p-1 m-0">
-                <div>
-                    @if ($item['type']=="folder")
-                        <div class="D">
-                            {!! str_repeat('&nbsp;', $item['depth']*4) !!} 
-                            <span class="dir"> 
-                                <i class="dir-icon"></i>    
-                                {!! $item['file']  !!}
-                            </span>
-                        </div>
-                    @elseif ($item['type']=="file")
-                        <div>
-                            <span class="file {{ str_replace("/","\\", $item['path']) == str_replace("/","\\",$startFile) ? "file-active" : ""  }}" path="{{ $item['path']  }}" title="{{ $item['path'] }}">
+            <div class="laravel-type-wrapper">
+                <div class="p-1 m-0">
+                    <div>
+                        @if ($item['type']=="folder")
+                            <div class="D">
                                 {!! str_repeat('&nbsp;', $item['depth']*4) !!} 
-                                <i class="fa-regular fa-file text-gray-300"></i> 
-                                {!! $item['file']  !!}
-                            </span>
-                        </div>
-                    @endif
-                </div>    
+                                <span class="dir"> 
+                                    <i class="dir-icon"></i>    
+                                    {!! $item['file']  !!}
+                                </span>
+                            </div>
+                        @elseif ($item['type']=="file")
+                            <div>
+                                <span class="file {{ str_replace("/","\\", $item['path']) == str_replace("/","\\",$startFile) ? "file-active" : ""  }}" path="{{ $item['path']  }}" title="{{ $item['path'] }}">
+                                    {!! str_repeat('&nbsp;', $item['depth']*4) !!} 
+                                    <i class="fa-regular fa-file text-gray-300"></i> 
+                                    {!! $item['file']  !!}
+                                </span>
+                            </div>
+                        @endif
+                    </div>    
+                </div>
             </div>
              @endforeach
         @endforeach
