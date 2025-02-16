@@ -23,7 +23,8 @@ class ShowSourcecodeController extends Controller
                 $startFileContent = file_get_contents($startFile);
             }
             // Hauptverzeichnis setzen (hier z. B. das aktuelle Verzeichnis)
-            $structure[$entry->type] = $this->listDirectoryRecursive($path);
+            $type = $entry->type;
+            $structure[$type] = $this->listDirectoryRecursive($path);
         }      
         return view('showSourceCode.index', compact('structure','startFile','startFileContent'));
     }
