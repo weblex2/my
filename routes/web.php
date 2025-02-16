@@ -244,7 +244,7 @@ Route::get('/logs', function () {
 
 
 Route::controller(ShowSourcecodeController::class)->group(function () {
-    Route::get('/ssc/{path?}','index')->name('showSourceCode.index');
+    Route::get('/ssc/{id}','index')->name('showSourceCode.index');
     Route::post('/ssc/getCode','getCode')->name('showSourceCode.getCode');
 });
 

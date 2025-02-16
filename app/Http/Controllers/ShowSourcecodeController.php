@@ -4,24 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Response;
+use App\Models\Ssc;
 
 class ShowSourcecodeController extends Controller
 {
-    public function index(String $mypath=""){
-        $path= base_path()."/resources/js/components/ReactTutorial";
-
-
-        // 🌍 Hauptverzeichnis setzen (hier z. B. das aktuelle Verzeichnis)
-        $structure = $this->listDirectoryRecursive($path);
-       
-        #foreach ($structure as $item) {
-        #    echo str_repeat('&nbsp;', $item['depth']*4) . $item['file'] . " Path: ". $item['path'] . "<br>";
-        #}
-        #dump($structure);
-        return view('showSourceCode.index', compact('structure'));
+    public function index($page_id){
+        
+        if ($page_id==null){
+            return "no page_id given"; 
+        }
+        $startFile = "";
+        $page = Ssc::where('page_id',"=", $page_id)->orderBy('type')->get();
+        foreach ($page as $entry){
+            $path = base_path().$entry->path;
+            
+            if ($entry->start_file!=null){
+                $startFile = base_path()."/".$entry->start_file;
+                $startFileContent = file_get_contents($startFile);
+            }
+            // Hauptverzeichnis setzen (hier z. B. das aktuelle Verzeichnis)
+            $structure[$entry->type] = $this->listDirectoryRecursive($path);
+        }      
+        return view('showSourceCode.index', compact('structure','startFile','startFileContent'));
     }
 
     function listDirectoryRecursive($directory, $depth = 0) {
+        if (!is_dir($directory)) {
+            $result[] = [
+                    'file' => basename($directory),
+                    'path' => $directory,
+                    'depth' => 0,
+                    'type' => 'file' // Typ: Ordner
+                ];
+            return $result;    
+        }
+
         $result = [];
     
         // Überprüfen, ob das Verzeichnis existiert und lesbar ist
@@ -84,8 +101,21 @@ class ShowSourcecodeController extends Controller
     public function getCode(Request $request){
         $path = $request['path'];
         $content = file_get_contents($path);
+
+
+        $linecount = 0;
+        $handle = fopen($path, "r");
+        while(!feof($handle)){
+            $line = fgets($handle);
+            $linecount++;
+        }
+        fclose($handle);
+
+        
+
         return Response::json([
             'content' => $content,
+            'linecount' => $linecount,
         ], 200);
     }
 

@@ -20,7 +20,11 @@ body{
             transition duration-150 ease-in-out text-gray-200 hover:text-zinc-400
 }
 
-#code-block{
+.file-active{
+    @apply text-orange-400 
+}
+
+#code-block, .line-number{
     @apply  text-sm font-medium 
 }
 
@@ -42,11 +46,11 @@ body{
 }
 
 pre[class*=language-]{
-    @apply w-full mt-[-2px] h-full pt-5
+    @apply w-full mt-[-2px] h-full pt-5 
 }
 
 .language-css .token.string, .style .token.string, .token.entity, .token.operator, .token.url{
-    background: none;
+    background: #2d2d2d;
 }
 
 /* width */
