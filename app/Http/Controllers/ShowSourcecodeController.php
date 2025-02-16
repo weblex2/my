@@ -55,7 +55,7 @@ class ShowSourcecodeController extends Controller
             // Alle Einträge im Verzeichnis sammeln
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != "..") {
-                    $path = $directory . '\\' . $entry;
+                    $path = $directory . '/' . $entry;
                     if (is_dir($path)) {
                         $folders[] = $entry; // Ordner speichern
                     } else {
@@ -71,7 +71,7 @@ class ShowSourcecodeController extends Controller
     
             // Zuerst die Ordner durchlaufen
             foreach ($folders as $folder) {
-                $path = $directory . '\\' . $folder;
+                $path = $directory . '/' . $folder;
                 $result[] = [
                     'file' => $folder,
                     'path' => $path,
@@ -86,7 +86,7 @@ class ShowSourcecodeController extends Controller
     
             // Dann die Dateien durchlaufen
             foreach ($files as $file) {
-                $path = $directory . '\\' . $file;
+                $path = $directory . '/' . $file;
                 $result[] = [
                     'file' => $file,
                     'path' => $path,
