@@ -1,5 +1,6 @@
 @extends('layouts.ssc')
 @section('content')
+<div class="loader"><img src="loader.gif"></div>
 <div class="container" >
     <div class="showCodeFiles">
         
@@ -46,6 +47,7 @@
             //$('.file-active').click();
 
             $('.file').click(function(){
+                //$('.loader').show();
                 var path = $(this).attr('path');   
                 $.ajax({
                 headers: {
@@ -80,9 +82,11 @@
                     codeBlock.textContent = textWithNumbers;
                     
                     Prism.highlightElement(codeBlock);
+                    //$('.loader').hide();
                 },
                 error: function( data) {
                     console.log(data);
+                    //$('.loader').hide();
                 }
             });
             });

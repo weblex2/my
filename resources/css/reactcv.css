@@ -99,6 +99,10 @@ a:hover{
     @apply flex flex-col justify-center  w-fit p-5 
 }
 
+.loader{
+    @apply fixed w-screen h-screen z-20 bg-green-600  top-0 left-0  items-center justify-center
+}
+
 .icon-smily{
     @apply fa-solid fa-face-smile text-yellow-500
 }
