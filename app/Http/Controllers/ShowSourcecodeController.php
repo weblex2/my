@@ -18,8 +18,8 @@ class ShowSourcecodeController extends Controller
         foreach ($page as $entry){
             $path = base_path().$entry->path;
             
-            if ($entry->start_file!=null){
-                $startFile = base_path()."\".$entry->start_file;
+            if ($entry->start_file!=null) {
+                $startFile = base_path()."\\".$entry->start_file;
                 $startFileContent = file_get_contents($startFile);
             }
             // Hauptverzeichnis setzen (hier z. B. das aktuelle Verzeichnis)
