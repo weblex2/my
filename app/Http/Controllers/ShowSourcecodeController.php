@@ -71,7 +71,7 @@ class ShowSourcecodeController extends Controller
     
             // Zuerst die Ordner durchlaufen
             foreach ($folders as $folder) {
-                $path = $directory . '/' . $folder;
+                $path = $directory . '\\' . $folder;
                 $result[] = [
                     'file' => $folder,
                     'path' => $path,
