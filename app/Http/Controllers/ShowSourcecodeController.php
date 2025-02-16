@@ -86,7 +86,7 @@ class ShowSourcecodeController extends Controller
     
             // Dann die Dateien durchlaufen
             foreach ($files as $file) {
-                $path = $directory . '/' . $file;
+                $path = $directory . '\\' . $file;
                 $result[] = [
                     'file' => $file,
                     'path' => $path,
