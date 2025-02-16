@@ -55,7 +55,7 @@ class ShowSourcecodeController extends Controller
             // Alle Einträge im Verzeichnis sammeln
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != "..") {
-                    $path = $directory . '/' . $entry;
+                    $path = $directory . '\\' . $entry;
                     if (is_dir($path)) {
                         $folders[] = $entry; // Ordner speichern
                     } else {
