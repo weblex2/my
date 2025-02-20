@@ -1,20 +1,20 @@
 <x-noppal>
+<div class="index-wrapper">
+    <div class="container mx-auto flex-auto noppindex">
 
-<div class="container mx-auto flex-auto">
-
-    <div class="flex justify-center items-center"> 
-    <img src="img/noppal3.jpg" class="img-me">
+        <div class="my-img-wrapper"> 
+            <img src="img/noppal3.jpg" class="img-me">
+        </div>
+        <div class="my-flex-box">
+            <a href="/blog" class="box"><div >Laravel Blog</div></a>
+            <a href="/blog/cat/1" class="box"><div>Projekte</div></a>
+            <a href="/travel-blog" class="box"><div>Reise Blog</div></a>
+        </div>
+        <div class="my-flex-box">
+            <a href="/cv" class="box"><div>Lebenslauf</div></a>
+            <a href="/futter" class="box"><div>Futter</div></a>
+        </div>    
     </div>
-    <div class="my-flex-box">
-        <div class="box"><a href="/blog">Laravel Blog</a></div>
-        <div class="box"><a href="/blog/cat/1">Projekte</a></div>
-        <div class="box"><a href="/travel-blog">Reise Blog</a></div>
-    </div>
-    <div class="my-flex-box">
-        <div class="box"><a href="/cv">Lebenslauf</a></div>
-        <div class="box"><a href="/futter">Futter</a></div>
-    </div>    
 </div>
-
 
 </x-noppal>
