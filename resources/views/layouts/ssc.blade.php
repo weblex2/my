@@ -17,13 +17,13 @@
         <!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"> -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
         <!-- Prism.js Core -->
-        <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" /> -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
         
         <!-- Scripts -->
-        @vite(['resources/js/ssc.js', 'resources/css/ssc.css'])
+        @vite(['resources/css/ssc.css'])
  
         <!-- Styles -->
         @livewireStyles

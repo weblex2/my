@@ -245,6 +245,14 @@ export default function Cv() {
           <div className="flex justify-center mt-0 mb-5">
             {/* <img src="../img/noppal3.jpg" className="img-me" /> */}
             <MyImage/>
+            <div className="cv-scc">
+              <div>
+                <a  href="/ssc/1" target="_blank">[ <i class="icon-eye"></i>&nbsp; view source code]</a>
+              </div>
+              <div>
+                Für alle, die mich einstellen wollen <i class="icon-smily"></i>
+              </div>
+            </div>  
           </div>
 
 

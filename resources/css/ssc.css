@@ -16,11 +16,24 @@ body{
     @apply cursor-pointer 
             px-1  
             text-sm font-medium 
-            text-gray-500 hover:text-gray-700 hover:border-gray-300 
-            transition duration-150 ease-in-out text-gray-200 hover:text-zinc-400
+            text-gray-400 hover:text-gray-700 hover:border-gray-300 
+            transition duration-150 ease-in-out  hover:text-zinc-400
 }
 
-#code-block{
+.laravel-type{
+    background: #2d2d2d41;
+    @apply w-full  p-2 text-orange-300
+}
+
+.laravel-type-wrapper{
+    @apply pl-4 cursor-pointer
+}
+
+.file-active{
+    @apply text-orange-400 
+}
+
+#code-block, .line-number{
     @apply  text-sm font-medium 
 }
 
@@ -33,7 +46,8 @@ body{
 }
 
 .showCodeFiles{
-    @apply w-[20%] h-screen bg-gray-700 float-left p-0 m-0
+    background: #2d2d2d;
+    @apply w-[20%] h-screen  float-left p-0 m-0 border-r border-gray-900
 }
 
 .showCodeContent{
@@ -41,9 +55,29 @@ body{
 }
 
 pre[class*=language-]{
-    @apply w-full mt-[-2px] h-full
+    @apply w-full mt-[-2px] h-full pt-5 
 }
 
 .language-css .token.string, .style .token.string, .token.entity, .token.operator, .token.url{
-    background: none;
+    background: #2d2d2d;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #88888839;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
