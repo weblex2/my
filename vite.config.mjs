@@ -17,6 +17,7 @@ export default defineConfig({
                 'resources/css/reactcv.css',
                 'resources/css/futter.css',
                 'resources/css/ssc.css',
+                'resources/js/websocket.js',
             ],
             refresh: true,
         }),
