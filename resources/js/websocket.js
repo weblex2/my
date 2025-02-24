@@ -22,32 +22,29 @@ window.Echo = new Echo({
 console.log("websocket am start");
 
 import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     wsHost: window.location.hostname,
-    wsPort: 8080,
+    wsPort: 9002,
     forceTLS: false,
     disableStats: true,
     enabledTransports: ['ws', 'wss'],
-    encrypted: true,
+    encrypted: false,
+    
 });
 
 window.Echo.channel('message')
     .listen('.message.sent', (e) => {
         // Append the new message to the chatroom
-        console.log(e.message);
-        //const msg = JSON.parse(e.message); 
-        //if (msg){
-        //    console.log(msg);
-        //}
-        //else{
-            const messages = document.getElementById('messages');
-            const messageElement = document.createElement('p');
-            messageElement.innerText = e.message;
-            messages.appendChild(messageElement);
-        //}
+        console.log("Message received:", e); 
+        const msg = JSON.parse(e.message); 
+        const messages = document.getElementById('messages');
+        const messageElement = document.createElement('p');
+        messageElement.innerText = e.message;
+        messages.appendChild(messageElement);
     });
 
 // Function to send a new message
@@ -57,7 +54,7 @@ window.sendMessage = function() {
         'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
     const messageInput = document.getElementById('messageInput');
-    console.log(messageInput.value);
+    console.log("Message Sent:" + messageInput.value);
     const message = messageInput.value;
     axios.post('/chat/send-message', { message: message })
         .then(response => {
