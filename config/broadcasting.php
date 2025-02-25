@@ -49,11 +49,11 @@ return [
             'app_id' => env('REVERB_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
-                'useTLS' => false, // <-- WICHTIG: Kein TLS, weil Reverb nur HTTP nutzt
-                'encrypted' => false, // <-- Muss auf false gesetzt sein!
+                'useTLS' => true, 
+                'encrypted' => true, 
                 'host' => env('REVERB_HOST', '127.0.0.1'),
                 'port' => env('REVERB_PORT', 9002),
-                'scheme' => env('REVERB_SCHEME', 'http'),
+                'scheme' => env('REVERB_SCHEME', 'https'),
             ],
         ],
 
