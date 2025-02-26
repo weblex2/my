@@ -23,25 +23,25 @@ console.log("websocket am start");
 
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+//console.log(import.meta.env.VITE_PUSHER_APP_CLUSTER);
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-    wsHost: 'noppal.de',
-    wsPort: 443,
-    wssPort: 443, 
-    forceTLS: true,
+    wsHost: "localhost",
+    wsPort: 9002,
+    wssPort: 9002, 
+    forceTLS: false,
     disableStats: true,
-    enabledTransports: ['ws','wss'],
-    encrypted: true,
-    
+    enabledTransports: ['ws'],
+    encrypted: false,
 });
 
 window.Echo.channel('message')
     .listen('.message.sent', (e) => {
         // Append the new message to the chatroom
         console.log("Message received:", e); 
-        const msg = JSON.parse(e.message); 
+        const msg = e.message; 
         const messages = document.getElementById('messages');
         const messageElement = document.createElement('p');
         messageElement.innerText = e.message;

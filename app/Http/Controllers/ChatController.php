@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
+use Log;
 
 class ChatController extends Controller
 {
@@ -11,7 +12,12 @@ class ChatController extends Controller
     {
         $message = $request->input('message');
 
-        MessageSent::dispatch($message);
+        try {
+            MessageSent::dispatch($message);
+        } catch (\Exception $e) {
+            Log::error('Error dispatching event:', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
         return response()->json(['success' => true, 'message' => 'Message sent successfully']);
     }
 
