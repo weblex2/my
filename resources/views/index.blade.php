@@ -13,7 +13,7 @@
         <div class="my-flex-box">
             <a href="/cv" class="box"><div>Lebenslauf</div></a>
             <a href="/futter" class="box"><div>Futter</div></a>
-            <a href="/chat" class="box"><div>Chat (Reverb)</div></a>
+            <!-- <a href="/chat?userid=25" class="box"><div>Chat (Reverb)</div></a> -->
         </div>    
     </div>
 </div>

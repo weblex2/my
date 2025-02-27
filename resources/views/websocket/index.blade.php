@@ -19,10 +19,9 @@
         </div>
         <div class="p-4">
             <div id="messages" class="h-64 overflow-y-scroll">
-               <!--  <div class="message">
-                    <p>This is a message from another user.</p>
-                    <div class="text-right text-sm text-gray-500">User Name, 10:00 AM</div>
-                </div> -->
+                <div class="message">
+                    <p><div id="connection-status">Verbindungsstatus: Unbekannt</div> </p>
+                </div>
             </div>
             <div class="mt-4">
                 <input type="text" id="messageInput" class="w-full p-2 border rounded" placeholder="Type your message here...">

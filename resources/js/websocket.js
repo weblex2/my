@@ -24,6 +24,8 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 let userId = getUserIdFromURL();
+const connectionStatusDiv = document.getElementById('connection-status');
+
 
 //console.log(import.meta.env.VITE_PUSHER_APP_CLUSTER);
 window.Echo = new Echo({
@@ -37,6 +39,38 @@ window.Echo = new Echo({
     disableStats: true,
     enabledTransports: ['ws'],
     encrypted: false,
+});
+
+// Event-Listener für Verbindungsstatus
+
+window.Echo.connector.pusher.connection.bind('connecting', () => {
+    console.log('Versuche, eine Verbindung zu Reverb herzustellen...');
+    connectionStatusDiv.textContent = 'Verbindungsstatus: Verbindungsaufbau...';
+});
+
+window.Echo.connector.pusher.connection.bind('connected', () => {
+    console.log('Verbindung zu Reverb erfolgreich hergestellt!');
+    connectionStatusDiv.textContent = 'Verbindungsstatus: Verbunden';
+});
+
+window.Echo.connector.pusher.connection.bind('connection_failed', () => {
+    console.error('Verbindung zu Reverb fehlgeschlagen!');
+    connectionStatusDiv.textContent = 'Verbindungsstatus: Fehlgeschlagen';
+});
+
+window.Echo.connector.pusher.connection.bind('disconnected', () => {
+    console.warn('Verbindung zu Reverb getrennt!');
+    connectionStatusDiv.textContent = 'Verbindungsstatus: Getrennt';
+});
+
+window.Echo.connector.pusher.connection.bind('state_change', (states) => {
+    console.log('Verbindungsstatus geändert:', states);
+    connectionStatusDiv.textContent = states;
+    
+});
+
+window.Echo.connector.pusher.connection.bind('error', (error) => {
+    console.error('Fehler bei der Verbindung:', error);
 });
 
 window.Echo.channel('chat')
