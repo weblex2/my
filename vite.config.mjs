@@ -16,6 +16,7 @@ export default defineConfig({
                 'resources/css/noppal.css',
                 'resources/css/reactcv.css',
                 'resources/css/futter.css',
+                'resources/css/chat.css',
                 'resources/css/ssc.css',
                 'resources/js/websocket.js',
             ],
