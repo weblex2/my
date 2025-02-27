@@ -1,0 +1,30 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.message{
+    @apply bg-gray-100 text-gray-800 p-3 rounded-lg m-2 self-start text-sm
+}
+.msg-user{
+    @apply text-right text-sm text-gray-500
+}    
+.channel{
+    @apply font-medium
+}
+
+.user_0{
+    @apply bg-gray-100 text-red-500
+}
+
+.user_25{
+    @apply bg-zinc-100
+}
+
+.user_36{
+    @apply bg-zinc-300
+}
+
+.user-icon{
+    @apply w-5 h-5 rounded-full float-right ml-2
+}

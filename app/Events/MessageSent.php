@@ -14,14 +14,16 @@ class MessageSent implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
+    public $channel;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($message)
+    public function __construct($message, $channel = 'chat')
     {
         $this->message = $message;
-        Log::channel('mylog')->info($message);
+        $this->channel = $channel;
+        //Log::channel('mylog')->info($message);
     }
 
     /**
@@ -32,7 +34,7 @@ class MessageSent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('message'), 
+            new Channel($this->channel), 
         ];
     }
 
