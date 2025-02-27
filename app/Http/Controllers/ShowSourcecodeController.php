@@ -16,15 +16,21 @@ class ShowSourcecodeController extends Controller
         $startFile = "";
         $page = Ssc::where('page_id',"=", $page_id)->orderBy('type')->get();
         foreach ($page as $entry){
-            $path = base_path().$entry->path;
+            $path = str_replace("\\", "/",base_path()."/".$entry->path);
             
             if ($entry->start_file!=null) {
-                $startFile = str_replace("\\", "/", base_path()."\\".$entry->start_file);
+                $startFile = $path;
                 $startFileContent = file_get_contents($startFile);
             }
             // Hauptverzeichnis setzen (hier z. B. das aktuelle Verzeichnis)
             $type = $entry->type;
-            $structure[$type] = $this->listDirectoryRecursive($path);
+            $res =  $this->listDirectoryRecursive($path);
+            if (isset($structure[$type])){
+                $structure[$type][] =   $res[0];
+            }
+            else{
+                $structure[$type] = $res;
+            }
         }      
         return view('showSourceCode.index', compact('structure','startFile','startFileContent'));
     }
