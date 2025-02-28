@@ -63,6 +63,7 @@
                     <div class="my-10">
                     <span class="tag">PHP</span>
                     <span class="tag">Laravel</span>
+                    <span class="tag">Laravel Filament</span>
                     <span class="tag">jQuery</span>
                     <span class="tag">mySQL</span>
                     <span class="tag">JS</span>
