@@ -5,7 +5,7 @@
             <div class="sm:rounded-lg h-full">
                 <div class="ml-5">
                 <p>Idea: <a href="https://docs.ntfy.sh/" target"_blank">https://docs.ntfy.sh/</a></p>
-                <p class="mb-5"><img src={{asset("img/ntfy_header.jpeg")}} class="h-[60%]"></p>
+                <p class="mb-5"><img src={{asset("img/ntfy_header.jpeg")}} class="h-[40%]"></p>
                 <p>   
                     Install the NTFY App on your phone.<br>
                     Configure it:
