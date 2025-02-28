@@ -160,6 +160,10 @@ Route::get('/react', function () {
     return view('react.index');
 }); 
 
+Route::get('/assd', function () {
+    return view('assd');
+}); 
+
 Route::get('/react/ajax', function () {
     return view('react.index');
 }); 
@@ -185,6 +189,7 @@ Route::controller(reactTutorialController::class)->group(function(){
     Route::get('/react/cv', 'cv')->name('reacttutorial.cv');
     Route::get('/react/cvtest','test')->name('cv.test');
 });
+
 
 Route::controller(yt2mp3::class)->group(function () {
     Route::GET('/yt2mp3', 'index')->name('yt2mp3.index');
