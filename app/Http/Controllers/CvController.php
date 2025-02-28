@@ -18,7 +18,7 @@ class CvController extends Controller
     public function index($name='', $edit=0){
         
         $cv_data = Cv::orderBy('type')->orderBy('date_from', 'desc')->get();
-        echo json_encode($cv_data);
+        #echo json_encode($cv_data);
         Carbon::setLocale('de');
         $data = [];
         foreach ($cv_data as $i => $dat){

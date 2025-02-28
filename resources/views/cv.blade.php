@@ -10,7 +10,7 @@
     <br>
         <div class="cv grid grid-cols-2 gap-0 ">
             <h1 class="col-span-2 text-center">Lebenslauf</h1>
-            Edit  = {{$edit}}
+            {{-- Edit  = {{$edit}} --}}
             <hr class="col-span-2 mb-10">
             <div class="grid grid-cols-6">
                 <h2 class="col-span-6  border-red-500">Persönliche Daten</h2>
