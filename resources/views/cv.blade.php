@@ -96,7 +96,7 @@
                 @endforeach
             </div>    
         </div>
-        <button type="button" class="btn">Edit</button>
-        <br>
+        {{-- <button type="button" class="btn">Edit</button>
+        <br> --}}
 <br>
 </x-noppal>
