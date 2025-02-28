@@ -8,9 +8,12 @@
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.2",
         "doctrine/dbal": "^3.0",
+        "filament/filament": "^3.2.0",
         "guzzlehttp/guzzle": "^7.2",
+        "illuminate/console": "*",
         "intervention/image": "^3.2",
         "laravel/framework": "^11.0",
+        "laravel/installer": "*",
         "laravel/jetstream": "^5.0.1",
         "laravel/passport": "^12.8",
         "laravel/reverb": "@beta",
@@ -49,7 +52,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

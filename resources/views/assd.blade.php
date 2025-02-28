@@ -38,6 +38,20 @@
             padding: 10px 20px; 
             cursor: pointer;
         }
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .restart {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -52,7 +66,10 @@
     <div class="nav-container">
         <button class="nav-btn prev">Zurück</button>
         <button class="nav-btn next">Weiter</button>
+        <button class="nav-btn restart">Erste Seite</button>
     </div>
+
+    <div class="loading">Lade...</div>
 
     <script>
         $(document).ready(function() {
@@ -62,27 +79,45 @@
             function scrollToPage(page) {
                 let position = -(page - 1) * 100 + "vw";
                 $(".container").animate({ marginLeft: position }, 600);
+                updateButtons(page);
             }
 
-            function sendAjaxRequest(callback) {
-                $.post("/nextPage", { page: currentPage })
+            function sendAjaxRequest(page, callback) {
+                $(".loading").fadeIn();
+                $.post("/nextPage", { page: page })
                     .done(function(response) {
+                        $(".loading").fadeOut();
                         if (response.success) {
                             callback(true);
                         } else {
-                            alert("Fehler beim Laden der nächsten Seite");
+                            alert("Fehler beim Laden der Seite " + page);
                             callback(false);
                         }
                     })
                     .fail(function() {
-                        console.warn("Kein echter Server vorhanden, verwende Fallback");
+                        $(".loading").fadeOut();
+                        console.warn("Kein echter Server vorhanden, verwende Fallback für Seite " + page);
                         callback(true); // Falls kein Server da ist, gehe trotzdem weiter
                     });
             }
 
+            function updateButtons(page) {
+                if (page === 1) {
+                    $(".prev").hide();
+                } else {
+                    $(".prev").show();
+                }
+
+                if (page === totalPages) {
+                    $(".restart").show();
+                } else {
+                    $(".restart").hide();
+                }
+            }
+
             $(".next").click(function() {
                 if (currentPage < totalPages) {
-                    sendAjaxRequest(function(success) {
+                    sendAjaxRequest(currentPage + 1, function(success) {
                         if (success) {
                             currentPage++;
                             scrollToPage(currentPage);
@@ -93,11 +128,26 @@
 
             $(".prev").click(function() {
                 if (currentPage > 1) {
-                    currentPage--;
-                    scrollToPage(currentPage);
+                    sendAjaxRequest(currentPage - 1, function(success) {
+                        if (success) {
+                            currentPage--;
+                            scrollToPage(currentPage);
+                        }
+                    });
                 }
             });
+
+            $(".restart").click(function() {
+                sendAjaxRequest(1, function(success) {
+                    if (success) {
+                        currentPage = 1;
+                        scrollToPage(currentPage);
+                    }
+                });
+            });
+
+            updateButtons(currentPage);
         });
     </script>
 </body>
-</html>
+</html> 
