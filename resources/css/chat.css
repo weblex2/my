@@ -28,3 +28,15 @@
 .user-icon{
     @apply w-5 h-5 rounded-full float-right ml-2
 }
+
+#connection-status{
+    @apply text-xs py-3
+}
+
+.reverb-icon{
+   @apply float-left w-5 h-5 mt-[2px] mr-2
+}
+
+.ssc-icon{
+    @apply fa-solid fa-code float-right mt-2
+}

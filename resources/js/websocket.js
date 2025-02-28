@@ -45,26 +45,26 @@ window.Echo = new Echo({
 
 window.Echo.connector.pusher.connection.bind('connecting', () => {
     console.log('Versuche, eine Verbindung zu Reverb herzustellen...');
-    connectionStatusDiv.textContent = 'Verbindungsstatus: Verbindungsaufbau...';
+    connectionStatusDiv.innerHTML = '<i class="fa-solid fa-plug text-yellow-500"></i> Connection: connection establishment...';
 });
 
 window.Echo.connector.pusher.connection.bind('connected', () => {
     console.log('Verbindung zu Reverb erfolgreich hergestellt!');
-    connectionStatusDiv.textContent = 'Verbindungsstatus: Verbunden';
+    connectionStatusDiv.innerHTML = '<i class="fa-solid fa-plug-circle-check text-green-500"></i> Connection: connected';
 });
 
 window.Echo.connector.pusher.connection.bind('connection_failed', () => {
     console.error('Verbindung zu Reverb fehlgeschlagen!');
-    connectionStatusDiv.textContent = 'Verbindungsstatus: Fehlgeschlagen';
+    connectionStatusDiv.innerHTML = '<i class="fa-solid fa-plug-circle-xmark text-red-500"></i> Connection: failed';
 });
 
 window.Echo.connector.pusher.connection.bind('disconnected', () => {
     console.warn('Verbindung zu Reverb getrennt!');
-    connectionStatusDiv.textContent = 'Verbindungsstatus: Getrennt';
+    connectionStatusDiv.innerHTML = 'Connection: Disconnected';
 });
 
 window.Echo.connector.pusher.connection.bind('state_change', (states) => {
-    console.log('Verbindungsstatus geändert:', states);
+    console.log('Connection changed:', states);
     connectionStatusDiv.textContent = states;
     
 });
