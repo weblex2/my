@@ -11,7 +11,7 @@ use Response;
 class NtfyController extends Controller
 {
     private $endpoint = "http://noppal.de:81/";
-    private $channel = "ntfy";
+    private $default_channel = "ntfy";
     private $emoticons =[];
     public function index($msg){
         $o_msg = (object)$msg;
@@ -29,8 +29,12 @@ class NtfyController extends Controller
         }
     }
 
-    public function sendMessage($msg){
-        $endpoint = $this->endpoint.$this->channel;
+    public function sendMessage($msg, $channel=null){
+        if ($channel==null){
+            $endpoint = $this->endpoint.$this->default_channel;
+        }else{
+                $endpoint = $this->endpoint.$channel;
+        }        
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $endpoint);
@@ -51,133 +55,148 @@ class NtfyController extends Controller
         }
         curl_close($ch);
         return $result;
-
-        
     }
 
     
 
     public function test($text=null){
-       $msg = MyDates::find(4);
-       $res = $this->sendMessage($msg);
-       dump($res);
+       return view('ntfy.test');
     }
 
-   public function showAll(){
-       $emoticons = Emoticons::all(); 
-       $notifications = MyDates::orderBy('reminder', 'DESC')->get();
-       foreach ($notifications as $i =>  $notification){
+    public function sendTestMessage(Request $request){
+        $msg = $request->msg;
+        $o_msg = (object)$msg;
+        $o_msg->priority = 1;
+        $o_msg->topic=$msg;
+        $o_msg->tags="";
+        $o_msg->description=$msg;
+        $res = $this->sendMessage($o_msg, 'test');
+        $res = json_decode($res, true);
+        
+        if (isset($res['id'])){
+            return redirect()->back();
+        }
+        else{
+            echo "Error: ". $res;
+        }
+        
+    }
+
+    public function showAll(){
+        $emoticons = Emoticons::all(); 
+        $notifications = MyDates::orderBy('reminder', 'DESC')->get();
+        foreach ($notifications as $i =>  $notification){
+                $emoticons  = explode(",",trim($notification->tags,","));
+                $emoticons_icons = [];
+                if ($emoticons){
+                    foreach ($emoticons as $j => $emoji){
+                        if (isset($this->emoticons[$emoji])){
+                        $emoticons_icons[$j]  = '<div class="ntfy-tag">' . $this->emoticons[$emoji] . '</div>';
+                        }
+                        else{
+                        $emoticons_icons[$j] = '<div class="ntfy-tag">' . $emoji . '</div>';
+                        }
+                    }
+                }
+                $notifications[$i]->tags2 = $emoticons_icons;
+        } 
+        return view('ntfy.show', compact('notifications','emoticons'));
+    }
+
+    public function editNotification($id){
+            
+            $emoticons2 = Emoticons::all(); 
+            $notification = MyDates::find($id);
+
             $emoticons  = explode(",",trim($notification->tags,","));
             $emoticons_icons = [];
             if ($emoticons){
                 foreach ($emoticons as $j => $emoji){
                     if (isset($this->emoticons[$emoji])){
-                    $emoticons_icons[$j]  = '<div class="ntfy-tag">' . $this->emoticons[$emoji] . '</div>';
+                        $emoticons_icons[$j]  = '<div class="ntfy-tag">' . $this->emoticons[$emoji] . '</div>';
                     }
                     else{
-                    $emoticons_icons[$j] = '<div class="ntfy-tag">' . $emoji . '</div>';
+                        $emoticons_icons[$j] = '<div class="ntfy-tag">' . $emoji . '</div>';
                     }
                 }
             }
-            $notifications[$i]->tags2 = $emoticons_icons;
-       } 
-       return view('ntfy.show', compact('notifications','emoticons'));
-   }
+            $notification->tags2 = $emoticons_icons;
 
-   public function editNotification($id){
+            $html = view('components.ntfy.notification', 
+                        ['notification' => $notification, 'emoticons'=>$emoticons2, 'mode' => 'edit']);
+            echo $html;
+    }
+
+    public function show($id){
+            $notification = MyDates::find($id);
+            $emoticons  = explode(",",trim($notification->tags,","));
+            $emoticons_icons = [];
+            if ($emoticons){
+                foreach ($emoticons as $j => $emoji){
+                    if (isset($this->emoticons[$emoji])){
+                        $emoticons_icons[$j]  = '<div class="ntfy-tag">' . $this->emoticons[$emoji] . '</div>';
+                    }
+                    else{
+                        $emoticons_icons[$j] = '<div class="ntfy-tag">' . $emoji . '</div>';
+                    }
+                }
+            }
+            $notification->tags2 = $emoticons_icons;
         
-        $emoticons2 = Emoticons::all(); 
-        $notification = MyDates::find($id);
+            $html = view('components.ntfy.notification', ['notification' => $notification, 'mode' => 'show']);
+            echo $html;
+    }
 
-        $emoticons  = explode(",",trim($notification->tags,","));
-        $emoticons_icons = [];
-        if ($emoticons){
-            foreach ($emoticons as $j => $emoji){
-                if (isset($this->emoticons[$emoji])){
-                    $emoticons_icons[$j]  = '<div class="ntfy-tag">' . $this->emoticons[$emoji] . '</div>';
-                }
-                else{
-                    $emoticons_icons[$j] = '<div class="ntfy-tag">' . $emoji . '</div>';
-                }
+    public function new(){
+            date_default_timezone_set('Europe/Berlin');
+            $myNotification = new MyDates();
+            $emoticons = Emoticons::all(); 
+            $myNotification->date = date('Y-m-d H:i:s');
+            $myNotification->reminder = date('Y-m-d H:i:s');
+            $myNotification->tags2 = [];
+            $html = view('components.ntfy.notification', 
+                        ['notification' => $myNotification, 'emoticons'=> $emoticons, 'mode' => 'edit']);
+            echo $html;
+    }
+
+    public function deleteNotification(Request $request){
+            $id = $request->id;
+            $notification = MyDates::find($id);
+            $res = $notification->delete();
+            if ($res){
+                return Response::json([
+                    'status' => 'ok',
+                ], 200);
             }
-        }
-        $notification->tags2 = $emoticons_icons;
-
-        $html = view('components.ntfy.notification', 
-                    ['notification' => $notification, 'emoticons'=>$emoticons2, 'mode' => 'edit']);
-        echo $html;
-   }
-
-   public function show($id){
-        $notification = MyDates::find($id);
-        $emoticons  = explode(",",trim($notification->tags,","));
-        $emoticons_icons = [];
-        if ($emoticons){
-            foreach ($emoticons as $j => $emoji){
-                if (isset($this->emoticons[$emoji])){
-                    $emoticons_icons[$j]  = '<div class="ntfy-tag">' . $this->emoticons[$emoji] . '</div>';
-                }
-                else{
-                    $emoticons_icons[$j] = '<div class="ntfy-tag">' . $emoji . '</div>';
-                }
-            }
-        }
-        $notification->tags2 = $emoticons_icons;
-    
-        $html = view('components.ntfy.notification', ['notification' => $notification, 'mode' => 'show']);
-        echo $html;
-   }
-
-   public function new(){
-        date_default_timezone_set('Europe/Berlin');
-        $myNotification = new MyDates();
-        $emoticons = Emoticons::all(); 
-        $myNotification->date = date('Y-m-d H:i:s');
-        $myNotification->reminder = date('Y-m-d H:i:s');
-        $myNotification->tags2 = [];
-        $html = view('components.ntfy.notification', 
-                    ['notification' => $myNotification, 'emoticons'=> $emoticons, 'mode' => 'edit']);
-        echo $html;
-   }
-
-   public function deleteNotification(Request $request){
-        $id = $request->id;
-        $notification = MyDates::find($id);
-        $res = $notification->delete();
-        if ($res){
+            else{
             return Response::json([
-                'status' => 'ok',
-            ], 200);
-        }
-        else{
-           return Response::json([
-                'data' => $res,
-                'status' => 'error',
-            ], 500);
-        }    
-   }
+                    'data' => $res,
+                    'status' => 'error',
+                ], 500);
+            }    
+    }
 
-   public function getDates($date=null){
-        if ($date==null){
-            $date=date('Y-m-d H:i:s');
-        }
-        $res = MyDates::where('reminder' ,"<=", $date)
-                      ->where('reminder' ,"!=", '0000-00-00 00:00:00')
-                      ->get();
-        foreach ($res as $notify){
-            if ($notify->recurring){
-                if ($notify->recurring_interval=="D")
-                    $new_notify = MyDates::find($notify->id);
-                    $new_notify->date = date('Y-m-d',strtotime($notify->date) + 86400);
-                    $new_notify->save();
+    public function getDates($date=null){
+            if ($date==null){
+                $date=date('Y-m-d H:i:s');
             }
-            $this->sendMessage($notify->topic);
+            $res = MyDates::where('reminder' ,"<=", $date)
+                        ->where('reminder' ,"!=", '0000-00-00 00:00:00')
+                        ->get();
+            foreach ($res as $notify){
+                if ($notify->recurring){
+                    if ($notify->recurring_interval=="D")
+                        $new_notify = MyDates::find($notify->id);
+                        $new_notify->date = date('Y-m-d',strtotime($notify->date) + 86400);
+                        $new_notify->save();
+                }
+                $this->sendMessage($notify->topic);
+            }
         }
-    }
 
-    public function createNotification(){
-        return view('ntfy.create');
-    }
+        public function createNotification(){
+            return view('ntfy.create');
+        }
 
     public function save(Request $request){
         $id = $request->id;
@@ -201,7 +220,7 @@ class NtfyController extends Controller
             #echo $html;
         }
         else{
-           return Response::json([
+        return Response::json([
                 'data' => $data,
                 'status' => $httpcode,
             ], 200);
