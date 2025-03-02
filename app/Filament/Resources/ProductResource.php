@@ -37,7 +37,6 @@ class ProductResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('name'),
                         Forms\Components\TextInput::make('slug'),
-                        
                     ])->columns(2), 
                     Forms\Components\Section::make('Pricing & Inventory')
                     ->schema([
