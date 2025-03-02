@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
 
 class TestController extends Controller
 {
@@ -31,5 +32,11 @@ class TestController extends Controller
         
         dump($result);
         
+    }
+
+    public function testProduct(){
+        $res = Product::first();
+        $res->load('brand');
+        dump($res);
     }
 }

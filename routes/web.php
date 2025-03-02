@@ -51,6 +51,7 @@ Route::get('/arcade', function () {
 
 Route::controller(TestController::class)->group(function () {
     Route::get('/gpt','chatGptApi')->name('cv.index');
+    Route::get('/fill/product','testProduct')->name('testProduct');
 });
 
 Route::controller(FutterController::class)->group(function () {
