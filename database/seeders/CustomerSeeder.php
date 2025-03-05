@@ -17,7 +17,6 @@ class CustomerSeeder extends Seeder
         #Log::info('Customer selected:', ['customer_id' => $customer->customer_id, 'customer' => $customer]);
 
         for ($i = 0; $i < 30; $i++) {
-            $customer_address = CustomerAddress::all()->random();
             Customer::create([
                 'external_id' => fake()->uuid(),
                 'name' => $faker->lastName,
@@ -25,7 +24,7 @@ class CustomerSeeder extends Seeder
                 'is_active' => $faker->boolean,
                 'email' => $faker->unique()->safeEmail,
                 'phone' => $faker->phoneNumber,
-                'primary_address' => $customer_address->id,
+                'primary_address' => 0,
                 'website' => fake()->url(),
                 'comments' => fake()->paragraph(),
             ]);
