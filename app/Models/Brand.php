@@ -12,7 +12,7 @@ class Brand extends Model
     protected $fillable = [
         'brand_id', 'name', 'slug', 'sku', 'description',
         'image', 'quantity', 'is_visible', 'is_featured', 
-        'type', 'published_at'
+        'type', 'published_at','url'
     ];
 
     public function categories(): BelongsToMany 
