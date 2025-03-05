@@ -16,9 +16,7 @@ return new class extends Migration
             $table->boolean('is_active')->defaultTrue();
             $table->string('name');
             $table->string('first_name')->nullabe();
-            $table->foreignId('company_id')
-                ->constrained('company')
-                ->nullable();
+            $table->integer('company_id')->nullable();
             $table->string('email')->nullabe();
             $table->string('phone')->nullabe();
             $table->string('website')->nullabe();

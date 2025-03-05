@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
@@ -13,7 +14,7 @@ class Order extends Model
         'customer_id', 'number', 'total_price', 'shipping_price', 'notes'
     ];
 
-    public function customer() : BelongsTo 
+    public function customer()  
     {
         return $this->belongsTo(Customer::Class);
     }
