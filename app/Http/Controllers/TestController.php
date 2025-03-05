@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Customer;
+use App\Models\CustomerAddress;
 
 class TestController extends Controller
 {
@@ -35,8 +37,8 @@ class TestController extends Controller
     }
 
     public function testProduct(){
-        $res = Product::first();
-        $res->load('brand');
-        dump($res);
+        $customer = Customer::first();
+       $customer->load('primaryAddress');
+        dump($customer);
     }
 }

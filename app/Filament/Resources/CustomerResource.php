@@ -19,28 +19,26 @@ class CustomerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Persons & Customers';
+
+    public static function getNavigationBadge(): ?string  {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('customer_id')
+                Forms\Components\TextInput::make('external_id')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('active')
+                Forms\Components\Toggle::make('is_active')
                     ->required(),
-                Forms\Components\TextInput::make('address')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('address_2')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('city')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('state')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('zip')
-                    ->numeric(),
+                Forms\Components\Select::make('company_id')
+                    ->relationship('company', 'company_name'),    
                 Forms\Components\TextInput::make('phone')
                     ->tel()
                     ->maxLength(255),
@@ -58,21 +56,30 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('customer_id')
+                Tables\Columns\TextColumn::make('id')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('company.company_name')
+                    ->searchable(),    
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('active')
+                Tables\Columns\TextColumn::make('first_name')
+                    ->searchable(),    
+                Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('address')
+                Tables\Columns\TextColumn::make('primaryAddress.address')
+                    ->label('Address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('address_2')
+                Tables\Columns\TextColumn::make('primaryAddress.address2')
+                    ->label('Address 2')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('city')
+                Tables\Columns\TextColumn::make('primaryAddress.city')
+                    ->label('City')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('state')
+                Tables\Columns\TextColumn::make('primaryAddress.state')
+                    ->label('State')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('zip')
+                Tables\Columns\TextColumn::make('primaryAddress.zip')
+                    ->label('Zip')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('phone')
@@ -80,7 +87,13 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('website')
-                    ->searchable(),
+                    ->searchable()
+                    ->url(fn ($record) => route('profile.show', $record->id))
+                    ->extraAttributes([
+                        'style' => 'max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
+                    ]),
+                Tables\Columns\TextColumn::make('external_id')
+                    ->searchable(),    
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
