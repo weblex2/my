@@ -83,10 +83,13 @@ class CustomerResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('phone')
+                    ->icon('heroicon-o-phone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->icon('heroicon-o-envelope')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('website')
+                    ->icon('heroicon-o-link')
                     ->searchable()
                     ->url(fn ($record) => route('profile.show', $record->id))
                     ->extraAttributes([
