@@ -1,7 +1,9 @@
 <x-noppal>
 <div class="index-wrapper">
     <div class="container mx-auto flex-auto noppindex">
-
+        @php
+            phpinfo();
+        @endphp
         <div class="my-img-wrapper"> 
             <img src="img/noppal3.jpg" class="img-me">
         </div>
