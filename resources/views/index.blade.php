@@ -6,7 +6,7 @@
         </div>
         <div class="my-flex-box">
             <a href="/blog" class="box"><div >Laravel Blog</div></a>
-            <a href="/admin" class="box"><div>Filament</div></a>
+            <a href="/filament/admin" class="box"><div>Filament</div></a>
             <a href="/travel-blog" class="box"><div>Reise Blog</div></a>
         </div>
         <div class="my-flex-box">

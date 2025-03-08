@@ -27,8 +27,8 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('filament/admin')
+            ->path('filament/admin')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Settings')
                     ->url('')
                     ->icon('heroicon-o-cog-6-tooth')
-                
+
             ])
             ->font('Poppins')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
