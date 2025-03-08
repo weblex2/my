@@ -13,6 +13,8 @@
             <a href="/cv" class="box"><div>Lebenslauf</div></a>
             <a href="/futter" class="box"><div>Futter</div></a>
             <a href="/notify/test" class="box"><div>Ntfy</div></a>
+            <a href="{{route('phpmyadmin')}}" class="box"><div>phpMyAdmin</div></a>
+
             <!-- <a href="/chat?userid=25" class="box"><div>Chat (Reverb)</div></a> -->
         </div>
     </div>

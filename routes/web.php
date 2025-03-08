@@ -35,19 +35,24 @@ use App\Http\Controllers\ShowSourcecodeController;
 */
 Route::get('/welcome', function () {
     return view('welcome');
-}); 
+});
+
+Route::get('/phpmyadmin', function () {
+    return redirect('https://noppal.de:8081');
+})->middleware(['auth'])->name('phpmyadmin');
+
 
 Route::get('/pi', function () {
     return phpinfo();
-}); 
+});
 
 Route::get('/', function () {
     return view('index');
-}); 
+});
 
 Route::get('/arcade', function () {
     return view('arcade.index');
-}); 
+});
 
 Route::controller(TestController::class)->group(function () {
     Route::get('/gpt','chatGptApi')->name('cv.index');
@@ -69,11 +74,11 @@ Route::controller(CvController::class)->group(function () {
     Route::get('/cv/json/{edit?}','json')->name('cv.json');
     Route::post('/cv/saveJson/','saveJson')->name('cv.savejson');
     Route::get('/cv/downloadJson/','downloadJson')->name('cv.downloadjson');
-    Route::post('/cv/uploadJson/','uploadJson')->name('cv.uploadjson'); 
+    Route::post('/cv/uploadJson/','uploadJson')->name('cv.uploadjson');
     Route::get('/cv/edit','edit')->name('cv.edit');
     Route::get('/cv/getPdf','pdf')->name('cv.pdf');
     Route::get('/manu/cv','indexm')->name('cv.indexm');
-    
+
 });
 
 Route::controller(GalleryController::class)->group(function () {
@@ -102,9 +107,9 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog/config', 'config')->name('gallery.config');
     Route::post('/travel-blog/storeConfig', 'storeConfig')->name('gallery.storeConfig');
     Route::get('/travel-blog/getBigPic/{id}', 'getBigPic')->name('gallery.getBigPic');
-});    
+});
 
-Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () { 
+Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () {
     Route::get('/dashboard', function () {
         //return view('dashboard');
         return redirect()->route('blog.index');
@@ -115,7 +120,10 @@ Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::controller(TwilioController::class)->group(function () {
     Route::get('/wa', 'send')->name('sendWhatsapp');
-});    
+});
+
+
+
 
 Route::controller(BlogController::class)->group(function () {
     Route::get('/blog', 'index')->name('blog.index');
@@ -130,13 +138,13 @@ Route::controller(BlogController::class)->group(function () {
     Route::get('blog/newComment/{id}', 'commentForm')->name('blog.newComment');
     Route::post('/blog/deleteComment', 'deleteComment')->name('blog.deleteComment');
     Route::GET('/blog/reactTest', 'reactTest')->name('blog.reactText');
-});   
+});
 
 Route::controller(CalendarController::class)->group(function () {
-    Route::get('/calendar', 'index')->name('calendar.index'); 
-    Route::get('/calendar/save', 'store')->name('calendar.saveEvent'); 
-});    
-   
+    Route::get('/calendar', 'index')->name('calendar.index');
+    Route::get('/calendar/save', 'store')->name('calendar.saveEvent');
+});
+
 
 
 Route::controller(FacebookController::class)->group(function(){
@@ -159,15 +167,15 @@ Route::controller(QueueController::class)->group(function(){
 
 Route::get('/react', function () {
     return view('react.index');
-}); 
+});
 
 Route::get('/assd', function () {
     return view('assd');
-}); 
+});
 
 Route::get('/react/ajax', function () {
     return view('react.index');
-}); 
+});
 
 /* Route::domain('friese24.noppal.de')->group(function () {
     Route::controller(FriesenController::class)->group(function(){
@@ -175,10 +183,10 @@ Route::get('/react/ajax', function () {
     });
 }); */
 
-//Friesen 
+//Friesen
 Route::controller(FriesenController::class)->group(function(){
     Route::get('/friese', 'index')->name('friese.index');
-    Route::get('getFriesen/{plz?}', 'getFriesen')->name('getfriesen');  
+    Route::get('getFriesen/{plz?}', 'getFriesen')->name('getfriesen');
     //Route::post('createFriese', 'createFriese')->name('firese.create');
 });
 
@@ -194,15 +202,15 @@ Route::controller(reactTutorialController::class)->group(function(){
 
 Route::controller(yt2mp3::class)->group(function () {
     Route::GET('/yt2mp3', 'index')->name('yt2mp3.index');
-    Route::POST('/yt2mp3/get', 'getmp3')->name('yt2mp3.getMp3'); 
+    Route::POST('/yt2mp3/get', 'getmp3')->name('yt2mp3.getMp3');
     Route::GET('/yt2mp3/download/{file}', 'downloadFile')->name('yt2mp3.download');
     Route::GET('/yt2mp3/download2/', 'download2')->name('yt2mp3.download2');
 });
 
 Route::controller(NtfyController::class)->group(function () {
-    Route::GET('/notify/getDates/{date?}', 'getDates')->name('ntfy.getDates');  
-    Route::GET('/notify/msg/{msg}', 'index')->name('ntfy.index');    
-    Route::GET('/notify/create', 'createNotification')->middleware(['auth'])->name('ntfy.create'); 
+    Route::GET('/notify/getDates/{date?}', 'getDates')->name('ntfy.getDates');
+    Route::GET('/notify/msg/{msg}', 'index')->name('ntfy.index');
+    Route::GET('/notify/create', 'createNotification')->middleware(['auth'])->name('ntfy.create');
     Route::POST('/notify/store', 'storeNotification')->middleware(['auth'])->name('ntfy.store');
     Route::GET('/notify/test', 'test')->name('ntfy.test');
     Route::POST('/notify/sendTestMessage', 'sendTestMessage')->name('ntfy.sendTestMessage');
