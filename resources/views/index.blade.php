@@ -1,10 +1,7 @@
 <x-noppal>
 <div class="index-wrapper">
-    <div class="container mx-auto flex-auto noppindex">
-        @php
-            phpinfo();
-        @endphp
-        <div class="my-img-wrapper"> 
+    <div class="container flex-auto mx-auto noppindex">
+        <div class="my-img-wrapper">
             <img src="img/noppal3.jpg" class="img-me">
         </div>
         <div class="my-flex-box">
@@ -17,7 +14,7 @@
             <a href="/futter" class="box"><div>Futter</div></a>
             <a href="/notify/test" class="box"><div>Ntfy</div></a>
             <!-- <a href="/chat?userid=25" class="box"><div>Chat (Reverb)</div></a> -->
-        </div>    
+        </div>
     </div>
 </div>
 
