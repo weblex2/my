@@ -100,6 +100,9 @@ class FutterController extends Controller
     public function save(Request  $request){
         $image = $request->file('file');
         $data = $request->all();
+        if (!is_dir(public_path('images/tmp'))){
+                mkdir(public_path('images/tmp'));
+        }
         $pics = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
         if (isset($image)){
             $imgName = $image->getClientOriginalName();
@@ -119,9 +122,7 @@ class FutterController extends Controller
             }
             //unset($data['_token']);
             //dump($data['ingredients']);
-            if (!is_dir(public_path('images/tmp'))){
-                mkdir(public_path('images/tmp'));
-            }
+
             $files = scandir(public_path('images/tmp'));
             $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
             $pic_name = array_values($files)[0];
