@@ -119,6 +119,9 @@ class FutterController extends Controller
             }
             //unset($data['_token']);
             //dump($data['ingredients']);
+            if (!is_dir(public_path('images/tmp'))){
+                mkdir(public_path('images/tmp'));
+            }
             $files = scandir(public_path('images/tmp'));
             $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
             $pic_name = array_values($files)[0];
