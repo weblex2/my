@@ -42,34 +42,37 @@ class FutterController extends Controller
         $startDate = Carbon::createFromFormat('Y-m-d', $date);
         $startDateDb = Carbon::createFromFormat('Y-m-d', $date);
         //echo $startDateDb;
-        
-        $dates[] = $startDate->format('l d.m.y'); 
-        $datesdb[] = $startDateDb->format('Y-m-d'); 
+
+        $dates[] = $startDate->format('l d.m.y');
+        $datesdb[] = $startDateDb->format('Y-m-d');
         for ($i=0; $i<6; $i++){
             $dates[] = $startDate->addDays(1)->format('l d.m.y');
             $datesdb[] = $startDateDb->addDays(1)->format('Y-m-d');
-        } 
+        }
 
         $res['dates'] = $dates;
         $res['datesdb'] = $datesdb;
         return $res;
-    
+
     }
     public function new(){
+        if (!is_dir(public_path('images/tmp'))){
+            mkdir(public_path('images/tmp'));
+        }
         $files = scandir(public_path('images/tmp'));
         $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
         foreach ($files as $file){
-                unlink(public_path('images/tmp/').$file); 
+                unlink(public_path('images/tmp/').$file);
         }
 
         return view('futter.new');
-    } 
+    }
 
     public function showAll(){
         $futter = Futter::all();
         $ft = [];
         $futterToday = FutterPerDay::where('day',">=", date('Y-m-d'))->get();
-        
+
         foreach ($futterToday as $fday){
             $ft[$fday->day] = [
                 'name' => $fday->futter->name,
@@ -106,7 +109,7 @@ class FutterController extends Controller
             }
             $image->move(public_path('images/tmp'),$imgName);
         }
-        
+
         else{
             if ($data['ingredients']!=""){
                 $data['ingredients'] = explode("\r\n",$data['ingredients']);
@@ -122,23 +125,23 @@ class FutterController extends Controller
             $pic_name_to = array_values($files)[0];
             if (substr($pic_name,0,8)=='download'){
                 $ext = substr($pic_name,8);
-                $pic_name_to = $data['name'].$ext; 
+                $pic_name_to = $data['name'].$ext;
             }
             File::move(public_path('images/tmp/').$pic_name, storage_path('app/public/futter/'.$pic_name_to));
-            
+
             $data['img'] = $pic_name_to;
-            $futter = new Futter();    
+            $futter = new Futter();
             $futter->fill($data);
             $futter->save();
             //empty tmp folder
             $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
             foreach ($files as $file){
-                unlink(public_path('images/tmp/').$file); 
+                unlink(public_path('images/tmp/').$file);
             }
             return redirect()->route('futter.index');
         }
 
-        
+
         //$imageName  = $image->getClientOriginalName();
         //$imageName = time().'.'.$image->extension();
         //
@@ -146,7 +149,7 @@ class FutterController extends Controller
 
     public function saveFutterPerDay(Request  $request){
         $req = $request->all();
-        $fpd = $model = FutterPerDay::where('day', '=', $request['day'])->get(); 
+        $fpd = $model = FutterPerDay::where('day', '=', $request['day'])->get();
         $futter = Futter::find($req['futter_id']);
         $fname = $futter->name;
         $ingredients = implode("\n", $futter->ingredients);
@@ -179,14 +182,14 @@ class FutterController extends Controller
         }
         else {
             $req['ingredients'] = [""];
-        }    
+        }
         $futter->fill($req);
         $res = $futter->update();
         if ($res){
             return redirect()->back()->with('success', 'Successfully Saved.');
         }
         else{
-            return redirect()->back()->with('error', 'Error occured!'); 
-        }    
+            return redirect()->back()->with('error', 'Error occured!');
+        }
     }
 }
