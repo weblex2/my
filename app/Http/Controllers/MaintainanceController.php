@@ -11,6 +11,7 @@ class MaintainanceController extends Controller
 {
     function backupDatabase()
     {
+        ini_set('memory_limit', '2G');
         $containerName = 'mysql8'; // Name deines Docker-Containers
         $dbUser = env('DB_USERNAME', 'root');
         $dbPassword = env('DB_PASSWORD', '!Cyberbob03');
