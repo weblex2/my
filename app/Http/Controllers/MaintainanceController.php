@@ -34,7 +34,7 @@ class MaintainanceController extends Controller
                 Log::channel('database')->info('Database backup successfully moved to S3.('. $s3_filename.')', ['type' =>'DB']);
                 // Prüfen, ob der heutige Upload auf S3 existiert
                 if (Storage::disk('s3')->exists($s3_filename)) {
-                    $yesterdayFile = 'laravel_' . date('Ymd', strtotime('-1 day')) . '.sql';
+                    $yesterdayFile = 'sql_backup/laravel_' . date('Ymd', strtotime('-1 day')) . '.sql';
                     // Prüfen, ob die Datei auf S3 existiert
                     if (Storage::disk('s3')->exists($yesterdayFile)) {
                         // Datei von S3 löschen
@@ -46,7 +46,7 @@ class MaintainanceController extends Controller
                     }
                 }
                 return "Backup erfolgreich erstellt: (".$fileSizeInGB." GB)" . $backupPath;
-                
+
             } catch (ProcessFailedException $exception) {
                 $logMessage = $exception->getMessage();
                 Log::channel('database')->error('Error while creating database backup.', ['type' =>'DB', 'exception' => $exception->getMessage()]);
