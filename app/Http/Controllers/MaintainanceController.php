@@ -62,4 +62,14 @@ class MaintainanceController extends Controller
             $logs  = Logs::where('created_at', "like", date('Y-m-d')."%")->orderBy('created_at', 'DESC')->get();
             return view('logs.logs', compact('logs'));
         }
+
+        public function refreshLogs(Request $request){
+            $req = $request->all();
+            $from  = $req['from'] ?? date('Y-m-d');
+            $to = $req['to'] ?? date('Y-m-d');
+            $type = $req['type'];
+            $logs = Logs::whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
+                          ->where('type',"like", $type."%")->get();
+            return view('logs.logs', compact('logs', 'from', 'to'));
+        }
 }
