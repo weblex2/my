@@ -21,6 +21,9 @@ input[type="text"], input[type="date"], select {
     @apply rounded bg-zinc-700 text-zinc-100 w-full
 }
 
+select {
+    @apply rounded bg-zinc-700 text-zinc-100 w-full
+}
 
 textarea{
     @apply rounded-xl bg-zinc-600 w-full
