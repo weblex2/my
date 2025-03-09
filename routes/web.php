@@ -23,6 +23,8 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\FutterController;
 use App\Http\Controllers\reactTutorialController;
 use App\Http\Controllers\ShowSourcecodeController;
+use App\Http\Controllers\MaintainanceController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,14 @@ Route::get('/', function () {
 Route::get('/arcade', function () {
     return view('arcade.index');
 });
+
+Route::get('/check-env', function() {
+    return env('AWS_ACCESS_KEY_ID');
+});
+
+Route::controller(MaintainanceController::class)->group(function () {
+    Route::get('/maintainance/backupDB','backupDatabase')->name('maintainance.backupdb');
+}
 
 
 Route::controller(S3Controller::class)->group(function () {
