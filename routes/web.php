@@ -15,6 +15,7 @@ use App\Http\Controllers\KnowledgeBaseController;
 use App\Http\Controllers\yt2mp3;
 use App\Http\Controllers\VideoController;
 use App\Events\Hallo;
+use App\Http\Controllers\S3Controller;
 use App\Http\Controllers\WebsocketController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CvController;
@@ -52,6 +53,14 @@ Route::get('/', function () {
 
 Route::get('/arcade', function () {
     return view('arcade.index');
+});
+
+
+Route::controller(S3Controller::class)->group(function () {
+    Route::get('/s3/test','index')->name('s3.index');
+    Route::get('/s3/show/filename/{filename}','show')->name('s3.show');
+    Route::get('/s3/uploadtest','uploadtest')->name('s3.uploadtest');
+
 });
 
 Route::controller(TestController::class)->group(function () {
