@@ -18,10 +18,14 @@
                 </div>
                 <div class="col-md-3">
                     <label>Typ:</label>
-                    <select name="type" class="form-control">
+                    <input type="text" name="type" value={{$type}}>
+                </div>
+                <div class="col-md-3">
+                    <label>Level:</label>
+                    <select name="level" class="form-control">
                         <option value="">Alle</option>
-                        <option value="INFO" {{ $type == 'INFO' ? 'selected' : '' }}>INFO</option>
-                        <option value="ERROR" {{ $type == 'ERROR' ? 'selected' : '' }}>ERROR</option>
+                        <option value="INFO" {{ $level == 'INFO' ? 'selected' : '' }}>INFO</option>
+                        <option value="ERROR" {{ $level == 'ERROR' ? 'selected' : '' }}>ERROR</option>
                     </select>
                 </div>
                 <div class="mt-4 col-md-3">

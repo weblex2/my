@@ -68,8 +68,11 @@ class MaintainanceController extends Controller
             $from  = $req['from'] ?? date('Y-m-d');
             $to = $req['to'] ?? date('Y-m-d');
             $type = $req['type'];
+            $level = $req['level'];
             $logs = Logs::whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
-                          ->where('type',"like", $type."%")->get();
-            return view('logs.logs', compact('logs', 'from', 'to'));
+                          ->where('level',"like", $level."%")
+                          ->where('type',"like", $type."%")
+                          ->get();
+            return view('logs.logs', compact('logs', 'from', 'to','level','type'));
         }
 }
