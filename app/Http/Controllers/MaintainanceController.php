@@ -14,7 +14,7 @@ class MaintainanceController extends Controller
     $containerName = 'mysql8'; // Name deines Docker-Containers
     $dbUser = env('DB_USERNAME', 'root');
     $dbPassword = "!Cyberbob03"; #env('DB_PASSWORD', 'secret');
-    $dbName = env('DB_DATABASE', 'laravel_db');
+    $dbName = env('DB_DATABASE', 'laravel');
     $backupPath = storage_path('app/laravel.sql');
 
     $command = "docker exec $containerName mysqldump -u $dbUser -p$dbPassword $dbName > $backupPath";
