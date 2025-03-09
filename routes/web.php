@@ -63,7 +63,7 @@ Route::get('/check-env', function() {
 
 Route::controller(MaintainanceController::class)->group(function () {
     Route::get('/maintainance/backupDB','backupDatabase')->name('maintainance.backupdb');
-}
+});
 
 
 Route::controller(S3Controller::class)->group(function () {
