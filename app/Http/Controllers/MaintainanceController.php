@@ -25,10 +25,13 @@ class MaintainanceController extends Controller
         $process = Process::fromShellCommandline($command);
             try {
                 $process->mustRun();
-                Log::channel('database')->info('Database backup successfully created.', ['type' =>'DB']);
+                $fileSize = filesize($backupPath);
+                // Umrechnung von Byte in GB (1 GB = 1073741824 Bytes)
+                $fileSizeInGB = $fileSize / 1073741824;
+                Log::channel('database')->info('Database backup successfully created. ('.$fileSizeInGB.' GB)', ['type' =>'DB']);
                 $this->uploadToS3($backupPath);
                 Log::channel('database')->info('Database backup successfully moved to S3.', ['type' =>'DB']);
-                return "Backup erfolgreich erstellt: " . $backupPath;
+                return "Backup erfolgreich erstellt: (".$fileSizeInGB." GB)" . $backupPath;
             } catch (ProcessFailedException $exception) {
                 $logMessage = $exception->getMessage();
                 Log::channel('database')->error('Error while creating database backup.', ['type' =>'DB', 'exception' => $exception->getMessage()]);
