@@ -6,7 +6,7 @@
 .dropzone, .dz-preview, .dz-image-preview, .dz-image, .dz-success, .dz-complete{
     @apply bg-transparent
 }
- 
+
 
 body{
     font-family: "Urbanist", sans-serif; font-style: normal;
@@ -14,7 +14,7 @@ body{
 }
 
 .btn{
-    @apply py-3 px-8 border rounded-xl 
+    @apply py-3 px-8 border rounded-xl
 }
 
 input[type="text"], input[type="date"]{
@@ -49,9 +49,9 @@ a:hover{
 }
 
 .box{
-    font-family: "Urbanist", sans-serif; font-style: normal; 
-    
-    @apply grow m-5 p-10 border border-zinc-300 text-center text-3xl shadow-md hover:shadow-gray-500 hover:border-zinc-400 
+    font-family: "Urbanist", sans-serif; font-style: normal;
+
+    @apply grow m-5 p-10 border border-zinc-300 text-center text-3xl shadow-md hover:shadow-gray-500 hover:border-zinc-400
 }
 a.box div{
     @apply !text-gray-500  w-full h-full
@@ -83,11 +83,11 @@ a.box div{
 }
 
 .cv h2{
-    @apply text-2xl pb-10 
+    @apply text-2xl pb-10
 }
 
 .cv h3 {
-    @apply font-extrabold 
+    @apply font-extrabold
 }
 
 .cv hr{
@@ -121,7 +121,7 @@ a.box div{
 
 
 .day, .day1{
-    @apply p-3 flex items-center justify-center  
+    @apply p-3 flex items-center justify-center
 }
 
 .day{
@@ -143,6 +143,13 @@ a.box div{
 }
 
 .t2{
-    @apply w-[50%] float-right border border-green-500 
+    @apply w-[50%] float-right border border-green-500
 }
 
+.tbl-logs{
+    @apply min-w-full
+}
+
+#tbl-logs td, .tbl-logs th{
+    @apply border border-gray-500 p-3
+}

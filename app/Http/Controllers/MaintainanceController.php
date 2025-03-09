@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
+use App\Models\Logs;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class MaintainanceController extends Controller
@@ -37,5 +38,10 @@ class MaintainanceController extends Controller
 
         public function uploadToS3($backupPath){
             $res = Storage::disk('s3')->put('sql_backup/laravel_'.date('Ymd').".sql", file_get_contents($backupPath));
+        }
+
+        public function showLogs(){
+            $logs  = Logs::where('created_at', "like", date('Y-m-d')."%")->orderBy('created_at', 'DESC')->get();
+            return view('logs.logs', compact('logs'));
         }
 }

@@ -63,6 +63,7 @@ Route::get('/check-env', function() {
 
 Route::controller(MaintainanceController::class)->group(function () {
     Route::get('/maintainance/backupDB','backupDatabase')->name('maintainance.backupdb');
+    Route::get('/logs','showLogs')->name('maintainance.showLogs');
 });
 
 
@@ -272,9 +273,9 @@ Route::post('/chat/send-message', [ChatController::class, 'store'])->name('chat.
 Route::get('/chat/test', [ChatController::class, 'test'])->name('chat.test');
 Route::get('/chat/send/{msg}', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
 
-Route::get('/logs', function () {
+/* Route::get('/logs', function () {
     return view('logs');
-});
+}); */
 
 
 Route::controller(ShowSourcecodeController::class)->group(function () {
