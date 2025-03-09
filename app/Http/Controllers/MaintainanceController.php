@@ -11,8 +11,6 @@ class MaintainanceController extends Controller
 {
     function backupDatabase()
     {
-
-        die();
         $containerName = 'mysql8'; // Name deines Docker-Containers
         $dbUser = env('DB_USERNAME', 'root');
         $dbPassword = env('DB_PASSWORD', '!Cyberbob03');
