@@ -27,7 +27,7 @@ class MaintainanceController extends Controller
                 $process->mustRun();
                 $fileSize = filesize($backupPath);
                 // Umrechnung von Byte in GB (1 GB = 1073741824 Bytes)
-                $fileSizeInGB = $fileSize / 1073741824;
+                $fileSizeInGB = round($fileSize / 1073741824,2);
                 Log::channel('database')->info('Database backup successfully created. ('.$fileSizeInGB.' GB)', ['type' =>'DB']);
                 $this->uploadToS3($backupPath);
                 Log::channel('database')->info('Database backup successfully moved to S3.', ['type' =>'DB']);
