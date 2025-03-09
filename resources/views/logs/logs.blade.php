@@ -4,6 +4,7 @@
             @csrf
             @php
                 if (!isset($type)) $type="";
+                if (!isset($level)) $level="";
                 if (!isset($from)) $from=date('Y-m-d');
                 if (!isset($to)) $to=date('Y-m-d');
             @endphp
