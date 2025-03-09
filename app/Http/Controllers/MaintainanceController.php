@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class MaintainanceController extends Controller
@@ -23,9 +24,13 @@ class MaintainanceController extends Controller
         $process = Process::fromShellCommandline($command);
             try {
                 $process->mustRun();
+                Log::channel('database')->info('Database backup successfully created.', ['type' =>'DB']);
                 $this->uploadToS3($backupPath);
+                Log::channel('database')->info('Database backup successfully moved to S3.', ['type' =>'DB']);
                 return "Backup erfolgreich erstellt: " . $backupPath;
             } catch (ProcessFailedException $exception) {
+                $logMessage = $exception->getMessage();
+                Log::channel('database')->error('Error while creating database backup.', ['type' =>'DB', 'exception' => $exception->getMessage()]);
                 return "Fehler beim Backup: " . $exception->getMessage();
             }
         }
