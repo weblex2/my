@@ -10,16 +10,16 @@ class Category extends Model
         'name', 'slug', 'parent_id', 'is_visible', 'description'
     ];
 
-    public function parent(): BelongsTo {
-        return $this->belongsTo('Category::class', 'parent_id');
+    public function parent()  {
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    public function child() : HasMany  {
-        return $this->hasMany('Category::class', 'parent_id');
+    public function child()   {
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function product() :BelongsToMany  {
-        return $this->belongsToMany('Product::class', 'parent_id');
+    public function products() {
+        return $this->belongsToMany(Product::class, 'parent_id');
     }
 
 }
