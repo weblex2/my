@@ -36,6 +36,7 @@ use App\Http\Controllers\MaintainanceController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/welcome', function () {
     return view('welcome');
 });
@@ -45,9 +46,9 @@ Route::get('/phpmyadmin', function () {
 })->middleware(['auth'])->name('phpmyadmin');
 
 
-Route::get('/pi', function () {
+Route::get('/phpinfo', function () {
     return phpinfo();
-});
+})->middleware(['auth'])->name('phpinfo');
 
 Route::get('/', function () {
     return view('index');
@@ -57,53 +58,51 @@ Route::get('/arcade', function () {
     return view('arcade.index');
 });
 
-Route::get('/check-env', function() {
+Route::get('/check-env', function () {
     return env('AWS_ACCESS_KEY_ID');
 });
 
 Route::controller(MaintainanceController::class)->group(function () {
-    Route::get('/maintainance/backupDB','backupDatabase')->name('maintainance.backupdb');
-    Route::get('/logs','showLogs')->name('maintainance.showLogs');
-    Route::post('/refreshLogs','refreshLogs')->name('maintainance.refreshLogs');
+    Route::get('/maintainance/backupDB', 'backupDatabase')->name('maintainance.backupdb');
+    Route::get('/logs', 'showLogs')->name('maintainance.showLogs');
+    Route::post('/refreshLogs', 'refreshLogs')->name('maintainance.refreshLogs');
 });
 
 
 Route::controller(S3Controller::class)->group(function () {
-    Route::get('/s3/test','index')->name('s3.index');
-    Route::get('/s3/show/filename/{filename}','show')->name('s3.show');
-    Route::get('/s3/uploadtest','uploadtest')->name('s3.uploadtest');
-
+    Route::get('/s3/test', 'index')->name('s3.index');
+    Route::get('/s3/show/filename/{filename}', 'show')->name('s3.show');
+    Route::get('/s3/uploadtest', 'uploadtest')->name('s3.uploadtest');
 });
 
 Route::controller(TestController::class)->group(function () {
-    Route::get('/gpt','chatGptApi')->name('cv.index');
-    Route::get('/fill/product','testProduct')->name('testProduct');
+    Route::get('/gpt', 'chatGptApi')->name('cv.index');
+    Route::get('/fill/product', 'testProduct')->name('testProduct');
 });
 
 Route::controller(FutterController::class)->group(function () {
-    Route::get('/futter','index')->name('futter.index');
-    Route::get('/futter/new','new')->name('futter.new');
-    Route::get('/futter/all','showAll')->name('futter.all');
-    Route::get('/futter/{id}','showDetails')->name('futter.detail');
-    Route::post('/futter/save','save')->name('futter.save');
-    Route::post('/futter/update','update')->name('futter.update');
-    Route::post('/futter/saveFutterPerDay','saveFutterPerDay')->name('futter.saveFutterPerDay');
+    Route::get('/futter', 'index')->name('futter.index');
+    Route::get('/futter/new', 'new')->name('futter.new');
+    Route::get('/futter/all', 'showAll')->name('futter.all');
+    Route::get('/futter/{id}', 'showDetails')->name('futter.detail');
+    Route::post('/futter/save', 'save')->name('futter.save');
+    Route::post('/futter/update', 'update')->name('futter.update');
+    Route::post('/futter/saveFutterPerDay', 'saveFutterPerDay')->name('futter.saveFutterPerDay');
 });
 
 Route::controller(CvController::class)->group(function () {
-    Route::get('/cv','index')->name('cv.index');
-    Route::get('/cv/json/{edit?}','json')->name('cv.json');
-    Route::post('/cv/saveJson/','saveJson')->name('cv.savejson');
-    Route::get('/cv/downloadJson/','downloadJson')->name('cv.downloadjson');
-    Route::post('/cv/uploadJson/','uploadJson')->name('cv.uploadjson');
-    Route::get('/cv/edit','edit')->name('cv.edit');
-    Route::get('/cv/getPdf','pdf')->name('cv.pdf');
-    Route::get('/manu/cv','indexm')->name('cv.indexm');
-
+    Route::get('/cv', 'index')->name('cv.index');
+    Route::get('/cv/json/{edit?}', 'json')->name('cv.json');
+    Route::post('/cv/saveJson/', 'saveJson')->name('cv.savejson');
+    Route::get('/cv/downloadJson/', 'downloadJson')->name('cv.downloadjson');
+    Route::post('/cv/uploadJson/', 'uploadJson')->name('cv.uploadjson');
+    Route::get('/cv/edit', 'edit')->name('cv.edit');
+    Route::get('/cv/getPdf', 'pdf')->name('cv.pdf');
+    Route::get('/manu/cv', 'indexm')->name('cv.indexm');
 });
 
 Route::controller(GalleryController::class)->group(function () {
-    Route::get('/travel-blog','index')->name('gallery.index');
+    Route::get('/travel-blog', 'index')->name('gallery.index');
     Route::get('/travel-blog/index2', 'index2')->name('gallery.index2');
     Route::get('/travel-blog/create', 'create')->name('gallery.create');
     Route::get('/travel-blog/edit', 'edit')->name('gallery.edit');
@@ -130,7 +129,7 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog/getBigPic/{id}', 'getBigPic')->name('gallery.getBigPic');
 });
 
-Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])->group(function () {
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         //return view('dashboard');
         return redirect()->route('blog.index');
@@ -168,7 +167,7 @@ Route::controller(CalendarController::class)->group(function () {
 
 
 
-Route::controller(FacebookController::class)->group(function(){
+Route::controller(FacebookController::class)->group(function () {
     Route::get('auth/facebook', 'redirectToFacebook')->name('auth.facebook');
     Route::get('auth/facebook/callback', 'handleFacebookCallback');
 });
@@ -179,7 +178,7 @@ Route::post('/FileUpload', [FileUploadController::class, 'FileUpload'])->name('F
 
 
 //Queue Test
-Route::controller(QueueController::class)->group(function(){
+Route::controller(QueueController::class)->group(function () {
     Route::get('testJob', 'index')->name('job.test');
     Route::post('createJob', 'createJob')->name('job.createJob');
     //Route::get('email-test', 'index')->name('queue.test');
@@ -205,19 +204,19 @@ Route::get('/react/ajax', function () {
 }); */
 
 //Friesen
-Route::controller(FriesenController::class)->group(function(){
+Route::controller(FriesenController::class)->group(function () {
     Route::get('/friese', 'index')->name('friese.index');
     Route::get('getFriesen/{plz?}', 'getFriesen')->name('getfriesen');
     //Route::post('createFriese', 'createFriese')->name('firese.create');
 });
 
 
-Route::controller(reactTutorialController::class)->group(function(){
+Route::controller(reactTutorialController::class)->group(function () {
     Route::get('/react/Tutorial', 'index')->name('reacttutorial.index');
     Route::get('/react/Counter', 'counter')->name('reacttutorial.counter');
     Route::post('/react/getMessage', 'getMessage')->name('reacttutorial.getMessage');
     Route::get('/react/cv', 'cv')->name('reacttutorial.cv');
-    Route::get('/react/cvtest','test')->name('cv.test');
+    Route::get('/react/cvtest', 'test')->name('cv.test');
 });
 
 
@@ -280,7 +279,6 @@ Route::get('/chat/send/{msg}', [ChatController::class, 'sendMessage'])->name('ch
 
 
 Route::controller(ShowSourcecodeController::class)->group(function () {
-    Route::get('/ssc/{id}','index')->name('showSourceCode.index');
-    Route::post('/ssc/getCode','getCode')->name('showSourceCode.getCode');
+    Route::get('/ssc/{id}', 'index')->name('showSourceCode.index');
+    Route::post('/ssc/getCode', 'getCode')->name('showSourceCode.getCode');
 });
-
