@@ -15,7 +15,7 @@
     @if($responseText)
         <div class="p-4 mt-4 bg-gray-200 rounded">
             <h3 class="font-semibold">Antwort:</h3>
-            <p>{{ $responseText }}</p>
+            <div class="overflow-auto max-h-52">{!! $responseText !!}</div>
         </div>
     @endif
 </div>

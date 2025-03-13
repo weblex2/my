@@ -30,10 +30,26 @@ class GoogleGemeni extends Component
         ]);
 
         $data = $response->json();
-        $this->responseText = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Keine Antwort erhalten.';
+        $rawResponse = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Keine Antwort erhalten.';
+
+        // Antwort formatieren
+        $this->responseText = $this->formatResponse($rawResponse);
 
         $this->message = ""; // Textfeld leeren
         $this->loading = false; // Ladeanzeige deaktivieren
+    }
+
+    private function formatResponse($text)
+    {
+        // Beispiel für einfache Formatierungen, du kannst hier noch mehr hinzufügen
+        // Absätze durch <p> ersetzen
+        $formattedText = nl2br($text); // Zeilenumbrüche in <br> umwandeln
+
+        // Weitere Formatierungen wie Fettdruck, Kursivschrift, etc. hinzufügen
+        $formattedText = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $formattedText); // **Text** -> <strong>Text</strong>
+        $formattedText = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $formattedText); // *Text* -> <em>Text</em>
+
+        return $formattedText;
     }
 
 
