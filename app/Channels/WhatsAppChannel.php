@@ -1,6 +1,5 @@
-// app/Channels/WhatsAppChannel.php
-
 <?php
+
 namespace App\Channels;
 
 use Illuminate\Notifications\Notification;

@@ -24,6 +24,7 @@ use App\Http\Controllers\FutterController;
 use App\Http\Controllers\reactTutorialController;
 use App\Http\Controllers\ShowSourcecodeController;
 use App\Http\Controllers\MaintainanceController;
+use App\Http\Controllers\ChatGptController;
 
 
 /*
@@ -60,6 +61,13 @@ Route::get('/arcade', function () {
 
 Route::get('/check-env', function () {
     return env('AWS_ACCESS_KEY_ID');
+});
+
+
+
+Route::controller(ChatGptController::class)->group(function () {
+    Route::get('/chatGpt', 'index')->name('chatGpt.index');
+    Route::post('/queryGemeni', 'query')->name('gemeni.query');
 });
 
 Route::controller(MaintainanceController::class)->group(function () {
