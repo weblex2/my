@@ -66,7 +66,7 @@ Route::get('/check-env', function () {
 
 
 Route::controller(GoogleGemeniController::class)->group(function () {
-    Route::get('/chatGpt', 'index')->name('chatGpt.index');
+    Route::get('/askGemeni', 'index')->name('gemeni.index');
     Route::post('/queryGemeni', 'query')->name('gemeni.query');
 });
 
