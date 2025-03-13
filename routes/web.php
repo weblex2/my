@@ -24,8 +24,8 @@ use App\Http\Controllers\FutterController;
 use App\Http\Controllers\reactTutorialController;
 use App\Http\Controllers\ShowSourcecodeController;
 use App\Http\Controllers\MaintainanceController;
-use App\Http\Controllers\ChatGptController;
-
+use App\Http\Controllers\GoogleGemeniController;
+use App\Livewire\GoogleGemeni;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ Route::get('/check-env', function () {
 
 
 
-Route::controller(ChatGptController::class)->group(function () {
+Route::controller(GoogleGemeniController::class)->group(function () {
     Route::get('/chatGpt', 'index')->name('chatGpt.index');
     Route::post('/queryGemeni', 'query')->name('gemeni.query');
 });
