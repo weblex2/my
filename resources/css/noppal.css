@@ -10,7 +10,9 @@
 
 body{
     font-family: "Urbanist", sans-serif; font-style: normal;
+    @apply bg-zinc-900 text-white
 }
+
 
 .index-card{
     @apply flex flex-col max-w-sm m-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700

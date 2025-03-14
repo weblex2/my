@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+    @apply bg-zinc-900 text-white
+}
 .calendar-wrapper{
     @apply grid md:grid-cols-7 w-full hidden md:inline-grid
 }
@@ -20,7 +23,7 @@
 }
 
 .food-mobile-text{
-    @apply  w-max 
+    @apply  w-max
 }
 
 .btn-futter{
