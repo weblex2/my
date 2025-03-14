@@ -9,18 +9,17 @@ use App\Models\Ssc;
 class ShowSourcecodeController extends Controller
 {
     public function index($page_id){
-        
+
         if ($page_id==null){
-            return "no page_id given"; 
+            return "no page_id given";
         }
         $startFile = "";
         $page = Ssc::where('page_id',"=", $page_id)->orderBy('type')->get();
         foreach ($page as $entry){
             $path = str_replace("\\", "/",base_path()."/".$entry->path);
-            
+
             if ($entry->start_file!=null) {
-                $startFile = $path;
-                $startFileContent = file_get_contents($startFile);
+                $startFileContent = file_get_contents($entry->start_file);
             }
             // Hauptverzeichnis setzen (hier z. B. das aktuelle Verzeichnis)
             $type = $entry->type;
@@ -31,7 +30,7 @@ class ShowSourcecodeController extends Controller
             else{
                 $structure[$type] = $res;
             }
-        }      
+        }
         return view('showSourceCode.index', compact('structure','startFile','startFileContent'));
     }
 
@@ -43,21 +42,21 @@ class ShowSourcecodeController extends Controller
                     'depth' => 0,
                     'type' => 'file' // Typ: Ordner
                 ];
-            return $result;    
+            return $result;
         }
 
         $result = [];
-    
+
         // Überprüfen, ob das Verzeichnis existiert und lesbar ist
         if (!is_dir($directory)) {
             return $result; // Leeres Array zurückgeben, falls das Verzeichnis nicht existiert
         }
-    
+
         // Öffnen des Verzeichnisses
         if ($handle = opendir($directory)) {
             $folders = [];
             $files = [];
-    
+
             // Alle Einträge im Verzeichnis sammeln
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != "..") {
@@ -70,11 +69,11 @@ class ShowSourcecodeController extends Controller
                 }
             }
             closedir($handle);
-    
+
             // Ordner und Dateien alphabetisch sortieren
             sort($folders);
             sort($files);
-    
+
             // Zuerst die Ordner durchlaufen
             foreach ($folders as $folder) {
                 $path = $directory . '/' . $folder;
@@ -84,12 +83,12 @@ class ShowSourcecodeController extends Controller
                     'depth' => $depth,
                     'type' => 'folder' // Typ: Ordner
                 ];
-    
+
                 // Rekursiver Aufruf für Unterverzeichnisse
                 $subResult = $this->listDirectoryRecursive($path, $depth + 1);
                 $result = array_merge($result, $subResult);
             }
-    
+
             // Dann die Dateien durchlaufen
             foreach ($files as $file) {
                 $path = $directory . '/' . $file;
@@ -101,10 +100,10 @@ class ShowSourcecodeController extends Controller
                 ];
             }
         }
-    
+
         return $result;
     }
-    
+
     public function getCode(Request $request){
         $path = $request['path'];
         $content = file_get_contents($path);
@@ -118,7 +117,7 @@ class ShowSourcecodeController extends Controller
         }
         fclose($handle);
 
-        
+
 
         return Response::json([
             'content' => $content,
@@ -126,29 +125,29 @@ class ShowSourcecodeController extends Controller
         ], 200);
     }
 
-   
+
     public function getTree($path)
         {
             $tree = [];
-        
+
             $branch = [
             'dir' => basename($path)
             ];
-        
+
             foreach (File::files($path) as $file) {
                 $branch['file'][] = $file;
             }
-        
+
             foreach (File::directories($path) as $directory) {
             $branch['file'][] = $this->getTree($directory);
             }
-        
+
             $finalStruct =  array_merge($tree, $branch);
             return $finalStruct;
         }
 
-    
-    
-    
-       
+
+
+
+
 }
