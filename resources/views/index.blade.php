@@ -48,7 +48,7 @@
             />
 
             <x-index.card
-                img="card-phpmyadmin.png"
+                img="card-phpmyadmin.webp"
                 header="PhpMyAdmin"
                 link="phpmyadmin"
             />
@@ -64,7 +64,7 @@
             />
 
             <x-index.card
-                img="card-gemeni.jpg"
+                img="card-gemeni.png"
                 header="Google Gemeni API"
                 link="gemeni.index"
             />

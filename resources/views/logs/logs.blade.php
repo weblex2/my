@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-md-3">
                     <label>Level:</label>
-                    <select name="level" class="rounded bg-zinc-700 text-zinc-100">
+                    <select name="level" class="form-control bg-zinc-700 text-zinc-100">
                         <option value="">Alle</option>
                         <option value="INFO" {{ $level == 'INFO' ? 'selected' : '' }}>INFO</option>
                         <option value="ERROR" {{ $level == 'ERROR' ? 'selected' : '' }}>ERROR</option>
