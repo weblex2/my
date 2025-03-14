@@ -58,9 +58,9 @@
 
         <div class="my-flex-box">
             <x-index.card
-                img="card-crm.jpg"
-                header="Lebenslauf in React"
-                link="filament.filament/admin.pages.dashboard"
+                img="card-cv.png"
+                header="Lebenslauf"
+                link="cv.index"
             />
 
             <x-index.card
