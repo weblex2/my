@@ -27,6 +27,8 @@ use App\Http\Controllers\MaintainanceController;
 use App\Http\Controllers\GoogleGemeniController;
 use App\Livewire\GoogleGemeni;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

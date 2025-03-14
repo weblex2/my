@@ -42,6 +42,14 @@ a:hover{
 }
 
 
+.icon{
+    @apply w-8 h-8  mr-2
+}
+
+.floatleft{
+    @apply float-left
+}
+
 /* Index */
 
 .img-me{
@@ -65,7 +73,7 @@ a.box div{
     @apply bg-white  h-screen w-screen
 }
 .noppindex{
-    @apply bg-white  h-screen
+    @apply bg-white  h-screen 
 }
 
 .my-img-wrapper{
