@@ -68,6 +68,13 @@
                 header="Google Gemeni API"
                 link="gemeni.index"
             />
+
+            <x-index.card
+                img="cv-maintainance.jpeg"
+                header="Site Maintainance"
+                link="maintainance.showLogs"
+            />
+
         </div>
 
 
