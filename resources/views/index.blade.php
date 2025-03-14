@@ -1,6 +1,6 @@
 <x-noppal>
 <div class="index-wrapper">
-    <div class="container flex-auto mx-auto noppindex">
+    <div class="flex-auto mx-auto noppindex">
         <div class="my-img-wrapper">
             <img src="img/noppal3.jpg" class="img-me">
         </div>
@@ -68,22 +68,8 @@
                 header="Google Gemeni API"
                 link="gemeni.index"
             />
-
-
         </div>
 
-        <div class="my-flex-box">
-            <a href="/cv" class="box"><div>Lebenslauf</div></a>
-        </div>
-
-        <div class="my-flex-box">
-            <a href="/askGemeni" class="box">
-                <div class="flex items-center justify-center">
-                    <img src="{{Storage::url('gemeni.png')}}">
-                    Google Gemeni API
-                </div>
-            </a>
-        </div>
 
     </div>
 </div>

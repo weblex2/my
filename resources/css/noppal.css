@@ -73,7 +73,7 @@ a.box div{
     @apply bg-white  h-screen w-screen
 }
 .noppindex{
-    @apply bg-white  h-screen 
+    @apply bg-white  h-screen absolute overflow-scroll w-screen
 }
 
 .my-img-wrapper{
