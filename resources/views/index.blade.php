@@ -46,15 +46,34 @@
                 header="Futter Manager"
                 link="futter.index"
             />
+
+            <x-index.card
+                img="card-phpmyadmin.png"
+                header="PhpMyAdmin"
+                link="phpmyadmin"
+            />
+
         </div>
 
 
         <div class="my-flex-box">
+            <x-index.card
+                img="card-crm.jpg"
+                header="Lebenslauf in React"
+                link="filament.filament/admin.pages.dashboard"
+            />
+
+            <x-index.card
+                img="card-gemeni.jpg"
+                header="Google Gemeni API"
+                link="gemeni.index"
+            />
+
+
+        </div>
+
+        <div class="my-flex-box">
             <a href="/cv" class="box"><div>Lebenslauf</div></a>
-            <a href="/futter" class="box"><div>Futter</div></a>
-            {{-- <a href="/notify/test" class="box"><div>Ntfy</div></a> --}}
-            <a href="{{route('phpmyadmin')}}" class="box"><div>phpMyAdmin</div></a>
-            <!-- <a href="/chat?userid=25" class="box"><div>Chat (Reverb)</div></a> -->
         </div>
 
         <div class="my-flex-box">
