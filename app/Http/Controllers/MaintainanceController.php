@@ -64,7 +64,8 @@ class MaintainanceController extends Controller
 
         public function showLogs(){
             $logs  = Logs::where('created_at', "like", date('Y-m-d')."%")->orderBy('created_at', 'DESC')->get();
-            return view('logs.logs', compact('logs'));
+            $types = Logs::select('type')->distinct()->orderBy('type','ASC')->get();
+            return view('logs.logs', compact('logs','types'));
         }
 
         public function refreshLogs(Request $request){
