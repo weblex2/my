@@ -1,3 +1,11 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    @apply text-black text-sm
+}
 .btn{
     @apply px-6 py-3 border border-zinc-900 bg-zinc-700 hover:bg-zinc-800 text-orange-500 rounded-xl
 }
@@ -7,35 +15,39 @@ input[type=text], input[type=submit], select, textarea{
 }
 
 .kb-grid{
-    @apply grid grid-cols-3 auto-cols-max hover:bg-zinc-700 hover:bg-opacity-20 rounded-md
+    @apply grid grid-cols-3 auto-cols-max hover:bg-zinc-700 hover:bg-opacity-20 rounded-md  text-black
 }
 
 .kb-grid div {
     @apply py-2 px-3
-} 
+}
+
+.grid-header{
+
+}
 
 .kb-topic h1, .kb-description h1, .kb-text h1 {
-    @apply text-xl text-zinc-600 float-left mr-4
-}    
+    @apply text-sm float-left mr-4
+}
 
 .kb-topic, .kb-description, .kb-text {
-    @apply p-5  
+    @apply p-5
 }
 
 .kb-text textarea{
-    
-    @apply  w-full h-20 text-white bg-zinc-700 bg-opacity-20 rounded-md my-3  min-h-[200px] border border-zinc-900 p-5
+
+    @apply  w-full h-20 bg-zinc-800 bg-opacity-20 rounded-md my-3  min-h-[200px] border border-zinc-900 p-5
 }
 
 .topic h2,  .description h2{
     @apply text-green-200  py-2
-}   
+}
 
 .btn {
-    @apply px-5 pt-2 border 
+    @apply px-5 pt-2 border
 }
 
 .btn-delete{
-    @apply hover:bg-red-400 hover:text-zinc-900 
+    @apply hover:bg-red-400 hover:text-zinc-900
 }
 

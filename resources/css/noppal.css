@@ -148,17 +148,7 @@ a.box div{
 }
 
 
-.day, .day1{
-    @apply p-3 flex items-center justify-center
-}
 
-.day{
-    @apply border-b border-gray-500
-}
-
-.day1{
-    @apply w-52 h-52
-}
 
 
 /* React Tutorials */
