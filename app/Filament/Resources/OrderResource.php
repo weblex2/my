@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
+use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -53,9 +54,27 @@ class OrderResource extends Resource
                     ])->columns(2),
                     Forms\Components\Wizard\Step::make('Order Items')
                         ->schema([
-                    ])
-                ])->columnSpanFull()
-            ]);
+                            Forms\Components\Repeater::make('items')
+                                ->relationship()
+                                ->schema([
+                                    Forms\Components\Select::make('product_id')
+                                ->label('Product')
+                                ->options(Product::query()->pluck('name', 'id')),
+
+                            Forms\Components\TextInput::make('quantity')
+                                ->numeric()
+                                ->default(1)
+                                ->required(),
+                            Forms\Components\TextInput::make('unit_price')
+                                ->label('Unit Price')
+                                ->disabled()
+                                ->dehydrated()
+                                ->numeric()
+                                ->required()
+                        ])->columns(3)
+                        ])
+                    ])->columnSpanFull()
+                ]);
     }
 
     public static function table(Table $table): Table

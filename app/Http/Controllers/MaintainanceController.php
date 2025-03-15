@@ -11,6 +11,10 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class MaintainanceController extends Controller
 {
+    public function index(){
+        return view('maintainance.index');
+    }
+
     function backupDatabase()
     {
         ini_set('memory_limit', '2G');
@@ -69,10 +73,12 @@ class MaintainanceController extends Controller
             $to = $req['to'] ?? date('Y-m-d');
             $type = $req['type'];
             $level = $req['level'];
+            $types = Logs::select('type')->distinct()->orderBy('type','ASC')->get();
             $logs = Logs::whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59'])
                           ->where('level',"like", $level."%")
                           ->where('type',"like", $type."%")
+                          ->orderBy('created_at', 'DESC')
                           ->get();
-            return view('logs.logs', compact('logs', 'from', 'to','level','type'));
+            return view('logs.logs', compact('logs', 'from', 'to','level','type','types'));
         }
 }

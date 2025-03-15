@@ -4,16 +4,16 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        @php 
+        @php
             $title = "Noppal";
         @endphp
         @if (request()->is('blog*'))
             @php
-                $title = "Noppals Blog";     
+                $title = "Noppals Blog";
             @endphp
         @else
             @php
-                $title = "Noppals Laravel";     
+                $title = "Noppals Laravel";
             @endphp
         @endif
         <title>{{ $title }}</title>
@@ -24,11 +24,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	
+
         <script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/kb.css'])
+        @vite(['resources/js/app.js', 'resources/css/kb.css'])
 
         <!-- Styles -->
         @livewireStyles
@@ -36,14 +36,14 @@
     <body class="font-sans antialiased ">
         <x-banner />
 
-        <div class="min-h-screen bg-slate-900">
-            
+        <div class="min-h-screen">
+
             <x-knowledgeBase.kb-navigation />
 
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-black shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>

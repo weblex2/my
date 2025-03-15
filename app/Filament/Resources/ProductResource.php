@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\ProductTypeEnum;
 
 
+
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
@@ -35,9 +36,14 @@ class ProductResource extends Resource
                 ->schema([
                     Forms\Components\Section::make('Group1')
                     ->schema([
-                        Forms\Components\TextInput::make('name'),
-                        Forms\Components\TextInput::make('slug'),
-                    ])->columns(2), 
+                        Forms\Components\TextInput::make('name')
+                            ->disabled()
+                            ->dehydrated()
+                            ->required(),
+                            //->unique(Product::class, 'slug', true),
+                        Forms\Components\TextInput::make('slug')
+                            ->required(),
+                    ])->columns(2),
                     Forms\Components\Section::make('Pricing & Inventory')
                     ->schema([
                         Forms\Components\TextInput::make('sku'),
@@ -65,14 +71,14 @@ class ProductResource extends Resource
                     Forms\Components\Section::make('Pricing & Inventory')
                         ->schema([
                             Forms\Components\FileUpload::make('image'),
-                        ])->collapsible(),  
-                    ]), 
+                        ])->collapsible(),
+                    ]),
 
                     Forms\Components\Section::make('Associations')
                         ->schema([
                             Forms\Components\Select::make('brand_id')
                                 ->relationship('brand', 'name')
-                    ]),  
+                    ]),
             ]);
     }
 

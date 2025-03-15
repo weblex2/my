@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Customer extends Model
 {
     use SoftDeletes, HasFactory;
+
+    protected $table = "fil_customers";
+    
     protected $fillable = [
         'name', 'email', 'phone', 'date_of_birth', 'address',
         'zip_code', 'city'

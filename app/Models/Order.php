@@ -14,13 +14,13 @@ class Order extends Model
         'customer_id', 'number', 'total_price', 'shipping_price', 'notes'
     ];
 
-    public function customer()  
+    public function customer()
     {
         return $this->belongsTo(Customer::Class);
     }
 
-    public function items() : HasMany {
-        return $this->hasMany(OrderItems::class);
+    public function items()  {
+        return $this->hasMany(OrderItem::class);
     }
 
 }
