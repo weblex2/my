@@ -5,7 +5,7 @@
             <img src="img/noppal3.jpg" class="img-me">
         </div>
 
-        <div class="flex items-center justify-center w-full text-black">
+        {{-- <div class="flex items-center justify-center w-full text-black">
                <div>Powerd by:</div>
                <img class="floatleft icon" src="{{Storage::url('aws-icon.webp')}}" title="AWS">
                <img class="floatleft icon" src="{{Storage::url('ec2-icon.webp')}}" title="AWS EC2">
@@ -13,7 +13,7 @@
                <img class="floatleft icon" src="{{Storage::url('filament-icon.jpg')}}" title="Filament">
                <img class="floatleft icon" src="{{Storage::url('mysql-icon.webp')}}" title="MySQL">
                <img class="floatleft icon" src="{{Storage::url('php-icon.webp')}}" title="PHP">
-        </div>
+        </div> --}}
 
         <div class="my-flex-box">
 
