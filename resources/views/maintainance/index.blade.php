@@ -5,5 +5,5 @@
 <div class="container flex-auto pt-20 mx-auto">
     Logs
 </div>
-
 </x-noppal>
+
