@@ -5,15 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        
+
         @if (request()->is('futter*'))
             @php
-                $title = "Futter"; 
+                $title = "Futter";
             @endphp
         @else
             @php
-                $title = "Noppal.de"; 
-            @endphp   
+                $title = "Noppal.de";
+            @endphp
         @endif
         <title>{{ $title }}</title>
         <!-- Fonts -->
@@ -40,8 +40,8 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <!-- Scripts -->
-        @vite(['resources/js/noppal.js','resources/css/noppal.css'])
- 
+        @vite(['resources/js/noppal.js','resources/css/futter.css'])
+
         <!-- Styles -->
         @livewireStyles
     </head>
@@ -50,7 +50,7 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
@@ -58,28 +58,29 @@
 
 
         <div class="font-sans antialiased">
-             /* @yield('header') */
+              @yield('header') 
         </div>
 
         @livewireScripts
+        @yield('content')
     </body>
     <script>
         $(function () {
             $('[data-toggle="popover"]').popover();
         });
 
-        $( ".foodimg" ).draggable({ 
-            revert: true, 
+        $( ".foodimg" ).draggable({
+            revert: true,
             helper: "clone"
         });
         $('.day1').droppable({
             hoverClass: "futterHoverClass",
-            drop: function( event, ui ) { 
-            var draggable = ui.draggable;           
-            var dragged = draggable.clone(); 
+            drop: function( event, ui ) {
+            var draggable = ui.draggable;
+            var dragged = draggable.clone();
             var futterId = ui.draggable.attr("foodid");
             var img = $('#food_'+futterId).find('img').attr('src');
-            $(this).html('<img src="'+img +'" class="rounded-full w-full h-full">');
+            $(this).html('<img src="'+img +'" class="w-full h-full rounded-full">');
             var dat = $(this).attr("date");
             //$(this).text( dat+ ": "+ futterId );
             var data = {};
@@ -89,7 +90,7 @@
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },        
+                },
                 type: 'POST',
                 url: '{{ url("futter/saveFutterPerDay") }}',
                 data: data,

@@ -19,7 +19,12 @@
                 </div>
                 <div class="col-md-3">
                     <label>Typ:</label>
-                    <input type="text" name="type" value={{$type}}>
+                    <select  name="type">
+                        <option value="">Alle</option>
+                        @foreach($types as $index => $seltype)
+                            <option {{$type==$seltype->type ? "selected": ""}} value="{{$seltype->type}}">{{$seltype->type}}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-3">
                     <label>Level:</label>

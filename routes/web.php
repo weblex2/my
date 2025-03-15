@@ -75,7 +75,7 @@ Route::controller(GoogleGemeniController::class)->group(function () {
 Route::controller(MaintainanceController::class)->group(function () {
     Route::get('/maintainance/backupDB', 'backupDatabase')->name('maintainance.backupdb');
     Route::get('/logs', 'showLogs')->name('maintainance.showLogs');
-    Route::post('/refreshLogs', 'refreshLogs')->name('maintainance.refreshLogs');
+    Route::post('/logs', 'refreshLogs')->name('maintainance.refreshLogs');
 });
 
 
