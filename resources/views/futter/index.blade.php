@@ -1,9 +1,10 @@
-<x-noppal>
-<x-slot name="header">
-    <h2 class="text-xl font-semibold leading-tight text-center text-gray-100">
+@extends('layouts.futter')
+@section('header')
+    <h2 class="mt-5 text-xl font-semibold leading-tight text-center text-gray-100">
         {{ __('Na Mäusschen, was essen wir heute?') }}
     </h2>
-</x-slot>
+@stop
+@section('content')
 <div class="container flex-auto pt-20 mx-auto">
 @php
     $today = date('Y-m-d');
@@ -101,4 +102,5 @@ $('.check').click(function(){
         });
     });
 </script>
-</x-noppal>
+
+@stop

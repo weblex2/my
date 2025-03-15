@@ -1,10 +1,12 @@
-<x-noppal>
-<x-slot name="header">
-    <h2 class="font-semibold text-xl text-center text-gray-100 leading-tight">
+@extends('layouts.futter')
+@section('header')
+    <h2 class="mt-5 text-xl font-semibold leading-tight text-center text-gray-100">
         {{ __('Na Mäusschen, was essen wir heute?') }}
     </h2>
-</x-slot>
-<div class="container mx-auto flex-auto pt-20">
+@stop
+
+@section('content')
+<div class="container flex-auto pt-20 mx-auto">
 <div id="dropzone">
         <form action="{{ route('futter.save') }}" method="POST" class="dropzone" id="file-upload" enctype="multipart/form-data">
             @csrf
@@ -16,13 +18,13 @@
                 <div class="col-span-10 m-1"><textarea name="ingredients"></textarea></div>
 
                 <div class="col-span-2 m-1">Zubereitung</div>
-                <div class="col-span-10 m-1"><textarea name="howto"></textarea></div>    
+                <div class="col-span-10 m-1"><textarea name="howto"></textarea></div>
 
-                <div class="dz-message col-span-12 bg-zinc-900 text-white border border-zinc-100">
+                <div class="col-span-12 text-white border dz-message bg-zinc-900 border-zinc-100">
                     Drag and Drop Single/Multiple Files Here<br>
                 </div>
 
-                <div class="col-span-12 items-center">
+                <div class="items-center col-span-12">
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>
@@ -86,4 +88,4 @@
             }
         }
     </script>
-</x-noppal>
+@stop
