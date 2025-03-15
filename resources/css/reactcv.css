@@ -12,7 +12,7 @@ body{
 }
 
 .btn{
-    @apply py-2 px-4 text-xs border rounded-xl 
+    @apply py-2 px-4 text-xs border rounded-xl
 }
 
 input[type="text"], input[type="date"]{
@@ -48,11 +48,11 @@ a:hover{
 }
 
 .cv h2{
-    @apply text-2xl pb-10 
+    @apply text-2xl pb-10
 }
 
 .cv h3 {
-    @apply font-extrabold 
+    @apply font-extrabold
 }
 
 .cv hr{
@@ -96,12 +96,14 @@ a:hover{
 }
 
 .cv-scc{
-    @apply flex flex-col justify-center  w-fit p-5 
+    @apply flex flex-col justify-center  w-fit p-5
 }
 
 .loader{
-    @apply fixed w-screen h-screen z-20 bg-green-600  top-0 left-0  items-center justify-center
+    @apply fixed w-screen h-screen z-20 bg-green-600  top-0 left-0  items-center justify-center hidden
 }
+
+
 
 .icon-smily{
     @apply fa-solid fa-face-smile text-yellow-500

@@ -13,10 +13,10 @@ body{
 
 
 .file, .dir  {
-    @apply cursor-pointer 
-            px-1  
-            text-sm font-medium 
-            text-gray-400 hover:text-gray-700 hover:border-gray-300 
+    @apply cursor-pointer
+            px-1
+            text-sm font-medium
+            text-gray-400 hover:text-gray-700 hover:border-gray-300
             transition duration-150 ease-in-out  hover:text-zinc-400
 }
 
@@ -30,11 +30,11 @@ body{
 }
 
 .file-active{
-    @apply text-orange-400 
+    @apply text-orange-400
 }
 
 #code-block, .line-number{
-    @apply  text-sm font-medium 
+    @apply  text-sm font-medium
 }
 
 .dir-icon{
@@ -55,7 +55,7 @@ body{
 }
 
 pre[class*=language-]{
-    @apply w-full mt-[-2px] h-full pt-5 
+    @apply w-full mt-[-2px] h-full pt-5
 }
 
 .language-css .token.string, .style .token.string, .token.entity, .token.operator, .token.url{
@@ -80,4 +80,12 @@ pre[class*=language-]{
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.loader{
+    @apply fixed flex w-screen h-screen z-20 bg-gray-600 bg-opacity-40 top-0 left-0  items-center justify-center hidden
+}
+
+ .wrapper{
+    background: #2d2d2d;
 }
