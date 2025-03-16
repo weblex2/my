@@ -89,18 +89,22 @@ class CvController extends Controller
     }
 
     public function pdf(){
-        //echo public_path().'/cv.pdf';
         ini_set('max_execution_time', 300);
         $html = file_get_contents('https://noppal.de/cv');
-        Browsershot::html($html)
-            ->setNodeBinary('/usr/bin/node')
-            ->setNpmBinary('/usr/bin/npm')
-            ->save(storage_path().DIRECTORY_SEPARATOR.'Alex Noppenberger CV '.date('Y-m-d').'.pdf');
-        /* Browsershot::url('http://noppal.de/cv')
-            ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
-            ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')
-            ->save(storage_path().'/tmp/cv.pdf'); */
-        //Pdf::url('http://noppal.de/cv')->save('cv.pdf');
+        $filename = 'Alex Noppenberger CV '.date('Y-m-d').'.pdf';
+        if (in_array($_SERVER['SERVER_PORT'],["80", "433"])) {
+            Browsershot::html($html)
+                ->setNodeBinary('/usr/bin/node')
+                ->setNpmBinary('/usr/bin/npm')
+                ->save(storage_path().DIRECTORY_SEPARATOR.$filename);
+        }
+        else{
+            Browsershot::html($html)
+                ->save(storage_path().DIRECTORY_SEPARATOR.$filename);
+        }
+
+          return response()->download(storage_path().DIRECTORY_SEPARATOR.$filename);
+
     }
 
     public function edit(){
