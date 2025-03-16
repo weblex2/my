@@ -80,7 +80,7 @@ a:hover{
 }
 
 .my-flex-box{
-    @apply flex w-[100%]  items-stretch  flex-row justify-center flex-auto mx-auto
+    @apply flex w-[100%]  flex-col lg:flex-row items-stretch  justify-center flex-auto mx-auto
 }
 
 .box{
