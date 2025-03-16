@@ -38,7 +38,7 @@ class FilTableFieldsResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('id')->dehydrated(),
-                Forms\Components\TextInput::make('user_id'),
+                Forms\Components\TextInput::make('user_id')->default(Auth::id()),
                 Forms\Components\TextInput::make('form'),
                 Forms\Components\TextInput::make('table'),
                 Forms\Components\TextInput::make('field'),
