@@ -4,7 +4,7 @@
 
     <div class="flex flex-col items-center justify-center ">
         <div><img src="{{asset('img/noppal3.jpg')}}" class="img-me"></div>
-        <div class="p-3 mt-5 border !border-zinc-700"><i class="fa-solid fa-download"></i> <a target="_blank" href="{{route("cv.pdf")}}"> [Download PDF]</a></div>
+        <div class="downloadlink p-3 mt-5 border !border-zinc-700"><i class="fa-solid fa-download"></i> <a target="_blank" href="{{route("cv.pdf")}}"> [Download PDF]</a></div>
     </div>
     <br>
     <br>

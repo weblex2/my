@@ -89,8 +89,11 @@ class CvController extends Controller
     }
 
     public function pdf(){
+        //dd($_SERVER);
         ini_set('max_execution_time', 300);
-        $html = file_get_contents('https://noppal.de/cv');
+        $html = file_get_contents("https://noppal.de/cv");
+        $html = str_replace('downloadlink', 'downloadlink hidden invisible', $html);
+
         $filename = 'Alex Noppenberger CV '.date('Y-m-d').'.pdf';
         if (in_array($_SERVER['SERVER_PORT'],["80", "433"])) {
             Browsershot::html($html)
