@@ -6,22 +6,15 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class index.card extends Component
+class KnowledgeBadge extends Component
 {
     /**
      * Create a new component instance.
      */
-
-    public $img;
-    public $header;
     public $text;
-    public $link;
 
-    public function __construct($img, $header, $text, $link)
+    public function __construct($text)
     {
-        $this->img = $img;
-        $this->header = $header;
-        $this->link = $link;
         $this->text = $text;
     }
 
@@ -30,6 +23,6 @@ class index.card extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.index.card');
+        return view('components.knowledge-badge');
     }
 }

@@ -13,9 +13,16 @@ body{
     @apply bg-zinc-900 text-white
 }
 
+.badges{
+    @apply container p-10 md:max-w-[1200px] my-10 flex flex-col md:flex-row items-center justify-center flex-auto mx-auto
+}
+
+.index-wrapper{
+    @apply bg-white  h-screen w-screen flex flex-col lg:flex-row md:flex-row
+}
 
 .index-card{
-    @apply flex flex-col max-w-sm m-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700
+    @apply flex w-full flex-col max-w-sm m-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700
 }
 .index-card img{
     @apply w-full h-40 rounded-t-lg
@@ -73,7 +80,7 @@ a:hover{
 }
 
 .my-flex-box{
-    @apply flex w-[100%] justify-center items-stretch
+    @apply flex w-[100%]  items-stretch  flex-row justify-center flex-auto mx-auto
 }
 
 .box{
@@ -85,9 +92,7 @@ a.box div{
     @apply !text-gray-500  w-full h-full
 }
 
-.index-wrapper{
-    @apply bg-white  h-screen w-screen
-}
+
 .noppindex{
     @apply bg-white  h-screen absolute overflow-scroll w-screen
 }
