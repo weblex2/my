@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Http\Controllers\FilamentFieldsController;
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\Customer;
@@ -22,24 +23,29 @@ class CustomerResource extends Resource
     protected static ?string $navigationGroup = 'Persons & Customers';
 
     protected static ?int $navigationSort = 2;
+
+
+
     public static function getNavigationBadge(): ?string  {
         return static::getModel()::count();
     }
 
     public static function form(Form $form): Form
     {
+        $fc = new FilamentFieldsController('customer',1);
+        $form_fields = $fc->getFields();
+
         return $form
             ->schema([
+
+                $form_fields[0],
                 Forms\Components\TextInput::make('external_id')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('is_active')
                     ->required(),
                 Forms\Components\Select::make('company_id')
-                    ->relationship('company', 'company_name'),    
+                    ->relationship('company', 'company_name'),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
                     ->maxLength(255),
@@ -55,18 +61,16 @@ class CustomerResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $fc = new FilamentFieldsController('customer',0);
+        $form_fields = $fc->getFields();
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('id')
+            ->columns(
+                    $form_fields,
+
+                /* Tables\Columns\TextColumn::make('id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('company.company_name')
-                    ->searchable(),    
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('first_name')
-                    ->searchable(),    
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+
                 Tables\Columns\TextColumn::make('primaryAddress.address')
                     ->label('Address')
                     ->searchable(),
@@ -97,7 +101,7 @@ class CustomerResource extends Resource
                         'style' => 'max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
                     ]),
                 Tables\Columns\TextColumn::make('external_id')
-                    ->searchable(),    
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -109,8 +113,8 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
+                    ->toggleable(isToggledHiddenByDefault: true), */
+            )
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])

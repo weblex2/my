@@ -16,7 +16,7 @@ use Session;
 class CvController extends Controller
 {
     public function index($name='', $edit=0){
-        
+
         $cv_data = Cv::orderBy('type')->orderBy('date_from', 'desc')->get();
         #echo json_encode($cv_data);
         Carbon::setLocale('de');
@@ -45,8 +45,8 @@ class CvController extends Controller
             foreach ($cv_data as $i => $dat){
                 $data[$dat->type][] = $dat;
             }
-        
-            
+
+
             $data['AU'] = [];
             $data['PD'] = [];
             $data['KN'] = [];
@@ -56,8 +56,8 @@ class CvController extends Controller
             session(['cvdata' => $data]);
         }
         $data['edit'] = false;
-        session(['cvdata' => $data]);        
-        
+        session(['cvdata' => $data]);
+
         return response()->json($data, 200);
     }
 
@@ -87,14 +87,15 @@ class CvController extends Controller
         session(['cvdata' => $data]);
         return response()->json($data, 200);
     }
-    
+
     public function pdf(){
         //echo public_path().'/cv.pdf';
-        ini_set('max_execution_time', 300);   
-        Browsershot::html('<h1>Hello world!!</h1>')
-            ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
-            ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')
-            ->save(storage_path().'/tmp/example.pdf'); 
+        ini_set('max_execution_time', 300);
+        $html = file_get_contents('https://noppal.de/cv');
+        Browsershot::html($html)
+            ->setNodeBinary('/usr/bin/node')
+            ->setNpmBinary('/usr/bin/npm')
+            ->save(storage_path().DIRECTORY_SEPARATOR.'Alex Noppenberger CV '.date('Y-m-d').'.pdf');
         /* Browsershot::url('http://noppal.de/cv')
             ->setNodeBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/node')
             ->setNpmBinary('/home/ec2-user/.nvm/versions/node/v20.11.0/bin/npm')

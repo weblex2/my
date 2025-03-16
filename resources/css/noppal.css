@@ -171,3 +171,15 @@ a.box div{
 #tbl-logs td, #tbl-logs th{
     @apply border border-gray-700 p-3
 }
+
+.filament-field-config td, .filament-field-config th{
+    @apply text-black p-1 border border-gray-300
+}
+
+.filament-field-config  tr{
+    @apply odd:bg-gray-100  even:bg-gray-50
+}
+
+.filament-field-config input{
+    @apply bg-white text-black p-1
+}

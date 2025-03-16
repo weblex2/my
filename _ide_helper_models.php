@@ -330,6 +330,47 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int $form
+ * @property int $user_id
+ * @property string $label
+ * @property string $table
+ * @property string $field
+ * @property string $type
+ * @property int $searchable
+ * @property int $sortable
+ * @property int $disabled
+ * @property int $required
+ * @property int $dehydrated
+ * @property int $collapsible
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereCollapsible($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereDehydrated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereDisabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereRequired($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereSearchable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereSortable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereTable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereUserId($value)
+ */
+	class FilTableFields extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $name
  * @property string $street
  * @property string $plz

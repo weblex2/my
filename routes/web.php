@@ -25,6 +25,7 @@ use App\Http\Controllers\reactTutorialController;
 use App\Http\Controllers\ShowSourcecodeController;
 use App\Http\Controllers\MaintainanceController;
 use App\Http\Controllers\GoogleGemeniController;
+use App\Http\Controllers\FilamentFieldsController;
 use App\Livewire\GoogleGemeni;
 
 
@@ -153,7 +154,9 @@ Route::controller(TwilioController::class)->group(function () {
 });
 
 
-
+Route::controller(FilamentFieldsController::class)->group(function () {
+    Route::get('/filament/manageFields/{table?}', 'index')->middleware(['auth'])->name('filament.managefields');;
+});
 
 Route::controller(BlogController::class)->group(function () {
     Route::get('/blog', 'index')->name('blog.index');

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
+use App\Models\FilTableFields;
 
 class TestController extends Controller
 {
@@ -22,7 +23,7 @@ class TestController extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
         $headers = array();
         $headers[] = 'Content-Type: application/json';
-        
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $result = curl_exec($ch);
@@ -31,14 +32,14 @@ class TestController extends Controller
         }
         curl_close($ch);
 
-        
+
         dump($result);
-        
+
     }
 
     public function testProduct(){
-        $customer = Customer::first();
-       $customer->load('primaryAddress');
+        $customer = FilTableFields::all();
+        //$customer->all();
         dump($customer);
     }
 }
