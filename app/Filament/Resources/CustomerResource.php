@@ -39,6 +39,11 @@ class CustomerResource extends Resource
             ->schema([
 
                 $form_fields[0],
+                $form_fields[1],
+                $form_fields[2],
+                $form_fields[3],
+                $form_fields[4],
+                /*
                 Forms\Components\TextInput::make('external_id')
                     ->required()
                     ->maxLength(255),
@@ -56,6 +61,7 @@ class CustomerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
+                */
             ]);
     }
 
@@ -66,7 +72,6 @@ class CustomerResource extends Resource
         return $table
             ->columns(
                     $form_fields,
-
                 /* Tables\Columns\TextColumn::make('id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('company.company_name')

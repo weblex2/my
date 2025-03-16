@@ -40,24 +40,43 @@ class FilamentFieldsController extends Controller
                                      ->get();
         foreach ($tableFields as $index => $tableField ){
             $this->config = $tableField;
-            // Create View Fields
+            // Create Form Fields
             if ($this->isForm==1){
                 switch ($tableField->type){
                     case "text": {
                         $this->field = Forms\Components\TextInput::make($tableField->field);
                         break;
                     }
+                    case "toggle": {
+                        $this->field = Forms\Components\Toggle::make($tableField->field);
+                        break;
+                    }
+                    default: {
+                        $this->field = Forms\Components\TextInput::make($tableField->field);
+                        break;
+                    }
+
                 }
                 $this->setLabel();
                 $this->setRequired();
                 $this->setSearchable();
-                $this->setSortable();
+                //$this->setSortable();
             }
-            // Create Form Fields
+            // Create View Fields
             else{
                 switch ($tableField->type){
                     case "text": {
                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        break;
+                    }
+                    case "date": {
+                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        $this->setDate();
+                        break;
+                    }
+                    case "dateTime": {
+                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        $this->setDateTime();
                         break;
                     }
                     case "toggle": {
@@ -107,5 +126,19 @@ class FilamentFieldsController extends Controller
             $this->field->sortable();
         }
     }
+
+    private function setToggable(){
+        $this->field->toggleable(isToggledHiddenByDefault: true);
+    }
+
+    private function setDate(){
+        $this->field->date();
+    }
+
+    private function setDateTime(){
+        $this->field->dateTime();
+    }
+
+
 
 }

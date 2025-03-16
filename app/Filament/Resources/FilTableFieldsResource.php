@@ -45,6 +45,8 @@ class FilTableFieldsResource extends Resource
                 Forms\Components\Select::make('type')
                     ->options([
                         'text' => 'text',
+                        'date' => 'date',
+                        'dateTime' => 'dateTime',
                         'boolean' => 'boolean',
                         'select' => 'select',
                         'markup' => 'markdown',
@@ -87,9 +89,31 @@ class FilTableFieldsResource extends Resource
                     ->options(User::pluck('name', 'id')->toArray()) // Alle Benutzer
                     ->default(Auth::id()), // Standardwert: aktueller Benutzer
                 TernaryFilter::make('form')
-                ->label('Formular / Übersicht') // Label für den Filter
-                ->trueLabel('Formular') // Was angezeigt wird, wenn true (1)
-                ->falseLabel('Übersicht') // Was angezeigt wird, wenn false (0)
+                    ->label('Formular / Übersicht') // Label für den Filter
+                    ->trueLabel('Formular') // Was angezeigt wird, wenn true (1)
+                    ->falseLabel('Übersicht'), // Was angezeigt wird, wenn false (0)
+                SelectFilter::make('table')
+                    ->options(function () {
+                         // Hole alle distinct "table" Werte aus der Tabelle
+                        $options = FilTableFields::select('table')
+                            ->distinct()
+                            ->pluck('table', 'table')
+                            ->toArray();
+                        // Füge die Option "Alle" hinzu
+                        // Wir fügen den speziellen Wert für "Alle" zu den Optionen hinzu
+                        return  $options;
+                    })
+
+                     ->query(function ($query, $state) {
+                        // Wenn "Alle" ausgewählt wird (leerer Wert), keine Filterung anwenden
+                        if ($state['value'] === '') {
+                            return $query; // Gibt alle Datensätze zurück
+                        }
+                        // Andernfalls filtere nach dem ausgewählten "table" Wert
+                        else{
+                            $query->where('table', $state);
+                        }
+                    }),
             ])
 
             ->actions([
