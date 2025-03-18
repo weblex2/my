@@ -31,6 +31,7 @@ const connectionStatusDiv = document.getElementById('connection-status');
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,
     wssPort: import.meta.env.VITE_REVERB_PORT,
