@@ -49,11 +49,14 @@ return [
             'app_id' => env('REVERB_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
-                'useTLS' => true,
-                'encrypted' => true,
-                'host' => env('REVERB_HOST', '127.0.0.1'),
-                'port' => env('REVERB_PORT', 9002),
-                'scheme' => env('REVERB_SCHEME', 'wss'),
+                'useTLS' => true, // TLS aktivieren
+                'encrypted' => true, // Falls gewünscht, um eine verschlüsselte Verbindung zu erzwingen
+                'host' => env('REVERB_HOST', 'noppal.de'), // Setze hier den tatsächlichen Produktions-Host
+                'port' => env('REVERB_PORT', 9002), // Der Port für WebSocket-Verbindung
+                'scheme' => env('REVERB_SCHEME', 'wss'), // WSS verwenden
+                'curl_options' => [
+                    // Optional, wenn du zusätzliche cURL-Optionen setzen möchtest
+                ],
             ],
         ],
 
