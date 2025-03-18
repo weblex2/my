@@ -51,9 +51,9 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
                 'useTLS' => false,
                 'encrypted' => false,
-                'host' => env('REVERB_HOST', '127.0.0.1'),
+                'host' => env('REVERB_HOST', '0.0.0.0'),
                 'port' => env('REVERB_PORT', 9002),
-                'scheme' => env('REVERB_SCHEME', 'wss'),
+                'scheme' => env('REVERB_SCHEME', 'ws'),
             ],
         ],
 
