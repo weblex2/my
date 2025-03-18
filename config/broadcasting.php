@@ -53,7 +53,7 @@ return [
                 'encrypted' => true,
                 'host' => env('REVERB_HOST', 'noppal.de'),
                 'port' => env('REVERB_PORT', 9002),
-                'scheme' => env('REVERB_SCHEME', 'wss'),
+                'scheme' => env('REVERB_SCHEME', 'https'),
             ],
         ],
 
