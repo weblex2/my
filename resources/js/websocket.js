@@ -31,14 +31,13 @@ const connectionStatusDiv = document.getElementById('connection-status');
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
-    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-    wsHost: 'noppal.de',
-    wsPort: 9002,
-    wssPort: 9002,
-    forceTLS: true,
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT,
+    wssPort: import.meta.env.VITE_REVERB_PORT,
+    forceTLS: true,  // Um sicherzustellen, dass du wss:// verwendest
     disableStats: true,
-    enabledTransports: ['ws','wss'],
-    encrypted: true,
+    enabledTransports: ['ws', 'wss'], // Beide Protokolle erlauben, je nach Verbindung
+    encrypted: true, // Verschlüsselung aktivieren
 });
 
 // Event-Listener für Verbindungsstatus
