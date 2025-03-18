@@ -37,7 +37,7 @@ window.Echo = new Echo({
     wssPort: import.meta.env.VITE_REVERB_PORT,
     forceTLS: false,  // Um sicherzustellen, dass du wss:// verwendest
     disableStats: true,
-    enabledTransports: ['ws', 'wss'], // Beide Protokolle erlauben, je nach Verbindung
+    enabledTransports: ['ws'], // Beide Protokolle erlauben, je nach Verbindung
     encrypted: false, // Verschlüsselung aktivieren
 });
 
