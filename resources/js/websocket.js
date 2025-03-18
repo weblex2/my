@@ -1,7 +1,7 @@
 // Listen for new messages using Laravel Echo
 /*
 import Echo from 'laravel-echo';
- 
+
 import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 console.log(import.meta.env.VITE_REVERB_PORT);
@@ -32,13 +32,13 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-    wsHost: "localhost",
+    wsHost: import.meta.env.VITE_PUSHER_HOST,
     wsPort: 9002,
-    wssPort: 9002, 
-    forceTLS: false,
+    wssPort: 9002,
+    forceTLS: true,
     disableStats: true,
-    enabledTransports: ['ws'],
-    encrypted: false,
+    enabledTransports: ['ws','wss'],
+    encrypted: true,
 });
 
 // Event-Listener für Verbindungsstatus
@@ -66,7 +66,7 @@ window.Echo.connector.pusher.connection.bind('disconnected', () => {
 window.Echo.connector.pusher.connection.bind('state_change', (states) => {
     console.log('Connection changed:', states);
     connectionStatusDiv.textContent = states;
-    
+
 });
 
 window.Echo.connector.pusher.connection.bind('error', (error) => {
@@ -76,8 +76,8 @@ window.Echo.connector.pusher.connection.bind('error', (error) => {
 window.Echo.channel('chat')
     .listen('.message.sent', (e) => {
         // Append the new message to the chatroom
-        console.log("Message received:", e); 
-        const msg = e.message; 
+        console.log("Message received:", e);
+        const msg = e.message;
         const messages = document.getElementById('messages');
         const messageElement = document.createElement('p');
         messageElement.innerHTML = e.message;
@@ -88,8 +88,8 @@ window.Echo.channel('chat')
 window.Echo.channel('system')
 .listen('.message.sent', (e) => {
     // Append the new message to the chatroom
-    console.log("Message received:", e); 
-    const msg = e.message; 
+    console.log("Message received:", e);
+    const msg = e.message;
     const messages = document.getElementById('messages');
     const messageElement = document.createElement('p');
     messageElement.innerHTML = e.message;
@@ -113,7 +113,7 @@ window.sendMessage = function(channel) {
         user_id = userId;
     }
     if (message) { // Nur senden, wenn die Nachricht nicht leer ist
-        
+
         axios.post('/chat/send-message', { message: message, user_id: user_id, channel:channel })
             .then(response => {
                 console.log(response.data);
