@@ -39,7 +39,7 @@ window.Echo = new Echo({
     disableStats: true,
     enabledTransports: ['ws'], // Beide Protokolle erlauben, je nach Verbindung
     encrypted: false, // Verschlüsselung aktivieren
-});
+}); 
 
 // Event-Listener für Verbindungsstatus
 
