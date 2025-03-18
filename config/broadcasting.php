@@ -49,11 +49,11 @@ return [
             'app_id' => env('REVERB_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
-                'useTLS' => false,
-                'encrypted' => false,
-                'host' => env('REVERB_HOST', '0.0.0.0'),
+                'useTLS' => true,
+                'encrypted' => true,
+                'host' => env('REVERB_HOST', 'noppal.de'),
                 'port' => env('REVERB_PORT', 9002),
-                'scheme' => env('REVERB_SCHEME', 'ws'),
+                'scheme' => env('REVERB_SCHEME', 'wss'),
             ],
         ],
 

@@ -35,11 +35,11 @@ window.Echo = new Echo({
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,
     wssPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: false,  // Um sicherzustellen, dass du wss:// verwendest
+    forceTLS: true,  // Um sicherzustellen, dass du wss:// verwendest
     disableStats: true,
-    enabledTransports: ['ws'], // Beide Protokolle erlauben, je nach Verbindung
-    encrypted: false, // Verschlüsselung aktivieren
-}); 
+    enabledTransports: ['ws', 'wss'], // Beide Protokolle erlauben, je nach Verbindung
+    encrypted: true, // Verschlüsselung aktivieren
+});
 
 // Event-Listener für Verbindungsstatus
 
