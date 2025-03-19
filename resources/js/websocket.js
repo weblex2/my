@@ -54,7 +54,7 @@ window.Echo.connector.pusher.connection.bind('error', (error) => {
 window.Echo.channel('chat')
     .listen('.message.sent', (e) => {
         // Append the new message to the chatroom
-        console.log("Message received:", e);
+        //console.log("Message received:", e);
         const msg = e.message;
         const messages = document.getElementById('messages');
         const messageElement = document.createElement('p');
@@ -66,7 +66,7 @@ window.Echo.channel('chat')
 window.Echo.channel('system')
 .listen('.message.sent', (e) => {
     // Append the new message to the chatroom
-    console.log("Message received:", e);
+    //console.log("Message received:", e);
     const msg = e.message;
     const messages = document.getElementById('messages');
     const messageElement = document.createElement('p');
