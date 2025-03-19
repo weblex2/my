@@ -60,7 +60,6 @@
                 text="Nur für mich, weil es so einfacher ist"
                 link="phpmyadmin"
             />
-
         </div>
 
 
@@ -86,6 +85,15 @@
                 link="maintainance.showLogs"
             />
 
+        </div>
+
+        <div class="my-flex-box">
+            <x-index.card
+                img="card-reverb.png"
+                header="Chat mit Laravel Reverb"
+                text="Laravel Reverb brings real-time WebSocket communication for Laravel applications."
+                link="message.view"
+            />
         </div>
 
 
