@@ -12,7 +12,7 @@
                 if (!isset($from)) $from=date('Y-m-d');
                 if (!isset($to)) $to=date('Y-m-d');
             @endphp
-            <div class="row">
+            <div class="flex justify-between gap-4">
                 <div class="col-md-3">
                     <label>Von:</label>
                     <input type="date" name="from" value="{{$from}}" class="form-control">
@@ -79,7 +79,7 @@
             <td>{{$log->context}}</td>
             <td>{{$log->message}}</td>
             <td>{{$log->created_at}}</td>
-        </tr> 
+        </tr>
         @endforeach
         </tbody>
         </table>
