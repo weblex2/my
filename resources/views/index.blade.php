@@ -25,18 +25,22 @@
                 text="Was ich auf der Reise mit Laravel so erlebt habe - ein Blog"
                 link="blog.index"
             />
+
+            <x-index.card
+                img="card-reverb.png"
+                header="Chat mit Laravel Reverb"
+                text="Laravel Reverb brings real-time WebSocket communication for Laravel applications."
+                link="message.view"
+            />
+
+
             <x-index.card
                 img="card-ntfy.webp"
                 header="Der eigene NTFY Server"
                 text="Ein einfacher Weg, Nachrichten zu verschicken"
                 link="ntfy.test"
             />
-            <x-index.card
-                img="card-blog.jpg"
-                header="Reise Blog"
-                text="Ich fahre auch gern mal weg, hier sind ein paar Einfrücke"
-                link="gallery.index"
-            />
+
         </div>
 
         <div class="my-flex-box">
@@ -89,10 +93,10 @@
 
         <div class="my-flex-box">
             <x-index.card
-                img="card-reverb.png"
-                header="Chat mit Laravel Reverb"
-                text="Laravel Reverb brings real-time WebSocket communication for Laravel applications."
-                link="message.view"
+                img="card-blog.jpg"
+                header="Reise Blog"
+                text="Ich fahre auch gern mal weg, hier sind ein paar Einfrücke"
+                link="gallery.index"
             />
         </div>
 
