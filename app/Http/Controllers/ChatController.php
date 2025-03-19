@@ -18,9 +18,11 @@ class ChatController extends Controller
         switch ($user_id){
             case 25:
                 $nick = 'Fritz';
+                $icon = 'img/Fritz.jpg';
                 break;
             case 36:
                 $nick = 'Herbert';
+                $icon = 'img/Herbert.jpg';
                 break;
             case 0:
                 $nick = 'System';
