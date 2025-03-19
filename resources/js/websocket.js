@@ -2,6 +2,15 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 let userId = getUserIdFromURL();
+let name = getNameFromURL();
+if (name == "") {
+    name = "unknown";
+}
+
+let header = document.getElementById('h1');
+console.log(header.textContent);
+header.append("(" + name + ")");
+
 console.log("Found UserId: "+userId);
 const connectionStatusDiv = document.getElementById('connection-status');
 
@@ -116,4 +125,9 @@ document.getElementById('messageInput').addEventListener('keydown', function(eve
 function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('userid'); // 'userid' aus der URL holen
+}
+
+function getNameFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('name'); // 'userid' aus der URL holen
 }

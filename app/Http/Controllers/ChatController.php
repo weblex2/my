@@ -67,7 +67,13 @@ class ChatController extends Controller
 
     public function login(Request $request){
         $user_id = $request->userid;
-        return Redirect::to('/message?userid='.$user_id);
+        if ($user_id==25){
+            $name="Fritz";
+        }
+        elseif ($user_id==36){
+            $name="Herbert";
+        }
+        return Redirect::to('/message?userid='.$user_id."&name=".$name);
     }
 
     public function showLogin(){
