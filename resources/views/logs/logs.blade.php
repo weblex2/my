@@ -79,7 +79,7 @@
             <td>{{$log->context}}</td>
             <td>{{$log->message}}</td>
             <td>{{$log->created_at}}</td>
-        </tr>
+        </tr> 
         @endforeach
         </tbody>
         </table>
