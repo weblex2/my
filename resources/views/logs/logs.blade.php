@@ -1,4 +1,4 @@
-<x-layouts.maintenance-layout>
+<x-noppal>
     <x-slot name="header">
         <h1>Wartungsmodus</h1>
     </x-slot>
@@ -84,4 +84,4 @@
         </tbody>
         </table>
     </div>
-</x-layouts.maintenance-layout>
+</x-noppal>
