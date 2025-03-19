@@ -2,7 +2,7 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 let userId = getUserIdFromURL();
-console.log("userId: "+userId);
+console.log("Found UserId: "+userId);
 const connectionStatusDiv = document.getElementById('connection-status');
 
 
@@ -76,7 +76,7 @@ window.Echo.channel('system')
 
 // Function to send a new message
 window.sendMessage = function(channel) {
-    console.log(channel);
+    console.log("Message sent on channel: " + channel);
     window.axios.defaults.headers.common = {
         'X-Requested-With': 'XMLHttpRequest',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
