@@ -1,6 +1,6 @@
 <x-noppal>
     <x-slot name="header">
-        <h1>Wartungsmodus</h1>
+        {{-- <h1>Wartungsmodus</h1> --}}
     </x-slot>
 
     <div class="container">
