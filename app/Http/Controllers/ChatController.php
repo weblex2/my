@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
+use Redirect;
 use Log;
 
 class ChatController extends Controller
@@ -24,9 +25,9 @@ class ChatController extends Controller
             case 0:
                 $nick = 'System';
                 break;
-            default: 
+            default:
                 $nick = 'No Nickname found!';
-                break;            
+                break;
         }
         $message = $this->renderMessage($message, $user_id, $icon, $channel, $nick);
 
@@ -62,5 +63,14 @@ class ChatController extends Controller
             'channel' => $channel,
             'nick'    => $nick,
         ])->render();
+    }
+
+    public function login(Request $request){
+        $user_id = $request->userid;
+        return Redirect::to('/message?userid='.$user_id);
+    }
+
+    public function showLogin(){
+        return view('websocket.login');
     }
 }

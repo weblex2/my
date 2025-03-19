@@ -271,24 +271,19 @@ Route::controller(VideoController::class)->group(function () {
 
 
 Route::controller(WebsocketController::class)->group(function () {
-    Route::GET('/message', 'message')->name('message.view');
+    Route::GET('/message/{user_id?}', 'message')->name('message.view');
     Route::POST('/message/send-message', 'store')->name('message.send');
 });
 
-
-
-
-Route::get('/chat', function () {
-    return view('websocket.index');
+Route::controller(ChatController::class)->group(function () {
+    Route::GET('/chat', 'showLogin')->name('chat.showLogin');
+    Route::POST('/chat', 'login')->name('chat.login');
+    Route::post('/chat/send-message', 'store')->name('chat.send');
+    Route::get('/chat/test', 'test')->name('chat.test');
+    Route::get('/chat/send/{msg}',  'sendMessage')->name('chat.sendMessage');
 });
 
-Route::post('/chat/send-message', [ChatController::class, 'store'])->name('chat.send');
-Route::get('/chat/test', [ChatController::class, 'test'])->name('chat.test');
-Route::get('/chat/send/{msg}', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
 
-/* Route::get('/logs', function () {
-    return view('logs');
-}); */
 
 
 Route::controller(ShowSourcecodeController::class)->group(function () {
