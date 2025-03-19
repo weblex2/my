@@ -1,25 +1,3 @@
-// Listen for new messages using Laravel Echo
-/*
-import Echo from 'laravel-echo';
-
-import Pusher from 'pusher-js';
-window.Pusher = Pusher;
-console.log(import.meta.env.VITE_REVERB_PORT);
-window.Echo = new Echo({
-    broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT,
-    wssPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    enabledTransports: ['ws', 'wss'],
-});
-
-*/
-
-//document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-console.log("websocket am start");
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
@@ -28,7 +6,6 @@ console.log("userId: "+userId);
 const connectionStatusDiv = document.getElementById('connection-status');
 
 
-//console.log(import.meta.env.VITE_PUSHER_APP_CLUSTER);
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_REVERB_APP_KEY,
@@ -36,7 +13,7 @@ window.Echo = new Echo({
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,
     wssPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: true,  // Um sicherzustellen, dass du wss:// verwendest
+    forceTLS: true,  // Um sicherzustellen, dass  wss:// verwendet wird
     disableStats: true,
     enabledTransports: ['ws', 'wss'], // Beide Protokolle erlauben, je nach Verbindung
     encrypted: true, // Verschlüsselung aktivieren
@@ -131,7 +108,7 @@ window.sendMessage = function(channel) {
 document.getElementById('messageInput').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') { // Überprüfen, ob die Enter-Taste gedrückt wurde
         event.preventDefault(); // Verhindert das Standardverhalten (z. B. Zeilenumbruch)
-        window.sendMessage(); // Nachricht senden
+        window.sendMessage('chat'); // Nachricht senden
     }
 });
 
