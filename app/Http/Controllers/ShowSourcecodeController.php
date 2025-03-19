@@ -25,7 +25,7 @@ class ShowSourcecodeController extends Controller
             $type = $entry->type;
             $res =  $this->listDirectoryRecursive($path);
             if (isset($structure[$type])){
-                $structure[$type][] =   $res[0];
+                $structure[$type][] = $res[0];
             }
             else{
                 $structure[$type] = $res;
