@@ -24,6 +24,7 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 let userId = getUserIdFromURL();
+console.log("userId: "+userId);
 const connectionStatusDiv = document.getElementById('connection-status');
 
 
