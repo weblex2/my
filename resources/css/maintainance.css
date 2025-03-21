@@ -1,0 +1,72 @@
+/* public/css/styles.css */
+
+/* Benutzerdefinierte Container-Klasse (entspricht 'container mx-auto p-8') */
+.custom-container {
+    max-width: 1200px; /* Entspricht 'container' */
+    margin-left: auto; /* Entspricht 'mx-auto' */
+    margin-right: auto; /* Entspricht 'mx-auto' */
+    padding: 2rem; /* Entspricht 'p-8' */
+}
+
+/* Titel */
+.title {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 600;   /* font-semibold */
+    margin-bottom: 2rem; /* mb-8 */
+    text-align: center; /* text-center */
+    color: #3B82F6;     /* text-blue-600 */
+}
+
+/* Grid-Layout für die Festplattenkarten */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+/* Stil für jede Festplattenkarte */
+.disk-card {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Titel für jedes Laufwerk */
+.disk-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 500;   /* font-medium */
+    margin-bottom: 1rem; /* mb-4 */
+    color: #4B5563;     /* text-gray-700 */
+}
+
+/* Informationen zu den Festplatten */
+.disk-info {
+    margin-top: 1rem; /* mt-4 */
+    font-size: 0.875rem; /* text-sm */
+    color: #4B5563;    /* text-gray-600 */
+}
+
+/* Stil für die Diagramme (Canvas) */
+canvas {
+    max-width: 250px;
+    max-height: 250px;
+}
+
+/* Stil für die Festplattenkarten bei Hover */
+.disk-card:hover {
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+/* Benutzerdefinierte Farben und Abstände */
+.bg-gray-100 {
+    background-color: #f7fafc;
+}
+
+.text-gray-800 {
+    color: #2d3748;
+}

@@ -3,15 +3,15 @@
 
 <x-noppal>
 
-    <div class="container p-8 mx-auto">
-        <h1 class="mb-8 text-4xl font-semibold text-center text-blue-600">Festplatteninformationen</h1>
+    <div class="custom-container">
+        <h1 class="title">Festplatteninformationen</h1>
 
-        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div class="grid-container">
             @foreach($diskInfo as $disk)
-                <div class="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg">
-                    <h3 class="mb-4 text-xl font-medium text-gray-700">{{ $disk['device'] }}</h3>
-                    <canvas id="diskChart{{ $loop->index }}" width="300" height="300"></canvas>
-                    <p class="mt-4 text-sm text-gray-600">
+                <div class="disk-card">
+                    <h3 class="disk-title">{{ $disk['device'] }}</h3>
+                    <canvas id="diskChart{{ $loop->index }}" width="250" height="250"></canvas>
+                    <p class="disk-info">
                         <span class="font-semibold">Gesamtgröße:</span> {{ $disk['size'] }} |
                         <span class="font-semibold">Freier Speicher:</span> {{ $disk['free'] }}
                     </p>
@@ -22,10 +22,10 @@
                         labels: ['Belegt', 'Frei'],
                         datasets: [{
                             data: [
-                                parseFloat('{{ $disk['size'] }}') - parseFloat('{{ $disk['free'] }}'), // Belegter Speicher
-                                parseFloat('{{ $disk['free'] }}') // Freier Speicher
+                                parseFloat('{{ $disk['size'] }}') - parseFloat('{{ $disk['free'] }}'),
+                                parseFloat('{{ $disk['free'] }}')
                             ],
-                            backgroundColor: ['#A0AEC0', '#68D391'], // Sanfte Farben für benutzt und frei
+                            backgroundColor: ['#A0AEC0', '#68D391'],
                         }]
                     };
 
@@ -62,6 +62,7 @@
             @endforeach
         </div>
     </div>
+
 
 
 </x-noppal>
