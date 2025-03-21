@@ -15,8 +15,7 @@ class MaintainanceController extends Controller
         return view('maintainance.index');
     }
 
-    function backupDatabase()
-    {
+    function backupDatabase()    {
         ini_set('memory_limit', '2G');
         $containerName = 'mysql8'; // Name deines Docker-Containers
         $dbUser = env('DB_USERNAME', 'root');
@@ -82,4 +81,82 @@ class MaintainanceController extends Controller
                           ->get();
             return view('logs.logs', compact('logs', 'from', 'to','level','type','types'));
         }
+
+        public function diskinfo(){
+            $diskInfo = $this->getDiskInfo();
+            return view('maintainance.diskinfo', compact('diskInfo'));
+        }
+
+        private function getDiskInfo()
+        {
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                // Windows: Laufwerksinformationen mit `wmic`
+                $output = shell_exec('wmic logicaldisk get DeviceID,Size,FreeSpace /format:list');
+                return $this->parseWindowsDiskInfo($output);
+            } else {
+                // Linux: `df -h` für Festplatteninformationen
+                $output = shell_exec('df -h /');
+                return $this->parseLinuxDiskInfo($output);
+            }
+        }
+
+        private function parseWindowsDiskInfo($output){
+            $lines = explode("\n", trim($output));
+            $disks = [];
+            $currentDisk = [];
+
+            foreach ($lines as $line) {
+                if (empty(trim($line))) {
+                    if (!empty($currentDisk) && isset($currentDisk['device'], $currentDisk['size'], $currentDisk['free'])) {
+                        $disks[] = $currentDisk;
+                    }
+                    $currentDisk = []; // Zurücksetzen für das nächste Laufwerk
+                    continue;
+                }
+
+                list($key, $value) = explode('=', trim($line), 2);
+                $value = trim($value);
+
+                if ($key == 'DeviceID' && !empty($value)) {
+                    $currentDisk['device'] = $value;
+                } elseif ($key == 'Size' && is_numeric($value) && !empty($value)) {
+                    $currentDisk['size'] = round($value / (1024 ** 3), 2) . ' GB';
+                } elseif ($key == 'FreeSpace' && is_numeric($value) && !empty($value)) {
+                    $currentDisk['free'] = round($value / (1024 ** 3), 2) . ' GB';
+                }
+            }
+
+            // Letztes Laufwerk hinzufügen, falls vorhanden
+            if (!empty($currentDisk) && isset($currentDisk['device'], $currentDisk['size'], $currentDisk['free'])) {
+                $disks[] = $currentDisk;
+            }
+
+            return $disks;
+    }
+
+
+        private function parseLinuxDiskInfo($output)
+        {
+            $lines = explode("\n", trim($output));
+            $diskInfo = [];
+
+            foreach ($lines as $i => $line) {
+                if ($i === 0) continue; // Erste Zeile ist die Kopfzeile
+
+                $columns = preg_split('/\s+/', $line);
+                if (count($columns) < 6) continue;
+
+                $diskInfo[] = [
+                    'device' => $columns[0],
+                    'size'   => $columns[1],
+                    'used'   => $columns[2],
+                    'free'   => $columns[3],
+                    'usage'  => $columns[4],
+                    'mount'  => $columns[5]
+                ];
+            }
+
+            return $diskInfo;
+        }
+
 }

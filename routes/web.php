@@ -77,6 +77,7 @@ Route::controller(MaintainanceController::class)->group(function () {
     Route::get('/maintainance/backupDB', 'backupDatabase')->name('maintainance.backupdb');
     Route::get('/logs', 'showLogs')->middleware(['auth'])->name('maintainance.showLogs');
     Route::post('/logs', 'refreshLogs')->middleware(['auth'])->name('maintainance.refreshLogs');
+     Route::get('/maintainance/diskinfo', 'diskinfo')->name('maintainance.diskInfo');
 });
 
 
