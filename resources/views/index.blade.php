@@ -30,7 +30,7 @@
                 img="card-reverb.png"
                 header="Chat mit Laravel Reverb"
                 text="Laravel Reverb brings real-time WebSocket communication for Laravel applications."
-                link="message.view"
+                link="chat.login"
             />
 
 
