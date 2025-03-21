@@ -3,7 +3,7 @@
 
 <x-noppal>
 
-    <div class="container max-w-[1000px] p-8 mx-auto">
+    <div class="container p-8 mx-auto">
         <h1 class="mb-8 text-4xl font-semibold text-center text-blue-600">Festplatteninformationen</h1>
 
         <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -25,7 +25,7 @@
                                 parseFloat('{{ $disk['size'] }}') - parseFloat('{{ $disk['free'] }}'), // Belegter Speicher
                                 parseFloat('{{ $disk['free'] }}') // Freier Speicher
                             ],
-                            backgroundColor: ['#FF5733', '#33FF57'], // Farben für benutzt und frei
+                            backgroundColor: ['#A0AEC0', '#68D391'], // Sanfte Farben für benutzt und frei
                         }]
                     };
 
@@ -62,5 +62,6 @@
             @endforeach
         </div>
     </div>
+
 
 </x-noppal>
