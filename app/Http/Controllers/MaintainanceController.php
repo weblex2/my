@@ -95,7 +95,7 @@ class MaintainanceController extends Controller
                 return $this->parseWindowsDiskInfo($output);
             } else {
                 // Linux: `df -h` für Festplatteninformationen
-                $output = shell_exec('df -h /');
+                $output = shell_exec('df -h');
                 return $this->parseLinuxDiskInfo($output);
             }
         }
