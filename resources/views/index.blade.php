@@ -28,12 +28,13 @@
                 <div class="flex flex-wrap justify-center gap-4">
                     <span class="px-4 py-2 text-sm text-white bg-blue-500 rounded-full">PHP</span>
                     <span class="px-4 py-2 text-sm text-white bg-green-500 rounded-full">Laravel</span>
+                    <span class="px-4 py-2 text-sm text-white bg-green-500 rounded-full">Laravel Filament</span>
                     <span class="px-4 py-2 text-sm text-white bg-yellow-500 rounded-full">AWS</span>
-                    <span class="px-4 py-2 text-sm text-white bg-gray-700 rounded-full">Docker</span>
+                    <span class="px-4 py-2 text-sm text-white bg-yellow-500 rounded-full">Docker</span>
                     <span class="px-4 py-2 text-sm text-white bg-indigo-500 rounded-full">MySQL</span>
                     <span class="px-4 py-2 text-sm text-white bg-red-500 rounded-full">Apache</span>
                     <span class="px-4 py-2 text-sm text-white bg-teal-500 rounded-full">Tailwind</span>
-                    <span class="px-4 py-2 text-sm text-white bg-purple-500 rounded-full">jQuery</span>
+                    <span class="px-4 py-2 text-sm text-white bg-teal-500 rounded-full">jQuery</span>
                 </div>
             </div>
         </div>
