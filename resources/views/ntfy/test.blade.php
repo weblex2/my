@@ -1,11 +1,20 @@
 @extends('layouts.ntfy')
+@section('nav')
+     <!-- Livewire-Komponente -->
+     @livewire('navigation-menu')  <!-- Hier binden wir die Livewire-Komponente innerhalb der section ein -->
 
+@stop
 @section('content')
 <div class="flex items-center justify-center min-h-screen bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600">
     <div class="w-full p-8 bg-white shadow-xl sm:w-3/4 lg:w-1/2 bg-opacity-90 rounded-xl">
         <div class="mb-8 text-center">
             <h1 class="mb-4 text-4xl font-bold text-gray-800">NTFY Docker Demo</h1>
-            <p class="text-lg text-gray-600">Willkommen zur NTFY-Demo! Hier siehst du, wie einfach es ist, NTFY in einem Docker-Container zu nutzen. Mit dieser Lösung kannst du Benachrichtigungen schnell und unkompliziert versenden. Du wirst sehen, wie einfach es ist, NTFY zu installieren und zu konfigurieren – alles innerhalb eines Docker-Containers.</p>
+            <p class="text-lg text-gray-600">
+                Willkommen zur NTFY-Demo!
+                Hier siehst du, wie einfach es ist, NTFY in einem Docker-Container zu nutzen.
+                Mit dieser Lösung kannst du Benachrichtigungen schnell und unkompliziert versenden.
+                Du wirst sehen, wie einfach es ist, NTFY zu installieren und zu konfigurieren.<br/>
+                (Beschreibung kommt noch)</p>
         </div>
 
         <!-- Flexbox für die Bilder, kleinerer Abstand bei großen Bildschirmen -->
