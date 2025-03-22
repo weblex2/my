@@ -5,6 +5,28 @@
             <img src="img/noppal3.jpg" class="img-me">
         </div>
 
+
+
+        <div class="container flex items-center justify-center text-black">
+        <div class="w-full p-10 bg-white border rounded-lg shadow-lg border-zinc-200">
+        <p class="text-lg text-center">
+            Ich bin ein leidenschaftlicher Programmierer mit einem starken Fokus auf <strong>PHP</strong> und <strong>Laravel</strong>.
+            In meiner Karriere habe ich mich intensiv mit der Entwicklung von Webanwendungen beschäftigt und bin ständig auf der Suche nach neuen Herausforderungen,
+            um meine Fähigkeiten zu erweitern.
+        </p>
+        <p class="mt-4 text-lg text-center">
+            Diese Seite ist mein persönliches Experimentierfeld, auf dem ich verschiedene Technologien und Konzepte ausprobiere.
+            Von kleinen Tools und Features bis hin zu komplexen Anwendungen – hier möchte ich nicht nur zeigen, was ich in der <strong>Webentwicklung</strong> beherrsche,
+            sondern auch kontinuierlich dazulernen und innovative Lösungen entwickeln.
+        </p>
+        <p class="mt-4 text-lg text-center">
+            Schau dich gerne um und sieh dir an, welche Projekte ich aktuell umsetze!
+        </p>
+    </div>
+</div>
+
+
+
         <div class="badges">
             <x-knowledge-badge text="AWS/EC2" />
             <x-knowledge-badge text="MySQL" />
