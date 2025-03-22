@@ -42,7 +42,7 @@
         </div>
 
         <div class="mt-8 text-center">
-            <p class="text-sm text-gray-600">Braucht du Hilfe? Schau dir die <a href="https://docs.ntfy.sh/" target="_blank" class="text-blue-500 transition duration-300 hover:text-blue-700">NTFY-Dokumentation</a> an.</p>
+            <p class="text-sm text-gray-600">Brauchst du Hilfe? Schau dir die <a href="https://docs.ntfy.sh/" target="_blank" class="text-blue-500 transition duration-300 hover:text-blue-700">NTFY-Dokumentation</a> an.</p>
         </div>
     </div>
 </div>
