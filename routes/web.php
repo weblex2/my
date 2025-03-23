@@ -27,6 +27,7 @@ use App\Http\Controllers\MaintainanceController;
 use App\Http\Controllers\GoogleGemeniController;
 use App\Http\Controllers\FilamentFieldsController;
 use App\Livewire\GoogleGemeni;
+use App\Http\Controllers\PhpMyAdminController;
 
 
 
@@ -290,4 +291,12 @@ Route::controller(ChatController::class)->group(function () {
 Route::controller(ShowSourcecodeController::class)->group(function () {
     Route::get('/ssc/{id}', 'index')->name('showSourceCode.index');
     Route::post('/ssc/getCode', 'getCode')->name('showSourceCode.getCode');
+});
+
+
+Route::controller(PhpMyAdminController::class)->group(function () {
+    Route::get('/laravelMyAdmin',  'index')->middleware(['auth'])->name('laravelMyAdmin.index');
+    Route::get('/laravelMyAdmin/edit/{table}','edit')->middleware(['auth'])->name('laravelMyAdmin.edit');
+    Route::post('/laravelMyAdmin/create_table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');
+    Route::post('/laravelMyAdmin/generate-migration',  'generateMigration')->middleware(['auth'])->name('laravelMyAdmin.generateMigration');
 });
