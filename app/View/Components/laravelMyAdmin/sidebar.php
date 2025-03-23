@@ -23,6 +23,6 @@ class sidebar extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.sidebar');
+        return view('components.laravel-my-admin.sidebar'); 
     }
 }
