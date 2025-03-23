@@ -19,6 +19,7 @@ export default defineConfig({
                 'resources/css/chat.css',
                 'resources/css/ssc.css',
                 'resources/css/maintainance.css',
+                'resources/css/laravelMyAdmin.css',
                 'resources/js/websocket.js',
             ],
             refresh: true,
