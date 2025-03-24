@@ -50,8 +50,8 @@
     <script>
         $(function () {
             $('.db').click(function(){
-                $('.tables').hide();
-                $('.fields').hide();
+                //$('.tables').hide();
+                //$('.fields').hide();
                 let db = $(this).attr('db_name');
                 $('.' + db + '-tables').toggle(200);
             });

@@ -1,0 +1,190 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dropzone, .dz-preview, .dz-image-preview, .dz-image, .dz-success, .dz-complete{
+    @apply bg-transparent
+}
+
+
+body{
+    font-family: "Urbanist", sans-serif; font-style: normal;
+    @apply bg-zinc-900 text-white
+}
+
+.badges{
+    @apply container p-10 md:max-w-[1200px] my-10 flex flex-col md:flex-row items-center justify-center flex-auto mx-auto
+}
+
+.index-wrapper{
+    @apply bg-white  h-screen w-screen flex flex-col lg:flex-row md:flex-row
+}
+
+.index-card{
+    @apply flex w-full flex-col max-w-sm m-3 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700
+}
+.index-card img{
+    @apply w-full h-40 rounded-t-lg
+}
+
+.index-card .header{
+    @apply mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-400
+}
+
+.index-card .read-more{
+    @apply inline-flex items-center w-40 px-3 py-2 mt-auto text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+}
+
+.btn{
+    @apply py-3 px-8 border rounded-xl
+}
+
+input[type="text"], input[type="date"], select {
+    @apply rounded bg-zinc-700 text-zinc-100 w-full
+}
+
+select {
+    @apply rounded bg-zinc-700 text-zinc-100 w-full
+}
+
+textarea{
+    @apply rounded-xl bg-zinc-600 w-full
+}
+
+a{
+    @apply text-orange-400
+}
+
+a:hover{
+    @apply text-orange-400
+}
+
+.tag{
+    @apply bg-blue-100 text-blue-800 text-xs font-medium me-2 ms-1 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 break-keep
+}
+
+
+.icon{
+    @apply w-8 h-8  mr-2
+}
+
+.floatleft{
+    @apply float-left
+}
+
+/* Index */
+
+.img-me{
+    @apply rounded-full w-60 h-60 mt-16
+}
+
+.my-flex-box{
+    @apply flex w-[100%]  flex-col lg:flex-row items-stretch  justify-center flex-auto mx-auto
+}
+
+.box{
+    font-family: "Urbanist", sans-serif; font-style: normal;
+
+    @apply grow m-5 p-10 border border-zinc-300 text-center text-3xl shadow-md hover:shadow-gray-500 hover:border-zinc-400
+}
+a.box div{
+    @apply !text-gray-500  w-full h-full
+}
+
+
+.noppindex{
+    @apply bg-white  h-screen absolute overflow-scroll w-screen
+}
+
+.my-img-wrapper{
+    @apply flex justify-center items-center mb-14
+}
+
+
+
+
+
+/* CV */
+
+.cv .grid{
+    @apply p-3
+}
+
+.cv h1{
+    @apply text-6xl mb-20
+}
+
+.cv h2{
+    @apply text-2xl pb-10
+}
+
+.cv h3 {
+    @apply font-extrabold
+}
+
+.cv hr{
+    @apply border-zinc-700
+}
+
+.bl{
+}
+
+
+.bl h3{
+    @apply text-2xl  mb-3
+}
+
+.bl_text{
+}
+
+.cv .header{
+    @apply text-blue-500 float-left w-[40%]
+}
+
+/* Futter */
+.futter h1{
+    @apply text-4xl m-5
+}
+
+
+.futterHoverClass{
+    @apply bg-green-500
+}
+
+
+
+
+
+/* React Tutorials */
+.t1{
+    @apply w-[50%] float-left border border-red-500
+}
+
+.t1 td, .t2 td{
+    @apply border border-green-500
+}
+
+.t2{
+    @apply w-[50%] float-right border border-green-500
+}
+
+.tbl-logs{
+    @apply min-w-full
+}
+
+#tbl-logs td, #tbl-logs th{
+    @apply border border-gray-700 p-3
+}
+
+.filament-field-config td, .filament-field-config th{
+    @apply text-black p-1 border border-gray-300
+}
+
+.filament-field-config  tr{
+    @apply odd:bg-gray-100  even:bg-gray-50
+}
+
+.filament-field-config input{
+    @apply bg-white text-black p-1
+}
