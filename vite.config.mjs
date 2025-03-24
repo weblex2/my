@@ -22,7 +22,7 @@ export default defineConfig({
                 'resources/css/laravelMyAdmin.css',
                 'resources/js/websocket.js',
                 'resources/js/laravelMyAdmin.js',
-                'resources/js/clean.js',
+                'resources/css/clean.css',
             ],
             refresh: true,
         }),
