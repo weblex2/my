@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\laravelMyAdmin;
+namespace App\View\Components\LaravelMyAdmin;
 
 use Closure;
 use Illuminate\Contracts\View\View;
