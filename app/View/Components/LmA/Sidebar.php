@@ -16,6 +16,7 @@ class Sidebar extends Component
     {
         $pac = new PhpMyAdminController();
         $this->dbs = $pac->getDatabases();
+        dd($this->dbs);
     }
 
     /**

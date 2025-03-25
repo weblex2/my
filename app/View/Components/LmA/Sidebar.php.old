@@ -1,0 +1,29 @@
+<?php
+
+namespace App\View\Components\LaravelMyAdmin;
+namespace App\View\Components\LaravelMyAdmin;
+
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+use App\Http\Controllers\PhpMyAdminController;
+
+class Sidebar extends Component
+{
+    public $dbs;
+
+    public function __construct()
+    {
+        $pac = new PhpMyAdminController();
+        $this->dbs = $pac->getDatabases();
+        dd($this->dbs);
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('components.laravel-my-admin.sidebar');
+    }
+}
