@@ -60,7 +60,6 @@
         <div class="w-64 h-screen max-h-screen text-white bg-gray-800 border-r border-black">
             <div class="h-screen max-h-screen pt-20 overflow-auto">
                 <h2 class="text-xl font-semibold">Sidebar</h2>
-                hiho123345
                 <x-laravelMyAdmin.sidebar />
             </div>
         </div>
