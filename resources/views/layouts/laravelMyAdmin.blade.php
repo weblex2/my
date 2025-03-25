@@ -11,7 +11,7 @@
 
         <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.1.1.min.js">
-        @vite(['resources/js/laravelMyAdmin.js', 'resources/css/clean.css',  'resources/css/laravelMyAdmin.css'])
+        @vite(['resources/js/laravelMyAdmin.js', 'resources/js/app.js',  'resources/css/laravelMyAdmin.css'])
 
         <!-- Styles -->
         @livewireStyles
@@ -27,6 +27,7 @@
         <div class="w-64 h-screen max-h-screen text-white bg-gray-800">
             <div class="h-screen max-h-screen pt-20 overflow-auto">
                 <h2 class="text-xl font-semibold">Sidebar</h2>
+                hiho123
                 <x-laravelMyAdmin.sidebar />
             </div>
         </div>

@@ -1,4 +1,10 @@
-/* public/css/laravelMayAdmin.css */
+@import "@fortawesome/fontawesome-free/css/all.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
 body {
     @apply text-xs bg-gray-100
 }
