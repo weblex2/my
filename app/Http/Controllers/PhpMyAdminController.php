@@ -119,6 +119,7 @@ class PhpMyAdminController extends Controller
             $column  = $field->COLUMN_NAME;
             $dbs[$db][$table][$column] = $field;
         }
+        dd($dbs);
         return $dbs;
     }
 
