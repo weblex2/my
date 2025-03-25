@@ -47,7 +47,7 @@ h1 {
 }
 
 .tblLaravelMyAdmin{
-    @apply  min-w-full border-collapse rounded-lg shadow-lg table-auto text-xs
+    @apply  min-w-full border-collapse rounded-lg shadow-lg table-auto text-xs  text-black
 }
 
 .tblLaravelMyAdmin th, .tblLaravelMyAdmin td{
