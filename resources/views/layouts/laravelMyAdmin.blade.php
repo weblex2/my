@@ -11,7 +11,7 @@
 
         <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.1.1.min.js">
-        @vite(['resources/js/app.js', 'resources/css/clean.css', 'resources/css/noppal.css', 'resources/css/laravelMyAdmin.css'])
+        @vite(['resources/js/app.js', 'resources/css/app.css', 'resources/css/clean.css', 'resources/css/noppal.css', 'resources/css/laravelMyAdmin.css'])
 
         <!-- Styles -->
         @livewireStyles

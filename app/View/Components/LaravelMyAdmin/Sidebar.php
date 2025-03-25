@@ -5,15 +5,17 @@ namespace App\View\Components\LaravelMyAdmin;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Http\Controllers\PhpMyAdminController;
 
 class Sidebar extends Component
 {
-    /**
-     * Create a new component instance.
-     */
+    public $dbs;
+
+
     public function __construct()
     {
-        //
+        $pac = new PhpMyAdminController();
+        $this->dbs = $pac->getDatabases();
     }
 
     /**
