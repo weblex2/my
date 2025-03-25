@@ -1,15 +1,14 @@
 <?php
 
-namespace App\View\Components\laravelMyAdmin;
+namespace App\View\Components\LaravelMyAdmin;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Http\Controllers\PhpMyAdminController;
 
-class sidebar extends Component
+class Sidebar extends Component
 {
-
     public $dbs;
 
     public function __construct()
@@ -23,6 +22,6 @@ class sidebar extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.sidebar'); 
+        return view('components.laravel-my-admin.sidebar');
     }
 }

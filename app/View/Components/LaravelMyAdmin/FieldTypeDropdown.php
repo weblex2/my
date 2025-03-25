@@ -6,14 +6,14 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ColumnsDropdown extends Component
+class FieldTypeDropdown extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct()
+    public $selected;
+
+
+    public function __construct($selected)
     {
-        //
+        $this->selected  = $selected;
     }
 
     /**
@@ -21,6 +21,6 @@ class ColumnsDropdown extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.columns-dropdown');
+        return view('components.laravel-my-admin.field-type-dropdown');
     }
 }

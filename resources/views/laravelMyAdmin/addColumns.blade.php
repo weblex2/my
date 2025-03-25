@@ -1,12 +1,12 @@
-@extends('layouts.laravelMyAdmin')
+@extends('layouts.clean')
 
 @section('content')
     <div class="container p-5 mx-auto ">
         <h1 class="mb-6 text-3xl font-bold text-gray-600">Bearbeiten der Tabelle: {{ $table }}</h1>
-
-        <div class="section">
-
-            <h3 class="mb-4 text-xl font-semibold">Spalten</h3>
+        <form action="{{ route('laravelMyAdmin.generateMigration') }}" method="POST" class="shadow-lg">
+            @csrf
+            <input type="hidden" name="table" value="{{ $table }}">
+            <h3 class="mb-4 text-xl font-semibold">Add columns</h3>
 
             <!-- Tabelle für Spalten -->
             <table class="tblLaravelMyAdmin">
@@ -37,7 +37,7 @@
                             </td>
                             <td>
                                 <!-- Select für Datentyp -->
-                                <x-laravel-my-admin.field-type-dropdown selected="{{$column->Datatype['type']}}" />
+                                <x-laravel-my-admin.type-select selected="{{$column->Datatype['type']}}" />
                             </td>
                             <td>
                                 <!-- Kollation -->
@@ -76,22 +76,32 @@
                     @endforeach
                 </tbody>
             </table>
+´
 
-
-
-        <form action="{{ route('laravelMyAdmin.generateMigration') }}" method="POST" class="shadow-lg">
-
-            @csrf
-            <input type="hidden" name="table" value="{{ $table }}">
 
             <h3 class="mt-6 mb-4 text-xl font-semibold">Neue Spalte hinzufügen</h3>
-            <div class="flex w-full bg-red-200">
-                <div class="mb-4">
-                    <label for="column_name" class="block font-medium text-gray-700">Spaltenname</label>
-                    <input type="text" name="changes[add][column_name]" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="column_name" placeholder="Spaltenname">
-                </div>
 
-            <div>Spalte(n) einfügen nach</div>
+            <div class="mb-4">
+                <label for="column_name" class="block font-medium text-gray-700">Spaltenname</label>
+                <input type="text" name="changes[add][column_name]" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="column_name" placeholder="Spaltenname">
+            </div>
+
+            <div class="mb-4">
+                <label for="column_type" class="block font-medium text-gray-700">Typ der neuen Spalte</label>
+                <select name="changes[add][column_type]" class="block w-full px-4 py-2 border border-gray-300 rounded-lg form-select">
+                    <option value="string">string</option>
+                    <option value="integer">integer</option>
+                    <option value="text">text</option>
+                    <option value="boolean">boolean</option>
+                    <option value="date">date</option>
+                    <option value="timestamp">timestamp</option>
+                    <option value="float">float</option>
+                    <option value="decimal">decimal</option>
+                    <option value="json">json</option>
+                    <option value="enum">enum</option>
+                    <option value="bigInteger">bigInteger</option>
+                </select>
+            </div>
 
             <div class="mb-6">
                 <label for="nullable" class="block font-medium text-gray-700">Nullable</label>
@@ -100,6 +110,5 @@
 
             <button type="submit" class="px-6 py-2 font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">Migration generieren</button>
         </form>
-        </div>
     </div>
 @stop

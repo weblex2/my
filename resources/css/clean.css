@@ -1,0 +1,25 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+body{
+    @apply text-black
+}
+
+.btn{
+    @apply px-6 py-2 font-semibold border rounded
+}
+
+.btn-primary{
+    @apply bg-blue-400 border border-blue-800 hover:bg-blue-700;
+}
+
+.btn-delete{
+    @apply bg-red-400 border border-red-800 hover:bg-red-700;
+}
+
+

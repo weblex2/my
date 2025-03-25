@@ -101,6 +101,10 @@ class PhpMyAdminController extends Controller
                 $result['signed'] = true;
             }
         }
+        // if nothing found
+        if ($result['type']=='') {
+            $result['type'] = $columnDefinition;
+        }
 
         return $result;
     }
