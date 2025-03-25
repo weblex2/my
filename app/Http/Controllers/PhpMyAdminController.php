@@ -113,13 +113,11 @@ class PhpMyAdminController extends Controller
         $res = DB::select('SELECT * from information_schema.columns where table_schema !="information_schema" order by table_schema, TABLE_NAME, column_name');
 
         foreach ($res as $field){
-            //dd($field);
             $db     = $field->TABLE_SCHEMA;
             $table  = $field->TABLE_NAME;
             $column  = $field->COLUMN_NAME;
             $dbs[$db][$table][$column] = $field;
         }
-        dd($dbs);
         return $dbs;
     }
 

@@ -22,5 +22,5 @@ class ColumnsDropdown extends Component
     public function render(): View|Closure|string
     {
         return view('components.laravel-my-admin.columns-dropdown');
-    }
+    } 
 }
