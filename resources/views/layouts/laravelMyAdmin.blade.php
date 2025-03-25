@@ -58,8 +58,7 @@
     <div class="flex">
         <!-- Sidebar -->
         <div class="w-64 h-screen max-h-screen text-white bg-gray-800 border-r border-black">
-            <div class="h-screen max-h-screen pt-20 overflow-auto">
-                <h2 class="text-xl font-semibold">Sidebar</h2>
+            <div class="h-screen max-h-screen pt-12 overflow-auto">
                 <x-laravelMyAdmin.sidebar />
             </div>
         </div>
