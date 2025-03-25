@@ -27,11 +27,11 @@ h1 {
 }
 
 .database-explorer .tables{
-    @apply cursor-pointer w-full  hidden pl-3
+    @apply cursor-pointer w-full m-0 hidden pl-3
 }
 
 .database-explorer .table{
-    @apply p-0
+    @apply p-1 m-0
 }
 
 .database-explorer .fields{
