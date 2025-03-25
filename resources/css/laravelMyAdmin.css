@@ -31,7 +31,7 @@ h1 {
 }
 
 .database-explorer .table{
-    @apply p-1
+    @apply p-0
 }
 
 .database-explorer .fields{
