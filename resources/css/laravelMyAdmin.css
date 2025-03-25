@@ -14,8 +14,12 @@ h1 {
     margin-bottom: 20px;
 }
 
-.main-content{
-    @apply flex-1 pt-24 ml-64 overflow-auto
+#maincontent{
+    @apply flex-1 relative h-full overflow-hidden
+}
+
+#content{
+    @apply h-full max-h-full w-full  bg-green-100
 }
 
 .sidebar{
@@ -31,7 +35,7 @@ h1 {
 }
 
 .database-explorer .table{
-    @apply p-1 m-0
+    @apply p-1 m-0 whitespace-nowrap
 }
 
 .database-explorer .fields{

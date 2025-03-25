@@ -5,7 +5,7 @@
             <div class="tables {{$dbname}}-tables">
                 <div class="table newtable" db_name="{{$dbname}}"><i class="text-yellow-300 fa-solid fa-star"></i> new</div>
                 @foreach ($db as $tablename => $table)
-                    <div class="table" table_name="{{$dbname}}-{{$tablename}}"><i class="fa-solid fa-table-list"></i> {{ $tablename }}</div>
+                    <div class="table" table_name="{{$dbname}}-{{$tablename}}" title={{$tablename}}><i class="fa-solid fa-table-list"></i> {{ $tablename }}</div>
                     <div class="fields {{$dbname}}-{{ $tablename }}-fields">
                         @foreach ($table as $fieldname => $field)
                             <div class="field {{$dbname}}-field"><i class="fa-solid fa-table-columns"></i> {{ $fieldname }}</div>

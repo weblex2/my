@@ -57,7 +57,7 @@
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-64 h-screen max-h-screen text-white bg-gray-800">
+        <div class="w-64 h-screen max-h-screen text-white bg-gray-800 border-r border-black">
             <div class="h-screen max-h-screen pt-20 overflow-auto">
                 <h2 class="text-xl font-semibold">Sidebar</h2>
                 hiho123345
@@ -66,11 +66,10 @@
         </div>
 
         <!-- Main Content -->
-        <div class="relative flex-1 overflow-auto" id="maincontent">
-            <div class="absolute flex w-full bg-green-200 laravelMainHeader">
-                <div>Databases</div>
-            </div>
+        <div class="h-screen max-h-screen text-white bg-gray-800"  id="maincontent">
+            <div class="h-screen max-h-screen pt-12 overflow-auto">
             @yield('content')
+            </div>
         </div>
     </div>
 
