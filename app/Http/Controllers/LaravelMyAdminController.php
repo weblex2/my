@@ -14,6 +14,7 @@ class LaravelMyAdminController extends Controller
     // Punkt 1: Tabellenübersicht
     public function index()
     {
+        Session::put('db', '');
         $tables = DB::select('SHOW TABLES');
         return view('laravelMyAdmin.index', compact('tables'));
     }

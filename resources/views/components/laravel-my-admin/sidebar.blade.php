@@ -1,5 +1,5 @@
 <div>
-    selected {{ $selected_db }}
+    <a href="/laravelMyAdmin">Home</a>
     @foreach ($dbs as $dbname => $db)
         <div class="database-explorer">
             <div class="db" db_name="{{$dbname}}">

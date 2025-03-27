@@ -47,7 +47,7 @@ body {
 }
 
 .sidebar{
-    @apply w-64 h-full h-screen max-h-screen  pt-20  text-white bg-gray-800
+    @apply w-64 p-3 font-semibold h-screen max-h-screen border-r border-black
 }
 
 .database-explorer .db{

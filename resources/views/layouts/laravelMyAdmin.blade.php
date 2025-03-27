@@ -57,7 +57,7 @@
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-64 h-screen max-h-screen border-r border-black">
+        <div class="sidebar">
             <div class="h-screen max-h-screen overflow-auto">
                 <x-laravelMyAdmin.sidebar />
             </div>
