@@ -10,12 +10,14 @@ use App\Http\Controllers\LaravelMyAdminController;
 class Sidebar extends Component
 {
     public $dbs;
+    public $selected_db;
 
 
     public function __construct()
     {
         $pac = new LaravelMyAdminController();
         $this->dbs = $pac->getDatabases();
+        $this->selected_db = session('db');
     }
 
     /**

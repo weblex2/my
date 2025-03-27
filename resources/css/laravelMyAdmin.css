@@ -22,6 +22,14 @@ body {
     @apply p-3 flex font-semibold
 }
 
+.action-icon{
+    @apply text-blue-500
+}
+
+.delete-icon{
+    @apply text-red-500
+}
+
 .menu{
     @apply flex border border-zinc-600  z-20 w-full bg-gradient-to-b from-zinc-200 via-white to-zinc-200 ml-[-1px] mt-[-1px]
 }
@@ -47,7 +55,7 @@ body {
 }
 
 .database-explorer .tables{
-    @apply cursor-pointer w-full m-0 hidden pl-3
+    @apply cursor-pointer w-full m-0  pl-3
 }
 
 .database-explorer .table{

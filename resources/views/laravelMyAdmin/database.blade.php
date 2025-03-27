@@ -21,12 +21,12 @@
         @foreach ($tables as $table)
             <tr>
             <td>{{$table->TABLE_NAME}}
-            <td><i class="text-blue-900 fa-solid fa-table"></i> Show</td>
-            <td><i class="fa-solid fa-folder-tree"></i> Structure</td>
-            <td><i class="fa-solid fa-magnifying-glass"></i> Search</td>
-            <td><i class="fa-solid fa-file-circle-plus"></i> Add Row</td>
-            <td><i class="fa-solid fa-eraser"></i> Truncate</td>
-            <td><i class="fa-solid fa-trash-can"></i> Delete</td>
+            <td><i class="fa-solid fa-table action-icon"></i> Show</td>
+            <td><i class="fa-solid fa-folder-tree action-icon"></i> Structure</td>
+            <td><i class="fa-solid fa-magnifying-glass action-icon"></i> Search</td>
+            <td><i class="fa-solid fa-file-circle-plus action-icon"></i> Add Row</td>
+            <td><i class="fa-solid fa-eraser action-icon"></i> Truncate</td>
+            <td><i class="fa-solid fa-trash-can delete-icon"></i> Delete</td>
             <td>{{$table->TABLE_ROWS}}
             <td>{{$table->ENGINE}}
             <td>{{$table->TABLE_COLLATION}}

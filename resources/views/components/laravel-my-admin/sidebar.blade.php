@@ -1,4 +1,5 @@
 <div>
+    selected {{ $selected_db }}
     @foreach ($dbs as $dbname => $db)
         <div class="database-explorer">
             <div class="db" db_name="{{$dbname}}">
@@ -6,20 +7,20 @@
                     <i class="fa-solid fa-database"></i> {{ $dbname }}</div>
                 </a>
                 <div class="tables {{$dbname}}-tables">
-                <div class="table newtable" db_name="{{$dbname}}">
+                <div class="table newtable {{$selected_db!=$dbname ? "hidden" :"" }}" db_name="{{$dbname}} ">
                     <i class="text-zinc-600 fa-solid fa-star"></i>
                     new
                 </div>
                 @foreach ($db as $tablename => $table)
-                    <div class="table" table_name="{{$dbname}}-{{$tablename}}" title={{$tablename}}>
+                    <div class="table {{$selected_db!=$dbname ? "hidden" :"" }}" table_name="{{$dbname}}-{{$tablename}}" title={{$tablename}}>
                         <a href="{{ route("laravelMyAdmin.newTable") }}">
                             <i class="fa-solid fa-table-list"></i>
                             {{ $tablename }}
                         </a>
                     </div>
-                    <div class="fields {{$dbname}}-{{ $tablename }}-fields">
+                    <div class="fields {{$dbname}}-{{ $tablename }}-fields ">
                         @foreach ($table as $fieldname => $field)
-                            <div class="field {{$dbname}}-field"><i class="fa-solid fa-table-columns"></i> {{ $fieldname }}</div>
+                            <div class="field"><i class="fa-solid fa-table-columns"></i> {{ $fieldname }}</div>
                         @endforeach
                     </div>
                 @endforeach
