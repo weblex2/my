@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ColumnsDropdown extends Component
+class MainMenu extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class ColumnsDropdown extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.columns-dropdown');
-    } 
+        return view('components.laravel-my-admin.main-menu');
+    }
 }

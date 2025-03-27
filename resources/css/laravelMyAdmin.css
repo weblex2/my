@@ -14,18 +14,12 @@ body {
 }
 
 
-
-h1 {
-    color: #007bff;
-    margin-bottom: 20px;
-}
-
 .gradient{
     @apply bg-gradient-to-b hover:from-white hover:via-zinc-200 hover:to-white text-black from-zinc-200 via-white to-zinc-200
 }
 
 .menu{
-    @apply flex border border-zinc-600 fixed z-20 w-full bg-gradient-to-b from-zinc-200 via-white to-zinc-200
+    @apply flex border border-zinc-600  z-20 w-full bg-gradient-to-b from-zinc-200 via-white to-zinc-200 ml-[-1px] mt-[-1px]
 }
 
 .menu-item{
@@ -72,8 +66,12 @@ h1 {
     @apply p-1 border border-gray-300
 }
 
+.tblLaravelMyAdmin .header{
+    @apply bg-gradient-to-b from-zinc-200 via-white to-zinc-200
+}
+
 .tblLaravelMyAdmin th{
-    @apply py-3 bg-gray-400 border border-zinc-600
+    @apply py-3
 }
 
 .tblLaravelMyAdmin tr{
@@ -99,23 +97,22 @@ input[type="checkbox"]{
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(31, 41, 55, var(--tw-bg-opacity));
-    border-radius: 5px;
+    @apply bg-slate-900
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(75, 85, 99, 0.8); /* Dunkelgrau */
-    border-radius: 5px;
+    background: rgba(128, 24, 74, 0.8); /* Dunkelgrau */
+
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(107, 114, 128, 0.9); /* Hellere Grautöne beim Hover */
+    background: rgba(15, 15, 14, 0.9); /* Hellere Grautöne beim Hover */
 }
 
 /* Für Firefox */
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(75, 85, 99, 0.8) rgba(31, 41, 55, var(--tw-bg-opacity));
+    scrollbar-color: rgba(210, 209, 208, 0.8) rgba(31, 41, 55, var(--tw-bg-opacity));
 }
 
 

@@ -52,26 +52,22 @@
 
     <body class="font-sans antialiased">
 
-    <div class="menu">
-        <div class="menu-item gradient">Datenbanken</div>
-        <div class="menu-item gradient">SQL</div>
-        <div class="menu-item gradient">Suche</div>
-        <div class="menu-item gradient">Abfrage</div>
-        <div class="menu-item gradient">Exportieren</div>
-        <div class="menu-item gradient">Importieren</div>
-    </div>
+
 
 
     <div class="flex">
         <!-- Sidebar -->
         <div class="w-64 h-screen max-h-screen border-r border-black">
-            <div class="h-screen max-h-screen pt-24 overflow-auto">
+            <div class="h-screen max-h-screen overflow-auto">
                 <x-laravelMyAdmin.sidebar />
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="h-screen max-h-screen"  id="maincontent">
+
+            <x-laravel-my-admin.main-menu/>
+
             <div class="h-screen max-h-screen pt-20 overflow-auto ">
                 <div id="content" class="container mx-auto">
                     @yield('content')

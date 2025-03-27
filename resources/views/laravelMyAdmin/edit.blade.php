@@ -8,7 +8,7 @@
             <!-- Tabelle für Spalten -->
             <table class="tblLaravelMyAdmin">
                 <thead >
-                    <tr>
+                    <tr class="header">
                         <th></th>
                         <th>#</th>
                         <th>Spaltenname</th>
