@@ -71,7 +71,7 @@ body {
 }
 
 .tblLaravelMyAdmin{
-    @apply  min-w-full border-collapse rounded-lg shadow-lg table-auto text-xs  text-black
+    @apply  min-w-full font-semibold border-collapse rounded-lg shadow-lg table-auto text-xs  text-black ml-[-1px]
 }
 
 .tblLaravelMyAdmin th, .tblLaravelMyAdmin td{
