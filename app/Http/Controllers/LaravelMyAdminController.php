@@ -145,16 +145,23 @@ class LaravelMyAdminController extends Controller
     function testMigration(){
         $migration = '2025_03_27_215940_create_tests_table.php';
         Artisan::call('migrate:rollback', ['--path' => 'database/migrations/'.$migration]);
-        $output['rollback'] = Artisan::output(); // Holt die Ausgabe des Artisan-Befehls
-
+        $output['rollback'] = nl2br(Artisan::output()); // Holt die Ausgabe des Artisan-Befehls
 
         Artisan::call('migrate', ['--path' => 'database/migrations/'.$migration]);
+        $output['migrate'] = nl2br(Artisan::output()); // Holt die Ausgabe des Artisan-Befehls
 
-        $output['migrate'] = Artisan::output(); // Holt die Ausgabe des Artisan-Befehls
-
+        return view('laravelMyAdmin.execMigration', compact('output'));
         return response()->json([
             //'message' => 'Migration erfolgreich ausgeführt',
             'output' => $output
+        ]);
+
+    }
+
+    function execMigration(Request $request){
+        $req = $request->all();
+        return response()->json([
+            'data' => '123'
         ]);
 
     }

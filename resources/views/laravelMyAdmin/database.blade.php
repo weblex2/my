@@ -1,10 +1,6 @@
 @extends('layouts.laravelMyAdmin')
 
 @section('content')
-    <div class="filter">
-        Filter: <input type="text" name="table_filter">
-    </div>
-
     <div>
     <table class="tblLaravelMyAdmin">
         <thead >

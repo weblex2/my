@@ -301,5 +301,6 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::get('/laravelMyAdmin/create-table','newTable')->middleware(['auth'])->name('laravelMyAdmin.newTable');
     Route::post('/laravelMyAdmin/create-table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');
     Route::post('/laravelMyAdmin/generate-migration',  'generateMigration')->middleware(['auth'])->name('laravelMyAdmin.generateMigration');
+    Route::post('/laravelMyAdmin/exec-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.execMigration');
     Route::get('/laravelMyAdmin/testmig','testMigration')->middleware(['auth'])->name('laravelMyAdmin.testmig');
 });
