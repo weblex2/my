@@ -27,7 +27,7 @@ use App\Http\Controllers\MaintainanceController;
 use App\Http\Controllers\GoogleGemeniController;
 use App\Http\Controllers\FilamentFieldsController;
 use App\Livewire\GoogleGemeni;
-use App\Http\Controllers\PhpMyAdminController;
+use App\Http\Controllers\LaravelMyAdminController;
 
 
 
@@ -294,7 +294,7 @@ Route::controller(ShowSourcecodeController::class)->group(function () {
 });
 
 
-Route::controller(PhpMyAdminController::class)->group(function () {
+Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::get('/laravelMyAdmin',  'index')->middleware(['auth'])->name('laravelMyAdmin.index');
     Route::get('/laravelMyAdmin/edit/{table}','edit')->middleware(['auth'])->name('laravelMyAdmin.edit');
     Route::post('/laravelMyAdmin/create_table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');

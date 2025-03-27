@@ -1,7 +1,7 @@
 @extends('layouts.laravelMyAdmin')
 
 @section('content')
-    <div class="container p-5 mx-auto">
+
         <h1 class="mb-6 text-3xl font-bold">Tabellenübersicht</h1>
 
         @if(session('success'))
@@ -17,6 +17,6 @@
                 </tr>
             </thead>
         </table>
-    </div>
+
 @stop
 

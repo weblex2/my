@@ -1,13 +1,10 @@
 @extends('layouts.laravelMyAdmin')
 
 @section('content')
-    <div class="container p-5 mx-auto ">
+    <div class="container mx-auto ">
         <h1 class="mb-6 text-3xl font-bold text-gray-600">Bearbeiten der Tabelle: {{ $table }}</h1>
 
         <div class="section">
-
-            <h3 class="mb-4 text-xl font-semibold">Spalten</h3>
-
             <!-- Tabelle für Spalten -->
             <table class="tblLaravelMyAdmin">
                 <thead >
@@ -69,8 +66,8 @@
                             </td>
 
                             <td>
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-delete">Delete</button>
+                                <button class="btn gradient"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                                <button class="btn gradient"><i class="fa-solid fa-trash-can"></i> Delete</button>
                             </td>
                         </tr>
                     @endforeach

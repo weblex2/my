@@ -10,20 +10,26 @@ body {
 }
 
 .btn{
-    @apply px-6 py-2 font-semibold border rounded text-xs text-black
+    @apply px-6 py-2 border rounded text-xs text-black border border-zinc-600
 }
 
-.btn-primary{
-    @apply bg-blue-300 border border-blue-600 hover:bg-blue-400;
-}
 
-.btn-delete{
-    @apply bg-red-300 border border-red-600 hover:bg-red-400;
-}
 
 h1 {
     color: #007bff;
     margin-bottom: 20px;
+}
+
+.gradient{
+    @apply bg-gradient-to-b hover:from-white hover:via-zinc-200 hover:to-white text-black from-zinc-200 via-white to-zinc-200
+}
+
+.menu{
+    @apply flex border border-zinc-600 fixed z-20 w-full bg-gradient-to-b from-zinc-200 via-white to-zinc-200
+}
+
+.menu-item{
+    @apply border-r border-zinc-400 p-3 cursor-pointer font-semibold
 }
 
 #maincontent{
@@ -31,7 +37,7 @@ h1 {
 }
 
 #content{
-    @apply h-full max-h-full w-full  bg-green-100
+    @apply h-full max-h-full w-full
 }
 
 .sidebar{
@@ -67,7 +73,7 @@ h1 {
 }
 
 .tblLaravelMyAdmin th{
-    @apply py-3 bg-gray-400
+    @apply py-3 bg-gray-400 border border-zinc-600
 }
 
 .tblLaravelMyAdmin tr{

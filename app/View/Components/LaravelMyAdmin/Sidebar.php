@@ -5,7 +5,7 @@ namespace App\View\Components\LaravelMyAdmin;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Http\Controllers\PhpMyAdminController;
+use App\Http\Controllers\LaravelMyAdminController;
 
 class Sidebar extends Component
 {
@@ -14,7 +14,7 @@ class Sidebar extends Component
 
     public function __construct()
     {
-        $pac = new PhpMyAdminController();
+        $pac = new LaravelMyAdminController();
         $this->dbs = $pac->getDatabases();
     }
 

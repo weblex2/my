@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
-class PhpMyAdminController extends Controller
+class LaravelMyAdminController extends Controller
 {
     // Punkt 1: Tabellenübersicht
     public function index()

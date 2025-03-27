@@ -44,7 +44,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <!-- Scripts -->
-        @vite(['resources/js/noppal.js','resources/css/clean.css','resources/css/laravelMyAdmin.css'])
+        @vite(['resources/js/laravelMyAdmin.js','resources/css/laravelMyAdmin.css'])
 
         <!-- Styles -->
         @livewireStyles
@@ -52,60 +52,37 @@
 
     <body class="font-sans antialiased">
 
-    <x-navigation-clean />
+    <div class="menu">
+        <div class="menu-item gradient">Datenbanken</div>
+        <div class="menu-item gradient">SQL</div>
+        <div class="menu-item gradient">Suche</div>
+        <div class="menu-item gradient">Abfrage</div>
+        <div class="menu-item gradient">Exportieren</div>
+        <div class="menu-item gradient">Importieren</div>
+    </div>
 
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-64 h-screen max-h-screen text-white bg-gray-800 border-r border-black">
+        <div class="w-64 h-screen max-h-screen border-r border-black">
             <div class="h-screen max-h-screen pt-24 overflow-auto">
                 <x-laravelMyAdmin.sidebar />
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="h-screen max-h-screen text-white bg-gray-800"  id="maincontent">
-            <div class="h-screen max-h-screen pt-12 overflow-auto">
-            @yield('content')
+        <div class="h-screen max-h-screen"  id="maincontent">
+            <div class="h-screen max-h-screen pt-20 overflow-auto ">
+                <div id="content" class="container mx-auto">
+                    @yield('content')
+                </div>
             </div>
         </div>
     </div>
-
-
-
 
     @stack('modals')
     @livewireScripts
     </body>
 
-    <script>
-        $(function () {
-            $('.db').click(function(){
-                //$('.tables').hide();
-                //$('.fields').hide();
-                let db = $(this).attr('db_name');
-                $('.' + db + '-tables').toggle(200);
-            });
-
-            $('.table').click(function(){
-                let tablename = $(this).attr('table_name');
-                $('.' + tablename + '-fields').toggle(200);
-            });
-
-
-            $('.newtable').click(function(){
-                let db = $(this).attr('db_name');
-                $.ajax({
-                    type: 'POST',
-                    url: '{{route("laravelMyAdmin.createTable")}}',
-                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    data: { db: db } }
-                    )
-                .done(function(resp) { alert("success: " + resp.data)  })
-                .fail(function() { alert("error"); })
-                //.always(function() { alert("complete");
-            });
-        });
-    </script>
 
 </html>
