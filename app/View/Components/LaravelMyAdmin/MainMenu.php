@@ -5,15 +5,17 @@ namespace App\View\Components\LaravelMyAdmin;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Illuminate\Support\Facades\Session;
 
 class MainMenu extends Component
 {
-    /**
-     * Create a new component instance.
-     */
+    public $db;
+    public $server;
+
     public function __construct()
     {
-        //
+        $this->db = session('db');
+        $this->server = gethostbyname(gethostname());
     }
 
     /**

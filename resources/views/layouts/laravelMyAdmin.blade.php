@@ -68,8 +68,8 @@
 
             <x-laravel-my-admin.main-menu/>
 
-            <div class="h-screen max-h-screen pt-20 overflow-auto ">
-                <div id="content" class="container mx-auto">
+            <div class="h-screen max-h-screen overflow-auto ">
+                <div id="content">
                     @yield('content')
                 </div>
             </div>

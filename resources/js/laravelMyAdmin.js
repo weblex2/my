@@ -10,12 +10,12 @@ import flatpickr from "flatpickr";
 
 
  $(function () {
-            $('.db').click(function(){
+            /* $('.db').click(function(){
                 //$('.tables').hide();
                 //$('.fields').hide();
                 let db = $(this).attr('db_name');
                 $('.' + db + '-tables').toggle(200);
-            });
+            }); */
 
             $('.table').click(function(){
                 let tablename = $(this).attr('table_name');

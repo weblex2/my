@@ -296,7 +296,10 @@ Route::controller(ShowSourcecodeController::class)->group(function () {
 
 Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::get('/laravelMyAdmin',  'index')->middleware(['auth'])->name('laravelMyAdmin.index');
+    Route::get('/laravelMyAdmin/db/{db}','dbindex')->middleware(['auth'])->name('laravelMyAdmin.viewDatabase');
     Route::get('/laravelMyAdmin/edit/{table}','edit')->middleware(['auth'])->name('laravelMyAdmin.edit');
-    Route::post('/laravelMyAdmin/create_table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');
+    Route::get('/laravelMyAdmin/create-table','newTable')->middleware(['auth'])->name('laravelMyAdmin.newTable');
+    Route::post('/laravelMyAdmin/create-table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');
     Route::post('/laravelMyAdmin/generate-migration',  'generateMigration')->middleware(['auth'])->name('laravelMyAdmin.generateMigration');
+    Route::get('/laravelMyAdmin/testmig','testMigration')->middleware(['auth'])->name('laravelMyAdmin.testmig');
 });

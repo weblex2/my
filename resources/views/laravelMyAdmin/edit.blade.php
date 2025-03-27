@@ -1,10 +1,10 @@
 @extends('layouts.laravelMyAdmin')
 
 @section('content')
-    <div class="container mx-auto ">
+    <div>
         <h1 class="mb-6 text-3xl font-bold text-gray-600">Bearbeiten der Tabelle: {{ $table }}</h1>
 
-        <div class="section">
+        <div class="">
             <!-- Tabelle für Spalten -->
             <table class="tblLaravelMyAdmin">
                 <thead >

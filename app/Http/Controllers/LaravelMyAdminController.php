@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\LaravelMyAdminMigrationController;
 
 class LaravelMyAdminController extends Controller
 {
@@ -12,8 +15,13 @@ class LaravelMyAdminController extends Controller
     public function index()
     {
         $tables = DB::select('SHOW TABLES');
-        //dd($tables);
         return view('laravelMyAdmin.index', compact('tables'));
+    }
+
+    public function dbindex($db=null){
+        Session::put('db', $db);
+        $tables = $this->getTablesFromDb($db);
+        return view('laravelMyAdmin.database', compact('tables'));
     }
 
     // Punkt 2: Bearbeiten einer Tabelle
@@ -110,7 +118,7 @@ class LaravelMyAdminController extends Controller
     }
 
     function getDatabases(){
-        $res = DB::select('SELECT * from information_schema.columns where table_schema !="information_schema" order by table_schema, TABLE_NAME, column_name');
+        $res = DB::select('SELECT * from information_schema.columns order by table_schema, TABLE_NAME, column_name');
 
         foreach ($res as $field){
             $db     = $field->TABLE_SCHEMA;
@@ -121,7 +129,33 @@ class LaravelMyAdminController extends Controller
         return $dbs;
     }
 
+    private function getTablesFromDb($db){
+        $qr="SELECT *
+             FROM information_schema.tables
+             WHERE table_schema ='".$db."'
+             ORDER BY TABLE_NAME";
+        $res = DB::select($qr);
+        return $res;
+    }
+
     function createTable(Request $request){
         return response()->json(['status'=>200,'data'=>'Jupp Table creation']);
+    }
+
+    function testMigration(){
+        $migration = '2025_03_27_215940_create_tests_table.php';
+        Artisan::call('migrate:rollback', ['--path' => 'database/migrations/'.$migration]);
+        $output['rollback'] = Artisan::output(); // Holt die Ausgabe des Artisan-Befehls
+
+
+        Artisan::call('migrate', ['--path' => 'database/migrations/'.$migration]);
+
+        $output['migrate'] = Artisan::output(); // Holt die Ausgabe des Artisan-Befehls
+
+        return response()->json([
+            //'message' => 'Migration erfolgreich ausgeführt',
+            'output' => $output
+        ]);
+
     }
 }
