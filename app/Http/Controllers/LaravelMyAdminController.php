@@ -15,15 +15,17 @@ class LaravelMyAdminController extends Controller
     // Punkt 1: Tabellenübersicht
     public function index()
     {
-        Session::put('db', '');
+        Session::forget('db', '');
+        Session::forget('table');
         $tables = DB::select('SHOW TABLES');
         return view('laravelMyAdmin.index', compact('tables'));
     }
 
     public function dbindex($db=null){
         Session::put('db', $db);
+        Session::forget('table');
         $tables = $this->getTablesFromDb($db);
-        return view('laravelMyAdmin.database', compact('tables'));
+        return view('laravelMyAdmin.database', compact('db', 'tables'));
     }
 
     // Punkt 2: Bearbeiten einer Tabelle
@@ -160,6 +162,10 @@ class LaravelMyAdminController extends Controller
 
     public function createTable(Request $request){
         return response()->json(['status'=>200,'data'=>'Jupp Table creation']);
+    }
+
+    public function newTable($db){
+        return view('laravelMyAdmin.newTable');
     }
 
     function showTable($db, $table){

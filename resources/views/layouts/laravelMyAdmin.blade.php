@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laravel Layout</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-            <!-- Scripts -->
-        @vite(['resources/js/laravelMyAdmin.js','resources/css/laravelMyAdmin.css'])
 
-        <!-- Styles -->
-        @livewireStyles
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    @vite(['resources/js/laravelMyAdmin.js','resources/css/laravelMyAdmin.css'])
+
+    <!-- Styles -->
+    @livewireStyles
 </head>
 <body class="flex h-screen">
 

@@ -1,6 +1,9 @@
 <div class="server ">
     <div class="mr-5"><i class="text-zinc-600 fa-solid fa-computer"></i> Server: {{ $server }}</div>
-    <div><i class="text-zinc-600 fa-solid fa-database"></i> Database: {{ $db }}</div>
+    <div class="mr-5"><i class="text-zinc-600 fa-solid fa-database"></i> Database: {{ $db }}</div>
+    @if (session()->has('table'))
+    <div><i class="text-zinc-600 fa-solid fa-table-list"></i> Table: {{ session('table') }}</div>
+    @endif
 </div>
 <div class="hidden menu md:flex">
     <div class="menu-item gradient">Datenbanken</div>

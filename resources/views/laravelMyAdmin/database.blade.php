@@ -20,7 +20,7 @@
         <tbody>
         @foreach ($tables as $table)
             <tr>
-            <td>{{$table->TABLE_NAME}}
+            <td><a href="{{ route("laravelMyAdmin.showTable", ["db" => $db, 'table' => $table->TABLE_NAME]) }}">{{$table->TABLE_NAME}}</a></td>
             <td><i class="fa-solid fa-table action-icon"></i> Show</td>
             <td><i class="fa-solid fa-folder-tree action-icon"></i> Structure</td>
             <td><i class="fa-solid fa-magnifying-glass action-icon"></i> Search</td>
