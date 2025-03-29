@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -105,16 +106,16 @@ class LaravelMyAdminController extends Controller
 
             // Überprüfen, ob 'unsigned' vorhanden ist
             if (!empty($matches[3])) {
-                $result['signed'] = false;
-            } else {
-                $result['signed'] = true;
+                $result['signed'] = $matches[3];
+            }
+            else{
+                $result['signed'] = "";
             }
         }
         // if nothing found
         if ($result['type']=='') {
             $result['type'] = $columnDefinition;
         }
-
         return $result;
     }
 
@@ -139,24 +140,82 @@ class LaravelMyAdminController extends Controller
         return $res;
     }
 
-    function createTable(Request $request){
+     private function getFieldsFromTable($db, $table){
+        $qr="SELECT *
+             FROM information_schema.columns
+             WHERE table_schema ='".$db."'
+             AND table_name ='".$table."'
+             ORDER BY ordinal_position";
+        $columns = DB::select($qr);
+        $columns = $this->getParsedColumns($columns);
+        return $columns;
+    }
+
+    private function getParsedColumns($columns){
+        foreach ($columns as $i => $column){
+            $columns[$i]->Datatype = $this->parseColumnDefinition($column->COLUMN_TYPE);
+        }
+        return $columns;
+    }
+
+    public function createTable(Request $request){
         return response()->json(['status'=>200,'data'=>'Jupp Table creation']);
     }
 
+    function showTable($db, $table){
+        Session::put('db', $db);
+        Session::put('table', $table);
+        $fields = $this->getFieldsFromTable($db, $table);
+        return view('laravelMyAdmin.table', compact('fields'));
+    }
+
     function testMigration(){
-        $migration = '2025_03_27_215940_create_tests_table.php';
-        Artisan::call('migrate:rollback', ['--path' => 'database/migrations/'.$migration]);
-        $output['rollback'] = nl2br(Artisan::output()); // Holt die Ausgabe des Artisan-Befehls
-
-        Artisan::call('migrate', ['--path' => 'database/migrations/'.$migration]);
-        $output['migrate'] = nl2br(Artisan::output()); // Holt die Ausgabe des Artisan-Befehls
-
+        $this->setDatabase('laravel2');
+        #$migration = '2025_03_27_215940_create_tests_table.php';
+        $migration = '2025_03_28_193709_create_tests2_table.php';
+        $migration = 'database/migrations/'.$migration;
+        $output['down'] = $this->migrationUp($migration);
+        $output['up']   = $this->migrationUp($migration);
         return view('laravelMyAdmin.execMigration', compact('output'));
-        return response()->json([
+        /* return response()->json([
             //'message' => 'Migration erfolgreich ausgeführt',
             'output' => $output
         ]);
+ */
+    }
 
+    private function migrationDown($migration){
+        // Migration down
+        Artisan::call('migrate:rollback', ['--path' => $migration ]);
+        $output = Artisan::output(); // Holt die Ausgabe des Artisan-Befehls
+    }
+
+    private function migrationUp($migration){
+        // Migration up
+        Artisan::call('migrate', ['--path' => $migration]);
+        $output = Artisan::output(); // Holt die Ausgabe des Artisan-Befehls
+        return $output;
+    }
+
+    private function setDatabase($database){
+        Config::set('database.connections.dynamic', [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => $database,
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ]);
+        // Verbindung zurücksetzen und auf neue Datenbank wechseln
+        DB::purge('dynamic');
+        DB::reconnect('dynamic');
+        // Standardverbindung auf die neue setzen
+        Config::set('database.default', 'dynamic');
     }
 
     function execMigration(Request $request){

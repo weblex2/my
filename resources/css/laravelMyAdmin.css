@@ -5,49 +5,71 @@
 
 
 
+
+
 body {
     @apply text-xs bg-gray-200
 }
 
-.btn{
-    @apply px-6 py-2 border rounded text-xs text-black border border-zinc-600
+
+#main-wrapper{
+    @apply flex flex-col flex-1 h-screen ml-0 transition-all duration-300 ease-in-out /* {{-- md:ml-64 --}} */
 }
 
-
-.gradient{
-    @apply bg-gradient-to-b hover:from-white hover:via-zinc-200 hover:to-white text-black from-zinc-200 via-white to-zinc-200
+#header{
+    @apply sticky top-0 p-4 md:p-0 flex flex-row md:flex-col items-center justify-between bg-white shadow-md md:justify-normal md:flex-row md:items-start
 }
 
-.server{
-    @apply p-3 flex font-semibold
+#menuButton{
+    @apply text-gray-700 md:hidden
 }
 
-.action-icon{
-    @apply text-blue-500
+#sideba2{
+    @apply fixed w-64 h-full p-4 overflow-auto text-white transition-transform duration-300 ease-in-out transform -translate-x-full bg-gray-800 md:relative md:translate-x-0
 }
 
-.delete-icon{
-    @apply text-red-500
+#main{
+    @apply flex-1  overflow-y-auto bg-gray-100 rounded
 }
 
 .menu{
-    @apply flex border border-zinc-600  z-20 w-full bg-gradient-to-b from-zinc-200 via-white to-zinc-200 ml-[-1px] mt-[-1px]
+    @apply flex w-full justify-start border border-zinc-600 ml-[-1px] bg-gradient-to-b text-black from-zinc-200 via-white to-zinc-200
 }
 
 .menu-item{
-    @apply border-r border-zinc-400 p-3 cursor-pointer font-semibold
+    @apply border-r border-zinc-400 p-3 cursor-pointer font-semibold bg-gradient-to-b hover:from-white hover:via-zinc-200 hover:to-white text-black from-zinc-200 via-white to-zinc-200
 }
 
-#maincontent{
-    @apply flex-1 relative h-full overflow-hidden
+.server{
+    @apply p-3 flex font-semibold flex-col md:flex-row hidden md:flex
 }
 
 #content{
-    @apply h-full max-h-full w-full
+    @apply w-full bg-gray-100 pb-10
 }
 
-.sidebar{
-    @apply w-64 p-3 font-semibold h-screen max-h-screen border-r border-black
+.form{
+    @apply m-4
+}
+
+.tblLaravelMyAdmin{
+    @apply  min-w-full font-semibold border-collapse rounded-lg shadow-lg table-auto text-xs  text-black ml-[-1px]
+}
+
+.tblLaravelMyAdmin th, .tblLaravelMyAdmin td{
+    @apply p-1 border border-gray-300
+}
+
+.tblLaravelMyAdmin .header{
+    @apply bg-gradient-to-b from-zinc-200 via-white to-zinc-200 border border-zinc-600
+}
+
+.tblLaravelMyAdmin th{
+    @apply py-3 border border-t-0 border-zinc-400
+}
+
+.tblLaravelMyAdmin tr{
+    @apply hover:bg-yellow-100 odd:bg-gray-200 even:bg-gray-100
 }
 
 .database-explorer .db{
@@ -70,25 +92,40 @@ body {
     @apply p-1
 }
 
-.tblLaravelMyAdmin{
-    @apply  min-w-full font-semibold border-collapse rounded-lg shadow-lg table-auto text-xs  text-black ml-[-1px]
+
+/*
+
+
+
+
+
+
+
+.btn{
+    @apply px-6 py-2 border rounded text-xs text-black border border-zinc-600
 }
 
-.tblLaravelMyAdmin th, .tblLaravelMyAdmin td{
-    @apply p-1 border border-gray-300
+
+.gradient{
+    @apply bg-gradient-to-b hover:from-white hover:via-zinc-200 hover:to-white text-black from-zinc-200 via-white to-zinc-200
 }
 
-.tblLaravelMyAdmin .header{
-    @apply bg-gradient-to-b from-zinc-200 via-white to-zinc-200
+
+
+.action-icon{
+    @apply text-blue-500
 }
 
-.tblLaravelMyAdmin th{
-    @apply py-3 border border-t-0 border-zinc-400
+.delete-icon{
+    @apply text-red-500
 }
 
-.tblLaravelMyAdmin tr{
-    @apply hover:bg-yellow-100 odd:bg-gray-200 even:bg-gray-100
-}
+
+
+
+
+
+
 
 select  {
     @apply block w-full px-2 py-1 border border-gray-300 rounded form-select text-xs bg-gray-100
