@@ -240,4 +240,9 @@ class LaravelMyAdminController extends Controller
         ])->render();
         return response()->json(['data' => $html], 200);
     }
+    
+    public function tools(){
+        $output = "";
+        return view('laravelMyAdmin.tools', compact('output'));
+    }
 }
