@@ -308,6 +308,8 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::post('/laravelMyAdmin/exec-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.execMigration');
     Route::get('/laravelMyAdmin/testmig','testMigration')->middleware(['auth'])->name('laravelMyAdmin.testmig');
     Route::get('/laravelMyAdmin/tools','tools')->middleware(['auth'])->name('laravelMyAdmin.tools');
+
 });
 
 Route::get('/git/pull', [GitController::class, 'pull'])->name('git.pull');
+Route::get('/git/npm/{type}',[GitController::class, 'npm'])->middleware(['auth'])->name('laravelMyAdmin.npm');
