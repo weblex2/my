@@ -1,57 +1,75 @@
 @extends('layouts.laravelMyAdmin')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('content')
-    <div>
+    @csrf
+    <!-- Tabelle für Spalten -->
 
+    <h1><span class="float-left pl-5">Neue Tabelle:</span> <input type="text" name="tablename" value=""></h1>
+    <div class="flex items-center">
 
+        <div class="float-left mr-5">Add Columns (Amount): </div>
+        <div class="float-left mr-5"><input type="text" id="amount" name="amount" value="3"></div>
+        <div class="float-left mr-5">After:</div>
         <div>
-
-            <!-- Tabelle für Spalten -->
-            <form action="{{ route('laravelMyAdmin.createTable') }}" method="POST" class="shadow-lg">
-                <div class="form">
-                @csrf
-                <h1>Neue Tabelle: </h1>
-
-                <div>Table Name: <input type="text" name="tablename" value=""></div>
-                </div>
-
-                <table class="tblLaravelMyAdmin">
-                    <thead >
-                        <tr class="header">
-                            <th>Name</th>
-                            <th>Typ</th>
-                            <th>Length/Values</th>
-                            <th>Standard</th>
-                            <th>Collation</th>
-                            <th>Attributes</th>
-                            <th>Null</th>
-                            <th>Index</th>
-                            <th>AI</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <x-laravel-my-admin.new-table-row name="{id}" type="id" />
-                        <x-laravel-my-admin.new-table-row name="{timestamps}" type="timestamps" />
-                    </tbody>
-                </table>
-                <button type="submit" class="btn btn-primary">Migration generieren</button>
-            </form>
-
-            {{-- <h3 class="mt-6 mb-4 text-xl font-semibold">Neue Spalte hinzufügen</h3>
-            <div class="flex w-full bg-red-200">
-                <div class="mb-4">
-                    <label for="column_name" class="block font-medium text-gray-700">Spaltenname</label>
-                    <input type="text" name="changes[add][column_name]" class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="column_name" placeholder="Spaltenname">
-                </div>
-
-            <div>Spalte(n) einfügen nach</div>
-
-            <div class="mb-6">
-                <label for="nullable" class="block font-medium text-gray-700">Nullable</label>
-                <input type="checkbox" name="changes[add][nullable]" class="w-5 h-5 text-blue-500 form-checkbox" id="nullable">
-            </div>
- --}}
-
+            <select id="after" name="after" class="w-12">
+                <option value="id" selected>id</option>
+            </select>
         </div>
+        <div><button class="btn" onclick="addRowsToNewTable()">Add</button></div>
     </div>
+
+    <div class="shadow-lg">
+        <table class="tblLaravelMyAdmin">
+            <thead >
+                <tr class="header">
+                    <th>&nbsp;</th>
+                    <th>Name</th>
+                    <th>Typ</th>
+                    <th>Length/Values</th>
+                    <th>Standard</th>
+                    <th>Collation</th>
+                    <th>Attributes</th>
+                    <th>Null</th>
+                    <th>Index</th>
+                    <th>AI</th>
+                </tr>
+            </thead>
+            <tbody>
+                <x-laravel-my-admin.new-table-row name="{id}" type="id" />
+                <x-laravel-my-admin.new-table-row name="{timestamps}" type="timestamps" />
+            </tbody>
+        </table>
+        <button type="button" onclick="showModal()" class="btn btn-primary">Migration generieren</button>
+    </div>
+
+    <script>
+        function addRowsToNewTable(url, data, successCallback, errorCallback) {
+            let amount = $('#amount').val();
+            let after  = $('#after').val();
+            //alert("amount" + amount + " after" + after);
+            $('#loader').css('visibility','visible');
+            $.ajax({
+                url: "{{route("laravelMyAdmin.addRowsToTable")}}",
+                type: "POST",
+                data: data,
+                //dataType: "json",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") // Falls Laravel CSRF-Schutz aktiv ist
+                },
+                success: function (response) {
+                    let afterTr = $('#'+after);
+                    afterTr.after(response.data);
+                    $('#loader').css('visibility','hidden');
+                },
+                error: function (xhr, status, error) {
+                    alert("no");
+                    //if (errorCallback) errorCallback(xhr, status, error);
+                    $('#loader').css('visibility','hidden');
+                }
+            });
+        }
+
+
+    </script>
 @stop

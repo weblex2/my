@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\LaravelMyAdminMigrationController;
@@ -230,5 +231,13 @@ class LaravelMyAdminController extends Controller
             'data' => '123'
         ]);
 
+    }
+
+    public function addRowsToTable(){
+        $html = view('components.laravel-my-admin.new-table-row', [
+            'name' => 'New Field',
+            'type' => 'string'
+        ])->render();
+        return response()->json(['data' => $html], 200);
     }
 }

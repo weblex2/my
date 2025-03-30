@@ -28,6 +28,8 @@ use App\Http\Controllers\GoogleGemeniController;
 use App\Http\Controllers\FilamentFieldsController;
 use App\Livewire\GoogleGemeni;
 use App\Http\Controllers\LaravelMyAdminController;
+use App\Http\Controllers\GitController;
+
 
 
 
@@ -300,8 +302,11 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::get('/laravelMyAdmin/edit/{table}','edit')->middleware(['auth'])->name('laravelMyAdmin.edit');
     Route::get('/laravelMyAdmin/show-table/{db}/{table}','showTable')->middleware(['auth'])->name('laravelMyAdmin.showTable');
     Route::get('/laravelMyAdmin/new-table/{db}','newTable')->middleware(['auth'])->name('laravelMyAdmin.newTable');
+    Route::post('/laravelMyAdmin/add-rows-to-table','addRowsToTable')->middleware(['auth'])->name('laravelMyAdmin.addRowsToTable');
     Route::post('/laravelMyAdmin/create-table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');
     Route::post('/laravelMyAdmin/generate-migration',  'generateMigration')->middleware(['auth'])->name('laravelMyAdmin.generateMigration');
     Route::post('/laravelMyAdmin/exec-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.execMigration');
     Route::get('/laravelMyAdmin/testmig','testMigration')->middleware(['auth'])->name('laravelMyAdmin.testmig');
 });
+
+Route::get('/git/pull', [GitController::class, 'pull'])->name('git.pull');
