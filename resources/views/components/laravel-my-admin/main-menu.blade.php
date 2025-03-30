@@ -12,5 +12,5 @@
     <div class="menu-item gradient">Abfrage</div>
     <div class="menu-item gradient">Exportieren</div>
     <div class="menu-item gradient">Importieren</div>
-    <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.tools")}}">Git123</a></div>
+    <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.tools")}}">Git</a></div>
 </div>
