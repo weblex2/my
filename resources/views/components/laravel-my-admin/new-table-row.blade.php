@@ -8,5 +8,5 @@
     <td><x-laravel-my-admin.attribute-dropdown selected="" /></td>
     <td><input type="checkbox" name="nullable" value="1"></td>
     <td>TBD</td>
-    <td><input type="checkbox" name="auto_increment" value="1"></td>
+    <td><input type="checkbox" name="auto_increment" value="1" {{$type=="id" ? "checked" : ""}}></td>
 </tr>

@@ -5,7 +5,7 @@
     @csrf
     <!-- Tabelle für Spalten -->
 
-    <h1><span class="float-left pl-5">Neue Tabelle:</span> <input type="text" name="tablename" value=""></h1>
+    <h1><span class="float-left pl-5">Neue Tabelle:</span> <input type="text" id="tablename" name="tablename" value="tests"></h1>
     <div class="flex items-center">
 
         <div class="float-left mr-5">Add Columns (Amount): </div>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="shadow-lg">
-        <table class="tblLaravelMyAdmin">
+        <table id="create-table" class="tblLaravelMyAdmin">
             <thead >
                 <tr class="header">
                     <th>&nbsp;</th>
@@ -40,7 +40,7 @@
                 <x-laravel-my-admin.new-table-row name="{timestamps}" type="timestamps" />
             </tbody>
         </table>
-        <button type="button" onclick="showModal()" class="btn btn-primary">Migration generieren</button>
+        <button type="button" id="submit-button" class="btn btn-primary">Migration generieren</button>
     </div>
 
     <script>
@@ -70,6 +70,49 @@
             });
         }
 
+
+        $('#submit-button').click(function() {
+        let inputData = [];
+
+        $('#create-table tbody tr').each(function() {
+            let rowData = {};
+            $(this).find('input, select').each(function() {
+                let name = $(this).attr('name');
+                let value;
+
+                if ($(this).is(':checkbox')) {
+                    value = $(this).is(':checked') ? $(this).val() : null;
+                } else {
+                    value = $(this).val();
+                }
+
+                rowData[name] = value;
+
+            });
+
+            inputData.push(rowData);
+        });
+
+        let tableName = $('#tablename').val();
+        let csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        $.ajax({
+            url: '{{ route("laravelMyAdmin.generateMigration" )}}',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ _token: csrfToken, data: { action : "create-table", tableName: tableName, rows: inputData } }),
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(response) {
+                console.log(response);
+                alert('Migration erfolgreich gesendet!');
+            },
+            error: function(xhr) {
+                alert('Fehler beim Senden der Migration: ' + xhr.responseText);
+            }
+        });
+    });
 
     </script>
 @stop

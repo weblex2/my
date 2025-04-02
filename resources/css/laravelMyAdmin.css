@@ -165,10 +165,10 @@ input[type="checkbox"]{
 
 ::-webkit-scrollbar-track {
     @apply bg-gray-200 border-r-2 border-black
-} 
+}
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-gray-200 hover:bg-gray-300; /* Dunkelgrau */
+    @apply bg-gray-400 hover:bg-gray-300; /* Dunkelgrau */
 }
 
 /* Für Firefox */

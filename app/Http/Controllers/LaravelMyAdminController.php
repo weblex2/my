@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\LaravelMyAdminMigrationController;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class LaravelMyAdminController extends Controller
 {
@@ -44,51 +45,55 @@ class LaravelMyAdminController extends Controller
 
     public function generateMigration(Request $request)
     {
-        $table = $request->input('table');
-        $changes = $request->input('changes');  // Beispiel: ['add' => ['column_name' => 'type']]
+        $data = json_decode($request->getContent(), true);
+        $action = $data['data']['action'];
+        $table = $data['data']['tableName'];
+        $rows = $data['data']['rows'];
 
-        $migrationName = 'add_columns_to_' . $table . '_' . time();
+        #$migrationName = 'add_columns_to_' . $table . '_' . time();
+        $migrationName = 'create_' . $table . '_' . time();
         $migrationPath = database_path('migrations/' . date('Y_m_d_His') . '_'. $migrationName . '.php');
 
-        $content = $this->generateMigrationContent($table, $changes);
+        $content = $this->generateMigrationContent($action, $table, $rows);
 
         File::put($migrationPath, $content);
 
-        return redirect()->route('laravelMyAdmin.index')->with('success', 'Migration wurde erfolgreich generiert.');
+
     }
 
     // Hilfsmethode, um Migration zu erstellen
-    private function generateMigrationContent($table, $changes)
+    private function generateMigrationContent($action, $table, $fields)
     {
-        $migrationContent = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\n";
-        $migrationContent .= "class " . ucfirst($changes['class']) . " extends Migration\n{\n";
-        $migrationContent .= "    public function up()\n    {\n";
-        $migrationContent .= "        Schema::table('$table', function (Blueprint \$table) {\n";
-
-        foreach ($changes as $action => $columns) {
-            foreach ($columns as $column => $type) {
-                if ($action == 'add') {
-                    $migrationContent .= "            \$table->$type('$column');\n";
+        if ($action=="create-table"){
+            $filePath = base_path('app/Templates/LaravelMyadmin/create_table.txt');
+            $fileContent = file_get_contents($filePath);  // Liest die Datei
+            $fileContent = str_replace('{{table}}', $table, $fileContent);
+            $fieldDefinition = "";
+            foreach ($fields as $field){
+                $columnName = str_replace(["{","}"],"", $field['name']);
+                $datatype = str_replace(["{","}"],"", $field['datatype']);
+                switch ($datatype) {
+                    case "id" :
+                        $fieldDefinition .= '$table->id();'."\n";
+                        break;
+                    case "string" :
+                        $fieldDefinition .= '$table->string("'.$columnName.'");'."\n";
+                        break;
+                    case "text" :
+                        $fieldDefinition .= '$table->text("'.$columnName.'");'."\n";
+                        break;
+                     case "decimal" :
+                        $fieldDefinition .= '$table->decimal("'.$columnName.'");'."\n";
+                        break;
+                    case "timestamps":
+                        $fieldDefinition .= '$table->timestamps("'.$columnName.'");'."\n";
+                        break;
                 }
             }
+            $fileContent = str_replace('{{fields}}', $fieldDefinition, $fileContent);
         }
 
-        $migrationContent .= "        });\n";
-        $migrationContent .= "    }\n\n";
-        $migrationContent .= "    public function down()\n    {\n";
-        $migrationContent .= "        Schema::table('$table', function (Blueprint \$table) {\n";
-        foreach ($changes as $action => $columns) {
-            foreach ($columns as $column => $type) {
-                if ($action == 'add') {
-                    $migrationContent .= "            \$table->dropColumn('$column');\n";
-                }
-            }
-        }
-        $migrationContent .= "        });\n";
-        $migrationContent .= "    }\n";
-        $migrationContent .= "}\n";
-
-        return $migrationContent;
+        return $fileContent;
     }
 
     function parseColumnDefinition($columnDefinition) {
@@ -176,25 +181,22 @@ class LaravelMyAdminController extends Controller
         return view('laravelMyAdmin.table', compact('fields'));
     }
 
-    function testMigration(){
+    /* function testMigration(){
         $this->setDatabase('laravel2');
         #$migration = '2025_03_27_215940_create_tests_table.php';
         $migration = '2025_03_28_193709_create_tests2_table.php';
         $migration = 'database/migrations/'.$migration;
-        $output['down'] = $this->migrationUp($migration);
+        $output['down'] = $this->migrationDown($migration);
         $output['up']   = $this->migrationUp($migration);
         return view('laravelMyAdmin.execMigration', compact('output'));
-        /* return response()->json([
-            //'message' => 'Migration erfolgreich ausgeführt',
-            'output' => $output
-        ]);
- */
-    }
+
+    } */
 
     private function migrationDown($migration){
         // Migration down
         Artisan::call('migrate:rollback', ['--path' => $migration ]);
         $output = Artisan::output(); // Holt die Ausgabe des Artisan-Befehls
+        return $output;
     }
 
     private function migrationUp($migration){
@@ -225,12 +227,35 @@ class LaravelMyAdminController extends Controller
         Config::set('database.default', 'dynamic');
     }
 
+    function testMigration(Request $request){
+        $req = $request->all();
+        $migrations = $req['migrations'];
+        $this->setDatabase(session('db'));
+        foreach($migrations as $migration){
+            $migration = 'database/migrations/'.$migration;
+            $output['down'] = $this->migrationDown($migration);
+            $output['up']   = $this->migrationUp($migration);
+        }
+        return response()->json(['data' => $output], 200);
+    }
+
+    function formatMigrationOutput($output){
+        return $output;
+    }
+
     function execMigration(Request $request){
         $req = $request->all();
-        return response()->json([
-            'data' => '123'
-        ]);
-
+        $migration = $req['migration'];
+        $action = $req['action'];
+        $this->setDatabase(session('db'));
+        $migration = 'database/migrations/'.$migration;
+        if ($action=="up"){
+            $output = $this->migrationUp($migration);
+        }
+        else{
+            $output = $this->migrationDown($migration);
+        }
+        return response()->json(['data' => $output], 200);
     }
 
     public function addRowsToTable(){
@@ -240,9 +265,43 @@ class LaravelMyAdminController extends Controller
         ])->render();
         return response()->json(['data' => $html], 200);
     }
-    
+
     public function tools(){
         $output = "";
         return view('laravelMyAdmin.tools', compact('output'));
+    }
+
+    public function showMigrations(){
+        $migrationPath = database_path('migrations');
+        $migrations  = array_diff(scandir($migrationPath), array('..', '.'));
+        rsort($migrations);
+        $db_migrations =  DB::table('migrations')->pluck('migration')->toArray();
+        $new_migrations = [] ;
+        foreach($migrations as $migration){
+            $migration = trim( $migration, '.php');
+            if (!in_array($migration, $db_migrations)){
+                $new_migrations[] = $migration.".php";
+            }
+        }
+        $changedMigrations = count($new_migrations);
+        return view('laravelMyAdmin.migrations', compact('migrations','new_migrations','changedMigrations'));
+    }
+
+    public function showTableContent($db, $table, $page=1){
+        $this->setDatabase($db);
+        $qr = "SELECT * FROM ".$table."";
+        $results = DB::select($qr); // Direkte DB-Abfrage
+
+        $currentPage = $page; // Aktuelle Seite
+        $perPage = 10; // Anzahl der Elemente pro Seite
+
+        // Slice die Ergebnisse für die aktuelle Seite
+        $itemsForCurrentPage = array_slice($results, ($currentPage - 1) * $perPage, $perPage);
+
+        // Paginator erstellen
+        $paginator = new LengthAwarePaginator($itemsForCurrentPage, count($results), $perPage, $currentPage);
+
+        return view('laravelMyAdmin.showTableContent', ['content' => $paginator]);
+        //return view('laravelMyAdmin.showTableContent', compact('content'));
     }
 }

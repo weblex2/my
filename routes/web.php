@@ -305,10 +305,12 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::post('/laravelMyAdmin/add-rows-to-table','addRowsToTable')->middleware(['auth'])->name('laravelMyAdmin.addRowsToTable');
     Route::post('/laravelMyAdmin/create-table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');
     Route::post('/laravelMyAdmin/generate-migration',  'generateMigration')->middleware(['auth'])->name('laravelMyAdmin.generateMigration');
-    Route::post('/laravelMyAdmin/exec-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.execMigration');
+    Route::post('/laravelMyAdmin/test-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.testMigration');
     Route::get('/laravelMyAdmin/testmig','testMigration')->middleware(['auth'])->name('laravelMyAdmin.testmig');
     Route::get('/laravelMyAdmin/tools','tools')->middleware(['auth'])->name('laravelMyAdmin.tools');
-
+    Route::get('/laravelMyAdmin/migrations','showMigrations')->middleware(['auth'])->name('laravelMyAdmin.migrations');
+    Route::post('/laravelMyAdmin/exec-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.execMigration');
+    Route::get('/laravelMyAdmin/table-content/{db}/{table}','showTableContent')->middleware(['auth'])->name('laravelMyAdmin.showTableContent');
 });
 
 Route::get('/git/pull', [GitController::class, 'pull'])->name('git.pull');
