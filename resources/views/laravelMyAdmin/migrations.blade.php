@@ -2,30 +2,26 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('content')
-    <h1 class="mb-6 text-3xl font-bold">Migrations</h1>
     <div class="flex ">
-
-
         @if(session('success'))
             <div class="p-4 mb-6 text-green-800 bg-green-100 rounded">
                 {{ session('success') }}
             </div>
         @endif
-        <div class="w-[400px] p-3 h-[900px] overflow-auto">
-            <div class="migrations">
+        <div class="migrations">
+            <div class="">
                 @foreach($migrations as $migration)
-                    <div class="{{ in_array($migration, $new_migrations) ? "bg-green-200" : "" }}">
-                        <input type="checkbox" value="{{$migration}}" {{ in_array($migration, $new_migrations) ? "checked" : "" }}> {{$migration}}
+                    <div class="migation-file p-1 {{ in_array($migration, $new_migrations) ? "bg-green-200" : "" }}">
+                        <input type="checkbox" value="{{$migration}}" {{ in_array($migration, $new_migrations) ? "checked" : "" }}>
+                        <span onclick="showMigration('{{$migration}}')">{{$migration}}</span>
                     </div>
                 @endforeach
             </div>
         </div>
-
-        <div class="migration-actions">
-            <button class="btn" id="migUp">Migration Up</button>
-            <button class="btn" id="migDown">Migration Down</button>
-            <button class="btn" id="migTest">Migration Test</button>
+        <div class="w-full bg-green-500 migration-content-wrapper">
+            <textarea id="migration-content">abcdefg</textarea>
         </div>
+
     </div>
 
     <script>
@@ -33,10 +29,18 @@
             let csrfToken = $('meta[name="csrf-token"]').attr('content');
             let checkboxes = $('.migrations input[type="checkbox"]:checked');
             $("#meinModal").find('.modal-body').html("");
+
+            if (checkboxes.length==0){
+                $("#meinModal").find('.modal-body').html("nothing selected!");
+                $("#meinModal").modal("show");
+                return false;
+            }
+
+            $("#meinModal").modal("show");
             for (let checkbox of checkboxes) {
                 let migration = $(checkbox).val();
-
                 try {
+                    $("#meinModal").find('.modal-body').append("<div>executing migration: " + direction + "  " + migration + '<span class="loader"><img src="{{asset("img/loading6.gif")}}" class="w-5 h-5"></span></div>');
                     let response = await $.ajax({
                         url: '{{route("laravelMyAdmin.execMigration")}}',
                         type: 'POST',
@@ -47,9 +51,9 @@
                     });
 
                     console.log("response:", response);
-                    $("#meinModal").find('.modal-body').append("executing migration: " + direction + "  " + migration +"<br>");
+                    //$("#meinModal").find('.loader').remove();
                     $("#meinModal").find('.modal-body').append(response.data + "<br><br>");
-                    $("#meinModal").modal("show");
+
 
                 } catch (error) {
                     alert('Fehler beim Ausführen der Migration: ' + error.responseText);
@@ -68,6 +72,10 @@
         $('#migTest').click(function() {
             executeMigrations('updown');
         });
+
+        function showMigration(migration) {
+            alert("Migration File!!" + migration);
+        }
 
     </script>
 

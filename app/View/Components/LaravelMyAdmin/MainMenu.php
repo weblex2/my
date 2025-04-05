@@ -15,6 +15,7 @@ class MainMenu extends Component
     public function __construct()
     {
         $this->db = session('db');
+        //$this->table = session('table');
         $this->server = gethostbyname(gethostname());
     }
 

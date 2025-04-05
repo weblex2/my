@@ -104,6 +104,16 @@ body {
     @apply p-1
 }
 
+.migrations{
+    @apply border-r border-zinc-600 w-[400px] p-2 h-[900px] overflow-auto whitespace-nowrap
+}
+.migration-badge{
+    @apply text-[10px] font-bold border border-zinc-100 absolute inline-flex items-center justify-center w-5 h-5   text-white bg-red-500  rounded-full -top-2 -end-2 dark:border-gray-600
+}
+
+#migration-content{
+    @apply w-full  h-full bg-zinc-100
+}
 
 .action-icon{
     @apply text-blue-500
@@ -117,7 +127,7 @@ select  {
     @apply block w-full px-2 py-1 border border-gray-300 rounded form-select text-xs bg-gray-100
 }
 
-input[type='text']{
+input[type='text'], input[type='number']{
     @apply block  px-2 py-1 border border-gray-300 rounded  text-xs bg-gray-100
 }
 
@@ -127,6 +137,10 @@ input[type="checkbox"]{
 
 .btn{
     @apply px-6 py-2 border rounded text-xs text-black border border-zinc-600 hover:border-zinc-600 bg-gradient-to-b from-zinc-200 via-white to-zinc-200  hover:from-white hover:via-zinc-200 hover:to-white
+}
+
+.menu-add-cols{
+    @apply p-5 grid grid-cols-12 bg-zinc-200
 }
 
 #modal{

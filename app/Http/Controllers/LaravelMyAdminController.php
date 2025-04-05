@@ -174,11 +174,11 @@ class LaravelMyAdminController extends Controller
         return view('laravelMyAdmin.newTable');
     }
 
-    function showTable($db, $table){
+    function showTableStructure($db, $table){
         Session::put('db', $db);
         Session::put('table', $table);
         $fields = $this->getFieldsFromTable($db, $table);
-        return view('laravelMyAdmin.table', compact('fields'));
+        return view('laravelMyAdmin.tableStructure', compact('fields'));
     }
 
     /* function testMigration(){
@@ -287,8 +287,25 @@ class LaravelMyAdminController extends Controller
         return view('laravelMyAdmin.migrations', compact('migrations','new_migrations','changedMigrations'));
     }
 
+    public static function getNewMigrationCount(){
+        $migrationPath = database_path('migrations');
+        $migrations  = array_diff(scandir($migrationPath), array('..', '.'));
+        $db_migrations =  DB::table('migrations')->pluck('migration')->toArray();
+        $new_migrations = [] ;
+        foreach($migrations as $migration){
+            $migration = trim( $migration, '.php');
+            if (!in_array($migration, $db_migrations)){
+                $new_migrations[] = $migration.".php";
+            }
+        }
+        return count($new_migrations);
+    }
+
     public function showTableContent($db, $table, $page=1){
+
         $this->setDatabase($db);
+        Session::put('db', $db);
+        Session::put('table', $table);
         $qr = "SELECT * FROM ".$table."";
         $results = DB::select($qr); // Direkte DB-Abfrage
 
@@ -304,4 +321,11 @@ class LaravelMyAdminController extends Controller
         return view('laravelMyAdmin.showTableContent', ['content' => $paginator]);
         //return view('laravelMyAdmin.showTableContent', compact('content'));
     }
+
+    // Table Operations
+    function truncateTable(Request $request){
+        $table = $request->input('table');
+        return $table;
+    }
+
 }

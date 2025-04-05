@@ -16,7 +16,7 @@
                 <option value="id" selected>id</option>
             </select>
         </div>
-        <div><button class="btn" onclick="addRowsToNewTable()">Add</button></div>
+        <div><button class="btn" onclick="addRowsToNewTable(this)">Add</button></div>
     </div>
 
     <div class="shadow-lg">
@@ -44,31 +44,7 @@
     </div>
 
     <script>
-        function addRowsToNewTable(url, data, successCallback, errorCallback) {
-            let amount = $('#amount').val();
-            let after  = $('#after').val();
-            //alert("amount" + amount + " after" + after);
-            $('#loader').css('visibility','visible');
-            $.ajax({
-                url: "{{route("laravelMyAdmin.addRowsToTable")}}",
-                type: "POST",
-                data: data,
-                //dataType: "json",
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") // Falls Laravel CSRF-Schutz aktiv ist
-                },
-                success: function (response) {
-                    let afterTr = $('#'+after);
-                    afterTr.after(response.data);
-                    $('#loader').css('visibility','hidden');
-                },
-                error: function (xhr, status, error) {
-                    alert("no");
-                    //if (errorCallback) errorCallback(xhr, status, error);
-                    $('#loader').css('visibility','hidden');
-                }
-            });
-        }
+       
 
 
         $('#submit-button').click(function() {

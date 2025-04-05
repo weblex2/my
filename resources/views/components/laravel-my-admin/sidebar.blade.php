@@ -18,7 +18,7 @@
                 </div>
                 @foreach ($db as $tablename => $table)
                     <div class="table {{$selected_db!=$dbname ? "hidden" :"" }}" table_name="{{$dbname}}-{{$tablename}}" title={{$tablename}}>
-                        <a href="{{ route("laravelMyAdmin.showTable", ["db" => $dbname, "table" => $tablename]) }}">
+                        <a href="{{ route("laravelMyAdmin.showTableContent", ["db" => $dbname, "table" => $tablename]) }}">
                             <i class="fa-solid fa-table-list"></i>
                             {{ $tablename }}
                         </a>
