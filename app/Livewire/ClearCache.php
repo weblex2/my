@@ -89,7 +89,7 @@ class ClearCache extends Component
         // Setze das Arbeitsverzeichnis
         chdir($projectRoot);
         $this->message = getCwd().' <br>Starte npm run build...<br>';
-        $this->streamCommand(base_path().'/npm run build');
+        $this->streamCommand('npm run build');
     }
 
     // Hilfsfunktion zum Streamen der Ausgabe von Befehlen
