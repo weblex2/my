@@ -10,33 +10,44 @@ class ClearCache extends Component
     public $message = '';
     public $isProcessing = false;
 
-    // Die Funktion zum Leeren des Caches
+    // Funktion zum Leeren des Caches
     public function clearCache()
     {
-        // Verhindern von mehrfachen Aufrufen während der Verarbeitung
-        if ($this->isProcessing) {
-            return;
-        }
+        $this->message = 'Leere Cache...<br>';
+        Artisan::call('cache:clear');
+        $this->message .= 'Cache wurde gelöscht.<br>';
+    }
 
-        $this->message = ''; // Clear previous messages
-        $this->isProcessing = true; // Setze Verarbeitung auf "in Bearbeitung"
+    // Funktion zum Leeren der Konfiguration
+    public function clearConfig()
+    {
+        $this->message = 'Leere Config...<br>';
+        Artisan::call('config:clear');
+        $this->message .= 'Config wurde gelöscht.<br>';
+    }
 
-        // Schritt 1: Cache leeren
-        $this->message .= 'Leere Cache...<br>';
+    // Funktion zum Leeren der Views
+    public function clearViews()
+    {
+        $this->message = 'Leere Views...<br>';
+        Artisan::call('view:clear');
+        $this->message .= 'Views wurden gelöscht.<br>';
+    }
+
+    // Funktion zum Leeren von allen Caches
+    public function clearAll()
+    {
+        $this->message = 'Leere Cache...<br>';
         Artisan::call('cache:clear');
         $this->message .= 'Cache wurde gelöscht.<br>';
 
-        // Schritt 2: Config leeren
         $this->message .= 'Leere Config...<br>';
         Artisan::call('config:clear');
         $this->message .= 'Config wurde gelöscht.<br>';
 
-        // Schritt 3: Views leeren
         $this->message .= 'Leere Views...<br>';
         Artisan::call('view:clear');
         $this->message .= 'Views wurden gelöscht.<br>';
-
-        $this->isProcessing = false; // Verarbeitung abgeschlossen
     }
 
     public function render()
