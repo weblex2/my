@@ -9,11 +9,11 @@ use App\Http\Controllers\LaravelMyAdminController;
 
 class MigrationBadge extends Component
 {
-    public $count;
+    public $badgecount;
 
     public function __construct()
     {
-        $this->count = LaravelMyAdminController::getNewMigrationCount() ?? 0;
+        $this->badgecount = LaravelMyAdminController::getNewMigrationCount() ?? 0;
     }
 
     /**
