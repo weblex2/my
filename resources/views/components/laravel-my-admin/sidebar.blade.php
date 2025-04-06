@@ -4,7 +4,7 @@
         <div class="database-explorer">
             <div class="db" db_name="{{$dbname}}">
                 <span class="toggledb" db_name="{{$dbname}}">
-                    {!!$selected_db!=$dbname ? "<i class='fa-solid fa-square-plus'></i>" :"<i class='fa-solid fa-square-minus'></i>" !!}
+                    {!!$selected_db!=$dbname ? "<i class='db-plus-minus fa-solid fa-square-plus '></i>" :"<i class=' db-plus-minus fa-solid fa-square-minus'></i>" !!}
                 </span>
                 <a href="{{route("laravelMyAdmin.viewDatabase",  ["db" => $dbname]) }}">
                     <i class="fa-solid fa-database"></i> {{ $dbname }}</div>

@@ -148,7 +148,7 @@ class LaravelMyAdminController extends Controller
         return $res;
     }
 
-     private function getFieldsFromTable($db, $table){
+    public function getFieldsFromTable($db, $table){
         $qr="SELECT *
              FROM information_schema.columns
              WHERE table_schema ='".$db."'

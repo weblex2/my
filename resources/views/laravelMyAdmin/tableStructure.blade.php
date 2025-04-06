@@ -7,9 +7,7 @@
         <div class="float-left mr-5"><input type="text" id="amount" name="amount" value="3"></div>
         <div class="float-left mr-5">After:</div>
         <div>
-            <select id="after" name="after" class="w-12">
-                <option value="id" selected>id</option>
-            </select>
+            <x-laravel-my-admin.table-columns-dropdown id="after" />
         </div>
         <div><button class="btn" onclick="addRowsToNewTable()">Add</button></div>
     </div>

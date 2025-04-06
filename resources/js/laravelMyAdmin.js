@@ -13,8 +13,14 @@ $(function () {
         let tableDiv = $(this).attr('db_name') + "-tables";
         // $(this).find('i').css('color', 'red');
         // $(this).toggleClass("fa-square-plus fa-square-minus");
+        var currentDisplay = $('.' + tableDiv).css('display');
+        if (currentDisplay === 'none') {
+            $('.' + tableDiv).css('display', 'block');
+        } else {
+            $('.' + tableDiv).css('display', 'none');
+        }
         console.log('toggeling ' + tableDiv);
-        $('.' + tableDiv).toggle(200);
+        //$('.' + tableDiv).toggle(200);
     });
 
     function post(url, data, successCallback, errorCallback) {

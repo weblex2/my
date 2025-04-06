@@ -84,7 +84,7 @@ class ClearCache extends Component
     // Funktion für npm run build
     public function npmRunBuild()
     {
-        $this->message = 'Starte npm run build...<br>';
+        $this->message = getCwd().' <br>Starte npm run build...<br>';
         $this->streamCommand('npm run build');
     }
 

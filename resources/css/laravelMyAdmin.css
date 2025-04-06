@@ -103,7 +103,10 @@ body {
 .database-explorer .field{
     @apply p-1
 }
+.db-plus-minus{
+    @apply bg-transparent text-zinc-500
 
+}
 .migrations{
     @apply border-r border-zinc-600 w-[400px] p-2 h-[900px] overflow-auto whitespace-nowrap
 }
