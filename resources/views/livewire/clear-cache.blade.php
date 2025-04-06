@@ -3,53 +3,53 @@
 
     <!-- Button zum Leeren des Caches -->
     <button wire:click="clearCache"
-            class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        Cache löschen
+         <i class="fa-solid fa-broom"></i> Cache löschen
     </button>
 
     <!-- Button zum Leeren der Konfiguration -->
     <button wire:click="clearConfig"
-            class="px-4 py-2 mt-2 text-white bg-yellow-500 rounded hover:bg-yellow-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        Config löschen
+        <i class="fa-solid fa-gear"></i> Config löschen
     </button>
 
     <!-- Button zum Leeren der Views -->
     <button wire:click="clearViews"
-            class="px-4 py-2 mt-2 text-white bg-green-500 rounded hover:bg-green-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        Views löschen
+        <i class="fa-solid fa-street-view"></i> Views löschen
     </button>
 
     <!-- Button zum Leeren von allem -->
     <button wire:click="clearAll"
-            class="px-4 py-2 mt-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        Alle löschen
+        <i class="fa-solid fa-globe"></i> Alle löschen
     </button>
 
     <h2 class="mt-6">Git Befehle</h2>
 
     <!-- Button für git pull -->
     <button wire:click="gitPull"
-            class="px-4 py-2 mt-2 text-white bg-gray-500 rounded hover:bg-gray-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        Git Pull
+       <i class="fa-solid fa-code-pull-request"></i> Git Pull
     </button>
 
     <!-- Button für git stash -->
     <button wire:click="gitStash"
-            class="px-4 py-2 mt-2 text-white bg-purple-500 rounded hover:bg-purple-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        Git Stash
+        <i class="fa-solid fa-code-branch"></i> Git Stash
     </button>
 
     <!-- Button für git push -->
     <button wire:click="gitPush"
-            class="px-4 py-2 mt-2 text-white bg-teal-500 rounded hover:bg-teal-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        Git Push
+        <i class="fa-solid fa-code-fork"></i> Git Push
     </button>
 
     <h2 class="mt-6">NPM Befehle</h2>

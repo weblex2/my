@@ -23,8 +23,7 @@
         <div class="menu-item gradient">Import</div>
         <div class="menu-item gradient">Rights</div>
         <div class="menu-item gradient">Operations</div>
-        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.tools")}}">Git</a></div>
-        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Clear Cache</a></div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Tools</a></div>
         <div class="relative menu-item gradient">
             <a href="{{route("laravelMyAdmin.migrations")}}">
                 <x-laravel-my-admin.migration-badge />
@@ -37,7 +36,7 @@
         <div class="menu-item gradient">SQL</div>
         <div class="menu-item gradient">Operations</div>
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.tools")}}">Git</a></div>
-        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Clear Cache</a></div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Tools</a></div>
         <div class="menu-item gradient {{ ($db=="") ? "disabled" :"" }}" id="migUp" ><i class="text-green-500 fa-solid fa-arrow-up"></i> Migration Up</div>
         <div class="menu-item gradient" id="migDown"><i class="text-red-500 fa-solid fa-arrow-down"></i> Migration Down</div>
         <div class="menu-item gradient" id="migDown"><i class="text-yellow-500 fa-solid fa-arrows-up-down"></i> Migration Test (Up/Down)</div>
