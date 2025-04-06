@@ -24,6 +24,7 @@
         <div class="menu-item gradient">Rights</div>
         <div class="menu-item gradient">Operations</div>
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.tools")}}">Git</a></div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Clear Cache</a></div>
         <div class="relative menu-item gradient">
             <a href="{{route("laravelMyAdmin.migrations")}}">
                 <x-laravel-my-admin.migration-badge />

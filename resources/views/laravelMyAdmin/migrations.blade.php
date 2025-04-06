@@ -26,7 +26,7 @@
 
     <script>
         async function executeMigrations(direction) {
-            let selectedDb = $('#db').val();
+            let selectedDb = $('#db').attr('db');
             if (selectedDb.trim()==""){
                 $("#meinModal").find('.modal-body').html("No database selected!");
                 $("#meinModal").modal("show");
