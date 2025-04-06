@@ -11,7 +11,7 @@ class MigrationBadge extends Component
 {
     public $badgecount;
 
-    public function __construct()
+    public function __construct($badgecount = 0)
     {
         $this->badgecount = LaravelMyAdminController::getNewMigrationCount() ?? 0;
     }
