@@ -78,14 +78,17 @@ class ClearCache extends Component
     public function npmRunDev()
     {
         $this->message = 'Starte npm run dev...<br>';
-        $this->streamCommand('../npm run dev');
+        $this->streamCommand('npm run dev');
     }
 
     // Funktion für npm run build
     public function npmRunBuild()
     {
         $this->message = getCwd().' <br>Starte npm run build...<br>';
-        $this->streamCommand('../npm run build');
+        $projectRoot = base_path();  // Laravel's base_path() gibt das Stammverzeichnis zurück
+        // Setze das Arbeitsverzeichnis
+        chdir($projectRoot);
+        $this->streamCommand('npm run build');
     }
 
     // Hilfsfunktion zum Streamen der Ausgabe von Befehlen
