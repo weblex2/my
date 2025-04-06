@@ -29,6 +29,22 @@
         Alle löschen
     </button>
 
+    <h2 class="mt-6">Git Befehle</h2>
+
+    <!-- Button für git pull -->
+    <button wire:click="gitPull"
+            class="px-4 py-2 mt-2 text-white bg-gray-500 rounded hover:bg-gray-700"
+            wire:loading.attr="disabled" wire:loading.class="opacity-50">
+        Git Pull
+    </button>
+
+    <!-- Button für git stash -->
+    <button wire:click="gitStash"
+            class="px-4 py-2 mt-2 text-white bg-purple-500 rounded hover:bg-purple-700"
+            wire:loading.attr="disabled" wire:loading.class="opacity-50">
+        Git Stash
+    </button>
+
     <!-- Anzeige von Verarbeitungsstatus -->
     @if ($isProcessing)
         <div class="mt-3 text-yellow-500">Verarbeitung läuft...</div>
@@ -38,4 +54,4 @@
     <div class="mt-3">
         {!! $message !!}
     </div>
-</div>
+</div

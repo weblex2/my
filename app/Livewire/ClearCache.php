@@ -37,7 +37,7 @@ class ClearCache extends Component
     // Funktion zum Leeren von allen Caches
     public function clearAll()
     {
-        $this->message = 'Leere Cache...<br>';
+        $this->message = 'Leere Cache...<img src="{{asset("img/loading6.gif"}}" class="w-5 h-5"><br>';
         Artisan::call('cache:clear');
         $this->message .= 'Cache wurde gelöscht.<br>';
 
@@ -48,6 +48,22 @@ class ClearCache extends Component
         $this->message .= 'Leere Views...<br>';
         Artisan::call('view:clear');
         $this->message .= 'Views wurden gelöscht.<br>';
+    }
+
+    // Funktion für git pull
+    public function gitPull()
+    {
+        $this->message = 'Führe git pull aus...<br>';
+        $output = shell_exec('git pull 2>&1');
+        $this->message .= nl2br($output) . '<br>';
+    }
+
+    // Funktion für git stash
+    public function gitStash()
+    {
+        $this->message = 'Führe git stash aus...<br>';
+        $output = shell_exec('git stash 2>&1');
+        $this->message .= nl2br($output) . '<br>';
     }
 
     public function render()
