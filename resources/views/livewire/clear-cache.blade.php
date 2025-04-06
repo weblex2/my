@@ -45,6 +45,13 @@
         Git Stash
     </button>
 
+    <!-- Button für git push -->
+    <button wire:click="gitPush"
+            class="px-4 py-2 mt-2 text-white bg-teal-500 rounded hover:bg-teal-700"
+            wire:loading.attr="disabled" wire:loading.class="opacity-50">
+        Git Push
+    </button>
+
     <!-- Anzeige von Verarbeitungsstatus -->
     @if ($isProcessing)
         <div class="mt-3 text-yellow-500">Verarbeitung läuft...</div>
@@ -54,4 +61,4 @@
     <div class="mt-3">
         {!! $message !!}
     </div>
-</div
+</div>

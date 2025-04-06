@@ -66,6 +66,14 @@ class ClearCache extends Component
         $this->message .= nl2br($output) . '<br>';
     }
 
+    // Funktion für git push
+    public function gitPush()
+    {
+        $this->message = 'Führe git push aus...<br>';
+        $output = shell_exec('git push 2>&1');
+        $this->message .= nl2br($output) . '<br>';
+    }
+
     public function render()
     {
         return view('livewire.clear-cache');
