@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\LaravelMyAdminMigrationController;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Controllers\LaravelColumnCreator;
 
 class LaravelMyAdminController extends Controller
 {
@@ -169,6 +170,16 @@ class LaravelMyAdminController extends Controller
     public function createTable(Request $request){
         return response()->json(['status'=>200,'data'=>'Jupp Table creation']);
     }
+
+    public function modifyTable(Request $request){
+        $table = session('table');
+        $req = $request->all();
+        $columns = json_decode($req['rows'],1);
+        $migrationColumnsText = LaravelColumnCreator::createModifiedFields($columns);
+        return response()->json(['status'=>200,'data'=>'Jupp Table creation']);
+    }
+
+
 
     public function newTable($db){
         return view('laravelMyAdmin.newTable');

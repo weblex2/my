@@ -73,7 +73,7 @@ body {
 }
 
 .tblLaravelMyAdmin .header{
-    @apply bg-gradient-to-b from-zinc-200 via-white to-zinc-200 border border-zinc-600
+    @apply bg-gradient-to-b from-zinc-200 via-white to-zinc-200 border border-zinc-400
 }
 
 .tblLaravelMyAdmin th{
@@ -148,6 +148,14 @@ input[type="checkbox"]{
 
 #modal{
     @apply fixed top-0 left-0 flex bg-green-200 w-screen h-screen items-center justify-center
+}
+
+.table-menu{
+    @apply flex items-center p-5
+}
+
+.table-columns-dropdown{
+    @apply min-w-20 mr-10
 }
 
 /*

@@ -16,8 +16,8 @@
                         <th>#</th>
                         <th>Spaltenname</th>
                         <th>Typ</th>
-                        <th>Kollation</th>
                         <th>Attribute</th>
+                        <th>Kollation</th>
                         <th>Null</th>
                         <th>Standard</th>
                         <th>Kommentare</th>
@@ -40,15 +40,13 @@
                                 <x-laravel-my-admin.type-select selected="{{$column->Datatype['type']}}" />
                             </td>
                             <td>
-                                <!-- Kollation -->
-                                {{ $column->COLLATION_NAME }}
-                            </td>
-
-                            <td>
                                 <!-- Attribute -->
                                 {{ $column->Datatype['signed'] == "true" ? "signed" : "" }}
                             </td>
-
+                            <td>
+                                <!-- Kollation -->
+                                {{ $column->COLLATION_NAME }}
+                            </td>
                             <td class="text-center">
                                 <!-- Nullable -->
                                 <input type="checkbox" name="changes[nullable][{{ $column->COLUMN_NAME }}]" value="1"  {{ $column->IS_NULLABLE === 'YES' ? 'checked' : '' }}>
