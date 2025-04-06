@@ -55,17 +55,17 @@
     <h2 class="mt-6">NPM Befehle</h2>
 
     <!-- Button für npm run dev -->
-    <button wire:click="npmRunDev"
+    {{-- <button wire:click="npmRunDev"
             class="px-4 py-2 mt-2 text-white bg-indigo-500 rounded hover:bg-indigo-700"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
         npm run dev
-    </button>
+    </button> --}}
 
     <!-- Button für npm run build -->
     <button wire:click="npmRunBuild"
-            class="px-4 py-2 mt-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+            class="btn"
             wire:loading.attr="disabled" wire:loading.class="opacity-50">
-        npm run build
+        <i class="fa-brands fa-npm"></i> npm run build
     </button>
 
     <!-- Anzeige von Verarbeitungsstatus -->
