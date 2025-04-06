@@ -13,7 +13,7 @@ class MigrationBadge extends Component
 
     public function __construct($badgecount = null)
     {
-        $this->badgecount =  $badgecount ?? LaravelMyAdminController::getNewMigrationCount() ?? 0;
+        $this->badgecount =  LaravelMyAdminController::getNewMigrationCount() ?? 0;
     }
 
     /**
@@ -21,6 +21,6 @@ class MigrationBadge extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.migration-badge', ['badgecount' => $this->badgecount]);
+        return view('components.laravel-my-admin.migration-badge');
     }
 }
