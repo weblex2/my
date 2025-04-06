@@ -328,4 +328,8 @@ class LaravelMyAdminController extends Controller
         return $table;
     }
 
+    function clearCache(){
+        return view('laravelMyAdmin.clearCache');
+    }
+
 }

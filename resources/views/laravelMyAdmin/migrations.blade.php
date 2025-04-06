@@ -26,6 +26,12 @@
 
     <script>
         async function executeMigrations(direction) {
+            let selectedDb = $('#db').val();
+            if (selectedDb.trim()==""){
+                $("#meinModal").find('.modal-body').html("No database selected!");
+                $("#meinModal").modal("show");
+                return false;
+            }
             let csrfToken = $('meta[name="csrf-token"]').attr('content');
             let checkboxes = $('.migrations input[type="checkbox"]:checked');
             $("#meinModal").find('.modal-body').html("");
@@ -51,9 +57,7 @@
                     });
 
                     console.log("response:", response);
-                    //$("#meinModal").find('.loader').remove();
                     $("#meinModal").find('.modal-body').append(response.data + "<br><br>");
-
 
                 } catch (error) {
                     alert('Fehler beim Ausführen der Migration: ' + error.responseText);

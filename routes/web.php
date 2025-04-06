@@ -311,6 +311,8 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::get('/laravelMyAdmin/migrations','showMigrations')->middleware(['auth'])->name('laravelMyAdmin.migrations');
     Route::post('/laravelMyAdmin/exec-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.execMigration');
     Route::get('/laravelMyAdmin/table-content/{db}/{table}','showTableContent')->middleware(['auth'])->name('laravelMyAdmin.showTableContent');
+    Route::get('/laravelMyAdmin/clearCache','clearCache')->middleware(['auth'])->name('laravelMyAdmin.clearCache');
+
 });
 
 Route::get('/git/pull', [GitController::class, 'pull'])->name('git.pull');
