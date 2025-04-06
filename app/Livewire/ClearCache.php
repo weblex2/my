@@ -37,7 +37,7 @@ class ClearCache extends Component
     // Funktion zum Leeren von allen Caches
     public function clearAll()
     {
-        $this->message = 'Leere Cache...<img src="{{asset("img/loading6.gif"}}" class="w-5 h-5"><br>';
+        $this->message = 'Leere Cache...<br>';
         Artisan::call('cache:clear');
         $this->message .= 'Cache wurde gelöscht.<br>';
 
