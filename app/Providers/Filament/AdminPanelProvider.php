@@ -29,11 +29,11 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
 
-        $counts = Customer::query()
+       /*  $counts = Customer::query()
             ->selectRaw('status, COUNT(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
-            ->all();
+            ->all(); */
 
         return $panel
             ->default()
