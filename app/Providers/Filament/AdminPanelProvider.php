@@ -40,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('filament/admin')
             ->login()
+            ->maxContentWidth('1280px')
             ->colors([
                 'primary' => Color::Amber,
             ])
