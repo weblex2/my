@@ -53,7 +53,7 @@ class CustomerResource extends Resource
                 ->options([
                     'new' => 'Neu',
                     'active' => 'Aktiv',
-                    'active' => 'Inaktiv',
+                    'inactive' => 'Inaktiv',
                     'pending' => 'Wartend',
                 ]),
                 Forms\Components\TextInput::make('name')
