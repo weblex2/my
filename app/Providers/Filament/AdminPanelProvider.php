@@ -20,6 +20,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationItem;
 use Filament\Navigation\MenuItem;
 use App\Filament\Resources\CustomerResource;
+use App\Models\Customer;
 
 
 
@@ -27,6 +28,13 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+
+        $counts = Customer::query()
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->all();
+
         return $panel
             ->default()
             ->id('admin')
@@ -52,20 +60,23 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('New Customers')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'new']]]))
                     ->icon('heroicon-o-user-plus')
-                    ->group('Customers'),
+                    ->group('Customers')
+                    ->badge($counts['new'] ?? 0),
                 NavigationItem::make('Active Customers')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'active']]]))
                     ->icon('heroicon-o-user-group')
-                    ->group('Customers'),
-                NavigationItem::make('Active Customers')
+                    ->group('Customers')
+                    ->badge($counts['active'] ?? 0),
+                NavigationItem::make('Inactive Customers')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'inactive']]]))
                     ->icon('heroicon-o-user-group')
-                    ->group('Customers'),
-
+                    ->group('Customers')
+                    ->badge($counts['inactive'] ?? 0),
                 NavigationItem::make('Pending Customers')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'pending']]]))
                     ->icon('heroicon-o-clock')
-                    ->group('Customers'),
+                    ->group('Customers')
+                    ->badge($counts['pending'] ?? 0),
 
                 NavigationItem::make('Noppals Blog')
                      ->url('https:/noppal.de', shouldOpenInNewTab: true)

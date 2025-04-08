@@ -48,6 +48,14 @@ class CustomerResource extends Resource
                 Forms\Components\TextInput::make('external_id')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('status')
+                ->label('Status')
+                ->options([
+                    'new' => 'Neu',
+                    'active' => 'Aktiv',
+                    'active' => 'Inaktiv',
+                    'pending' => 'Wartend',
+                ]),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -83,6 +91,7 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
+                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('first_name'),
                 Tables\Columns\TextColumn::make('primaryAddress.address')
