@@ -11,11 +11,8 @@ class Customer extends Model
     use SoftDeletes, HasFactory;
 
     protected $table = "fil_customers";
-    
-    protected $fillable = [
-        'name', 'email', 'phone', 'date_of_birth', 'address',
-        'zip_code', 'city'
-    ];
+
+    protected $guarded = ['id'];
 
     public function customer_address()  {
         return $this->hasMany(CustomerAddress::class, 'customer_id');

@@ -19,6 +19,8 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationItem;
 use Filament\Navigation\MenuItem;
+use App\Filament\Resources\CustomerResource;
+
 
 
 class AdminPanelProvider extends PanelProvider
@@ -27,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('filament/admin')
+            ->id('admin')
             ->path('filament/admin')
             ->login()
             ->colors([
@@ -40,7 +42,31 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
+
+
+
+
+
             ->navigationItems([
+
+                NavigationItem::make('New Customers')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'new']]]))
+                    ->icon('heroicon-o-user-plus')
+                    ->group('Customers'),
+                NavigationItem::make('Active Customers')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'active']]]))
+                    ->icon('heroicon-o-user-group')
+                    ->group('Customers'),
+                NavigationItem::make('Active Customers')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'inactive']]]))
+                    ->icon('heroicon-o-user-group')
+                    ->group('Customers'),
+
+                NavigationItem::make('Pending Customers')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'pending']]]))
+                    ->icon('heroicon-o-clock')
+                    ->group('Customers'),
+
                 NavigationItem::make('Noppals Blog')
                      ->url('https:/noppal.de', shouldOpenInNewTab: true)
                      ->icon('heroicon-o-shopping-cart')

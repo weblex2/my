@@ -195,7 +195,7 @@ namespace App\Models{
 /**
  * 
  *
- * @property int $id
+ * @property int $id Die ID halt
  * @property int $is_active
  * @property string $name
  * @property string $first_name

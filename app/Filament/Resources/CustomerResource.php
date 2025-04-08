@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\SelectFilter;
 
 class CustomerResource extends Resource
 {
@@ -38,13 +39,19 @@ class CustomerResource extends Resource
         return $form
             ->schema([
 
-                $form_fields[0],
+                /* $form_fields[0],
                 $form_fields[1],
                 $form_fields[2],
                 $form_fields[3],
-                $form_fields[4],
-                /*
+                $form_fields[4], */
+
                 Forms\Components\TextInput::make('external_id')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('first_name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('is_active')
@@ -61,7 +68,7 @@ class CustomerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
-                */
+
             ]);
     }
 
@@ -71,11 +78,13 @@ class CustomerResource extends Resource
         $form_fields = $fc->getFields();
         return $table
             ->columns(
-                    $form_fields,
-                /* Tables\Columns\TextColumn::make('id')
+                    //$form_fields,
+                    [
+                Tables\Columns\TextColumn::make('id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('company.company_name')
-
+                Tables\Columns\TextColumn::make('company.company_name'),
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('first_name'),
                 Tables\Columns\TextColumn::make('primaryAddress.address')
                     ->label('Address')
                     ->searchable(),
@@ -118,10 +127,16 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true), */
-            )
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
+                SelectFilter::make('status')
+                ->options([
+                    'new' => 'New',
+                    'active' => 'Active',
+                    'pending' => 'Pending',
+                ]),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
