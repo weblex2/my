@@ -199,6 +199,7 @@ namespace App\Models{
  * @property int $is_active
  * @property string $name
  * @property string $first_name
+ * @property string $status
  * @property int|null $company_id
  * @property string $email
  * @property string $phone
@@ -211,13 +212,22 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $addresses
+ * @property-read int|null $addresses_count
  * @property-read \App\Models\Company|null $company
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $customer_address
  * @property-read int|null $customer_address_count
+ * @property-read \App\Models\CustomerAddress|null $homeAddress
+ * @property-read \App\Models\CustomerAddress|null $invoiceAddress
+ * @property-read \App\Models\CustomerAddress|null $preferredAddress
  * @property-read \App\Models\CustomerAddress|null $primaryAddress
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer inactive()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer new()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer pending()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereComments($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereCompanyId($value)
@@ -233,6 +243,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer wherePrimaryAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereWebsite($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withTrashed()

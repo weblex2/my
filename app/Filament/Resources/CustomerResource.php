@@ -94,19 +94,19 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('first_name'),
-                Tables\Columns\TextColumn::make('primaryAddress.address')
+                Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('primaryAddress.address2')
+                Tables\Columns\TextColumn::make('preferredAddress.address2')
                     ->label('Address 2')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('primaryAddress.city')
+                Tables\Columns\TextColumn::make('preferredAddress.city')
                     ->label('City')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('primaryAddress.state')
+                Tables\Columns\TextColumn::make('preferredAddress.state')
                     ->label('State')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('primaryAddress.zip')
+                Tables\Columns\TextColumn::make('preferredAddress.zip')
                     ->label('Zip')
                     ->numeric()
                     ->sortable(),

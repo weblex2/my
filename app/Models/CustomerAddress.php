@@ -12,7 +12,7 @@ class CustomerAddress extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
 
-    public function customer() : BelongsTo 
+    public function customer() : BelongsTo
     {
         return $this->belongsTo(Customer::Class);
     }
@@ -29,5 +29,7 @@ class CustomerAddress extends Model
 
         return $address;
     }
+
+
 
 }
