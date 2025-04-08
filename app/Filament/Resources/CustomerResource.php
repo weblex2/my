@@ -97,9 +97,9 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('preferredAddress.address2')
+                /* Tables\Columns\TextColumn::make('preferredAddress.address2')
                     ->label('Address 2')
-                    ->searchable(),
+                    ->searchable(), */
                 Tables\Columns\TextColumn::make('preferredAddress.city')
                     ->label('City')
                     ->searchable(),
