@@ -154,6 +154,7 @@ class CustomerResource extends Resource
                     Tables\Actions\EditAction::make(),
                 ]),
             ])
+            ->recordAction('edit')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
