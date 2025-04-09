@@ -67,10 +67,10 @@ class OrderResource extends Resource
                                 ->required(),
                             Forms\Components\TextInput::make('unit_price')
                                 ->label('Unit Price')
-                                ->disabled()
+                                //->disabled()
                                 ->dehydrated()
                                 ->numeric()
-                                ->required()
+                                //->required()
                         ])->columns(3)
                         ])
                     ])->columnSpanFull()

@@ -88,11 +88,20 @@ class CustomerResource extends Resource
             ->columns(
                     //$form_fields,
                     [
+                Tables\Columns\TextColumn::make('actions')
+                    ->label('Actions') // Kein Label, um Platz zu sparen
+                    ->getStateUsing(fn () => '') // Kein Inhalt, nur Platzhalter
+                    ->html()
+                    ->formatStateUsing(fn ($record) => view('filament.tables.actions', [
+                        'record' => $record,
+                    ])->render())
+                ->extraAttributes(['class' => 'w-16']),
                 Tables\Columns\TextColumn::make('id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
                 Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->url(fn ($record) => static::getUrl('view', ['record' => $record])), // Link zur View-Seite,
                 Tables\Columns\TextColumn::make('first_name'),
                 Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
@@ -147,11 +156,8 @@ class CustomerResource extends Resource
                     'pending' => 'Pending',
                 ]),
             ])
-            ->recordAction(Tables\Actions\EditAction::class)
-            /* ->recordAction(function ($record) {
-                \Log::info('Record clicked, redirecting to edit: ' . $record->id);
-                //return redirect()->to(self::getUrl('edit', ['record' => $record]));
-            }) */
+            ->recordAction(Tables\Actions\EditAction::class) // Keine Aktion bei einfachem Klick
+            ->recordUrl(null)
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\DeleteAction::make(),
