@@ -54,6 +54,11 @@ class Customer extends Model
         return static::where('status', $status)->count();
     }
 
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
     // Optional: Scopes für spezifische Stati
     public function scopeNew($query)
     {
