@@ -147,6 +147,11 @@ class CustomerResource extends Resource
                     'pending' => 'Pending',
                 ]),
             ])
+            ->recordAction(Tables\Actions\EditAction::class)
+            /* ->recordAction(function ($record) {
+                \Log::info('Record clicked, redirecting to edit: ' . $record->id);
+                //return redirect()->to(self::getUrl('edit', ['record' => $record]));
+            }) */
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\DeleteAction::make(),
@@ -154,14 +159,15 @@ class CustomerResource extends Resource
                     Tables\Actions\EditAction::make(),
                 ]),
             ])
-            ->recordAction('edit')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ;
+
     }
 
     public static function getRelations(): array
@@ -175,6 +181,7 @@ class CustomerResource extends Resource
     {
         return [
             'index' => Pages\ManageCustomers::route('/'),
+            'view' => Pages\ViewCustomer::route('/{record}'), // Detailseite hinzufügen
         ];
     }
 

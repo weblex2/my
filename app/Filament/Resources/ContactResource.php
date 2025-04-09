@@ -50,12 +50,12 @@ class ContactResource extends Resource
                 Tables\Columns\TextColumn::make('customer.id')
                     ->label('ID')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('details')
-                    ->label('Details')
-                    ->limit(50),
                 Tables\Columns\TextColumn::make('contacted_at')
                     ->label('Kontaktzeitpunkt')
                     ->dateTime()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Typ')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('customer.name')
                     ->label('Nachname')
@@ -65,9 +65,9 @@ class ContactResource extends Resource
                     ->label('Vorname')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('type')
-                    ->label('Typ')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('details')
+                    ->label('Details')
+                    ->limit(50),
 
             ])
             ->filters([

@@ -34,7 +34,7 @@ class ContactsRelationManager extends RelationManager
             ]);
     }
 
-    public function table(Table $tablegray): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
