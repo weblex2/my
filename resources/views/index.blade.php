@@ -86,7 +86,7 @@
                 img="card-crm.jpg"
                 header="Erstes eigenes CRM mit Filament"
                 text="Das wollte ich schon immer einmal haben :)"
-                link="filament.filament/admin.pages.dashboard"
+                link="filament.admin.pages.dashboard"
             />
 
             <x-index.card
