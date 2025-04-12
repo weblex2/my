@@ -23,14 +23,14 @@
             @endif
             <td>
                 @if ($edit)
-                    <x-laravel-my-admin.table-columns-dropdown id="column_name" name="column_name" selected="{{$field->COLUMN_NAME}}" />
+                    <input type="text" name="column_name" value="{{$field->COLUMN_NAME}}" />
                 @else
                     {{$field->COLUMN_NAME}}
                 @endif
-                </td>
+            </td>
             <td>
                 @if ($edit)
-                  <x-laravel-my-admin.field-type-dropdown id="column_name" name="column_name" selected="{{$field->Datatype['type']}}" />
+                  <x-laravel-my-admin.field-type-dropdown name="column_name" selected="{{$field->Datatype['type']}}" />
                 @else
                     {{$field->Datatype['type']}}
                 @endif
@@ -42,15 +42,35 @@
                     {{$field->Datatype['length']}}
                 @endif
             </td>
-            <td>@if ($edit)
-                  <x-laravel-my-admin.default-dropdown id="default" name="default" selected="{{$field->COLUMN_DEFAULT}}" />
+            <td>
+                @if ($edit)
+                  <x-laravel-my-admin.default-dropdown name="default" selected="{{$field->COLUMN_DEFAULT}}" />
+                @else
+                    {{$field->COLUMN_DEFAULT}}
+                @endif
+
+            </td>
+            <td>
+                @if ($edit)
+                  <x-laravel-my-admin.attribute-dropdown name="attribute" selected="{{$field->Datatype['signed'] }}" />
                 @else
                     {{$field->COLUMN_DEFAULT}}
                 @endif
             </td>
-            <td>{{$field->Datatype['signed'] }}</td>
-            <td>{{$field->COLLATION_NAME}}</td>
-            <td>{{$field->IS_NULLABLE}}</td>
+            <td>
+                @if ($edit)
+                  <x-laravel-my-admin.collation-dropdown name="collation" selected="{{$field->COLLATION_NAME}}" />
+                @else
+                    {{$field->COLLATION_NAME}}
+                @endif
+            </td>
+            <td>
+                @if ($edit)
+                  <x-laravel-my-admin.nullable name="is_nullable" selected="{{$field->IS_NULLABLE}}" :edit="1"/>
+                @else
+                    {{$field->IS_NULLABLE}}
+                @endif
+            </td>
             <td>{{$field->COLUMN_COMMENT}}</td>
             <td>{{$field->EXTRA}}</td>
         </tr>

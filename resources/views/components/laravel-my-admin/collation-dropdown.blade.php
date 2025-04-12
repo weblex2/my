@@ -362,7 +362,7 @@
                   <option value="utf8mb4_tr_0900_as_cs" title="Türkisch (UCA 9.0.0), Beachtet Groß- und Kleinschreibung, Beachtet Groß- und Kleinschreibung">utf8mb4_tr_0900_as_cs</option>
                   <option value="utf8mb4_turkish_ci" title="Türkisch (UCA 4.0.0), Beachtet nicht Groß- und Kleinschreibung">utf8mb4_turkish_ci</option>
                   <option value="utf8mb4_unicode_520_ci" title="Unicode (UCA 5.2.0), Beachtet nicht Groß- und Kleinschreibung">utf8mb4_unicode_520_ci</option>
-                  <option value="utf8mb4_unicode_ci" title="Unicode (UCA 4.0.0), Beachtet nicht Groß- und Kleinschreibung">utf8mb4_unicode_ci</option>
+                  <option {{$selected=="utf8mb4_unicode_ci" ? "selected" : ""}} value="utf8mb4_unicode_ci" title="Unicode (UCA 4.0.0), Beachtet nicht Groß- und Kleinschreibung">utf8mb4_unicode_ci</option>
                   <option value="utf8mb4_vi_0900_ai_ci" title="Vietnamesisch (UCA 9.0.0), Ignoriert Groß- und Kleinschreibung, Beachtet nicht Groß- und Kleinschreibung">utf8mb4_vi_0900_ai_ci</option>
                   <option value="utf8mb4_vi_0900_as_cs" title="Vietnamesisch (UCA 9.0.0), Beachtet Groß- und Kleinschreibung, Beachtet Groß- und Kleinschreibung">utf8mb4_vi_0900_as_cs</option>
                   <option value="utf8mb4_vietnamese_ci" title="Vietnamesisch (UCA 4.0.0), Beachtet nicht Groß- und Kleinschreibung">utf8mb4_vietnamese_ci</option>

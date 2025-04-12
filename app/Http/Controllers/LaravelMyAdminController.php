@@ -115,7 +115,7 @@ class LaravelMyAdminController extends Controller
 
             // Überprüfen, ob 'unsigned' vorhanden ist
             if (!empty($matches[3])) {
-                $result['signed'] = $matches[3];
+                $result['signed'] = trim($matches[3]);
             }
             else{
                 $result['signed'] = "";

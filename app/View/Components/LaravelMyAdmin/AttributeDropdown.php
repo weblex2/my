@@ -8,12 +8,11 @@ use Illuminate\View\Component;
 
 class AttributeDropdown extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct()
+    public $selected;
+
+    public function __construct($selected="")
     {
-        //
+        $this->selected = $selected;
     }
 
     /**

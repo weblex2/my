@@ -1,17 +1,18 @@
 <?php
 
-namespace App\View\Components\LaravelMyAdmin;
+namespace App\View\Components\laravelMyAdmin;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class CollationDropdown extends Component
+class Nullable extends Component
 {
     public $selected;
-
-    public function __construct($selected)
+    public $edit;
+    public function __construct($selected, $edit)
     {
+        $this->edit = $edit;
         $this->selected = $selected;
     }
 
@@ -20,6 +21,6 @@ class CollationDropdown extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.collation-dropdown');
+        return view('components.laravel-my-admin.nullable');
     }
 }
