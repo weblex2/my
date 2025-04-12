@@ -10,8 +10,9 @@
 
 
 @if (request()->is('laravelMyAdmin/showTableStructure/*')  ||
-         request()->is('laravelMyAdmin/new-table*')   ||
-         request()->is('laravelMyAdmin/table-content*')
+     request()->is('laravelMyAdmin/editTableStructure*')  ||
+     request()->is('laravelMyAdmin/new-table*')   ||
+     request()->is('laravelMyAdmin/table-content*')
         )
      <div class="hidden menu md:flex">
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.showTableContent", [ "db" => session("db"), "table" => session("table") ] ) }}">Show</a></div>

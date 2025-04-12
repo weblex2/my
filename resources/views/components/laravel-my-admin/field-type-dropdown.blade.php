@@ -4,15 +4,14 @@
     </optgroup>
     <optgroup label="String & Text Types">
         <option value="char" {{ strpos($selected, 'char') !== false ? 'selected' : '' }}>char</option>
-        <option value="longText" {{ strpos($selected, 'longText') !== false ? 'selected' : '' }}>longText</option>
+        <option value="longtext" {{ strpos($selected, 'longtext') !== false ? 'selected' : '' }}>longText</option>
         <option value="mediumText" {{ strpos($selected, 'mediumText') !== false ? 'selected' : '' }}>mediumText</option>
-        <option value="string" {{ strpos($selected, 'string') !== false ? 'selected' : '' }}>string</option>
-        <option value="text" {{ strpos($selected, 'text') !== false ? 'selected' : '' }}>text</option>
+        <option value="string" {{ in_array($selected, ['string','varchar','text']) !== false ? 'selected' : '' }}>string</option>
         <option value="tinyText" {{ strpos($selected, 'tinyText') !== false ? 'selected' : '' }}>tinyText</option>
     </optgroup>
     <optgroup label="Numeric Types">
         <option value="bigIncrements" {{ strpos($selected, 'bigIncrements') !== false ? 'selected' : '' }}>bigIncrements</option>
-        <option value="bigInteger" {{ strpos($selected, 'bigInteger') !== false ? 'selected' : '' }}>bigInteger</option>
+        <option value="bigint" {{ strpos($selected, 'bigint') !== false ? 'selected' : '' }}>bigInteger</option>
         <option value="decimal" {{ strpos($selected, 'decimal') !== false ? 'selected' : '' }}>decimal</option>
         <option value="double" {{ strpos($selected, 'double') !== false ? 'selected' : '' }}>double</option>
         <option value="float" {{ strpos($selected, 'float') !== false ? 'selected' : '' }}>float</option>
@@ -24,5 +23,10 @@
         <option value="tinyInteger" {{ strpos($selected, 'tinyInteger') !== false ? 'selected' : '' }}>tinyInteger</option>
         <option value="unsignedBigInteger" {{ strpos($selected, 'unsignedBigInteger') !== false ? 'selected' : '' }}>unsignedBigInteger</option>
         <option value="unsignedInteger" {{ strpos($selected, 'unsignedInteger') !== false ? 'selected' : '' }}>unsignedInteger</option>
+    </optgroup>
+    <optgroup label="Date Types">
+        <option value="date" {{ $selected == 'date' ? 'selected' : '' }}>date</option>
+        <option value="datetime" {{ $selected == 'datetime' ? 'selected' : '' }}>datetime</option>
+        <option value="timestamp" {{ $selected == 'timestamp' ? 'selected' : '' }}>datetime</option>
     </optgroup>
 </select>

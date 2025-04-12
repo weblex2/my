@@ -189,7 +189,14 @@ class LaravelMyAdminController extends Controller
         Session::put('db', $db);
         Session::put('table', $table);
         $fields = $this->getFieldsFromTable($db, $table);
-        return view('laravelMyAdmin.tableStructure', compact('fields'));
+        return view('laravelMyAdmin.showTableStructure', compact('fields'));
+    }
+
+     function editTableStructure(){
+        $db     = session('db');
+        $table  = session('table');
+        $fields = $this->getFieldsFromTable($db, $table);
+        return view('laravelMyAdmin.editTableStructure', compact('fields'));
     }
 
     /* function testMigration(){

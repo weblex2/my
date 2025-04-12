@@ -1,6 +1,7 @@
 <select name="default">
-    <option value="">---select---</option>
-    <option value="defined">How defined</option>
-    <option value="null">Null</option>
-    <option value="current_timestamp">Current Timestamp</option>
+    <option value=null>---select---</option>
+    <option value="">empty string</option>
+    <option value="defined">how defined</option>
+    <option value="null">null</option>
+    <option value="current_timestamp" {{$selected=="current_timestamp()" ? "selected" : ""}}>current_timestamp()</option>
 </select>
