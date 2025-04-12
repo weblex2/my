@@ -39,7 +39,7 @@
                 @if ($edit)
                   <input type="text" name="length" value="{{$field->Datatype['length']}}" />
                 @else
-                    {{$field->Datatype['type']}}
+                    {{$field->Datatype['length']}}
                 @endif
             </td>
             <td>@if ($edit)
