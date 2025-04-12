@@ -59,7 +59,7 @@ $(function () {
         //alert("amount" + amount + " after" + after);
         $('#loader').css('visibility','visible');
         $.ajax({
-            url: '/laravelMyAdmin/add-rows-to-table',
+            url: '/laravelMyAdmin/addRowsToTable',
             type: "POST",
             data: data,
             dataType: "json",
@@ -133,5 +133,72 @@ $(function () {
     }
 });
 
+
+function searchAndSendModifiedRows() {
+        // Array zum Speichern der modifizierten Daten
+        let modifiedData = [];
+
+        // Durchsuche alle Zeilen der Tabelle mit der Klasse .tblLaravelMyAdmin
+        $('.tblLaravelMyAdmin tr[modified]').each(function() {
+            let rowData = {};
+            let row = $(this);
+
+            // Durchsuche alle td-Elemente in der Zeile
+            row.find('td').each(function() {
+                let td = $(this);
+                let fieldName = td.data('field') || td.index(); // Falls ein data-field Attribut existiert, sonst Spaltenindex
+
+                // Prüfe, ob ein input, select oder checkbox existiert
+                let input = td.find('input, select');
+                let checkbox = td.find('input[type="checkbox"]');
+
+                if (checkbox.length) {
+                    // Checkbox: Wert ist checked/unchecked
+                    rowData[fieldName] = checkbox.is(':checked');
+                } else if (input.length) {
+                    // Input oder Select: Hole den Wert
+                    rowData[fieldName] = input.val();
+                } else {
+                    // Fallback: Hole den Textinhalt der Zelle
+                    rowData[fieldName] = td.text().trim();
+                }
+            });
+
+            // Füge die Daten der Zeile zum Array hinzu (optional: Zeilen-ID oder andere Kennung)
+            if (Object.keys(rowData).length > 0) {
+                rowData.rowId = row.data('id') || row.index(); // Falls ein data-id Attribut existiert
+                modifiedData.push(rowData);
+            }
+        });
+
+        // Wenn modifizierte Daten vorhanden sind, sende POST-Request
+        if (modifiedData.length > 0) {
+            $.ajax({
+                url: '{{ route("laravelMyAdmin.generateMigration") }}', // Laravel-Route
+                type: 'POST',
+                data: {
+                    modifiedRows: modifiedData,
+                    _token: '{{ csrf_token() }}' // CSRF-Token für Laravel
+                },
+                success: function(response) {
+                    console.log('Migration erfolgreich gesendet:', response);
+                    // Optional: Feedback für den Nutzer anzeigen
+                    alert('Daten erfolgreich gesendet!');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Fehler beim Senden der Daten:', error);
+                    // Optional: Fehlermeldung anzeigen
+                    alert('Fehler beim Senden der Daten: ' + error);
+                }
+            });
+        } else {
+            console.log('Keine modifizierten Zeilen gefunden.');
+        }
+    }
+
+
+    $('.tblLaravelMyAdmin').on('change', 'input, select, checkbox, textarea', function() {
+        $(this).closest('tr').attr('changed', 'true');
+    });
 
 

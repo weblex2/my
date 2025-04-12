@@ -10,7 +10,7 @@
             <th>Standard</th>
             <th>Attribute</th>
             <th>Collation</th>
-            <th>Nullable</th>
+            <th>Null</th>
             <th>Kommentare</th>
             <th>Extra</th>
         </tr>

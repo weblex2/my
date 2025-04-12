@@ -303,7 +303,7 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::get('/laravelMyAdmin/showTableStructure/{db}/{table}','showTableStructure')->middleware(['auth'])->name('laravelMyAdmin.showTableStructure');
     Route::get('/laravelMyAdmin/editTableStructure','editTableStructure')->middleware(['auth'])->name('laravelMyAdmin.editTableStructure');
     Route::get('/laravelMyAdmin/new-table/{db}','newTable')->middleware(['auth'])->name('laravelMyAdmin.newTable');
-    Route::post('/laravelMyAdmin/add-rows-to-table','addRowsToTable')->middleware(['auth'])->name('laravelMyAdmin.addRowsToTable');
+    Route::post('/laravelMyAdmin/addRowsToTable','addRowsToTable')->middleware(['auth'])->name('laravelMyAdmin.addRowsToTable');
     Route::post('/laravelMyAdmin/create-table','createTable')->middleware(['auth'])->name('laravelMyAdmin.createTable');
     Route::post('/laravelMyAdmin/modify-table','modifyTable')->middleware(['auth'])->name('laravelMyAdmin.modifyTable');
     Route::post('/laravelMyAdmin/generate-migration',  'generateMigration')->middleware(['auth'])->name('laravelMyAdmin.generateMigration');

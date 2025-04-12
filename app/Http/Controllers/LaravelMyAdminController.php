@@ -276,11 +276,15 @@ class LaravelMyAdminController extends Controller
         return response()->json(['data' => $output], 200);
     }
 
-    public function addRowsToTable(){
-        $html = view('components.laravel-my-admin.new-table-row', [
-            'name' => 'New Field',
-            'type' => 'string'
-        ])->render();
+    public function addRowsToTable(Request $request){
+        $req = $request->all();
+        $html = "";
+        for ($i=0; $i<$req['amount']; $i++){
+            $html .= view('components.laravel-my-admin.new-table-row', [
+                'name' => 'new_field_'.($i+1),
+                'type' => 'string'
+            ])->render();
+        }
         return response()->json(['data' => $html], 200);
     }
 

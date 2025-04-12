@@ -27,9 +27,6 @@
                 @foreach ($row as $key => $value)
                     <td>{{$value}}</td>
                 @endforeach
-                {{-- <td>{{ $row }}</td>
-                <td></td>
-                <td></td> --}}
             </tr>
         @endforeach
     </table>
