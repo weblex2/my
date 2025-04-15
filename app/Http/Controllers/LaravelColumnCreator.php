@@ -3,41 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Classes\Column;
 
 class LaravelColumnCreator extends Controller
 {
 
-    public $cols = [];
-    private $col;
+    public $col;
+    public $columns;
 
-    public function __construct(){
-
-    }
-
-    public static function createModifiedFields($columns){
-        foreach ($columns as $column){
-            $this->setName($column['name']);
-            $this->setType($column['datatype']);
-            $this->setLength($column['length']);
-            $this->setNullable($column['nullable']);
-            $this->cols[] = $col;
+    public function createModifiedFields($columns){
+        foreach ($columns as $i => $column){
+            $col = new Column();
+            $col->setName($column['name']);
+            $col->setType($column['datatype']);
+            $col->setLength($column['length']);
+            $col->setCollation($column['collation']);
+            $col->setNullable($column['nullable']);
+            $columns[$i] = $col->getColsString();
         }
-        return this->cols;
-    }
-
-    private function setName($name){
-        $this->name = $name;
-    }
-
-    private function setType($type){
-        $this->type = $type;
-    }
-
-    private function setLengrh($length){
-        $this->length = $length;
-    }
-
-    public function setNullable(){
-
+        $txt = implode("\n", $columns);
+        return $txt;
     }
 }

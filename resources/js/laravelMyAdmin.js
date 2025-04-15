@@ -88,7 +88,9 @@ $(function () {
 
     function modifyTable() {
         const rowDataAll = [];
-        $('.tblLaravelMyAdmin tr[attribute]').each(function () {
+        const migration_name = $('#migration_name').val();
+
+        $('.tblLaravelMyAdmin tr[changed]').each(function () {
             const rowData = {};
             $(this).find('td').find('input[name], select[name], textarea[name]').each(function () {
                 const $field = $(this);
@@ -109,6 +111,12 @@ $(function () {
             rowDataAll.push(rowData);
             console.log(rowData); // z. B. {column1: 'abc', active: '1', type: 'selectOption'}
         });
+        
+        if (rowDataAll.length == 0) {
+            $("#meinModal").find('.modal-body').html("Nothing to do..");
+            $("#meinModal").modal("show");
+            return false;
+        }
 
         // AJAX-Request
         $.ajax({
@@ -119,7 +127,8 @@ $(function () {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") // Falls Laravel CSRF-Schutz aktiv ist
             },
             data: {
-                rows: JSON.stringify(rowDataAll)
+                rows: JSON.stringify(rowDataAll),
+                migration_name: $('#migration_name').val()
             },
             success: function (response) {
                 console.log('Erfolg:', response);

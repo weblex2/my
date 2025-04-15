@@ -43,6 +43,17 @@ class LaravelMyAdminController extends Controller
         return view('laravelMyAdmin.edit', compact('table', 'columns'));
     }
 
+    public function createMigrationFile($action, $table, $rows, $migrationName){
+        //modify
+        if ($action=="modify"){
+            $migrationPath = database_path('migrations/' .  $migrationName . '.php');
+            $filePath = base_path('app/Templates/LaravelMyadmin/modify_table.txt');
+            $fileContent = file_get_contents($filePath);  // Liest die Datei
+            $fileContent = str_replace('{{fields}}', $rows, $fileContent);
+            $fileContent = str_replace('{{table}}', $table, $fileContent);
+            File::put($migrationPath, $fileContent);
+        }
+    }
 
     public function generateMigration(Request $request)
     {
@@ -94,6 +105,8 @@ class LaravelMyAdminController extends Controller
             $fileContent = str_replace('{{fields}}', $fieldDefinition, $fileContent);
         }
 
+
+
         return $fileContent;
     }
 
@@ -108,8 +121,8 @@ class LaravelMyAdminController extends Controller
         // Entferne Leerzeichen und teile die Definition
         $columnDefinition = trim($columnDefinition);
 
-        // Finde den Typ (z.B. bigint)
-        if (preg_match('/^(\w+)\((\d+)\)( unsigned)?$/i', $columnDefinition, $matches)) {
+       /*  // Finde den Typ (z.B. bigint)
+        if (preg_match('/^(\w+)\((\d+)(?:,(\d+))?\)( unsigned)?$/i', $columnDefinition, $matches)) {
             $result['type'] = strtolower($matches[1]); // z.B. 'bigint'
             $result['length'] = (int) $matches[2]; // z.B. 20
 
@@ -120,7 +133,15 @@ class LaravelMyAdminController extends Controller
             else{
                 $result['signed'] = "";
             }
+        } */
+        if (preg_match('/^(\w+)\((\d+)(?:,(\d+))?\)( unsigned)?$/i', $columnDefinition, $matches)) {
+            $result['type'] = $matches[1];           // 'decimal'
+            $result['length'] = $matches[2];         // '10'
+            $result['scale'] = $matches[3] ?? null;  // '2' oder null
+            $result['signed'] = isset($matches[4]); // true oder false
         }
+
+
         // if nothing found
         if ($result['type']=='') {
             $result['type'] = $columnDefinition;
@@ -175,8 +196,11 @@ class LaravelMyAdminController extends Controller
         $table = session('table');
         $req = $request->all();
         $columns = json_decode($req['rows'],1);
-        $migrationColumnsText = LaravelColumnCreator::createModifiedFields($columns);
-        return response()->json(['status'=>200,'data'=>'Jupp Table creation']);
+        $migrationName = $req['migration_name'];
+        $lcc = new LaravelColumnCreator();
+        $rows = $lcc->createModifiedFields($columns);
+        $this->createMigrationFile('modify', $table, $rows, $migrationName);
+        return response()->json(['status'=>200,'data'=>$rows]);
     }
 
 
@@ -196,7 +220,7 @@ class LaravelMyAdminController extends Controller
         $db     = session('db');
         $table  = session('table');
         $fields = $this->getFieldsFromTable($db, $table);
-        return view('laravelMyAdmin.editTableStructure', compact('fields'));
+        return view('laravelMyAdmin.editTableStructure', compact('fields','table'));
     }
 
     /* function testMigration(){
