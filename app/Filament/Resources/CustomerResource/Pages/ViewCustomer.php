@@ -9,6 +9,8 @@ use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Actions\Action;
+use App\Filament\Resources\ContactResource;
 
 class ViewCustomer extends ViewRecord
 {
@@ -32,4 +34,15 @@ class ViewCustomer extends ViewRecord
             ])
             ->columns(2);
     } */
+
+    public function getHeaderActions(): array
+    {
+        return [
+            Action::make('createContact')
+                ->label('Neuen Kontakt anlegen')
+                ->icon('heroicon-o-plus')
+                ->url(fn () => ContactResource::getUrl('create', ['customer_id' => $this->record->id]))
+                ->color('primary'),
+        ];
+    }
 }

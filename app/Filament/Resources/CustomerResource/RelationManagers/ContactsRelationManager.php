@@ -8,6 +8,8 @@ use Filament\Forms\Form; // Korrektes Import-Statement
 use Filament\Tables\Table;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\ContactResource;
+use Filament\Tables\Actions\Action;
+
 
 
 class ContactsRelationManager extends RelationManager
@@ -53,7 +55,29 @@ class ContactsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\Action::make('neuerKontakt')
+                    ->label('Neuen Kontakt anlegen')
+                    ->icon('heroicon-o-plus')
+                    ->form([
+                        Forms\Components\Select::make('type')
+                            ->label('Typ')
+                            ->options([
+                                'Telefonat' => 'Telefonat',
+                                'Email' => 'Email',
+                            ])
+                            ->required(),
+                        Forms\Components\Textarea::make('details')
+                            ->label('Details')
+                            ->rows(4),
+                        Forms\Components\DateTimePicker::make('contacted_at')
+                            ->label('Kontaktzeitpunkt')
+                            ->default(now()),
+                    ])
+                    ->action(function (array $data, RelationManager $livewire) {
+                        $livewire->getRelationship()->create(array_merge($data, [
+                            'customer_id' => $livewire->ownerRecord->id,
+                        ]));
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -63,4 +87,5 @@ class ContactsRelationManager extends RelationManager
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
+
 }

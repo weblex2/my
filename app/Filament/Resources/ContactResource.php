@@ -9,6 +9,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
+use App\Filament\Resources\ContactResource;
 
 class ContactResource extends Resource
 {
@@ -32,6 +34,7 @@ class ContactResource extends Resource
                         'name', // das brauchst du trotzdem für die Zuordnung, wird aber nicht angezeigt
                         fn ($query) => $query->orderBy('name') // optional: sortieren
                     )
+                    ->default(fn () => request()->get('customer_id'))
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->name}, {$record->first_name}")
                     ->searchable() // optional: damit man auch im Dropdown suchen kann
                     ->required(),
@@ -106,4 +109,7 @@ class ContactResource extends Resource
             'view' => Pages\ViewContact::route('/{record}'),
         ];
     }
+
+
+
 }
