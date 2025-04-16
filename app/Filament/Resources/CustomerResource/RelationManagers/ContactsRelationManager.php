@@ -50,6 +50,7 @@ class ContactsRelationManager extends RelationManager
 
                     //->openUrlInNewTab(), // optional,
                     ,
+                Tables\Columns\TextColumn::make('subject')->label('Subject')->limit(50),
                 Tables\Columns\TextColumn::make('details')->label('Details')->limit(50),
                 Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')->dateTime(),
             ])

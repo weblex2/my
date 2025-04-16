@@ -41,8 +41,8 @@ class ContactResource extends Resource
                 Forms\Components\Select::make('type')
                     ->label('Typ')
                     ->options([
-                        'Telefonat' => 'Telefonat',
-                        'Email' => 'Email',
+                        'tel' => 'Telefonat',
+                        'email' => 'Email',
                         // Weitere Typen nach Bedarf
                     ])
                     ->required(),

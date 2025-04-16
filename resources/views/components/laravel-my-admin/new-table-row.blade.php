@@ -1,6 +1,6 @@
 <tr id="{{str_replace(["{","}"],'', $name)}}" changed="true">
     <td><i class="fa-trash" onclick="$(this).closest('tr').remove()"></i></td>
-    <td><input type="text" name="name" value="{{$name}}"></td>
+    <td><input type="text" name="column_name" value="{{$name}}"></td>
     <td><x-laravel-my-admin.field-type-dropdown selected={{$type}} /></td>
     <td><input type="text" name="length"></td>
     <td><x-laravel-my-admin.default-dropdown selected="" /></td>
