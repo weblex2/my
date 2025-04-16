@@ -27,7 +27,13 @@ class ContactResource extends Resource
             ->schema([
                 Forms\Components\Select::make('customer_id')
                     ->label('Kunde')
-                    ->relationship('customer', 'name') // Beziehung zum Customer, "name" ist das anzuzeigende Feld
+                    ->relationship(
+                        'customer',
+                        'name', // das brauchst du trotzdem für die Zuordnung, wird aber nicht angezeigt
+                        fn ($query) => $query->orderBy('name') // optional: sortieren
+                    )
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->name}, {$record->first_name}")
+                    ->searchable() // optional: damit man auch im Dropdown suchen kann
                     ->required(),
                 Forms\Components\Select::make('type')
                     ->label('Typ')
