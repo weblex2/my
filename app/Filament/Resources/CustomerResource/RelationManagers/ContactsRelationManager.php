@@ -8,7 +8,9 @@ use Filament\Forms\Form; // Korrektes Import-Statement
 use Filament\Tables\Table;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\ContactResource;
+use App\Filament\Resources\CustomerResource;
 use Filament\Tables\Actions\Action;
+use Filament\Notifications\Notification;
 
 
 
@@ -77,7 +79,19 @@ class ContactsRelationManager extends RelationManager
                         $livewire->getRelationship()->create(array_merge($data, [
                             'customer_id' => $livewire->ownerRecord->id,
                         ]));
-                    })
+                         // Toast-Nachricht anzeigen
+                        Notification::make()
+                            ->title('Kontakt gespeichert')
+                            ->body('Der Kommentar wurde erfolgreich gespeichert.')
+                            ->success()
+                            ->send();
+                    }),
+
+                Tables\Actions\Action::make('bearbeiteKunde')
+                    ->label('Kunde bearbeiten')
+                    ->icon('heroicon-o-pencil')
+                    ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->ownerRecord]))
+                    ->color('gray')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

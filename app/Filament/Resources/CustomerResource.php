@@ -166,6 +166,7 @@ class CustomerResource extends Resource
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
+
                 ]),
             ])
             ->bulkActions([
@@ -191,6 +192,7 @@ class CustomerResource extends Resource
         return [
             'index' => Pages\ManageCustomers::route('/'),
             'view' => Pages\ViewCustomer::route('/{record}'), // Detailseite hinzufügen
+            'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }
 

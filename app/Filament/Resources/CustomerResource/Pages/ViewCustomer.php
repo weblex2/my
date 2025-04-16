@@ -43,6 +43,11 @@ class ViewCustomer extends ViewRecord
                 ->icon('heroicon-o-plus')
                 ->url(fn () => ContactResource::getUrl('create', ['customer_id' => $this->record->id]))
                 ->color('primary'),
+            Action::make('bearbeiteKunde')
+                ->label('Kunde bearbeiten')
+                ->icon('heroicon-o-pencil')
+                ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->record->id]))
+                ->color('gray')
         ];
     }
 }
