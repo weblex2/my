@@ -176,7 +176,7 @@ class ZimbraController extends Controller
             else{
                 $contact  = new Contact();
                 $contact->external_id = $email['uid'];
-                $contact->customer_id = 54;
+                $contact->customer_id = 1;
                 $contact->subject = $email['subject'];
                 $contact->type = 'email';
                 $contact->details = $email['text_body'];
