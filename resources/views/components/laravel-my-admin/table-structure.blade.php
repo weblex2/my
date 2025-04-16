@@ -37,7 +37,7 @@
             </td>
             <td>
                 @if ($edit)
-                  <input type="text" name="length" value="{{$field->Datatype['length']}} {{$field->Datatype['scale'] ?? ",".$field->Datatype['scale']}}" />
+                  <input type="text" name="length" value="{{$field->Datatype['length']}} {{isset($field->Datatype['scale']) ?  ",".$field->Datatype['scale'] : ""}}" />
                 @else
                     {{$field->Datatype['length']}}{{isset($field->Datatype['scale']) ?  ",".$field->Datatype['scale'] : ""}}
                 @endif
