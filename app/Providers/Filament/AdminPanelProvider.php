@@ -42,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->maxContentWidth('1280px')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#14b8a6',
             ])
             //->sidebarFullyCollapsibleOnDesktop()
             ->sidebarCollapsibleOnDesktop()

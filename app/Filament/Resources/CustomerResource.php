@@ -2,18 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use App\Http\Controllers\FilamentFieldsController;
-use App\Filament\Resources\CustomerResource\Pages;
-use App\Filament\Resources\CustomerResource\RelationManagers;
-use App\Models\Customer;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Customer;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TrashedFilter;
+use App\Filament\Resources\CustomerResource\Pages;
+use App\Http\Controllers\FilamentFieldsController;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CustomerResource\RelationManagers;
 
 class CustomerResource extends Resource
 {
@@ -89,7 +95,7 @@ class CustomerResource extends Resource
             ->columns(
                     //$form_fields,
                     [
-                Tables\Columns\TextColumn::make('actions')
+               /*  Tables\Columns\TextColumn::make('actions')
                     ->label('Actions') // Kein Label, um Platz zu sparen
                     ->getStateUsing(fn () => '') // Kein Inhalt, nur Platzhalter
                     ->html()
@@ -97,13 +103,15 @@ class CustomerResource extends Resource
                         'record' => $record,
                     ])->render())
                 ->extraAttributes(['class' => 'w-16']),
+                */
                 Tables\Columns\TextColumn::make('id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
-                Tables\Columns\TextColumn::make('status'),
+
                 Tables\Columns\TextColumn::make('name')
                     ->url(fn ($record) => static::getUrl('view', ['record' => $record])), // Link zur View-Seite,
                 Tables\Columns\TextColumn::make('first_name'),
+                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
                     ->searchable(),
