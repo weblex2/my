@@ -7,6 +7,8 @@ use Filament\Tables;
 use Filament\Forms\Form; // Korrektes Import-Statement
 use Filament\Tables\Table;
 use Filament\Resources\RelationManagers\RelationManager;
+use App\Filament\Resources\ContactResource;
+
 
 class ContactsRelationManager extends RelationManager
 {
@@ -38,7 +40,12 @@ class ContactsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('type')->label('Typ'),
+                Tables\Columns\TextColumn::make('type')->label('Typ')
+                    //->url(fn ($record) => ContactResource::getUrl('view', ['record' => $record])),
+                    ->url(fn ($record) => route('filament.admin.resources.contacts.view', ['record' => $record]))
+
+                    //->openUrlInNewTab(), // optional,
+                    ,
                 Tables\Columns\TextColumn::make('details')->label('Details')->limit(50),
                 Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')->dateTime(),
             ])
