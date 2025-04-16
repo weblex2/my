@@ -58,26 +58,26 @@ class AdminPanelProvider extends PanelProvider
 
             ->navigationItems([
 
-                NavigationItem::make('New Customers')
-                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'new']]]))
+                NavigationItem::make('Existing Accounts')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'exacc']]]))
                     ->icon('heroicon-o-user-plus')
                     ->group('Customers')
-                    ->badge($counts['new'] ?? 0),
-                NavigationItem::make('Active Customers')
-                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'active']]]))
+                    ->badge($counts['exacc'] ?? 0),
+                NavigationItem::make('Deals')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'deal']]]))
                     ->icon('heroicon-o-user-group')
                     ->group('Customers')
-                    ->badge($counts['active'] ?? 0),
-                NavigationItem::make('Inactive Customers')
-                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'inactive']]]))
+                    ->badge($counts['deal'] ?? 0),
+                NavigationItem::make('Leads')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'lead']]]))
                     ->icon('heroicon-o-user-group')
                     ->group('Customers')
-                    ->badge($counts['inactive'] ?? 0),
-                NavigationItem::make('Pending Customers')
-                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'pending']]]))
+                    ->badge($counts['lead'] ?? 0),
+                NavigationItem::make('Contacts')
+                    ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'contact']]]))
                     ->icon('heroicon-o-clock')
                     ->group('Customers')
-                    ->badge($counts['pending'] ?? 0),
+                    ->badge($counts['contact'] ?? 0),
 
                 NavigationItem::make('Noppals Blog')
                      ->url('https:/noppal.de', shouldOpenInNewTab: true)

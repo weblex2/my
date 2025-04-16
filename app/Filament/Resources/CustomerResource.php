@@ -51,10 +51,11 @@ class CustomerResource extends Resource
                 Forms\Components\Select::make('status')
                 ->label('Status')
                 ->options([
-                    'new' => 'Neu',
-                    'active' => 'Aktiv',
-                    'inactive' => 'Inaktiv',
-                    'pending' => 'Wartend',
+                    '' => 'Alle',
+                    'exacc' => 'Existing Account',
+                    'deal' => 'Deal',
+                    'lead' => 'Lead',
+                    'contact' => 'Contact',
                 ]),
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -151,9 +152,11 @@ class CustomerResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
                 SelectFilter::make('status')
                 ->options([
-                    'new' => 'New',
-                    'active' => 'Active',
-                    'pending' => 'Pending',
+                    '' => 'Alle',
+                    'exacc' => 'Existing Account',
+                    'deal' => 'Deal',
+                    'lead' => 'Lead',
+                    'contact' => 'Contact',
                 ]),
             ])
             ->recordAction(Tables\Actions\EditAction::class) // Keine Aktion bei einfachem Klick
