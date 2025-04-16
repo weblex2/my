@@ -17,7 +17,7 @@
      <div class="hidden menu md:flex">
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.showTableContent", [ "db" => session("db"), "table" => session("table") ] ) }}">Show</a></div>
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.showTableStructure", [ "db" => session("db"), "table" => session("table") ] ) }}">Structure</a></div>
-        <div class="menu-item gradient">SQL</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-code"></i> SQL</div>
         <div class="menu-item gradient">Search</div>
         <div class="menu-item gradient">Insert</div>
         <div class="menu-item gradient">Export</div>
@@ -34,7 +34,7 @@
 
 @elseif (request()->is('laravelMyAdmin/migrations*') )
         <div class="hidden menu md:flex">
-        <div class="menu-item gradient">SQL</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-code"></i> SQL</div>
         <div class="menu-item gradient">Operations</div>
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.tools")}}">Git</a></div>
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Tools</a></div>
@@ -50,7 +50,7 @@
     </div>
 @else
     <div class="hidden menu md:flex">
-        <div class="menu-item gradient">Datenbanken</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-database"></i> Datenbanken</div>
         <div class="menu-item gradient">SQL</div>
         <div class="menu-item gradient">Suche</div>
         <div class="menu-item gradient">Abfrage</div>

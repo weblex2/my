@@ -12,6 +12,7 @@
             <div class="">
                 @foreach($migrations as $migration)
                     <div class="migation-file p-1 {{ in_array($migration, $new_migrations) ? "bg-green-200" : "" }}">
+                        <a href="#"><i class="text-red-400 fa-solid fa-trash-can"></i></a> &nbsp;
                         <input type="checkbox" value="{{$migration}}" {{ in_array($migration, $new_migrations) ? "checked" : "" }}>
                         <span onclick="showMigration('{{$migration}}')">{{$migration}}</span>
                     </div>
