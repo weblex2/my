@@ -14,7 +14,7 @@ class LaravelColumnCreator extends Controller
     public function createModifiedFields($columns){
         foreach ($columns as $i => $column){
             $col = new Column();
-            $col->setName($column['name']);
+            $col->setName($column['column_name']);
             $col->setType($column['datatype']);
             $col->setLength($column['length']);
             $col->setCollation($column['collation']);

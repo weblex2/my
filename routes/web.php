@@ -29,6 +29,8 @@ use App\Http\Controllers\FilamentFieldsController;
 use App\Livewire\GoogleGemeni;
 use App\Http\Controllers\LaravelMyAdminController;
 use App\Http\Controllers\GitController;
+use App\Http\Controllers\ZimbraController;
+
 
 
 
@@ -314,8 +316,18 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
     Route::post('/laravelMyAdmin/exec-migration','execMigration')->middleware(['auth'])->name('laravelMyAdmin.execMigration');
     Route::get('/laravelMyAdmin/table-content/{db}/{table}','showTableContent')->middleware(['auth'])->name('laravelMyAdmin.showTableContent');
     Route::get('/laravelMyAdmin/clearCache','clearCache')->middleware(['auth'])->name('laravelMyAdmin.clearCache');
+    Route::get('/laravelMyAdmin/sql','sql')->middleware(['auth'])->name('laravelMyAdmin.sql');
+    Route::post('/laravelMyAdmin/sql','execsql')->middleware(['auth'])->name('laravelMyAdmin.execSql');
 
 });
 
 Route::get('/git/pull', [GitController::class, 'pull'])->name('git.pull');
 Route::get('/git/npm/{type}',[GitController::class, 'npm'])->middleware(['auth'])->name('laravelMyAdmin.npm');
+
+
+Route::controller(ZimbraController::class)->group(function () {
+    //Route::post('/zimbra/emails', 'getEmailsByDateRange')->name('zimbra.getEmailsByDateRange');
+    Route::post('/zimbra/emails', 'fetchTodayEmails')->name('zimbra.fetchTodayEmails');
+    Route::get('/zimbra/emails','index')->name('zimbra.index');
+    Route::get('/zimbra/saveEmails','saveEmails')->name('zimbra.saveEmails');
+});

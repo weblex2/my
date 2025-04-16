@@ -378,4 +378,62 @@ class LaravelMyAdminController extends Controller
         return view('laravelMyAdmin.clearCache');
     }
 
+    function sql(){
+        return view('laravelMyAdmin.sql');
+    }
+
+    function execSql(Request $request){
+        $db     = session('db');
+        $table  = session('table');
+        $this->setDatabase($db);
+        $req = $request->all();
+        $sql = $req['sql'];
+
+        try {
+            $start = microtime(true);
+            $sqlTrimmed = ltrim($sql);
+            $command = strtolower(strtok($sqlTrimmed, ' ')); // erster SQL-Befehl
+
+            switch ($command) {
+                case 'select':
+                    $result = DB::select($sql);
+                    $affected = count($result);
+                    break;
+
+                case 'update':
+                case 'delete':
+                case 'insert':
+                    $affected = DB::affectingStatement($sql);
+                    $result = true;
+                    break;
+
+                default:
+                    DB::statement($sql);
+                    $affected = null;
+                    $result = true;
+                    break;
+            }
+
+            $durationSec = round(microtime(true) - $start, 4);
+
+            return [
+                'success' => true,
+                'command' => $command,
+                'duration_sec' => $durationSec,
+                'affected_rows' => $affected,
+                'result' => $result,
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Raw SQL failed: ' . $e->getMessage());
+
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+                'duration_sec' => 0,
+                'affected_rows' => 0,
+                'result' => null,
+            ];
+        }
+    }
+
 }

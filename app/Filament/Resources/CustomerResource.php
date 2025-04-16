@@ -50,7 +50,12 @@ class CustomerResource extends Resource
                 $form_fields[2],
                 $form_fields[3],
                 $form_fields[4], */
-
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('first_name')
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('external_id')
                     ->required()
                     ->maxLength(255),
@@ -63,12 +68,7 @@ class CustomerResource extends Resource
                     'lead' => 'Lead',
                     'contact' => 'Contact',
                 ]),
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('first_name')
-                    ->required()
-                    ->maxLength(255),
+
                 Forms\Components\Toggle::make('is_active')
                     ->required(),
                 Forms\Components\Select::make('company_id')
@@ -80,7 +80,8 @@ class CustomerResource extends Resource
                     ->email()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('website')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
 

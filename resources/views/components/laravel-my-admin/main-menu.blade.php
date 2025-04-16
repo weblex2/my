@@ -15,16 +15,16 @@
      request()->is('laravelMyAdmin/table-content*')
         )
      <div class="hidden menu md:flex">
-        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.showTableContent", [ "db" => session("db"), "table" => session("table") ] ) }}">Show</a></div>
-        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.showTableStructure", [ "db" => session("db"), "table" => session("table") ] ) }}">Structure</a></div>
-        <div class="menu-item gradient"><i class="fa-solid fa-code"></i> SQL</div>
-        <div class="menu-item gradient">Search</div>
-        <div class="menu-item gradient">Insert</div>
-        <div class="menu-item gradient">Export</div>
-        <div class="menu-item gradient">Import</div>
-        <div class="menu-item gradient">Rights</div>
-        <div class="menu-item gradient">Operations</div>
-        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Tools</a></div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.showTableContent", [ "db" => session("db"), "table" => session("table") ] ) }}"><i class="fa-solid fa-list-check"></i> Show</a></div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.showTableStructure", [ "db" => session("db"), "table" => session("table") ] ) }}"> <i class="fa-solid fa-folder-tree"></i> Structure</a></div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.sql")}}"><i class="fa-solid fa-code"></i> SQL</a></div>
+        <div class="menu-item gradient"><i class="fa-solid fa-magnifying-glass"></i> Search</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-file-arrow-up"></i> Insert</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-file-export"></i> Export</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-file-import"></i> Import</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-person-military-pointing"></i> Priveledges</div>
+        <div class="menu-item gradient"><i class="fa-solid fa-screwdriver"></i> Operations</div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}"><i class="fa-solid fa-screwdriver-wrench"></i> Tools</a></div>
         <div class="relative menu-item gradient">
             <a href="{{route("laravelMyAdmin.migrations")}}">
                 <x-laravel-my-admin.migration-badge />
@@ -34,7 +34,7 @@
 
 @elseif (request()->is('laravelMyAdmin/migrations*') )
         <div class="hidden menu md:flex">
-        <div class="menu-item gradient"><i class="fa-solid fa-code"></i> SQL</div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.sql")}}"><i class="fa-solid fa-code"></i> SQL</a></div>
         <div class="menu-item gradient">Operations</div>
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.tools")}}">Git</a></div>
         <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.clearCache")}}">Tools</a></div>
@@ -51,7 +51,7 @@
 @else
     <div class="hidden menu md:flex">
         <div class="menu-item gradient"><i class="fa-solid fa-database"></i> Datenbanken</div>
-        <div class="menu-item gradient">SQL</div>
+        <div class="menu-item gradient"><a href="{{route("laravelMyAdmin.sql")}}"><i class="fa-solid fa-code"></i> SQL</a></div>
         <div class="menu-item gradient">Suche</div>
         <div class="menu-item gradient">Abfrage</div>
         <div class="menu-item gradient">Exportieren</div>
