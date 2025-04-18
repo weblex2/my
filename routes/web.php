@@ -330,4 +330,5 @@ Route::controller(ZimbraController::class)->group(function () {
     Route::post('/zimbra/emails', 'fetchTodayEmails')->name('zimbra.fetchTodayEmails');
     Route::get('/zimbra/emails','index')->name('zimbra.index');
     Route::get('/zimbra/saveEmails','saveEmails')->name('zimbra.saveEmails');
+    Route::get('/zimbra/test','test')->name('zimbra.test');
 });
