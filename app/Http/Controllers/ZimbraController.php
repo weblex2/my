@@ -67,18 +67,15 @@ class ZimbraController extends Controller
         #$yesterday = Carbon::yesterday()->format('d-M-Y'); // Format: "16-Apr-2025"
         #$dayAfterYesterday = Carbon::yesterday()->addDay()->format('d-M-Y H:i:s'); // Für den Bereich
 
-        $from = '2025-04-16';
-        $to   = '2025-04-17';
-
-        $from =  Carbon::parse($from)->format('d-M-Y H:i:s');
-        $to   =  Carbon::parse($to)->format('d-M-Y H:i:s');
-
+        $to = Carbon::now('UTC')->format('d-M-Y');
+        // Datum vor 3 Tagen in UTC
+        $from = Carbon::now('UTC')->subDays(3)->format('d-M-Y');
 
 
         // E-Mails von gestern abrufen
         $messages = $folder->query()
                         ->since($from)
-                        ->before($to)
+                        //->before($to)
                         ->get();
 
         foreach ($messages as $message) {
@@ -92,13 +89,12 @@ class ZimbraController extends Controller
                 $result['emails_imported'] = $result['emails_imported']+1;
                 if ($res['attachements']!=[]){
                     $result['attachements'][] = $res['attachements'];
-                    $result['documents_imported'] = $result['documents_imported']+ $res['attachements']['saved'];
+                    $result['documents_imported'] = $result['documents_imported']+ $res['attachements'][0]['saved'];
                 }
             }
             //$parsedEmails[] = $parsedEmail;
         }
-        $result['emails_imported'] = $result['saved'];
-        $result['documents_imported'] = $result['saved'];
+
         return $result;
     }
 

@@ -53,6 +53,7 @@ class CustomerResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('first_name')
                     ->required()
                     ->maxLength(255),
@@ -106,12 +107,14 @@ class CustomerResource extends Resource
                 ->extraAttributes(['class' => 'w-16']),
                 */
                 Tables\Columns\TextColumn::make('id')
-                    ->searchable(),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->url(fn ($record) => static::getUrl('view', ['record' => $record])), // Link zur View-Seite,
-                Tables\Columns\TextColumn::make('first_name'),
+                    ->url(fn ($record) => static::getUrl('view', ['record' => $record])) // Link zur View-Seite,
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('first_name')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
