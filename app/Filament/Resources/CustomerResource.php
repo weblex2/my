@@ -27,9 +27,11 @@ class CustomerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Persons & Customers';
+    protected static ?string $navigationGroup = 'Customers';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationLabel = 'All Customers';
+
+    protected static ?int $navigationSort = 4;
 
 
 

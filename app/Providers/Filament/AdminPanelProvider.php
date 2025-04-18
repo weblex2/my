@@ -70,17 +70,17 @@ class AdminPanelProvider extends PanelProvider
                     ->badge($counts['deal'] ?? 0),
                 NavigationItem::make('Leads')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'lead']]]))
-                    ->icon('heroicon-o-user-group')
+                    ->icon('heroicon-o-users')
                     ->group('Customers')
                     ->badge($counts['lead'] ?? 0),
                 NavigationItem::make('Contacts')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'contact']]]))
-                    ->icon('heroicon-o-clock')
+                    ->icon('heroicon-o-user')
                     ->group('Customers')
                     ->badge($counts['contact'] ?? 0),
 
-                NavigationItem::make('Noppals Blog')
-                     ->url('https:/noppal.de', shouldOpenInNewTab: true)
+                NavigationItem::make('ASSD')
+                     ->url('https:/assd.com', shouldOpenInNewTab: true)
                      ->icon('heroicon-o-shopping-cart')
                      ->group('External')
                      ->sort(3)
