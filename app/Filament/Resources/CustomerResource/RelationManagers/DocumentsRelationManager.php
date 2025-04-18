@@ -47,7 +47,21 @@ class DocumentsRelationManager extends RelationManager
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')->label('Datum')->dateTime('M d, Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('contact.subject')->label('Betreff')->limit(50)->searchable(),
-                Tables\Columns\TextColumn::make('size')->label('Größe')->limit(50),
+                Tables\Columns\TextColumn::make('size')->label('Größe')
+                    ->formatStateUsing(function ($state) {
+                        $bytes = (int) $state;
+
+                        if ($bytes >= 1073741824) {
+                            return number_format($bytes / 1073741824, 2) . ' GB';
+                        } elseif ($bytes >= 1048576) {
+                            return number_format($bytes / 1048576, 2) . ' MB';
+                        } elseif ($bytes >= 1024) {
+                            return number_format($bytes / 1024, 2) . ' KB';
+                        }
+
+                        return $bytes . ' B';
+                    })
+                    ->alignment('right'),
             ])
             ->filters([])
             ->headerActions([
