@@ -51,6 +51,9 @@ namespace App\Models{
  * @property string $comment
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $new_field_1
+ * @property string $new_field_2
+ * @property int $new_field_3
  * @property-read \App\Models\Blog|null $blog
  * @property-read \App\Models\User|null $comment_user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments newModelQuery()
@@ -60,6 +63,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereNewField1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereNewField2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereNewField3($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogComments whereUserId($value)
  */
@@ -196,8 +202,10 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string|null $external_id
  * @property int $customer_id
  * @property string $type
+ * @property string|null $subject
  * @property string|null $details
  * @property string|null $contacted_at
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -210,7 +218,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereCustomerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereExternalId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereSubject($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereUpdatedAt($value)
  */
@@ -225,7 +235,7 @@ namespace App\Models{
  * @property int $is_active
  * @property string $name
  * @property string $first_name
- * @property string $status
+ * @property string|null $status
  * @property int|null $company_id
  * @property string $email
  * @property string $phone
@@ -289,6 +299,7 @@ namespace App\Models{
  * @property string $type
  * @property string|null $address
  * @property string|null $address2
+ * @property string|null $city
  * @property string|null $zip
  * @property string|null $state
  * @property string|null $country
@@ -300,6 +311,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress whereAddress2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress whereCountry($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress whereCustomerId($value)
@@ -339,6 +351,38 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Cv whereValue($value)
  */
 	class Cv extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int|null $customer_id
+ * @property string|null $external_id
+ * @property string $filename
+ * @property int $size
+ * @property string $mime_type
+ * @property string|null $content
+ * @property int $user
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Contact|null $contact
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereExternalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Document whereUser($value)
+ */
+	class Document extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -864,6 +908,7 @@ namespace App\Models{
  * @property int $order_id
  * @property int $product_id
  * @property string $quantity
+ * @property string $unit_price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem newModelQuery()
@@ -874,6 +919,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|OrderItem whereUpdatedAt($value)
  */
 	class OrderItem extends \Eloquent {}

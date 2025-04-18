@@ -50,9 +50,10 @@ class ContactsRelationManager extends RelationManager
 
                     //->openUrlInNewTab(), // optional,
                     ,
+                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')->dateTime(),
                 Tables\Columns\TextColumn::make('subject')->label('Subject')->limit(50),
                 Tables\Columns\TextColumn::make('details')->label('Details')->limit(50),
-                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')->dateTime(),
+
             ])
             ->filters([
                 //
@@ -92,7 +93,17 @@ class ContactsRelationManager extends RelationManager
                     ->label('Kunde bearbeiten')
                     ->icon('heroicon-o-pencil')
                     ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->ownerRecord]))
-                    ->color('gray')
+                    ->color('gray'),
+                Tables\Actions\Action::make('importEmails')
+                    ->label('E-Mails importieren')
+                    ->icon('heroicon-o-inbox')
+                    ->color('primary')
+                    ->modalHeading('E-Mails importieren')
+                    ->modalContent(fn () => view('filament.actions.import-emails-modal', [
+                        'customerId' => $this->ownerRecord->id,
+                    ]))
+                    ->modalSubmitAction(false)
+                    ->modalCancelAction(false),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

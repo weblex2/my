@@ -80,5 +80,24 @@ class Customer extends Model
         return $query->where('status', 'pending');
     }
 
+    /**
+     * Gibt ein Array zurück, das E-Mail-Adressen den Kunden-IDs zuordnet
+     *
+     * @return array Array im Format ['email' => 'id']
+     */
+    public static function getEmailToIdMap(): array
+    {
+        try {
+            return self::select('id', 'email')
+                ->get()
+                ->pluck('id', 'email')
+                ->toArray();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Fehler beim Abrufen der E-Mail-zu-ID-Zuordnung', [
+                'error' => $e->getMessage(),
+            ]);
+            return [];
+        }
+    }
 
 }
