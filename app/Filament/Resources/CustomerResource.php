@@ -196,6 +196,7 @@ class CustomerResource extends Resource
     {
         return [
             RelationManagers\ContactsRelationManager::class,
+            RelationManagers\DocumentsRelationManager::class,
         ];
     }
 

@@ -30,6 +30,7 @@ use App\Livewire\GoogleGemeni;
 use App\Http\Controllers\LaravelMyAdminController;
 use App\Http\Controllers\GitController;
 use App\Http\Controllers\ZimbraController;
+use App\Http\Controllers\DocumentDownloadController;
 
 
 
@@ -332,3 +333,5 @@ Route::controller(ZimbraController::class)->group(function () {
     Route::get('/zimbra/saveEmails','saveEmails')->name('zimbra.saveEmails');
     Route::get('/zimbra/test','importEmails')->name('zimbra.importEmails');
 });
+
+Route::get('/documents/{document}/download', [DocumentDownloadController::class, 'download'])->name('documents.download');

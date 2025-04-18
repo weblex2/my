@@ -255,6 +255,8 @@ namespace App\Models{
  * @property-read int|null $contacts_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $customer_address
  * @property-read int|null $customer_address_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Document> $documents
+ * @property-read int|null $documents_count
  * @property-read \App\Models\CustomerAddress|null $homeAddress
  * @property-read \App\Models\CustomerAddress|null $invoiceAddress
  * @property-read \App\Models\CustomerAddress|null $preferredAddress
@@ -368,6 +370,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Contact|null $contact
+ * @property-read \App\Models\Customer|null $customer
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Document newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Document newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Document query()

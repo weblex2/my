@@ -12,4 +12,9 @@ class Document extends Model
     {
         return $this->belongsTo(Contact::class, 'external_id', 'external_id');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'id', 'customer_id');
+    }
 }

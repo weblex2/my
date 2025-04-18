@@ -4,7 +4,7 @@
 <div>
     <div>
         <h2 class="mb-4 text-lg font-semibold">E-Mails importieren</h2>
-
+        loading {{ $loading }}
         @if ($loading)
             <div class="flex justify-center mb-4">
                 <svg class="w-5 h-5 text-blue-500 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
