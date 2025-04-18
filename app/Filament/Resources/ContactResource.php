@@ -46,6 +46,7 @@ class ContactResource extends Resource
                     ->options([
                         'phone' => 'Telefonat',
                         'email' => 'E-Mail',
+                    ]),
                 Forms\Components\Textarea::make('details')
                     ->label('Details')
                     ->rows(4),
