@@ -39,9 +39,9 @@ class DocumentsRelationManager extends RelationManager
                         }
 
                         $url = route('documents.download', $record->id);
-                        $iconTag = '<img src="' . asset('img/icons/' . $icon) . '" alt="Icon" class="inline w-5 h-5 mr-2 align-middle" />&nbsp;';
+                        $iconTag = '<img src="' . asset('img/icons/' . $icon) . '" alt="Icon" class="rounded-full inline w-5 h-5 mr-2 align-middle" />&nbsp;';
 
-                        return $iconTag . "<a href='{$url}' target='_blank' class='ml-2 underline align-middle text-primary-600'>{$record->filename}</a>";
+                        return $iconTag . "<a href='{$url}' target='_blank' class='ml-2 underline align-middle  text-primary-600'>{$record->filename}</a>";
                     })
                     ->html()
                     ->searchable(),

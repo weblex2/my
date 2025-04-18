@@ -44,12 +44,26 @@ class ContactResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('type')
                     ->label('Typ')
-                    ->options([
-                        'tel' => 'Telefonat',
-                        'email' => 'Email',
-                        // Weitere Typen nach Bedarf
-                    ])
-                    ->required(),
+                    ->formatStateUsing(function ($state) {
+                        $icons = [
+                            'phone' => 'o-phone',
+                            'email' => 'o-envelope',
+                        ];
+
+                        $labels = [
+                            'phone' => 'Telefonat',
+                            'email' => 'E-Mail',
+                        ];
+
+                        $iconName = $icons[$state] ?? 'o-question-mark-circle';
+                        $label = $labels[$state] ?? ucfirst($state);
+
+                        return "<x-heroicon-{$iconName} class='inline-block w-5 h-5 mr-1 align-middle text-primary-600' />" .
+                            "<span class='align-middle'>{$label}</span>";
+                    })
+                    ->html()
+                    ->sortable()
+                    ->searchable(),
                 Forms\Components\Textarea::make('details')
                     ->label('Details')
                     ->rows(4),

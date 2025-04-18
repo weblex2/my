@@ -52,10 +52,13 @@ class CustomerResource extends Resource
                 $form_fields[2],
                 $form_fields[3],
                 $form_fields[4], */
+
+                Forms\Components\Toggle::make('is_active')
+                    ->required()
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-
                 Forms\Components\TextInput::make('first_name')
                     ->required()
                     ->maxLength(255),
@@ -72,23 +75,21 @@ class CustomerResource extends Resource
                     'contact' => 'Contact',
                 ]),
 
-                Forms\Components\Toggle::make('is_active')
-                    ->required(),
-                Forms\Components\Select::make('company_id')
-                    ->relationship('company', 'company_name'),
                 Forms\Components\TextInput::make('phone')
                     ->tel()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->maxLength(255),
+                Forms\Components\Select::make('company_id')
+                    ->relationship('company', 'company_name'),
+
                 Forms\Components\TextInput::make('website')
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                    ->maxLength(255),
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
 
-            ]);
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table

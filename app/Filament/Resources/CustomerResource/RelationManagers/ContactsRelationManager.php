@@ -11,6 +11,8 @@ use App\Filament\Resources\ContactResource;
 use App\Filament\Resources\CustomerResource;
 use Filament\Tables\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\HtmlString;
+
 
 
 
@@ -27,8 +29,8 @@ class ContactsRelationManager extends RelationManager
                 Forms\Components\Select::make('type')
                     ->label('Typ')
                     ->options([
-                        'Telefonat' => 'Telefonat',
-                        'Email' => 'Email',
+                        'phone' => 'Telefonat',
+                        'email' => 'Email',
                     ])
                     ->required(),
                 Forms\Components\Textarea::make('details')
@@ -45,13 +47,37 @@ class ContactsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('type')->label('Typ')
-                    //->url(fn ($record) => ContactResource::getUrl('view', ['record' => $record])),
-                    ->url(fn ($record) => route('filament.admin.resources.contacts.view', ['record' => $record]))
+                    ->formatStateUsing(function ($state) {
+                        $icons = [
+                            'email' => 'email.svg',
+                            'phone' => 'phone.svg',
+                        ];
 
-                    //->openUrlInNewTab(), // optional,
-                    ,
-                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d.m.Y H:i')),
-                Tables\Columns\TextColumn::make('subject')->label('Subject')->limit(50),
+                        $icon = 'default.svg';
+
+                         foreach ($icons as $type => $filename) {
+                            if ($state == $type) {
+                                $icon = $filename;
+                                break;
+                            }
+                        }
+
+                        $labels = [
+                            'phone' => 'Telefonat',
+                            'email' => 'E-Mail',
+                        ];
+                        $label = $labels[$state] ?? ucfirst($state);
+                        return '<img src="' . asset('img/icons/' . $icon) . '" alt="Icon" class="inline w-5 h-5 mr-2 align-middle rounded-full" />&nbsp;' . $label;
+                    })
+                    ->html()
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')
+                    ->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d.m.Y H:i')),
+                Tables\Columns\TextColumn::make('subject')->label('Subject')
+                    ->url(fn ($record) => route('filament.admin.resources.contacts.view', ['record' => $record]))
+                    ->limit(50),
                 Tables\Columns\TextColumn::make('details')->label('Details')->limit(50),
 
             ])
@@ -75,8 +101,8 @@ class ContactsRelationManager extends RelationManager
                         Forms\Components\Select::make('type')
                             ->label('Typ')
                             ->options([
-                                'Telefonat' => 'Telefonat',
-                                'Email' => 'Email',
+                                'phone' => 'Telefonat',
+                                'email' => 'Email',
                             ])
                             ->required(),
                         Forms\Components\Textarea::make('details')
