@@ -50,13 +50,22 @@ class ContactsRelationManager extends RelationManager
 
                     //->openUrlInNewTab(), // optional,
                     ,
-                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')->dateTime(),
+                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d.m.Y H:i')),
                 Tables\Columns\TextColumn::make('subject')->label('Subject')->limit(50),
                 Tables\Columns\TextColumn::make('details')->label('Details')->limit(50),
 
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')->label('Von'),
+                        Forms\Components\DatePicker::make('until')->label('Bis'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['from'], fn ($q, $date) => $q->whereDate('created_at', '>=', $date))
+                            ->when($data['until'], fn ($q, $date) => $q->whereDate('created_at', '<=', $date));
+                    }),
             ])
             ->headerActions([
                 Tables\Actions\Action::make('neuerKontakt')
