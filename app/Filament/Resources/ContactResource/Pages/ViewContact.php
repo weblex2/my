@@ -38,13 +38,13 @@ class ViewContact extends ViewRecord
     }
 
     public function getHeaderActions(): array
-{
-    return [
-        Action::make('replyEmail')
-            ->label('E-Mail beantworten')
-            ->icon('heroicon-o-envelope')
-            ->url(fn () => 'mailto:' . $this->record->from . '?subject=Antwort auf: ' . urlencode($this->record->subject))
-            ->openUrlInNewTab(),
-    ];
-}
+    {
+        return [
+            Action::make('replyEmail')
+                ->label('E-Mail beantworten')
+                ->icon('heroicon-o-envelope')
+                ->url(fn () => 'mailto:' . $this->record->from . '?subject=Antwort auf: ' . urlencode($this->record->subject))
+                ->openUrlInNewTab(),
+        ];
+    }
 }

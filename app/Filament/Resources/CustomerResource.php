@@ -20,6 +20,8 @@ use App\Filament\Resources\CustomerResource\Pages;
 use App\Http\Controllers\FilamentFieldsController;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CustomerResource\RelationManagers;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components\TextEntry;
 
 class CustomerResource extends Resource
 {
@@ -196,6 +198,22 @@ class CustomerResource extends Resource
             ;
 
     }
+
+    /* public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('company.company_name')
+                    ->label('Company'),
+                TextEntry::make('name')
+                    ->label('Lastname'),
+                TextEntry::make('first_name')
+                    ->label('First Name'),
+                TextEntry::make('website')
+                    ->label('Website')
+            ])
+            ->columns(3);
+    } */
 
     public static function getRelations(): array
     {

@@ -47,7 +47,7 @@ class ViewCustomer extends ViewRecord
                 ->label('Kunde bearbeiten')
                 ->icon('heroicon-o-pencil')
                 ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->record->id]))
-                ->color('gray')
+                ->color('primary')
         ];
     }
 }

@@ -81,6 +81,7 @@ class ContactsRelationManager extends RelationManager
                     ->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d.m.Y H:i')),
                 Tables\Columns\TextColumn::make('subject')->label('Subject')
                     ->url(fn ($record) => route('filament.admin.resources.contacts.view', ['record' => $record]))
+                    ->color('primary')
                     ->limit(50),
                 Tables\Columns\TextColumn::make('details')->label('Details')->limit(50),
 
@@ -132,7 +133,7 @@ class ContactsRelationManager extends RelationManager
                     ->label('Kunde bearbeiten')
                     ->icon('heroicon-o-pencil')
                     ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->ownerRecord]))
-                    ->color('gray'),
+                    ->color('primary'),
                 Tables\Actions\Action::make('importEmails')
                     ->label('E-Mails importieren')
                     ->icon('heroicon-o-inbox')
