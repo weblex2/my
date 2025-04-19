@@ -32,13 +32,14 @@ class ZimbraController extends Controller
     public function importEmails(){
 
         $result = [
-            'status' => '',
+            'status' => 'success',
             'saved' => 0,
             'errors' => [],
             'attachements' => [],
             'documents_imported' => 0,
             'emails_imported' => 0,
         ];
+
 
         $host = "mail.efm.de"; #/zimbra/#1
         $port = 993;
