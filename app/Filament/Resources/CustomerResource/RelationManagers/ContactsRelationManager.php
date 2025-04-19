@@ -48,28 +48,32 @@ class ContactsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('type')->label('Typ')
                     ->formatStateUsing(function ($state) {
-                        $icons = [
-                            'email' => 'email.svg',
-                            'phone' => 'phone.svg',
-                        ];
-
-                        $icon = 'default.svg';
-
-                         foreach ($icons as $type => $filename) {
-                            if ($state == $type) {
-                                $icon = $filename;
-                                break;
-                            }
-                        }
-
                         $labels = [
                             'phone' => 'Telefonat',
                             'email' => 'E-Mail',
                         ];
                         $label = $labels[$state] ?? ucfirst($state);
-                        return '<img src="' . asset('img/icons/' . $icon) . '" alt="Icon" class="inline w-5 h-5 mr-2 align-middle rounded-full" />&nbsp;' . $label;
+                        return $label;
                     })
-                    ->html()
+                    ->icon(function ($record) {
+                        // Definiere eine Zuordnung von Typen zu Heroicon-Namen
+                        $icons = [
+                            'phone' => 'heroicon-o-phone',   // Telefon-Icon
+                            'email' => 'heroicon-o-envelope', // E-Mail-Icon
+                        ];
+
+                        // Standard-Icon, falls der Typ nicht gefunden wird
+                        $icon = 'heroicon-o-question-mark-circle';
+
+                        // Suche nach dem passenden Icon basierend auf dem Typ
+                        if (isset($icons[$record->type])) {
+                            $icon = $icons[$record->type];
+                        }
+
+                        return $icon;
+                    })
+                    ->iconColor('primary')
+                    //->html()
                     ->searchable()
                     ->sortable(),
 

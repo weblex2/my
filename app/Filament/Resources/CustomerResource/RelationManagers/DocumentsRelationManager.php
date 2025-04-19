@@ -20,31 +20,36 @@ class DocumentsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('filename')
                     ->label('Filename')
-                    ->formatStateUsing(function ($record) {
+                    ->icon(function ($record) {
+                        // Definiere eine Zuordnung von MIME-Typen zu Heroicon-Namen
                         $icons = [
-                            'image/' => 'image.svg',
-                            'application/pdf' => 'pdf.svg',
-                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'word.svg',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'excel.svg',
-                            'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'powerpoint.svg',
+                            'image/' => 'heroicon-o-camera', // Kamera für Bilder
+                            'application/pdf' => 'heroicon-o-document', // Dokument-Icon für PDF
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'heroicon-o-document-text', // Word-Dokument-Icon
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'heroicon-o-document-text', // Excel-Icon (Datenbank als Platzhalter)
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'heroicon-o-presentation-chart-bar', // Powerpoint-Icon
                         ];
 
-                        $icon = 'default.svg';
+                        // Fallback-Icon, falls der MIME-Typ nicht gefunden wird
+                        $icon = 'heroicon-o-document';
 
-                        foreach ($icons as $type => $filename) {
+                        // Suche nach dem passenden Icon basierend auf dem MIME-Typ
+                        foreach ($icons as $type => $heroicon) {
                             if (str_contains($record->mime_type, $type)) {
-                                $icon = $filename;
+                                $icon = $heroicon;
                                 break;
                             }
                         }
 
-                        $url = route('documents.download', $record->id);
-                        $iconTag = '<img src="' . asset('img/icons/' . $icon) . '" alt="Icon" class="rounded-full inline w-5 h-5 mr-2 align-middle" />&nbsp;';
-
-                        return $iconTag . "<a href='{$url}' target='_blank' class='ml-2 underline align-middle  text-primary-600'>{$record->filename}</a>";
+                        return $icon;
                     })
-                    ->html()
+                    ->iconColor('primary')
+                    ->url(function ($record) {
+                        // URL für den Download-Link der Datei
+                        return route('documents.download', $record->id);
+                    })
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')->label('Datum')->dateTime('M d, Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('contact.subject')->label('Betreff')->limit(50)->searchable(),
                 Tables\Columns\TextColumn::make('size')->label('Größe')
