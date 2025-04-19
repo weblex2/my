@@ -144,7 +144,9 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('website')
                     ->icon('heroicon-o-link')
                     ->searchable()
-                    ->url(fn ($record) => route('profile.show', $record->id))
+                    //->url(fn ($record) => route('profile.show', $record->id)) //link zum user profile
+                    ->url(fn ($record) => $record->website)
+                    ->openUrlInNewTab()
                     ->extraAttributes([
                         'style' => 'max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
                     ]),

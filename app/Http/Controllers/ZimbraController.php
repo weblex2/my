@@ -188,6 +188,8 @@ class ZimbraController extends Controller
             $contact->external_id   = $parsedEmail['id'];
             $contact->customer_id   = $customer_id;
             $contact->type          = 'email';
+            $contact->from          = $parsedEmail['from'];
+            $contact->to            = $parsedEmail['to'];
             $contact->contacted_at  = $parsedEmail['date'];
             $contact->subject       = $parsedEmail['subject'];
             $contact->details       = $parsedEmail['plain_text'];

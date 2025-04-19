@@ -83,6 +83,7 @@ class ContactResource extends Resource
                     ->limit(50),
 
             ])
+            
             ->filters([
                 //
             ])
