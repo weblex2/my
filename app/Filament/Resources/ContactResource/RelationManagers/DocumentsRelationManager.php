@@ -29,9 +29,14 @@ class DocumentsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('filename')
-            ->columns([
-                Tables\Columns\TextColumn::make('filename'),
-            ])
+           ->columns([
+            Tables\Columns\TextColumn::make('filename')
+                ->label('Download')
+                ->url(fn ($record) => route('documents.download', ['document' => $record->id]))
+                ->iconColor('primary')
+                ->icon('heroicon-m-arrow-down-tray')
+                ->openUrlInNewTab(),
+        ])
             ->filters([
                 //
             ])

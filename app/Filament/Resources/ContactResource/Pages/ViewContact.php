@@ -15,15 +15,15 @@ class ViewContact extends ViewRecord
 
     public function getTitle(): string
     {
-        return "Kontakt  ". ($this->record->customer->name ?? 'Unbekannter Kunde') . " /  " . $this->record->contacted_at;
+        return "Kontakt  ". ($this->record->customer->name ?? 'Unbekannter Kunde') . " /  " . $this->record->contacted_at . " (Customer ID ". $this->record->customer->id .")" ;
     }
 
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
-                TextEntry::make('customer_id')
-                    ->label('Customer ID'),
+               /*  TextEntry::make('customer_id')
+                    ->label('Customer ID'), */
                 TextEntry::make('type')
                     ->label('Kontaktart'),
                 TextEntry::make('subject')
