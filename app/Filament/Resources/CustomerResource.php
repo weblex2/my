@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Customer;
+use App\Models\CustomerAssd;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
@@ -88,6 +89,48 @@ class CustomerResource extends Resource
 
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255),
+                /* Forms\Components\TextInput::make('assd.bi')
+                    ->maxLength(255)
+                    ->relationship('assd', 'bi'), */
+                Forms\Components\Select::make('assd.solution')
+                    ->relationship('assd', 'solution')
+                    ->options([
+                        'pms2' => 'PMS 2',
+                        'pms3' => 'PMS 3',
+                    ])
+                    ->saveRelationshipsUsing(function ($record, $state) {
+                        if ($state) {
+                            $record->assd()->updateOrCreate(
+                                ['customer_id' => $record->id],
+                                ['solution' => $state]
+                            );
+                        }
+                    }),
+
+                Forms\Components\Select::make('assd.bi')
+                    ->label('BI')
+                    ->relationship('assd', 'bi')
+                    ->options([
+                        'clickview' => 'CliqView',
+                        'mspbi' => 'MS Power BI',
+                    ])
+                    ->saveRelationshipsUsing(function ($record, $state) {
+                        if ($state) {
+                            $record->assd()->updateOrCreate(
+                                ['customer_id' => $record->id],
+                                ['bi' => $state]
+                            );
+                        }
+                    }),
+                   /*  ->afterStateUpdated(function ($state, $record) {
+                        if ($state) {
+                            $record->assd()->updateOrCreate(
+                                ['customer_id' => $record->id],
+                                ['solution' => $state]
+                            );
+                        }
+                    }), */
+
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
 
@@ -120,13 +163,11 @@ class CustomerResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('first_name')
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
                     ->searchable(),
-                /* Tables\Columns\TextColumn::make('preferredAddress.address2')
-                    ->label('Address 2')
-                    ->searchable(), */
                 Tables\Columns\TextColumn::make('preferredAddress.city')
                     ->label('City')
                     ->searchable(),
@@ -154,6 +195,42 @@ class CustomerResource extends Resource
                     ]),
                 Tables\Columns\TextColumn::make('external_id')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('assd.type')
+                    ->label('Type')
+                    ->searchable()
+                    ->visible(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+                        $statusFilter = $filters['status']['value'] ?? null;
+                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
+                        return $isVisible;
+                    }),
+                Tables\Columns\TextColumn::make('assd.spread')
+                    ->label('Spread')
+                    ->searchable()
+                    ->visible(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+                        $statusFilter = $filters['status']['value'] ?? null;
+                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
+                        return $isVisible;
+                    }),
+                Tables\Columns\TextColumn::make('assd.bi')
+                    ->label('BI')
+                    ->searchable()
+                    ->visible(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+                        $statusFilter = $filters['status']['value'] ?? null;
+                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
+                        return $isVisible;
+                    }),
+                Tables\Columns\TextColumn::make('assd.solution')
+                    ->label('Solution')
+                    ->searchable()
+                    ->visible(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+                        $statusFilter = $filters['status']['value'] ?? null;
+                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
+                        return $isVisible;
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -211,6 +288,8 @@ class CustomerResource extends Resource
                     ->label('First Name'),
                 TextEntry::make('website')
                     ->label('Website')
+                TextEntry::make('status')
+                    ->label('Status')
             ])
             ->columns(3);
     } */

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 
 class Customer extends Model
 {
@@ -39,6 +40,11 @@ class Customer extends Model
     public function invoiceAddress()
     {
         return $this->hasOne(CustomerAddress::class)->where('type', 'INVC');
+    }
+
+    public function assd()
+    {
+        return $this->hasOne(CustomerAssd::class, 'customer_id', 'id');
     }
 
     public function preferredAddress()
@@ -103,6 +109,48 @@ class Customer extends Model
     public function documents()
     {
         return $this->hasMany(Document::class);
+    }
+
+    /**
+     * Gibt die Anzahl der Datensätze pro Monat für die letzten 6 Monate als Array zurück.
+     * Schlüssel sind Monatsnamen (z. B. 'January'), auch Monate ohne Datensätze sind enthalten (mit count = 0).
+     *
+     * @return array Format: ['January' => count, 'February' => count, ...]
+     */
+    public static function getRecordCountByYearMonthLastSixMonths(): array
+    {
+        $sixMonthsAgo = now()->subMonths(6)->startOfMonth();
+        $now = now()->startOfMonth();
+
+        // Hole die Daten aus der Datenbank
+        $results = self::selectRaw("
+                MONTHNAME(created_at) AS month_name,
+                COUNT(*) AS record_count
+            ")
+            ->where('created_at', '>=', $sixMonthsAgo)
+            ->groupByRaw('YEAR(created_at), MONTH(created_at)')
+            ->orderByDesc('created_at')
+            ->get()
+            ->pluck('record_count', 'month_name')
+            ->toArray();
+
+        // Generiere alle Monate der letzten 6 Monate
+        $allMonths = [];
+        $currentMonth = Carbon::parse($now);
+        for ($i = 0; $i < 6; $i++) {
+            $monthName = $currentMonth->format('F'); // Vollständiger Monatsname (z. B. January)
+            $allMonths[$monthName] = $results[$monthName] ?? 0;
+            $currentMonth->subMonth();
+        }
+
+        // Sortiere nach Monatsreihenfolge (absteigend)
+        $monthOrder = array_reverse(array_slice(array_map(fn($i) => Carbon::createFromDate(2025, $i, 1)->format('F'), range(1, 12)), -6, 6));
+        $sortedMonths = array_fill_keys($monthOrder, 0);
+        foreach ($allMonths as $month => $count) {
+            $sortedMonths[$month] = $count;
+        }
+
+        return $sortedMonths;
     }
 
 }

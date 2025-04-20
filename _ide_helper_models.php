@@ -205,6 +205,8 @@ namespace App\Models{
  * @property string|null $external_id
  * @property int $customer_id
  * @property string $type
+ * @property string|null $from
+ * @property string|null $to
  * @property string|null $subject
  * @property string|null $details
  * @property string|null $contacted_at
@@ -219,8 +221,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereCustomerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereDetails($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereExternalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereFrom($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereSubject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereTo($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact whereUpdatedAt($value)
  */
@@ -250,6 +254,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $addresses
  * @property-read int|null $addresses_count
+ * @property-read \App\Models\CustomerAssd|null $assd
  * @property-read \App\Models\Company|null $company
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Contact> $contacts
  * @property-read int|null $contacts_count
@@ -324,6 +329,44 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAddress whereZip($value)
  */
 	class CustomerAddress extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $customer_id
+ * @property string|null $type
+ * @property string|null $spread
+ * @property string|null $arr
+ * @property string|null $cm
+ * @property string|null $bi
+ * @property string|null $solution
+ * @property string|null $houses
+ * @property string|null $rooms
+ * @property string|null $sales_valume
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Customer $customer
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereArr($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereBi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereCm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereCustomerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereHouses($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereRooms($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereSalesValume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereSolution($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereSpread($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereUpdatedAt($value)
+ */
+	class CustomerAssd extends \Eloquent {}
 }
 
 namespace App\Models{
