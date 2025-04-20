@@ -12,4 +12,9 @@ class Contact extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'external_id', 'external_id');
+    }
 }

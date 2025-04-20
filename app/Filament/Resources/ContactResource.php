@@ -6,11 +6,14 @@ use App\Filament\Resources\ContactResource\Pages;
 use App\Models\Contact;
 use Filament\Forms;
 use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Actions\Action;
-use App\Filament\Resources\ContactResource;
+use App\Filament\Resources\RelationManagers\DocumentsRelationManager;
+use App\Filament\Resources\ContactResource\RelationManagers;
+
 
 class ContactResource extends Resource
 {
@@ -83,7 +86,7 @@ class ContactResource extends Resource
                     ->limit(50),
 
             ])
-            
+
             ->filters([
                 //
             ])
@@ -98,7 +101,7 @@ class ContactResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\DocumentsRelationManager::class,
         ];
     }
 

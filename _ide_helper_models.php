@@ -213,6 +213,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Customer $customer
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Document> $documents
+ * @property-read int|null $documents_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Contact query()
