@@ -18,7 +18,7 @@ class TableChart extends BaseWidget
         return $table
             ->query(CustomerResource::getEloquentQuery())
             ->defaultPaginationPageOption(5)
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('id', 'asc')
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->sortable(),
