@@ -25,7 +25,8 @@ class TableChart extends BaseWidget
                 Tables\Columns\TextColumn::make('company.company_name'),
 
                 Tables\Columns\TextColumn::make('name')
-                    //->url(fn ($record) => static::getUrl('view', ['record' => $record])) // Link zur View-Seite,
+                    ->url(fn ($record) => CustomerResource::getUrl('view', ['record' => $record]))
+                    ->color('primary')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('first_name')
                     ->sortable(),
