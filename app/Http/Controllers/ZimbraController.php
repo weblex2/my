@@ -21,6 +21,7 @@ class ZimbraController extends Controller
     private $user_id;
     private $customerEmailIds;
     public  $result;
+    private $folderName;
 
     public function __construct()
     {
@@ -29,8 +30,8 @@ class ZimbraController extends Controller
         $this->result = [];
     }
 
-    public function importEmails(){
-
+    public function importEmails()
+    {
         $result = [
             'status' => 'success',
             'saved' => 0,
@@ -40,64 +41,71 @@ class ZimbraController extends Controller
             'emails_imported' => 0,
         ];
 
-
-        $host = "mail.efm.de"; #/zimbra/#1
+        $host = "mail.efm.de";
         $port = 993;
         $username = 'alex.noppenberger@assd.com';
         $password = 'Akwg44Frt6Cx';
-        $ssl = "/ssl";
-        // ClientManager initialisieren
+
         $cm = new ClientManager();
 
-        // Client mit Konfiguration erstellen
         $client = $cm->make([
-                'host' => $host,
-                'port' => 993,
-                'encryption' => 'ssl',
-                'validate_cert' => true,
-                'username' => $username,
-                'password' => $password,
-                'protocol' => 'imap'
-            ]);
+            'host' => $host,
+            'port' => 993,
+            'encryption' => 'ssl',
+            'validate_cert' => true,
+            'username' => $username,
+            'password' => $password,
+            'protocol' => 'imap'
+        ]);
 
         $client->connect();
-        $folder = $client->getFolder('INBOX');
 
 
-        // Datum für gestern berechnen
-        #$yesterday = Carbon::yesterday()->format('d-M-Y'); // Format: "16-Apr-2025"
-        #$dayAfterYesterday = Carbon::yesterday()->addDay()->format('d-M-Y H:i:s'); // Für den Bereich
-
+        // Datum
         $to = Carbon::now('UTC')->format('d-M-Y');
-        // Datum vor 3 Tagen in UTC
         $from = Carbon::now('UTC')->subDays(3)->format('d-M-Y');
 
+        // 📥 INBOX & 📤 SENT Folder
+        $folders = ['INBOX', 'Sent'];
 
-        // E-Mails von gestern abrufen
-        $messages = $folder->query()
-                        ->since($from)
-                        //->before($to)
-                        ->get();
-
-        foreach ($messages as $message) {
-            //echo $message->getSubject() . "<br>";
-            $parsedEmail = $this->parseSingleEmail($message);
-            $res = $this->saveEmail($parsedEmail);
-            if ($res){
-                if ($result['status']!="error"){
-                    $result['status'] = "success";
+        foreach ($folders as $folderName) {
+            try {
+                $folder = null;
+                $folder = $client->getFolder($folderName);
+                if ($folderName=="Sent"){
+                    $this->folderName = "Sent";
                 }
-                $result['emails_imported'] = $result['emails_imported']+1;
-                if ($res['attachements']!=[]){
-                    $result['attachements'][] = $res['attachements'];
-                    $result['documents_imported'] = $result['documents_imported']+ $res['attachements'][0]['saved'];
+            } catch (\Exception $e) {
+                $result['errors'][] = "Ordner '$folderName' konnte nicht geladen werden: " . $e->getMessage();
+                continue;
+            }
+
+            $messages = $folder->query()
+                ->since($from)
+                ->get();
+
+            foreach ($messages as $message) {
+                $parsedEmail = $this->parseSingleEmail($message);
+                $res = $this->saveEmail($parsedEmail);
+
+                if ($res) {
+                    if ($result['status'] != "error") {
+                        $result['status'] = "success";
+                    }
+
+                    $result['emails_imported']++;
+
+                    if (!empty($res['attachements'])) {
+                        $result['attachements'][] = $res['attachements'];
+                        $result['documents_imported'] += $res['attachements'][0]['saved'];
+                    }
                 }
             }
-            //$parsedEmails[] = $parsedEmail;
         }
 
         return $result;
     }
+
 
     /**
      * Einzelne E-Mail parsen
@@ -180,8 +188,11 @@ class ZimbraController extends Controller
             $contact = new Contact();
             $email = $parsedEmail['from'];
             $customer_id = $this->customerEmailIds[$email] ?? false;
-            if (!$customer_id){
+            if (!$customer_id && $this->folderName!="Sent"){
                 return false;
+            }
+            else{
+                $customer_id = 3;
             }
             // Benutzer-ID setzen (Fallback: aktueller Benutzer oder 1)
             $userId = $this->user_id ?? auth()->id() ?? 1;
