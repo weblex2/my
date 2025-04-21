@@ -192,9 +192,18 @@ class ZimbraController extends Controller
 
         if (!$this->emailExists($parsedEmail['id'])){
             $contact = new Contact();
-            $email = $parsedEmail['from'];
-            $customer_id = $this->customerEmailIds[$email] ?? false;
+            $from = $parsedEmail['from'];
+            $to = $parsedEmail['to'];
+            $customer_id = $this->customerEmailIds[$from] ?? false;
             if (!$customer_id && $this->folderName!="Sent"){
+                return false;
+            }
+
+            if (!$customer_id && $this->folderName="Sent"){
+                $customer_id = $this->customerEmailIds[$to] ?? false;
+            }
+
+            if (!$customer_id){
                 return false;
             }
 
