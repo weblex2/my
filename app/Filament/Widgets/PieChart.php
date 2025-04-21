@@ -11,6 +11,17 @@ class PieChart extends ChartWidget
     protected static ?int $sort = 6;
     protected static string $chartType = 'pie';
 
+    protected static ?string $maxHeight = '300px';
+    public function getColumnSpan(): int|string|array
+    {
+        return 1; // Halbe Breite (von 2 Spalten z. B.)
+    }
+
+    protected function getType(): string
+    {
+        return 'pie';
+    }
+
     protected function getData(): array
     {
         $statuses = Customer::selectRaw('status, COUNT(*) as count')
@@ -34,15 +45,5 @@ class PieChart extends ChartWidget
             ],
             'labels' => array_keys($statuses),
         ];
-    }
-
-    protected function getType(): string
-    {
-        return 'pie';
-    }
-
-    protected function getContentHeight(): string
-    {
-        return 'h-10'; // oder h-80, h-96 usw.
     }
 }
