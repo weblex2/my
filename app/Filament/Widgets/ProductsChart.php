@@ -21,6 +21,14 @@ class ProductsChart extends ChartWidget
                 [
                     'label' => 'Customers created',
                     'data' => $data,
+                    'fill' => true,
+                ],
+                [
+                    'label' => 'Customers created last year',
+                    'data' =>[15, 10, 10, 4, 5, 0, 0, 0, 0, 0, 0, 0 ],
+                    'borderColor' => 'rgba(76, 175, 80, 1)',         // Linienfarbe
+                    'backgroundColor' => 'rgba(76, 175, 80, 0.4)',   // Fläche unter der Linie
+                    'fill' => true,                                  // Fläche unter Linie anzeigen
                 ],
             ],
             'labels' => $labels,

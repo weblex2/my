@@ -40,4 +40,9 @@ class PieChart extends ChartWidget
     {
         return 'pie';
     }
+
+    protected function getContentHeight(): string
+    {
+        return 'h-10'; // oder h-80, h-96 usw.
+    }
 }
