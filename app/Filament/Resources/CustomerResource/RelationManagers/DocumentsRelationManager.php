@@ -6,6 +6,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Models\Document;
+use App\Filament\Resources\ContactResource;
 use App\Filament\Resources\CustomerResource;
 
 class DocumentsRelationManager extends RelationManager
@@ -49,9 +50,12 @@ class DocumentsRelationManager extends RelationManager
                         return route('documents.download', $record->id);
                     })
                     ->searchable(),
-
-                Tables\Columns\TextColumn::make('created_at')->label('Datum')->dateTime('M d, Y H:i')->sortable(),
-                Tables\Columns\TextColumn::make('contact.subject')->label('Betreff')->limit(50)->searchable(),
+                Tables\Columns\TextColumn::make('contact.subject')
+                    ->label('Betreff')
+                    ->url(fn ($record) => route('filament.admin.resources.contacts.view', ['record' => $record]))
+                    ->color('primary')
+                    ->limit(50)->searchable(),
+                 Tables\Columns\TextColumn::make('created_at')->label('Datum')->dateTime('M d, Y H:i')->sortable(),
                 Tables\Columns\TextColumn::make('size')->label('Größe')
                     ->formatStateUsing(function ($state) {
                         $bytes = (int) $state;

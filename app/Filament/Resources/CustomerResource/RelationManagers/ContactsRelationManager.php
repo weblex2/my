@@ -103,14 +103,16 @@ class ContactsRelationManager extends RelationManager
                     //->html()
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('from')->label('From'),
-                Tables\Columns\TextColumn::make('to')->label('To'),
-                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')
-                    ->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d.m.Y H:i')),
                 Tables\Columns\TextColumn::make('subject')->label('Subject')
                     ->url(fn ($record) => route('filament.admin.resources.contacts.view', ['record' => $record]))
                     ->color('primary')
                     ->limit(50),
+                Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')
+                    ->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d.m.Y H:i')),
+                Tables\Columns\TextColumn::make('from')->label('From'),
+                Tables\Columns\TextColumn::make('to')->label('To'),
+
+
                 Tables\Columns\TextColumn::make('details')->label('Details')->limit(50),
 
             ])
