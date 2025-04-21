@@ -20,7 +20,10 @@ class CompanyResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Persons & Customers';
+    #protected static ?string $navigationGroup = 'Persons & Customers';
+    protected static ?string $navigationGroup = 'Customers';
+
+    protected static ?int $navigationSort = 6;
 
     public static function getNavigationBadge(): ?string  {
         return static::getModel()::count();

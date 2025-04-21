@@ -5,8 +5,6 @@
             <img src="img/noppal3.jpg" class="img-me">
         </div>
 
-@livewire('import-emails', ['customerId' => 1])
-
         <div class="container flex items-center justify-center mb-20 text-black">
         <div class="w-full p-10 bg-white border rounded-lg shadow-lg border-zinc-200">
             <p class="text-lg text-center">

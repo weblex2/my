@@ -12,9 +12,7 @@ use App\Filament\Resources\CustomerResource;
 use Filament\Tables\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\HtmlString;
-
-
-
+use Illuminate\Support\Facades\Auth;
 
 class ContactsRelationManager extends RelationManager
 {
@@ -56,27 +54,36 @@ class ContactsRelationManager extends RelationManager
                         return $label;
                     })
                     ->icon(function ($record) {
-                        // Definiere eine Zuordnung von Typen zu Heroicon-Namen
-                        $icons = [
-                            'phone' => 'heroicon-o-phone',   // Telefon-Icon
-                            'email' => 'heroicon-o-envelope', // E-Mail-Icon
-                        ];
+                        $userEmail = Auth::user()?->email;
 
-                        // Standard-Icon, falls der Typ nicht gefunden wird
-                        $icon = 'heroicon-o-question-mark-circle';
+                        if ($record->type === 'email') {
+                            // Eingehend, wenn User Empfänger ist
+                            if (in_array($userEmail, explode(',',$record->to))) {
+                                return 'heroicon-o-arrow-down-left'; // Beispiel: eingehend
+                            }
 
-                        // Suche nach dem passenden Icon basierend auf dem Typ
-                        if (isset($icons[$record->type])) {
-                            $icon = $icons[$record->type];
+                            // Ausgehend, wenn User Absender ist
+                            if ($record->from === $userEmail) {
+                                return 'heroicon-o-arrow-up-right'; // Beispiel: ausgehend
+                            }
+
+                            // Fallback
+                            return 'heroicon-o-envelope';
                         }
 
-                        return $icon;
+                        // Für andere Typen z. B. phone
+                        $icons = [
+                            'phone' => 'heroicon-o-phone',
+                        ];
+
+                        return $icons[$record->type] ?? 'heroicon-o-question-mark-circle';
                     })
                     ->iconColor('primary')
                     //->html()
                     ->searchable()
                     ->sortable(),
-
+                Tables\Columns\TextColumn::make('from')->label('From'),
+                Tables\Columns\TextColumn::make('to')->label('To'),
                 Tables\Columns\TextColumn::make('contacted_at')->label('Kontaktzeitpunkt')
                     ->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d.m.Y H:i')),
                 Tables\Columns\TextColumn::make('subject')->label('Subject')

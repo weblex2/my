@@ -11,6 +11,7 @@ use App\Models\Document;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 
+
 class ZimbraController extends Controller
 {
     private $soapUrl;
@@ -63,7 +64,7 @@ class ZimbraController extends Controller
 
         // Datum
         $to = Carbon::now('UTC')->format('d-M-Y');
-        $from = Carbon::now('UTC')->subDays(3)->format('d-M-Y');
+        $from = Carbon::now('UTC')->subDays(5)->format('d-M-Y');
 
         // 📥 INBOX & 📤 SENT Folder
         $folders = ['INBOX', 'Sent'];
@@ -122,7 +123,12 @@ class ZimbraController extends Controller
             // Metadaten extrahieren
             $subject = $message->getSubject() ?? 'Kein Betreff';
             $from = $message->getFrom()[0]->mail ?? 'Unbekannter Absender';
-            $to = collect($message->getTo())->pluck('mail')->implode(', ') ?? 'Unbekannter Empfänger';
+            //dd($message->getTo());
+            $to = collect($message->getTo()->toArray() ?? [])
+            ->map(fn($address) => $address->mail ?? null)
+            ->filter()
+            ->implode(', ') ?: 'Unbekannter Empfänger';
+
             // Datum extrahieren und formatieren
             $rawDate = $message->getDate(); // String oder Attribute-Objekt
             $date = $rawDate ? Carbon::parse($rawDate)->format('Y-m-d H:i:s') : 'Unbekanntes Datum';
