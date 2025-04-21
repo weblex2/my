@@ -59,12 +59,12 @@ class ContactsRelationManager extends RelationManager
                         if ($record->type === 'email') {
                             // Eingehend, wenn User Empfänger ist
                             if (in_array($userEmail, explode(',',$record->to))) {
-                                return 'heroicon-o-arrow-down-left'; // Beispiel: eingehend
+                                return 'heroicon-o-arrow-down-tray'; // Beispiel: eingehend
                             }
 
                             // Ausgehend, wenn User Absender ist
                             if ($record->from === $userEmail) {
-                                return 'heroicon-o-arrow-up-right'; // Beispiel: ausgehend
+                                return 'heroicon-o-arrow-up-tray'; // Beispiel: ausgehend
                             }
 
                             // Fallback
@@ -78,7 +78,28 @@ class ContactsRelationManager extends RelationManager
 
                         return $icons[$record->type] ?? 'heroicon-o-question-mark-circle';
                     })
-                    ->iconColor('primary')
+                    ->iconColor(function ($record) {
+                        $userEmail = Auth::user()?->email;
+
+                        if ($record->type === 'email') {
+                            if (in_array($userEmail, explode(',', $record->to))) {
+                                return 'success'; // Eingehend – grün
+                            }
+
+                            if ($record->from === $userEmail) {
+                                return 'warning'; // Ausgehend – orange
+                            }
+
+                            return 'gray'; // Neutral
+                        }
+
+                        // Für andere Typen wie "phone"
+                        if ($record->type === 'phone') {
+                            return 'info'; // z. B. blau
+                        }
+
+                        return 'secondary'; // Fallback
+                    })
                     //->html()
                     ->searchable()
                     ->sortable(),
