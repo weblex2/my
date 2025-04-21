@@ -197,9 +197,7 @@ class ZimbraController extends Controller
             if (!$customer_id && $this->folderName!="Sent"){
                 return false;
             }
-            else{
-                $customer_id = 3;
-            }
+           
             // Benutzer-ID setzen (Fallback: aktueller Benutzer oder 1)
             $userId = $this->user_id ?? auth()->id() ?? 1;
             $contact->external_id   = $parsedEmail['id'];
