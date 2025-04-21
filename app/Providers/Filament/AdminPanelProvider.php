@@ -52,32 +52,43 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
 
-
-
-
-
             ->navigationItems([
+                NavigationItem::make('All Customers')
+                    ->url(fn (): string => CustomerResource::getUrl('index'))
+                    ->icon('heroicon-o-users')
+                    ->group('Customers')
+                    ->badge(array_sum($counts))
+                    ->isActiveWhen(function () {
+                        $currentUrl = url()->full();
+                        $targetUrl = CustomerResource::getUrl('index');
 
+                        // Nur aktiv, wenn exakt gleiche URL ohne Filter
+                        return $currentUrl === $targetUrl || parse_url($currentUrl, PHP_URL_QUERY) === null;
+                    }),
                 NavigationItem::make('Existing Accounts')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'exacc']]]))
                     ->icon('heroicon-o-user-plus')
                     ->group('Customers')
-                    ->badge($counts['exacc'] ?? 0),
+                    ->badge($counts['exacc'] ?? 0)
+                    ->isActiveWhen(fn () => request()->fullUrlIs(CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'exacc']]]) . '*')),
                 NavigationItem::make('Deals')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'deal']]]))
                     ->icon('heroicon-o-user-group')
                     ->group('Customers')
-                    ->badge($counts['deal'] ?? 0),
+                    ->badge($counts['deal'] ?? 0)
+                    ->isActiveWhen(fn () => request()->fullUrlIs(CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'deal']]]) . '*')),
                 NavigationItem::make('Leads')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'lead']]]))
                     ->icon('heroicon-o-users')
                     ->group('Customers')
-                    ->badge($counts['lead'] ?? 0),
+                    ->badge($counts['lead'] ?? 0)
+                    ->isActiveWhen(fn () => request()->fullUrlIs(CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'lead']]]) . '*')),
                 NavigationItem::make('Contacts')
                     ->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'contact']]]))
                     ->icon('heroicon-o-user')
                     ->group('Customers')
-                    ->badge($counts['contact'] ?? 0),
+                    ->badge($counts['contact'] ?? 0)
+                    ->isActiveWhen(fn () => request()->fullUrlIs(CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'contact']]]) . '*')),
 
                 NavigationItem::make('ASSD')
                      ->url('https:/assd.com', shouldOpenInNewTab: true)

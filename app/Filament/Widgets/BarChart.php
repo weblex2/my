@@ -22,6 +22,11 @@ class BarChart extends ChartWidget
                     'label' => 'Customers created',
                     'data' => $data,
                 ],
+                [
+                    'label' => 'Customers created last year',
+                    'data' =>[15, 10, 10, 4, 5, 0, 0, 0, 0, 0, 0, 0 ],
+                    'backgroundColor' => 'rgba(76, 175, 80, 0.4)',  // Farbe für Balken
+                ],
             ],
             'labels' => $labels,
         ];
