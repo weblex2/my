@@ -180,6 +180,9 @@ class CustomerResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->icon('heroicon-o-phone')
+                    ->formatStateUsing(fn ($state) => '+49 (0) ' . substr($state, 3, 3) . ' ' . substr($state, 6)) // oder deine Logik
+                    ->url(fn ($record) => 'tel:' . preg_replace('/[^0-9+]/', '', $record->phone))
+                    ->openUrlInNewTab(false)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->icon('heroicon-o-envelope')
@@ -191,7 +194,7 @@ class CustomerResource extends Resource
                     ->url(fn ($record) => $record->website)
                     ->openUrlInNewTab()
                     ->extraAttributes([
-                        'style' => 'max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
+                        'style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
                     ]),
                 Tables\Columns\TextColumn::make('external_id')
                     ->searchable(),
