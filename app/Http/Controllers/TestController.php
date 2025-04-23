@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\CustomerAssd;
 use App\Models\CustomerAddress;
 use App\Models\FilTableFields;
 
@@ -37,9 +38,11 @@ class TestController extends Controller
 
     }
 
-    public function testProduct(){
-        $customer = FilTableFields::all();
-        //$customer->all();
-        dump($customer);
+    public function testModel(){
+
+        $customer = Customer::find(5);
+        $customer->load('assd');
+        //dump($customer);
+        dump($customer->assd->bi);
     }
 }

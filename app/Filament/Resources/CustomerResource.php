@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\TextEntry;
+use App\Enums\CustomerStatusEnum;
 
 class CustomerResource extends Resource
 {
@@ -35,8 +36,6 @@ class CustomerResource extends Resource
     protected static ?string $navigationLabel = 'All Customers';
 
     protected static ?int $navigationSort = 4;
-
-
 
     public static function getNavigationBadge(): ?string  {
         return static::getModel()::count();
@@ -70,12 +69,18 @@ class CustomerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('status')
                 ->label('Status')
-                ->options([
+                /* ->options([
                     '' => 'Alle',
                     'exacc' => 'Existing Account',
                     'deal' => 'Deal',
                     'lead' => 'Lead',
                     'contact' => 'Contact',
+                ]), */
+                ->options([
+                    'exacc' => CustomerStatusEnum::EXACC->label(),
+                    'deal' => CustomerStatusEnum::DEAL->label(),
+                    'lead' => CustomerStatusEnum::LEAD->label(),
+                    'contact' => CustomerStatusEnum::CONTACT->label(),
                 ]),
 
                 Forms\Components\TextInput::make('phone')
@@ -89,15 +94,16 @@ class CustomerResource extends Resource
 
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255),
-                /* Forms\Components\TextInput::make('assd.bi')
-                    ->maxLength(255)
-                    ->relationship('assd', 'bi'), */
+
                 Forms\Components\Select::make('assd.solution')
-                    ->relationship('assd', 'solution')
+                    ->label('Solution')
                     ->options([
                         'pms2' => 'PMS 2',
                         'pms3' => 'PMS 3',
                     ])
+                    ->default(function ($record) {
+                        return $record->assd->solution ?? 'none'; // Fallback auf 'none', wenn assd oder solution null ist
+                    })
                     ->saveRelationshipsUsing(function ($record, $state) {
                         if ($state) {
                             $record->assd()->updateOrCreate(
@@ -107,29 +113,39 @@ class CustomerResource extends Resource
                         }
                     }),
 
-                Forms\Components\Select::make('assd.bi')
-                    ->label('BI')
-                    ->relationship('assd', 'bi')
-                    ->options([
-                        'clickview' => 'CliqView',
-                        'mspbi' => 'MS Power BI',
-                    ])
-                    ->saveRelationshipsUsing(function ($record, $state) {
-                        if ($state) {
-                            $record->assd()->updateOrCreate(
-                                ['customer_id' => $record->id],
-                                ['bi' => $state]
-                            );
-                        }
-                    }),
-                   /*  ->afterStateUpdated(function ($state, $record) {
-                        if ($state) {
-                            $record->assd()->updateOrCreate(
-                                ['customer_id' => $record->id],
-                                ['solution' => $state]
-                            );
-                        }
-                    }), */
+                    Forms\Components\Select::make('assd.bi')
+                        ->label('BI')
+                        ->options([
+                            'clickview' => 'ClickView',
+                            'qlik' => 'Qlik',
+                            'powerbi' => 'Power BI',
+                            'tableau' => 'Tableau',
+                            'none' => 'Kein Tool',
+                        ])
+                        ->default(function ($record) {
+                            return $record->assd->bi ?? 'none'; // Fallback auf 'none', wenn assd oder bi null ist
+                        })
+                        ->reactive() // Optional: Macht das Feld reaktiv, falls du später Logik hinzufügen möchtest
+                        ->afterStateHydrated(function ($component, $state, $record) {
+                            // Stelle sicher, dass der Wert korrekt gesetzt wird, wenn das Formular geladen wird
+                            $component->state($record->assd->bi ?? 'none');
+                        })
+                        ->saveRelationshipsUsing(function ($record, $state) {
+                            if ($state) {
+                                $record->assd()->updateOrCreate(
+                                    ['customer_id' => $record->id],
+                                    ['bi' => $state]
+                                );
+                            }
+                        }),
+                       /*  ->afterStateUpdated(function ($state, $record) {
+                            if ($state) {
+                                $record->assd()->updateOrCreate(
+                                    ['customer_id' => $record->id],
+                                    ['solution' => $state]
+                                );
+                            }
+                        }), */
 
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
@@ -164,7 +180,8 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('first_name')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                    ->formatStateUsing(fn (string $state) => CustomerStatusEnum::tryFrom($state)?->label() ?? $state),
                 Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
                     ->searchable(),
@@ -216,14 +233,18 @@ class CustomerResource extends Resource
                         $isVisible = in_array($statusFilter, ['deal', 'exacc']);
                         return $isVisible;
                     }),
-                Tables\Columns\TextColumn::make('assd.bi')
+                    TextColumn::make('assd.bi')
                     ->label('BI')
-                    ->searchable()
-                    ->visible(function ($livewire) {
-                        $filters = $livewire->tableFilters;
-                        $statusFilter = $filters['status']['value'] ?? null;
-                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
-                        return $isVisible;
+                    ->getStateUsing(function ($record) {
+                        $bi = $record->assd->bi ?? 'none';
+                        return match ($bi) {
+                            'clickview' => 'ClickView',
+                            'qlik' => 'Qlik',
+                            'powerbi' => 'Power BI',
+                            'tableau' => 'Tableau',
+                            'none' => 'Kein Tool',
+                            default => 'Kein Tool',
+                        };
                     }),
                 Tables\Columns\TextColumn::make('assd.solution')
                     ->label('Solution')
@@ -319,6 +340,8 @@ class CustomerResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ])
+            ->with('assd');
+
     }
 }
