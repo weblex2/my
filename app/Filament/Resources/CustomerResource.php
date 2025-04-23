@@ -5,24 +5,25 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Customer;
-use App\Models\CustomerAssd;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\CustomerAssd;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TrashedFilter;
+use Filament\Infolists\Components\TextEntry;
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Http\Controllers\FilamentFieldsController;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CustomerResource\RelationManagers;
-use Filament\Infolists\Infolist;
-use Filament\Infolists\Components\TextEntry;
 use App\Enums\CustomerStatusEnum;
 
 class CustomerResource extends Resource
@@ -69,13 +70,6 @@ class CustomerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('status')
                 ->label('Status')
-                /* ->options([
-                    '' => 'Alle',
-                    'exacc' => 'Existing Account',
-                    'deal' => 'Deal',
-                    'lead' => 'Lead',
-                    'contact' => 'Contact',
-                ]), */
                 ->options([
                     'exacc' => CustomerStatusEnum::EXACC->label(),
                     'deal' => CustomerStatusEnum::DEAL->label(),
@@ -95,7 +89,7 @@ class CustomerResource extends Resource
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255),
 
-                Forms\Components\Select::make('assd.solution')
+                Forms\Components\Select::make('solution')
                     ->label('Solution')
                     ->options([
                         'pms2' => 'PMS 2',
@@ -113,7 +107,7 @@ class CustomerResource extends Resource
                         }
                     }),
 
-                    Forms\Components\Select::make('assd.bi')
+                    Forms\Components\Select::make('bi')
                         ->label('BI')
                         ->options([
                             'clickview' => 'ClickView',
@@ -121,31 +115,9 @@ class CustomerResource extends Resource
                             'powerbi' => 'Power BI',
                             'tableau' => 'Tableau',
                             'none' => 'Kein Tool',
-                        ])
-                        ->default(function ($record) {
-                            return $record->assd->bi ?? 'none'; // Fallback auf 'none', wenn assd oder bi null ist
-                        })
-                        ->reactive() // Optional: Macht das Feld reaktiv, falls du später Logik hinzufügen möchtest
-                        ->afterStateHydrated(function ($component, $state, $record) {
-                            // Stelle sicher, dass der Wert korrekt gesetzt wird, wenn das Formular geladen wird
-                            $component->state($record->assd->bi ?? 'none');
-                        })
-                        ->saveRelationshipsUsing(function ($record, $state) {
-                            if ($state) {
-                                $record->assd()->updateOrCreate(
-                                    ['customer_id' => $record->id],
-                                    ['bi' => $state]
-                                );
-                            }
-                        }),
-                       /*  ->afterStateUpdated(function ($state, $record) {
-                            if ($state) {
-                                $record->assd()->updateOrCreate(
-                                    ['customer_id' => $record->id],
-                                    ['solution' => $state]
-                                );
-                            }
-                        }), */
+                        ]),
+
+                       // ->reactive(), // Optional: Macht das Feld reaktiv, falls du später Logik hinzufügen möchtest
 
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
@@ -193,29 +165,32 @@ class CustomerResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('preferredAddress.zip')
                     ->label('Zip')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->icon('heroicon-o-phone')
+                    ->iconColor('primary')
                     ->formatStateUsing(fn ($state) => '+49 (0) ' . substr($state, 3, 3) . ' ' . substr($state, 6)) // oder deine Logik
                     ->url(fn ($record) => 'tel:' . preg_replace('/[^0-9+]/', '', $record->phone))
                     ->openUrlInNewTab(false)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->icon('heroicon-o-envelope')
+                    ->iconColor('primary')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('website')
                     ->icon('heroicon-o-link')
+                    ->iconColor('primary')
                     ->searchable()
                     //->url(fn ($record) => route('profile.show', $record->id)) //link zum user profile
                     ->url(fn ($record) => $record->website)
                     ->openUrlInNewTab()
-                    ->extraAttributes([
+                    ->extraAttributes(fn ($state) => [
                         'style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
+                        'title' => $state, // Wert für Tooltip sicherstellen
                     ]),
                 Tables\Columns\TextColumn::make('external_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('assd.type')
+                Tables\Columns\TextColumn::make('type')
                     ->label('Type')
                     ->searchable()
                     ->visible(function ($livewire) {
@@ -224,7 +199,7 @@ class CustomerResource extends Resource
                         $isVisible = in_array($statusFilter, ['deal', 'exacc']);
                         return $isVisible;
                     }),
-                Tables\Columns\TextColumn::make('assd.spread')
+                Tables\Columns\TextColumn::make('spread')
                     ->label('Spread')
                     ->searchable()
                     ->visible(function ($livewire) {
@@ -233,10 +208,10 @@ class CustomerResource extends Resource
                         $isVisible = in_array($statusFilter, ['deal', 'exacc']);
                         return $isVisible;
                     }),
-                    TextColumn::make('assd.bi')
-                    ->label('BI')
+                Tables\Columns\TextColumn::make('bi')
+                    ->label('BI123')
                     ->getStateUsing(function ($record) {
-                        $bi = $record->assd->bi ?? 'none';
+                        $bi = $record->bi ?? 'none';
                         return match ($bi) {
                             'clickview' => 'ClickView',
                             'qlik' => 'Qlik',
@@ -246,9 +221,48 @@ class CustomerResource extends Resource
                             default => 'Kein Tool',
                         };
                     }),
-                Tables\Columns\TextColumn::make('assd.solution')
+                Tables\Columns\BadgeColumn::make('solution')
                     ->label('Solution')
                     ->searchable()
+                    ->getStateUsing(fn ($record) => $record->solution ?? 'no_solution')
+                    ->visible(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+                        $statusFilter = $filters['status']['value'] ?? null;
+                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
+                        return $isVisible;
+                    })
+                     ->colors([
+                        'info' => fn ($state) => $state === 'pms3',
+                        'warning' => fn ($state) => $state === 'pms2',
+                        'success' => fn ($state) => $state === 'pms1',
+                        'gray' => fn ($state) => $state === 'no_solution',
+                    ])
+                    ->formatStateUsing(function ($state) {
+                        if (blank($state)) {
+                            return 'No Solution';
+                        }
+
+                        return match ($state) {
+                            'pms3' => 'PMS 3',
+                            'pms2' => 'PMS 2',
+                            'pms1' => 'PMS 1',
+                            default => 'No Solution',
+                        };
+                    }),
+
+                Tables\Columns\BadgeColumn::make('sales_valume')
+                    ->label('Sales Volume')
+                    ->colors([
+                        'danger' => fn ($state) => $state < 5000,
+                        'warning' => fn ($state) => $state >= 5000 && $state < 10000,
+                        'success' => fn ($state) => $state >= 10000,
+                    ])
+                    ->default(0.0)
+                    ->numeric()
+                    ->formatStateUsing(function ($state, $record) {
+                        $currencySymbol = $record->currency ?? '€'; // Hier kannst du die Währung dynamisch wählen
+                        return $currencySymbol . ' ' . number_format($state, 2, ',', '.');
+                    })
                     ->visible(function ($livewire) {
                         $filters = $livewire->tableFilters;
                         $statusFilter = $filters['status']['value'] ?? null;
@@ -267,6 +281,8 @@ class CustomerResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

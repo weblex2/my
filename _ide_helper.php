@@ -27999,6 +27999,45 @@ namespace Livewire\Features\SupportTesting {
             }
     }
 
+namespace Filament {
+    /**
+     * 
+     *
+     */
+    class Panel {
+            }
+    }
+
+namespace Filament\Support\Components {
+    /**
+     * 
+     *
+     */
+    class Component {
+            }
+    /**
+     * 
+     *
+     */
+    class ViewComponent {
+            }
+    }
+
+namespace Filament\Navigation {
+    /**
+     * 
+     *
+     */
+    class NavigationItem {
+            }
+    /**
+     * 
+     *
+     */
+    class MenuItem {
+            }
+    }
+
 namespace Illuminate\View {
     /**
      * 
@@ -28109,6 +28148,15 @@ namespace Illuminate\View {
             return \Illuminate\View\View::response($callback);
         }
 
+            }
+    }
+
+namespace Filament\Tables\Columns {
+    /**
+     * 
+     *
+     */
+    class Column {
             }
     }
 

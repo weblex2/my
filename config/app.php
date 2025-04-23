@@ -198,6 +198,7 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        App\Providers\Filament\FilamentMacroServiceProvider::class,
 
     ],
 
