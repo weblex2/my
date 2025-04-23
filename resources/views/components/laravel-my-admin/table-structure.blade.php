@@ -20,59 +20,26 @@
         <tr id="{{$field->COLUMN_NAME}}">
             @if($edit==1)
                 <td>&nbsp;</td>
+                <td><input type="text" name="column_name" value="{{$field->COLUMN_NAME}}" /></td>
+                <td><x-laravel-my-admin.field-type-dropdown name="column_name" selected="{{$field->Datatype['type']}}" /></td>
+                <td> <input type="text" name="length" value="{{$field->Datatype['length']}} {{isset($field->Datatype['scale']) ?  ",".$field->Datatype['scale'] : ""}}" /></td>
+                <td><x-laravel-my-admin.default-dropdown name="default" selected="{{$field->COLUMN_DEFAULT}}" /></td>
+                <td><x-laravel-my-admin.attribute-dropdown name="attribute" selected="{{$field->Datatype['signed'] }}" /></td>
+                <td><x-laravel-my-admin.collation-dropdown name="collation" selected="{{$field->COLLATION_NAME}}" /></td>
+                <td><x-laravel-my-admin.nullable name="is_nullable" selected="{{$field->IS_NULLABLE}}" :edit="1"/></td>
+                <td>{{$field->COLUMN_COMMENT}}</td>
+                <td>{{$field->EXTRA}}</td>
+            @else
+                <td>{{$field->COLUMN_NAME}}</td>
+                <td>{{$field->Datatype['type']}}</td>
+                <td>{{$field->Datatype['length']}}{{isset($field->Datatype['scale']) ?  ",".$field->Datatype['scale'] : ""}}</td>
+                <td>{{$field->COLUMN_DEFAULT}}</td>
+                <td>{{$field->COLUMN_DEFAULT}}</td>
+                <td>{{$field->COLLATION_NAME}}</td>
+                <td>{{$field->IS_NULLABLE}}</td>
+                <td>{{$field->COLUMN_COMMENT}}</td>
+                <td>{{$field->EXTRA}}</td>
             @endif
-            <td>
-                @if ($edit)
-                    <input type="text" name="column_name" value="{{$field->COLUMN_NAME}}" />
-                @else
-                    {{$field->COLUMN_NAME}}
-                @endif
-            </td>
-            <td>
-                @if ($edit)
-                  <x-laravel-my-admin.field-type-dropdown name="column_name" selected="{{$field->Datatype['type']}}" />
-                @else
-                    {{$field->Datatype['type']}}
-                @endif
-            </td>
-            <td>
-                @if ($edit)
-                  <input type="text" name="length" value="{{$field->Datatype['length']}} {{isset($field->Datatype['scale']) ?  ",".$field->Datatype['scale'] : ""}}" />
-                @else
-                    {{$field->Datatype['length']}}{{isset($field->Datatype['scale']) ?  ",".$field->Datatype['scale'] : ""}}
-                @endif
-            </td>
-            <td>
-                @if ($edit)
-                  <x-laravel-my-admin.default-dropdown name="default" selected="{{$field->COLUMN_DEFAULT}}" />
-                @else
-                    {{$field->COLUMN_DEFAULT}}
-                @endif
-
-            </td>
-            <td>
-                @if ($edit)
-                  <x-laravel-my-admin.attribute-dropdown name="attribute" selected="{{$field->Datatype['signed'] }}" />
-                @else
-                    {{$field->COLUMN_DEFAULT}}
-                @endif
-            </td>
-            <td>
-                @if ($edit)
-                  <x-laravel-my-admin.collation-dropdown name="collation" selected="{{$field->COLLATION_NAME}}" />
-                @else
-                    {{$field->COLLATION_NAME}}
-                @endif
-            </td>
-            <td>
-                @if ($edit)
-                  <x-laravel-my-admin.nullable name="is_nullable" selected="{{$field->IS_NULLABLE}}" :edit="1"/>
-                @else
-                    {{$field->IS_NULLABLE}}
-                @endif
-            </td>
-            <td>{{$field->COLUMN_COMMENT}}</td>
-            <td>{{$field->EXTRA}}</td>
         </tr>
     @endforeach
     </tbody>
