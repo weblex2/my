@@ -310,16 +310,28 @@ class CustomerResource extends Resource
             ->recordUrl(null)
             ->actions([
                 Actions\ActionGroup::make([
-                    Actions\DeleteAction::make()->visible(fn ($record) => auth()->user()->can('delete', $record)),
-                    Actions\ViewAction::make()->visible(fn ($record) => auth()->user()->can('view', $record)),
-                    Actions\EditAction::make()->visible(fn ($record) => auth()->user()->can('update', $record)),
+                    Actions\DeleteAction::make()->visible(function ($record) {
+                        return auth()->user()->can('delete', $record);
+                    }),
+                    Actions\ViewAction::make()->visible(function ($record) {
+                        return auth()->user()->can('view', $record);
+                    }),
+                    Actions\EditAction::make()->visible(function ($record) {
+                        return auth()->user()->can('update', $record);
+                    }),
                 ]),
             ])
             ->bulkActions([
                 Actions\BulkActionGroup::make([
-                    Actions\DeleteBulkAction::make()->visible(fn () => auth()->user()->can('deleteAny', Customer::class)),
-                    Actions\ForceDeleteBulkAction::make()->visible(fn () => auth()->user()->can('forceDeleteAny', Customer::class)),
-                    Actions\RestoreBulkAction::make()->visible(fn () => auth()->user()->can('restoreAny', Customer::class)),
+                    Actions\DeleteBulkAction::make()->visible(function () {
+                        return auth()->user()->can('deleteAny', Customer::class);
+                    }),
+                    Actions\ForceDeleteBulkAction::make()->visible(function () {
+                        return auth()->user()->can('forceDeleteAny', Customer::class);
+                    }),
+                    Actions\RestoreBulkAction::make()->visible(function () {
+                        return auth()->user()->can('restoreAny', Customer::class);
+                    }),
                 ]),
             ]);
 
@@ -360,13 +372,5 @@ class CustomerResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ])
-            ->with('assd');
 
-    }
 }
