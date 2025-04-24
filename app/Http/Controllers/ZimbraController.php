@@ -219,9 +219,10 @@ class ZimbraController extends Controller
             $contact->details       = $parsedEmail['plain_text'];
             $success = $contact->save();
             if ($success){
+                $contact_id = $contact->id;
                 $result['status'] = "success";
                 $result['saved'] = 1;
-                $attResult =  $this->saveAttachement($parsedEmail, $customer_id , $userId);
+                $attResult =  $this->saveAttachement($parsedEmail, $contact_id, $customer_id , $userId);
                 if (($attResult['status']=='success' && $attResult['saved']!= 0) || $attResult['status']!="success"){
                     $result['attachements'][]  = $attResult;
                 }
@@ -239,7 +240,7 @@ class ZimbraController extends Controller
         return $count;
     }
 
-    private function saveAttachement(array $parsedEmail, ?int $customerId = null, int $userId ): array
+    private function saveAttachement(array $parsedEmail, $contact_id, ?int $customerId = null, int $userId ): array
     {
 
 
@@ -264,6 +265,7 @@ class ZimbraController extends Controller
                 try {
                     $res = Document::create([
                         'external_id' => $parsedEmail['id'], // Verknüpfung mit contacts.external_id
+                        'contact_id' => $contact_id,
                         'customer_id' => $customerId,
                         'filename' => $attachment['filename'],
                         'size' => $attachment['size'],

@@ -63,8 +63,11 @@ class ContactResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Contact ID')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('customer.id')
-                    ->label('ID')
+                    ->label('Customer ID')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('contacted_at')
                     ->label('Kontaktzeitpunkt')
@@ -81,6 +84,11 @@ class ContactResource extends Resource
                     ->label('Vorname')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('subject')
+                    ->label('Subject')
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('details')
                     ->label('Details')
                     ->limit(50),
