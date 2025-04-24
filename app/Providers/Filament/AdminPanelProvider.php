@@ -116,6 +116,7 @@ class AdminPanelProvider extends PanelProvider
                 'Customers',      // Erscheint zuerst
                 'Shop',          // Erscheint als zweites
                 'User Management', // Definiere die Navigationsgruppe
+                'Settings',
             ])
             ->font('Poppins')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
