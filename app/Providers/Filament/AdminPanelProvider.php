@@ -22,6 +22,7 @@ use Filament\Navigation\MenuItem;
 use App\Filament\Resources\CustomerResource;
 use App\Filament\Resources\UserResource;
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
+use App\Filament\Resources\FilTableFieldsResource;
 use App\Models\Customer;
 
 
@@ -49,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
             ->resources([
                 UserResource::class,
                 RoleResource::class,
+                FilTableFieldsResource::class,
             ])
             //->sidebarFullyCollapsibleOnDesktop()
             ->sidebarCollapsibleOnDesktop()
