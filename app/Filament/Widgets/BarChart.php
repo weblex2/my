@@ -25,7 +25,7 @@ class BarChart extends ChartWidget
                 [
                     'label' => 'Customers created last year',
                     'data' =>[15, 10, 10, 4, 5, 0, 0, 0, 0, 0, 0, 0 ],
-                    'backgroundColor' => 'rgba(76, 175, 80, 0.4)',  // Farbe für Balken
+                    'backgroundColor' => 'rgba(209, 209, 25, 0.14)',  // Farbe für Balken
                 ],
             ],
             'labels' => $labels,
