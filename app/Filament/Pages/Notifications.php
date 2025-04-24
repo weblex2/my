@@ -28,6 +28,12 @@ class CustomNotificationsPage extends Page implements HasTable
         return auth()->user()->unreadNotifications()->count() > 0 ? 'danger' : 'primary';
     }
 
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        $count = auth()->user()->unreadNotifications()->count();
+        return "Du hast {$count} ungelesene Nachricht" . ($count === 1 ? '' : 'en');
+    }
+
     public function table(Table $table): Table
     {
         return $table

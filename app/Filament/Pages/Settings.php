@@ -12,13 +12,13 @@ use Filament\Forms\Concerns\InteractsWithForms;
 class Settings extends Page
 {
     use InteractsWithForms;
-    
+
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static string $view = 'filament.pages.settings';
     protected static ?string $navigationLabel = 'Settings';
 
-    protected static ?string $navigationGroup = 'Pages';
+    protected static ?string $navigationGroup = 'Settings';
 
     public $settings = [];
 
