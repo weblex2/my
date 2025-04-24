@@ -164,8 +164,8 @@ class ContactsRelationManager extends RelationManager
                     ->icon('heroicon-o-pencil')
                     ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->ownerRecord]))
                     ->color('primary')
-                    ->visible(function ($record) {
-                        return auth()->user()->can('edit', $this->ownerRecord);
+                    ->disabled(function ($record) {
+                        return !auth()->user()->can('edit', $this->ownerRecord);
                     }),
                 Tables\Actions\Action::make('importEmails')
                     ->label('E-Mails importieren')

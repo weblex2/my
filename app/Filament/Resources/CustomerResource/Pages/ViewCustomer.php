@@ -48,8 +48,8 @@ class ViewCustomer extends ViewRecord
                 ->icon('heroicon-o-pencil')
                 ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->record->id]))
                 ->color('primary')
-                ->visible(function ($record) {
-                    return auth()->user()->can('edit', $record);
+                ->disabled(function ($record) {
+                    return !auth()->user()->can('edit', $record);
                 }),
         ];
     }
