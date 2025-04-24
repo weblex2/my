@@ -41,6 +41,9 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->preload(),
                 Forms\Components\Textarea::make('two_factor_secret')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('two_factor_recovery_codes')

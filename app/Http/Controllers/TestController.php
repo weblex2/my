@@ -8,6 +8,8 @@ use App\Models\Customer;
 use App\Models\CustomerAssd;
 use App\Models\CustomerAddress;
 use App\Models\FilTableFields;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class TestController extends Controller
 {
@@ -40,9 +42,15 @@ class TestController extends Controller
 
     public function testModel(){
 
-        $customer = Customer::find(5);
-        $customer->load('assd');
+        #$customer = Customer::find(5);
+        #$customer->load('assd');
         //dump($customer);
-        dump($customer->assd->bi);
+        #dump($customer->assd->bi);
+        $adminRole = Role::firstOrCreate(
+            ['name' => 'admin', 'guard_name' => 'web']
+        );
+        $user = \App\Models\User::find(1);
+        $user->assignRole('admin');
+        $adminRole->givePermissionTo(Permission::all());
     }
 }

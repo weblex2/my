@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.2",
+        "bezhansalleh/filament-shield": "^3.3",
         "blade-ui-kit/blade-heroicons": "^2.6",
         "doctrine/dbal": "^3.0",
         "filament/filament": "^3.2.0",
@@ -28,6 +29,7 @@
         "pbmedia/laravel-ffmpeg": "^8.3",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-pdf": "^1.5",
+        "spatie/laravel-permission": "^6.17",
         "twilio/sdk": "^6.43",
         "webklex/php-imap": "^6.1"
     },
