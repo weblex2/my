@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Filament\Pages;
+
+use Filament\Pages\Page;
+use Filament\Tables;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
+
+class CustomNotificationsPage extends Page implements HasTable
+{
+    use InteractsWithTable;
+
+    protected static ?string $navigationIcon  = 'heroicon-o-bell';
+    protected static ?string $navigationLabel = 'Notifications';
+    protected static ?string $navigationGroup = 'Settings';
+    protected static string $view = 'filament.pages.notifications';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) auth()->user()->unreadNotifications()->count();
+    }
+
+    // optional: Farbe (danger, warning, info, primary, success, gray)
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return auth()->user()->unreadNotifications()->count() > 0 ? 'danger' : 'primary';
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->query(auth()->user()->notifications()->getQuery())
+            ->columns([
+                Tables\Columns\TextColumn::make('data.title')->label('Title'),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->label('Date'),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->actions([
+                Tables\Actions\Action::make('toggleRead')
+                    ->label(fn ($record): string => $record->read_at ? 'Mark as Unread' : 'Mark as Read')
+                    ->action(fn ($record) => $record->read_at
+                        ? $record->update(['read_at' => null])
+                        : $record->markAsRead()
+                    )
+                    ->icon(fn ($record): string => $record->read_at ? 'heroicon-o-envelope' : 'heroicon-o-envelope-open'),
+                Tables\Actions\Action::make('delete')
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->action(fn ($record) => $record->delete())
+                    ->requiresConfirmation()
+                    ->tooltip('Delete this notification'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkAction::make('markRead')
+                    ->label('Mark Read')
+                    ->action(fn (\Illuminate\Support\Collection $records) => $records->each->markAsRead()),
+                Tables\Actions\BulkAction::make('markUnread')
+                    ->label('Mark Unread')
+                    ->action(fn (\Illuminate\Support\Collection $records) => $records->each(fn ($record) => $record->update(['read_at' => null]))),
+                Tables\Actions\BulkAction::make('deleteSelected')
+                    ->label('Delete Selected')
+                    ->color('danger')
+                    ->action(fn (\Illuminate\Support\Collection $records) => $records->each->delete())
+                    ->requiresConfirmation(),
+            ]);
+    }
+}
+

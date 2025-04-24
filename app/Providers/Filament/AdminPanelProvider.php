@@ -24,6 +24,7 @@ use App\Filament\Resources\UserResource;
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use App\Filament\Resources\FilTableFieldsResource;
 use App\Models\Customer;
+use App\Filament\Pages\CustomNotificationsPage;
 
 
 
@@ -58,6 +59,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+                CustomNotificationsPage::class,
             ])
 
             ->navigationItems([
