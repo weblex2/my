@@ -12,13 +12,9 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'brand_id', 'name', 'slug', 'sku', 'description',
-        'image','quantity', 'is_visible','is_featured', 'price',
-        'type','published_at'
-    ];
+    protected $guarded = ['id'];
 
-    public function brand(): BelongsTo 
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
@@ -26,5 +22,17 @@ class Product extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class)->withTimestamps();
+    }
+
+    public function quotes()
+    {
+        return $this->belongsToMany(Quote::class, 'quote_products')
+            ->withPivot('quantity', 'unit_price')
+            ->withTimestamps();
+    }
+
+    public function quoteProducts()
+    {
+        return $this->hasMany(QuoteProduct::class);
     }
 }

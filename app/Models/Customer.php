@@ -19,6 +19,11 @@ class Customer extends Model
         return $this->hasMany(CustomerAddress::class, 'customer_id');
     }
 
+    public function quotes()
+    {
+        return $this->hasMany(Quote::class);
+    }
+
     public function company()  {
         return $this->belongsTo(Company::class);
     }

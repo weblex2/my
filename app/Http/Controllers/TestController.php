@@ -52,5 +52,6 @@ class TestController extends Controller
         $user = \App\Models\User::find(1);
         $user->assignRole('admin');
         $adminRole->givePermissionTo(Permission::all());
+        echo "Done";
     }
 }

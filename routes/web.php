@@ -95,7 +95,7 @@ Route::controller(S3Controller::class)->group(function () {
 
 Route::controller(TestController::class)->group(function () {
     Route::get('/gpt', 'chatGptApi')->name('cv.index');
-    Route::get('/test', 'testModel')->name('testProduct');
+    Route::get('/test2', 'testModel')->name('testProduct');
 });
 
 Route::controller(FutterController::class)->group(function () {
