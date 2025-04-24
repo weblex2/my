@@ -117,6 +117,9 @@ class CustomerResource extends Resource
                             'none' => 'Kein Tool',
                         ]),
 
+                    Forms\Components\TextInput::make('sales_volume')
+                        ->numeric(),
+
                        // ->reactive(), // Optional: Macht das Feld reaktiv, falls du später Logik hinzufügen möchtest
 
                 Forms\Components\Textarea::make('comments')
@@ -148,10 +151,11 @@ class CustomerResource extends Resource
 
                 Tables\Columns\TextColumn::make('name')
                     ->url(fn ($record) => static::getUrl('view', ['record' => $record])) // Link zur View-Seite,
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('first_name')
-                    ->sortable(),
-
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->formatStateUsing(fn (string $state) => CustomerStatusEnum::tryFrom($state)?->label() ?? $state),
                 Tables\Columns\TextColumn::make('preferredAddress.address')
@@ -188,8 +192,8 @@ class CustomerResource extends Resource
                         'style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
                         'title' => $state, // Wert für Tooltip sicherstellen
                     ]),
-                Tables\Columns\TextColumn::make('external_id')
-                    ->searchable(),
+                /* Tables\Columns\TextColumn::make('external_id')
+                    ->searchable(), */
                 Tables\Columns\TextColumn::make('type')
                     ->label('Type')
                     ->searchable()
@@ -209,7 +213,7 @@ class CustomerResource extends Resource
                         return $isVisible;
                     }),
                 Tables\Columns\TextColumn::make('bi')
-                    ->label('BI123')
+                    ->label('BI')
                     ->getStateUsing(function ($record) {
                         $bi = $record->bi ?? 'none';
                         return match ($bi) {
@@ -220,6 +224,12 @@ class CustomerResource extends Resource
                             'none' => 'Kein Tool',
                             default => 'Kein Tool',
                         };
+                    })
+                    ->visible(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+                        $statusFilter = $filters['status']['value'] ?? null;
+                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
+                        return $isVisible;
                     }),
                 Tables\Columns\BadgeColumn::make('solution')
                     ->label('Solution')
@@ -250,7 +260,7 @@ class CustomerResource extends Resource
                         };
                     }),
 
-                Tables\Columns\BadgeColumn::make('sales_valume')
+                Tables\Columns\BadgeColumn::make('sales_volume')
                     ->label('Sales Volume')
                     ->colors([
                         'danger' => fn ($state) => $state < 5000,
