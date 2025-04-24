@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
+use Filament\Tables\Actions;
 
 class UserResource extends Resource
 {
@@ -47,7 +48,6 @@ class UserResource extends Resource
                     ->password()
                     ->dehydrated(fn (?string $state): bool => filled($state)) // Nur speichern, wenn ein Wert eingegeben wurde
                     ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)) // Passwort verschlüsseln
-                    ->required()
                     ->visibleOn(['create', 'edit']) // Sichtbar beim Erstellen und Bearbeiten
                     ->maxLength(255),
                 Forms\Components\Select::make('roles')

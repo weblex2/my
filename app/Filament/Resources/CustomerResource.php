@@ -25,6 +25,7 @@ use App\Http\Controllers\FilamentFieldsController;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Enums\CustomerStatusEnum;
+use Filament\Tables\Actions;
 
 class CustomerResource extends Resource
 {
@@ -308,21 +309,19 @@ class CustomerResource extends Resource
             ->recordAction(Tables\Actions\EditAction::class) // Keine Aktion bei einfachem Klick
             ->recordUrl(null)
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\DeleteAction::make(),
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-
+                Actions\ActionGroup::make([
+                    Actions\DeleteAction::make()->visible(fn ($record) => auth()->user()->can('delete', $record)),
+                    Actions\ViewAction::make()->visible(fn ($record) => auth()->user()->can('view', $record)),
+                    Actions\EditAction::make()->visible(fn ($record) => auth()->user()->can('update', $record)),
                 ]),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make()->visible(fn () => auth()->user()->can('deleteAny', Customer::class)),
+                    Actions\ForceDeleteBulkAction::make()->visible(fn () => auth()->user()->can('forceDeleteAny', Customer::class)),
+                    Actions\RestoreBulkAction::make()->visible(fn () => auth()->user()->can('restoreAny', Customer::class)),
                 ]),
-            ])
-            ;
+            ]);
 
     }
 
