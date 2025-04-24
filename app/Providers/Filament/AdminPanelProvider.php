@@ -20,6 +20,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationItem;
 use Filament\Navigation\MenuItem;
 use App\Filament\Resources\CustomerResource;
+use App\Filament\Resources\UserResource;
+use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use App\Models\Customer;
 
 
@@ -43,6 +45,10 @@ class AdminPanelProvider extends PanelProvider
             ->maxContentWidth('1280px')
             ->colors([
                 'primary' => '#14b8a6',
+            ])
+            ->resources([
+                UserResource::class,
+                RoleResource::class,
             ])
             //->sidebarFullyCollapsibleOnDesktop()
             ->sidebarCollapsibleOnDesktop()
@@ -104,6 +110,11 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-cog-6-tooth')
 
             ])
+            ->navigationGroups([
+                'Customers',      // Erscheint zuerst
+                'Shop',          // Erscheint als zweites
+                'User Management', // Definiere die Navigationsgruppe
+            ])
             ->font('Poppins')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
@@ -126,6 +137,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-            ]);
+            ])
+            ;
     }
 }
