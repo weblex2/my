@@ -19,21 +19,29 @@ class DocumentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    // Navigation deaktivieren
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
-    }
-
-    protected static ?string $navigationLabel = 'Dokumente';
-
-    protected static ?string $pluralLabel = 'Dokumente';
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('contact_id')
+                    ->numeric(),
+                Forms\Components\TextInput::make('customer_id')
+                    ->numeric(),
+                Forms\Components\TextInput::make('external_id')
+                    ->maxLength(191),
+                Forms\Components\TextInput::make('filename')
+                    ->required()
+                    ->maxLength(191),
+                Forms\Components\TextInput::make('size')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('mime_type')
+                    ->required()
+                    ->maxLength(191),
+                Forms\Components\TextInput::make('content'),
+                Forms\Components\TextInput::make('user')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -41,7 +49,33 @@ class DocumentResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('contact_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('customer_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('external_id')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('filename')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('size')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('mime_type')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('content'),
+                Tables\Columns\TextColumn::make('user')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
