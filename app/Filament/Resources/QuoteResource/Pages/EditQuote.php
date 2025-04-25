@@ -42,11 +42,4 @@ class EditQuote extends EditRecord
         ];
     }
 
-    protected function getCancelAction(): Action
-    {
-        return Action::make('cancel')
-            ->label('Abbrechen')
-            ->url($this->getResource()::getUrl('index'))
-            ->color('gray');
-    }
 }
