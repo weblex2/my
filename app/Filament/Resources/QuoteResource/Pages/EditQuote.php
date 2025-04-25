@@ -42,4 +42,18 @@ class EditQuote extends EditRecord
         ];
     }
 
+    protected function getCancelAction(): Action
+    {
+        return Action::make('cancel')
+            ->label('Abbrechen')
+            ->action(function () {
+                \Log::info('Cancel button clicked in EditQuote'); // Debugging
+                $this->redirect($this->getResource()::getUrl('index'), navigate: true);
+            })
+            ->color('gray')
+            ->extraAttributes([
+                'wire:loading.attr' => 'disabled', // Deaktiviert Button während Livewire-Anfrage
+            ]);
+    }
+
 }

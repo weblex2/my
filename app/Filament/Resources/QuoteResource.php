@@ -85,10 +85,20 @@ class QuoteResource extends Resource
                                         ->searchable()
                                         ->required()
                                         ->live()
-                                        ->afterStateUpdated(function ($state, Set $set) {
+                                        ->afterStateUpdated(function ($state, Set $set, Get $get) {
                                             $product = Product::find($state);
                                             if ($product) {
                                                 $set('unit_price', $product->price);
+                                                self::updateTotalPrice($get, $set);
+                                                self::calculateTotalAmount($get, $set);
+                                            }
+                                        })
+                                        ->afterStateHydrated(function ($state, Set $set, Get $get) {
+                                            // Setze unit_price und total_price beim Laden des Formulars
+                                            $product = Product::find($state);
+                                            if ($product) {
+                                                $set('unit_price', $product->price);
+                                                self::updateTotalPrice($get, $set);
                                             }
                                         }),
 
@@ -131,13 +141,7 @@ class QuoteResource extends Resource
 
                     Forms\Components\Wizard\Step::make('Zusammenfassung')
                         ->schema([
-                            Textarea::make('terms')
-                                ->label('AGB')
-                                ->columnSpanFull(),
 
-                            Textarea::make('notes')
-                                ->label('Bemerkungen')
-                                ->columnSpanFull(),
 
                             TextInput::make('total_amount')
                                 ->label('Gesamtbetrag')
@@ -146,6 +150,13 @@ class QuoteResource extends Resource
                                 ->afterStateHydrated(function (Get $get, Set $set) {
                                     self::calculateTotalAmount($get, $set);
                                 }),
+                            Textarea::make('terms')
+                                ->label('AGB')
+                                ->columnSpanFull(),
+
+                            Textarea::make('notes')
+                                ->label('Bemerkungen')
+                                ->columnSpanFull(),
                         ]),
                 ])
                 ->columnSpanFull()
@@ -236,6 +247,7 @@ class QuoteResource extends Resource
         $total = 0;
 
         foreach ($products as $product) {
+            $product['total_price'] = $product['quantity']*$product['unit_price'];
             if (isset($product['total_price']) && is_numeric($product['total_price'])) {
                 $total += (float) $product['total_price'];
             } elseif (isset($product['quantity']) && isset($product['unit_price'])) {
