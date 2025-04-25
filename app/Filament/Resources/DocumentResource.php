@@ -19,6 +19,11 @@ class DocumentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -64,7 +69,7 @@ class DocumentResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('mime_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('content'),
+                //Tables\Columns\TextColumn::make('content'),
                 Tables\Columns\TextColumn::make('user')
                     ->numeric()
                     ->sortable(),

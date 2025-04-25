@@ -116,6 +116,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Customers',      // Erscheint zuerst
+                'Angebote',
                 'Shop',          // Erscheint als zweites
                 'User Management', // Definiere die Navigationsgruppe
                 'Settings',

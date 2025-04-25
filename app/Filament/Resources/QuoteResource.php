@@ -26,6 +26,10 @@ class QuoteResource extends Resource
     protected static ?string $model = \App\Models\Quote::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
+    protected static ?string $navigationLabel = 'Angebote';
+
+    protected static ?string $navigationGroup = 'Angebote';
+
     public static function form(Form $form): Form
     {
         return $form
