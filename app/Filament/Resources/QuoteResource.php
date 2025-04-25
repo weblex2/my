@@ -35,8 +35,12 @@ class QuoteResource extends Resource
                         ->schema([
                             Select::make('customer_id')
                                 ->label('Kunde')
-                                ->options(Customer::query()->pluck('name', 'id'))
-                                ->searchable()
+                                ->options(
+                                    Customer::query()->get()->mapWithKeys(function ($customer) {
+                                        return [$customer->id => "{$customer->name}, {$customer->first_name}"];
+                                    })
+                                )
+                                ->searchable(['name', 'first_name']) // Suche nach name und first_name
                                 ->required()
                                 ->live()
                                 ->afterStateUpdated(function ($state, Set $set) {
