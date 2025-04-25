@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Blade;
+use Filament\Notifications\Notification;
 
 class QuoteResource extends Resource
 {
@@ -159,7 +160,10 @@ class QuoteResource extends Resource
                 Tables\Columns\TextColumn::make('quote_number')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('customer.name')
-                    ->searchable(),
+                    ->formatStateUsing(fn ($record) => "{$record->customer->name}, {$record->customer->first_name}")
+                    ->url(fn ($record): string => CustomerResource::getUrl('edit', ['record' => $record->customer_id]))
+                    ->color('primary')
+                    ->searchable(['customer.name', 'customer.first_name']),
                 Tables\Columns\TextColumn::make('valid_until')
                     ->date('d.m.Y'),
                 Tables\Columns\TextColumn::make('total_amount')
