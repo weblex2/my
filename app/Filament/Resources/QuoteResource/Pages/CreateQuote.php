@@ -15,6 +15,14 @@ class CreateQuote extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
+    protected function getCancelAction(): Action
+    {
+        return Action::make('cancel')
+            ->label('Abbrechen')
+            ->url($this->getResource()::getUrl('index'))
+            ->color('gray');
+    }
+
     protected function afterCreate(): void
     {
         // Berechne den endgültigen Gesamtbetrag

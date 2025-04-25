@@ -22,6 +22,7 @@ class EditQuote extends EditRecord
         $this->record->update(['total_amount' => $this->record->total_amount]);
     }
 
+
     protected function getHeaderActions(): array
     {
         return [
@@ -39,5 +40,13 @@ class EditQuote extends EditRecord
                 })
                 ->visible(fn (): bool => $this->record->status === 'draft'),
         ];
+    }
+
+    protected function getCancelAction(): Action
+    {
+        return Action::make('cancel')
+            ->label('Abbrechen')
+            ->url($this->getResource()::getUrl('index'))
+            ->color('gray');
     }
 }
