@@ -162,6 +162,7 @@ class QuoteResource extends Resource
                 Tables\Columns\TextColumn::make('customer.name')
                     ->formatStateUsing(fn ($record) => "{$record->customer->name}, {$record->customer->first_name}")
                     ->url(fn ($record): string => CustomerResource::getUrl('edit', ['record' => $record->customer_id]))
+                    ->icon('heroicon-o-user')
                     ->color('primary')
                     ->searchable(['customer.name', 'customer.first_name']),
                 Tables\Columns\TextColumn::make('valid_until')
