@@ -17,9 +17,11 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Tables\Actions\Action;
+use Illuminate\Support\Facades\Blade;
 
 class QuoteResource extends Resource
 {
@@ -44,7 +46,7 @@ class QuoteResource extends Resource
                                         return [$customer->id => "{$customer->name}, {$customer->first_name}"];
                                     })
                                 )
-                                ->searchable(['name', 'first_name']) // Suche nach name und first_name
+                                ->searchable(['name', 'first_name'])
                                 ->required()
                                 ->live()
                                 ->afterStateUpdated(function ($state, Set $set) {
@@ -57,6 +59,15 @@ class QuoteResource extends Resource
                                 ->unique(ignoreRecord: true)
                                 ->maxLength(255),
 
+                            Select::make('status')
+                                ->label('Status')
+                                ->required()
+                                ->options([
+                                    'draft' => 'Draft',
+                                    'sent' => 'Sent',
+                                    'accepted' => 'Accepted',
+                                    'rejected' => 'Rejected'
+                                ]),
                             DatePicker::make('valid_until')
                                 ->label('Gültig bis')
                                 ->required()
@@ -150,9 +161,10 @@ class QuoteResource extends Resource
                 Tables\Columns\TextColumn::make('customer.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('valid_until')
-                    ->date(),
+                    ->date('d.m.Y'),
                 Tables\Columns\TextColumn::make('total_amount')
-                    ->money('EUR'),
+                    ->money('EUR')
+                    ->alignEnd(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -178,7 +190,18 @@ class QuoteResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn (Quote $record): bool => $record->status === 'draft'),
+                    ->disabled(fn (Quote $record): bool => $record->status !== 'draft'),
+                Tables\Actions\Action::make('download_pdf')
+                    ->label('PDF herunterladen')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->action(function (Quote $record) {
+                        $quote = Quote::with(['customer', 'quoteProducts.product'])->find($record->id);
+                        $pdf = Pdf::loadView('filament.pdf.quote', ['quote' => $quote]);
+                        return response()->streamDownload(
+                            fn () => print($pdf->output()),
+                            "Angebot_{$quote->quote_number}.pdf"
+                        );
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -215,7 +238,7 @@ class QuoteResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // RelationManager nicht mehr nötig, da Repeater verwendet wird
+            //
         ];
     }
 

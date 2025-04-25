@@ -10,6 +10,11 @@ class ListQuotes extends ListRecords
 {
     protected static string $resource = QuoteResource::class;
 
+    public function getTitle(): string
+    {
+        return "Angebote";
+    }
+
     protected function getHeaderActions(): array
     {
         return [
