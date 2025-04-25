@@ -21,16 +21,15 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Tables\Actions\Action;
-use Illuminate\Support\Facades\Blade;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Log;
 
 class QuoteResource extends Resource
 {
     protected static ?string $model = \App\Models\Quote::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
     protected static ?string $navigationLabel = 'Angebote';
-
     protected static ?string $navigationGroup = 'Angebote';
 
     public static function form(Form $form): Form
@@ -102,6 +101,7 @@ class QuoteResource extends Resource
                                         ->live()
                                         ->afterStateUpdated(function (Get $get, Set $set) {
                                             self::updateTotalPrice($get, $set);
+                                            self::calculateTotalAmount($get, $set);
                                         }),
 
                                     TextInput::make('unit_price')
@@ -111,6 +111,7 @@ class QuoteResource extends Resource
                                         ->live()
                                         ->afterStateUpdated(function (Get $get, Set $set) {
                                             self::updateTotalPrice($get, $set);
+                                            self::calculateTotalAmount($get, $set);
                                         }),
 
                                     TextInput::make('total_price')
@@ -121,7 +122,11 @@ class QuoteResource extends Resource
                                 ->columns(3)
                                 ->itemLabel(fn (array $state): ?string => Product::find($state['product_id'])?->name ?? null)
                                 ->addActionLabel('Produkt hinzufügen')
-                                ->minItems(1),
+                                ->minItems(1)
+                                ->live()
+                                ->afterStateUpdated(function (Get $get, Set $set) {
+                                    self::calculateTotalAmount($get, $set);
+                                }),
                         ]),
 
                     Forms\Components\Wizard\Step::make('Zusammenfassung')
@@ -227,12 +232,13 @@ class QuoteResource extends Resource
     protected static function calculateTotalAmount(Get $get, Set $set): void
     {
         $products = $get('quoteProducts') ?? [];
+        \Log::info($products);
         $total = 0;
 
         foreach ($products as $product) {
-            if (isset($product['total_price'])) {
+            if (isset($product['total_price']) && is_numeric($product['total_price'])) {
                 $total += (float) $product['total_price'];
-            } else if (isset($product['quantity']) && isset($product['unit_price'])) {
+            } elseif (isset($product['quantity']) && isset($product['unit_price'])) {
                 $total += (float) $product['quantity'] * (float) $product['unit_price'];
             }
         }
