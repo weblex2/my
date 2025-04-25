@@ -37,7 +37,7 @@ class ProductResource extends Resource
                     Forms\Components\Section::make('Group1')
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->disabled()
+                            //->disabled()
                             ->dehydrated()
                             ->required(),
                             //->unique(Product::class, 'slug', true),
@@ -53,7 +53,9 @@ class ProductResource extends Resource
                             ->options([
                                 'downloadable' => ProductTypeEnum::DOWNLOADABLE->value ,
                                 'deliverable' => ProductTypeEnum::DELIVERABLE->value,
-                            ]),
+                            ])
+                            ->default('downloadable')
+                            ->required(),
                     ])->columns(2),
                     Forms\Components\Section::make('Description')
                         ->schema([
