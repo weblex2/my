@@ -335,3 +335,4 @@ Route::controller(ZimbraController::class)->group(function () {
 });
 
 Route::get('/documents/{document}/download', [DocumentDownloadController::class, 'download'])->name('documents.download');
+Route::get('/pdf/view/{id}', [DocumentDownloadController::class, 'view'])->name('pdf.view');

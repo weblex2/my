@@ -10,7 +10,20 @@ use App\Models\Contact;
 use App\Models\Document;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\MailManager;
+use App\Mail\FilamentMail;
+use Illuminate\Mail\Transport\SmtpTransport;
+use Symfony\Component\Mailer\Transport\Dsn;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Illuminate\Mail\Mailer;
+use Illuminate\Mail\TransportManager;
+use Illuminate\Container\Container;
+use Illuminate\Support\Arr;
+use Illuminate\Mail\Message;
+use Swift_SmtpTransport;
+use Swift_Mailer;
 
 class ZimbraController extends Controller
 {
@@ -291,6 +304,37 @@ class ZimbraController extends Controller
             Log::error('Allgemeiner Fehler beim Speichern der Dokumente', ['error' => $e->getMessage()]);
             return $result;
         }
+    }
+
+ public static function sendMail($mail)
+{
+    // Dynamische Config
+    $config = [
+        'transport' => 'smtp',
+        'host' => 'mail.efm.de',
+        'port' => 587,
+        'encryption' => 'tls',
+        'username' => 'alex@noppenberger.org',
+        'password' => 'Akwg44Frt6Cx',
+        'from' => ['address' => 'alex@noppenberger.org', 'name' => 'Alex'],
+    ];
+
+    // MailManager aus dem Service Container holen
+    $manager = app(MailManager::class);
+
+    // Mailer mit dynamischer Config erstellen
+    $mailer = $manager->mailer('smtp', $config);
+
+    // E-Mail senden
+    $res = $mailer->to($mail['to'])->send(new FilamentMail($mail['body'], $mail['attachment'][0]));
+}
+
+    function getUserMailer($host, $port, $username, $password, $encryption = 'tls') {
+        $transport = new SmtpTransport($host, $port, $encryption);
+        $transport->setUsername($username);
+        $transport->setPassword($password);
+
+        return new Mailer('user-mailer', app()['view'], $transport, app()['events']);
     }
 
 }

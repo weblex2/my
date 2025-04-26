@@ -41,4 +41,23 @@ class CreateQuote extends CreateRecord
             ]);
         }
     }
+
+    public function previewPdf()
+    {
+        $data = $this->form->getState();
+
+        $quote = new \App\Models\Quote($data);
+        $quote->customer = \App\Models\Customer::find($data['customer_id']);
+        $quote->quoteProducts = collect($data['quoteProducts'])->map(function ($item) {
+            $item['product'] = \App\Models\Product::find($item['product_id']);
+            return (object) $item;
+        });
+
+        $pdf = Pdf::loadView('filament.pdf.quote', ['quote' => $quote]);
+
+        return Response::streamDownload(
+            fn () => print($pdf->output()),
+            'Angebot_Vorschau.pdf'
+        );
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\QuoteResource\Pages;
 use App\Filament\Resources\QuoteResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use App\Models\Quote;
 
 class EditQuote extends EditRecord
 {
@@ -54,6 +55,24 @@ class EditQuote extends EditRecord
             ->extraAttributes([
                 'wire:loading.attr' => 'disabled', // Deaktiviert Button während Livewire-Anfrage
             ]);
+    }
+
+    public function previewPdf(Quote $quote)
+    {
+        $x = 1;
+        $quote = Quote::find($id);
+        $quote->customer = Customer::find($data['customer_id']);
+        $quote->quoteProducts = collect($data['quoteProducts'])->map(function ($item) {
+            $item['product'] = Product::find($item['product_id']);
+            return (object) $item;
+        });
+
+        $pdf = Pdf::loadView('filament.pdf.quote', ['quote' => $quote]);
+
+        return Response::streamDownload(
+            fn () => print($pdf->output()),
+            'Angebot_Vorschau.pdf'
+        );
     }
 
 }

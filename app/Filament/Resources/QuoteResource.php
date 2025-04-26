@@ -24,6 +24,11 @@ use Filament\Tables\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
+use App\Filament\Helpers\FilamentHelper;
+use Livewire\Livewire;
+use App\Http\Controllers\ZimbraController;
+
+
 
 class QuoteResource extends Resource
 {
@@ -68,6 +73,7 @@ class QuoteResource extends Resource
                                     'accepted' => 'Accepted',
                                     'rejected' => 'Rejected'
                                 ]),
+
                             DatePicker::make('valid_until')
                                 ->label('Gültig bis')
                                 ->required()
@@ -124,12 +130,22 @@ class QuoteResource extends Resource
                                             self::calculateTotalAmount($get, $set);
                                         }),
 
+                                    Select::make('reoccurance')
+                                        ->label('Reoccurance')
+                                        ->required()
+                                        ->default('once')
+                                        ->options([
+                                            'once' => 'einmalig',
+                                            'year' => 'jährlich',
+                                            'month' => 'monatlich',
+                                        ]),
+
                                     TextInput::make('total_price')
                                         ->label('Gesamtpreis')
                                         ->numeric()
                                         ->readOnly(),
                                 ])
-                                ->columns(3)
+                                ->columns(5)
                                 ->itemLabel(fn (array $state): ?string => Product::find($state['product_id'])?->name ?? null)
                                 ->addActionLabel('Produkt hinzufügen')
                                 ->minItems(1)
@@ -150,21 +166,29 @@ class QuoteResource extends Resource
                                 ->afterStateHydrated(function (Get $get, Set $set) {
                                     self::calculateTotalAmount($get, $set);
                                 }),
-                            Textarea::make('terms')
+                            Forms\Components\MarkdownEditor::make('agb')
                                 ->label('AGB')
                                 ->columnSpanFull(),
 
-                            Textarea::make('notes')
+                            Forms\Components\MarkdownEditor::make('notes')
                                 ->label('Bemerkungen')
                                 ->columnSpanFull(),
+
                         ]),
+
                 ])
                 ->columnSpanFull()
                 ->persistStepInQueryString()
                 ->submitAction(
                     Action::make('submit')
                         ->label('Angebot erstellen')
-                        ->action('create')
+                        ->action(function (Form $form) {
+                        // Den Datensatz speichern
+                        $data = $form->getState();
+
+                        // ID an die Methode übergeben, um das PDF zu erstellen
+                        return $this->previewPdf($data);
+                    }),
                 ),
             ]);
     }
@@ -216,12 +240,93 @@ class QuoteResource extends Resource
                     ->label('PDF herunterladen')
                     ->icon('heroicon-o-document-arrow-down')
                     ->action(function (Quote $record) {
-                        $quote = Quote::with(['customer', 'quoteProducts.product'])->find($record->id);
-                        $pdf = Pdf::loadView('filament.pdf.quote', ['quote' => $quote]);
+                        $pdf = FilamentHelper::renderPdf($record->id);
                         return response()->streamDownload(
-                            fn () => print($pdf->output()),
-                            "Angebot_{$quote->quote_number}.pdf"
+                            fn () => print($pdf['content']->output()),
+                            "Angebot_{$pdf['quote_number']}.pdf"
                         );
+                    }),
+                Tables\Actions\Action::make('view_pdf')
+                    ->label('PDF anzeigen')
+                    ->icon('heroicon-o-document')
+                     ->url(function (Quote $record) {
+                        // Generiere die URL für das PDF
+                        return route('pdf.view', ['id' => $record->id]);
+                    })
+                    ->openUrlInNewTab(),
+                Tables\Actions\Action::make('send_email')
+                    ->label('Email senden')
+                    //->icon('heroicon-o-mail')
+                    ->modalHeading('E-Mail senden')
+                    //->modalWidth('lg')
+                    ->form([
+                        Forms\Components\TextInput::make('email')
+                            ->label('E-Mail-Adresse')
+                            ->email()
+                            ->default(function (Quote $record) {
+                                $record->load('customer');  // Lade die `customer` Beziehung
+                                $customer = $record->customer;
+
+                                if ($customer) {
+                                    \Log::info("Customer Email: " . $customer->email);
+                                    return $customer->email;  // Setze die E-Mail-Adresse als Standardwert
+                                } else {
+                                    \Log::warning("Kein Kunde gefunden für Quote ID: {$record->id}");
+                                    return '';  // Setze einen leeren Standardwert, wenn kein Kunde gefunden wird
+                                }
+                            })
+                            ->required(),
+                        Forms\Components\TextInput::make('cc')
+                            ->label('CC')
+                            ->email(),
+                        Forms\Components\TextInput::make('subject')
+                            ->label('Subject')
+                            ->required(),
+                        Forms\Components\TextArea::make('body')
+                            ->label('Nachricht')
+                            ->required()
+                            ->extraAttributes(['class' => 'h-24']),
+                        // Vorschau des PDFs
+                        Forms\Components\TextInput::make('pdf_link')
+                            ->label('Angebots-PDF')
+                            ->default(fn (Quote $record) => route('pdf.view', ['id' => $record->id]))
+                            ->disabled()
+                            ->suffixAction(
+                                Forms\Components\Actions\Action::make('open_pdf')
+                                    ->label('Anzeigen')
+                                    ->url(fn (Quote $record) => route('pdf.view', ['id' => $record->id]))
+                                    ->openUrlInNewTab()
+                            ),
+                    ])
+                    ->action(function (array $data, Quote $record) {
+                        // Holen der E-Mail-Adresse des Kunden
+                        \Log::info("Halllllooooo");
+                        $record->load('customer');
+                        $customer = $record->customer;
+                        $email = $customer->email;
+                        \Log::info("Quote Record: ", (array) $record);
+                        \Log::info("Customer Email: " . ($email ?: 'Kein Kunde gefunden'));
+                        // Generiere das PDF für das Angebot
+                        $pdf = FilamentHelper::generateFile($record->id);
+
+                        // Versenden der E-Mail mit dem PDF als Anhang
+                        $mail = [
+                            'to' => $email,
+                            'cc' =>  $data['cc'],
+                            'subject' =>  $data['subject'],
+                            'body' =>  $data['body'],
+                            'attachment' => [
+                                0 => $pdf
+                            ]
+                        ];
+                        $res = ZimbraController::sendMail($mail);
+
+
+                        // Benachrichtigung anzeigen
+                        Notification::make()
+                            ->title('E-Mail wurde gesendet')
+                            ->success()
+                            ->send();
                     }),
             ])
             ->bulkActions([

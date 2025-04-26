@@ -6,10 +6,12 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            font-size:14px;
             margin: 40px;
         }
         .header {
             text-align: center;
+            font-size: 24px;
             margin-bottom: 40px;
         }
         .table {
@@ -32,6 +34,9 @@
         .text-right{
             text-align: right !important;
         }
+        h1{
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
@@ -51,6 +56,7 @@
                 <th class="text-right">Menge</th>
                 <th class="text-right">Einzelpreis</th>
                 <th class="text-right">Gesamtpreis</th>
+                <th class="">Fälligkeit</th>
             </tr>
         </thead>
         <tbody>
@@ -60,6 +66,21 @@
                     <td class="text-right">{{ $product->quantity }}</td>
                     <td class="text-right">{{ number_format($product->unit_price, 2, ',', '.') }} €</td>
                     <td class="text-right">{{ number_format($product->unit_price * $product->quantity, 2, ',', '.') }} €</td>
+                    <td class="text-right">
+                        @switch($product->reoccurance)
+                            @case('year')
+                                jährlich
+                                @break
+                            @case('month')
+                                monatlich
+                                @break
+                            @case('once')
+                                einmalig
+                                @break
+                            @default
+                                <p>Unbekannter Status.</p>
+                        @endswitch
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -69,12 +90,12 @@
 
     @if($quote->terms)
         <h3>AGB</h3>
-        <p>{{ $quote->terms }}</p>
+        <p>{!! nl2br($quote->terms) !!}</p>
     @endif
 
     @if($quote->notes)
         <h3>Bemerkungen</h3>
-        <p>{{ $quote->notes }}</p>
+        <p>{!! nl2br($quote->notes) !!}</p>
     @endif
 </body>
 </html>
