@@ -282,7 +282,7 @@ class QuoteResource extends Resource
                         Forms\Components\TextInput::make('subject')
                             ->label('Subject')
                             ->required(),
-                        Forms\Components\TextArea::make('body')
+                        Forms\Components\Textarea::make('body')
                             ->label('Nachricht')
                             ->required()
                             ->extraAttributes(['class' => 'h-24']),
