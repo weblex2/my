@@ -163,10 +163,10 @@ class ContactsRelationManager extends RelationManager
                     ->label('Kunde bearbeiten')
                     ->icon('heroicon-o-pencil')
                     ->url(fn () => CustomerResource::getUrl('edit', ['record' => $this->ownerRecord]))
-                    ->color('primary')
-                    ->disabled(function ($record) {
+                    ->color('primary'),
+                    /* ->disabled(function ($record) {
                         return !auth()->user()->can('edit', $this->ownerRecord);
-                    }),
+                    }), */
                 Tables\Actions\Action::make('importEmails')
                     ->label('E-Mails importieren')
                     ->icon('heroicon-o-inbox')
