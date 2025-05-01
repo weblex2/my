@@ -52,6 +52,13 @@
         <i class="fa-solid fa-code-fork"></i> Git Push
     </button>
 
+    <!-- Swagger refresh -->
+     <button wire:click="refreshSwagger"
+            class="btn"
+            wire:loading.attr="disabled" wire:loading.class="opacity-50">
+        <i class="fa-solid fa-globe"></i> Swagger refresh
+    </button>
+
     <h2 class="mt-6">NPM Befehle</h2>
 
     <!-- Button für npm run dev -->

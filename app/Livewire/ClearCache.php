@@ -50,6 +50,12 @@ class ClearCache extends Component
         $this->message .= 'Views wurden gelöscht.<br>';
     }
 
+    function refreshSwagger(){
+        $this->message .= 'Swagger Generate API<br>';
+        Artisan::call('l5-swagger:generate');
+        $this->message .= 'Swagger regenerated<br>';
+    }
+
     // Funktion für git pull
     public function gitPull()
     {
