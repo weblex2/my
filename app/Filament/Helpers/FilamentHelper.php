@@ -7,23 +7,16 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Quote;
 use Illuminate\Support\Facades\Log;
 use App\Exports\CustomExport;
+use App\Models\GeneralSetting;
 
 class FilamentHelper
 {
     private $data;
 
-
-    /**
-     * Fügt einer Column dynamische Hintergrundfarbe + Textfarbe hinzu.
-     */
-    public static function withBackground(Column $column, callable $callback): Column
-    {
-        return $column
-            ->html()
-            ->formatStateUsing(function ($state, $record) use ($callback) {
-                $classes = $callback($state, $record);
-                return '<div class="px-2 py-1 rounded ' . $classes . '">' . e($state) . '</div>';
-            });
+    public static function readSetting($field){
+        $setting = GeneralSetting::where('field', $field)->first();
+        // Wenn der Datensatz existiert, gibt den Wert zurück, sonst null
+        return $setting ? $setting->value : false;
     }
 
     public static function renderPdf($id){

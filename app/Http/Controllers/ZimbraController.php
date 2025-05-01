@@ -25,6 +25,9 @@ use Illuminate\Mail\Message;
 use Swift_SmtpTransport;
 use Swift_Mailer;
 use Illuminate\Support\Facades\Crypt;
+use App\Filament\Helpers\FilamentHelper;
+
+
 
 class ZimbraController extends Controller
 {
@@ -58,11 +61,12 @@ class ZimbraController extends Controller
 
         $user = Auth::user();
         $host = "mail.efm.de";
+        $host = FilamentHelper::readSetting('imap_server');
         $port = 993;
         $username = $user->email;
         #$password = 'Akwg44Frt6Cx';
         $password = decrypt($user->user01);
-       
+
         $cm = new ClientManager();
 
         $client = $cm->make([

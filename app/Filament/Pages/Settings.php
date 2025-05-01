@@ -44,13 +44,40 @@ class Settings extends Page
     protected function getFormSchema(): array
     {
         return [
-            Forms\Components\TextInput::make('site_name')
-                ->label('Site Name')
-                ->required(),
-            Forms\Components\Toggle::make('email_notifications')
-                ->label('Enable Email Notifications'),
-            Forms\Components\TextInput::make('imap_server')
-                ->label('IMAP Server'),
+            // Allgemeine Einstellungen
+            Forms\Components\Section::make('General')
+                ->schema([
+                    Forms\Components\TextInput::make('site_name')
+                        ->label('Site Name')
+                        ->required(),
+                    Forms\Components\Toggle::make('email_notifications')
+                        ->label('Enable Email Notifications'),
+                ])
+                ->collapsible(),  // Kollapsbar
+
+            // E-Mail Einstellungen
+            Forms\Components\Section::make('IMAP')
+                ->schema([
+
+                    Forms\Components\TextInput::make('imap_server')
+                        ->label('Server'),
+                    Forms\Components\TextInput::make('imap_port')
+                        ->label('Port')
+                        ->numeric()
+                        ->default(995),  // Beispiel Port
+                    Forms\Components\TextInput::make('imap_encryption')
+                        ->label('Encryption')
+                        ->default('ssl'),
+                ])
+                ->columns(3)
+                ->collapsible(),  // Kollapsbar
+
+            // Sonstige Einstellungen
+            Forms\Components\Section::make('Other')
+                ->schema([
+                    // Hier kannst du andere Felder hinzufügen
+                ])
+                ->collapsible(),  // Kollapsbar
         ];
     }
 
