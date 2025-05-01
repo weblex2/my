@@ -28,6 +28,11 @@ class Customer extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function primaryAddress() {
         return $this->belongsTo(CustomerAddress::class, 'primary_address');
     }

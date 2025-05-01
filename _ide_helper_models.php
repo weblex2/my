@@ -263,6 +263,7 @@ namespace App\Models{
  * @property string|null $houses
  * @property string|null $rooms
  * @property string|null $sales_volume
+ * @property int|null $user_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $addresses
  * @property-read int|null $addresses_count
  * @property-read \App\Models\CustomerAssd|null $assd
@@ -279,6 +280,7 @@ namespace App\Models{
  * @property-read \App\Models\CustomerAddress|null $primaryAddress
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quote> $quotes
  * @property-read int|null $quotes_count
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer inactive()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer new()
@@ -312,6 +314,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereWebsite($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withoutTrashed()
@@ -1053,10 +1056,14 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string|null $reoccurance
  * @property int $customer_id
  * @property string $quote_number
  * @property string $total_amount
+ * @property string $status
  * @property string $valid_until
+ * @property string|null $notes
+ * @property string|null $agb
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -1067,11 +1074,15 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereAgb($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereCustomerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereQuoteNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereReoccurance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereValidUntil($value)
@@ -1089,6 +1100,7 @@ namespace App\Models{
  * @property int $quote_id
  * @property int $product_id
  * @property int $quantity
+ * @property string|null $reoccurance
  * @property string $unit_price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -1102,6 +1114,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct whereQuoteId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct whereReoccurance($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct whereUpdatedAt($value)
  */
@@ -1207,6 +1220,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $facebook_id
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Customer> $customers
+ * @property-read int|null $customers_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions

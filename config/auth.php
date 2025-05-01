@@ -42,10 +42,10 @@ return [
         ],
 
         'api' => [
-            'driver' => 'passport', 
+            'driver' => 'sanctum',
             'provider' => 'users',
-            'hash' => true,
-        ], 
+            'hash' => false,
+        ],
 
         /*  should be like this after upgrade to Laravel 10 but works anway
         'api' => [
