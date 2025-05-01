@@ -811,6 +811,27 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $field
+ * @property string $value
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting whereField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting whereValue($value)
+ */
+	class GeneralSetting extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $queue
  * @property string $payload
  * @property int $attempts
@@ -1220,6 +1241,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $facebook_id
+ * @property string|null $user01
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Customer> $customers
  * @property-read int|null $customers_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -1251,6 +1273,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTwoFactorRecoveryCodes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTwoFactorSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUser01($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutPermission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutRole($roles, $guard = null)
  */

@@ -24,6 +24,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Mail\Message;
 use Swift_SmtpTransport;
 use Swift_Mailer;
+use Illuminate\Support\Facades\Crypt;
 
 class ZimbraController extends Controller
 {
@@ -55,11 +56,13 @@ class ZimbraController extends Controller
             'emails_imported' => 0,
         ];
 
+        $user = Auth::user();
         $host = "mail.efm.de";
         $port = 993;
-        $username = 'alex.noppenberger@assd.com';
-        $password = 'Akwg44Frt6Cx';
-
+        $username = $user->email;
+        #$password = 'Akwg44Frt6Cx';
+        $password = decrypt($user->user01);
+       
         $cm = new ClientManager();
 
         $client = $cm->make([

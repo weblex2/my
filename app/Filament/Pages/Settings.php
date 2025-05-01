@@ -49,17 +49,33 @@ class Settings extends Page
                 ->required(),
             Forms\Components\Toggle::make('email_notifications')
                 ->label('Enable Email Notifications'),
+            Forms\Components\TextInput::make('imap_server')
+                ->label('IMAP Server'),
         ];
     }
 
     public function submit(): void
     {
         $data = $this->form->getState();
-        Cache::put('settings', $data);
-        //$this->notify('success', 'Settings saved successfully!');
-        Notification::make()
-        ->title('Settings saved successfully!')
-        ->success()
-        ->sendToDatabase(auth()->user());
+
+        // Speichere die Einstellungen in der Datenbank (Tabelle general_settings)
+        foreach ($data as $field => $value) {
+            // Überprüfen, ob bereits ein Wert für dieses Feld existiert
+            $setting = \App\Models\GeneralSetting::updateOrCreate(
+                ['field' => $field],  // Bedingung: Suche nach 'field'
+                ['value' => $value]    // Wenn nicht vorhanden, setze den Wert
+            );
         }
+
+        // Cache aktualisieren
+        Cache::put('settings', $data);
+
+        // Benachrichtigung senden
+        Notification::make()
+            ->title('Settings saved successfully!')
+            ->success()
+            ->send();
+        // Wenn du die Benachrichtigung in der Datenbank speichern willst:
+        //auth()->user()->notify(new GeneralNotification('Settings saved successfully!'));
+    }
 }

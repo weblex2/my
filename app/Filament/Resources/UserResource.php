@@ -67,6 +67,14 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('facebook_id')
                     ->maxLength(255)
                     ->default(null),
+                 Forms\Components\TextInput::make('user01')
+                    ->label('IMAP Password')
+                    //->password()
+                    ->afterStateHydrated(fn ($component, $state) => $component->state($state ? decrypt($state) : ''))
+                    ->dehydrated(fn (?string $state): bool => filled($state)) // Nur speichern, wenn ein Wert eingegeben wurde
+                    ->dehydrateStateUsing(fn (string $state): string => encrypt($state)) // Passwort verschlüsseln
+                    ->visibleOn(['create', 'edit']), // Sichtbar beim Erstellen und Bearbeiten
+
             ]);
     }
 
@@ -128,4 +136,6 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
+
+
 }

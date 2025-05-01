@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\User;
 use App\Models\CustomerAssd;
 use App\Models\CustomerAddress;
 use App\Models\FilTableFields;
@@ -42,6 +43,13 @@ class TestController extends Controller
 
     public function testModel(){
 
+
+        $user = User::find(1);
+        dump($user);
+        dump($user->user01);
+        #$pw = decrypt($user->user01);
+        #echo $pw;
+        die();
         #$customer = Customer::find(5);
         #$customer->load('assd');
         //dump($customer);

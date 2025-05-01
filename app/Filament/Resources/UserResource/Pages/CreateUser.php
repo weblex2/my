@@ -9,4 +9,10 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateUser extends CreateRecord
 {
     protected static string $resource = UserResource::class;
+
+    protected function afterSave()
+    {
+        // Weiterleitung zur Übersicht nach dem Speichern
+        return redirect()->route('filament.admin.resources.users.index');
+    }
 }
