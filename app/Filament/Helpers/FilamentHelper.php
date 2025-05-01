@@ -5,6 +5,8 @@ namespace App\Filament\Helpers;
 use Filament\Tables\Columns\Column;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Quote;
+use Illuminate\Support\Facades\Log;
+use App\Exports\CustomExport;
 
 class FilamentHelper
 {
@@ -55,5 +57,19 @@ class FilamentHelper
         // PDF speichern
         $pdf->save($path);
         return $path;
+    }
+
+    public static function excelExport($data){
+        $exportData = [];
+        $header = array_keys($data[0]->getAttributes());
+        $exportData[] = $header;
+        foreach ($data as $item) {
+            $row = [];
+            foreach ($item->getAttributes() as $key => $value) {
+                $row[ucwords(str_replace('_', ' ', $key))] = $value;
+            }
+            $exportData[] = $row;
+        }
+        return new CustomExport($exportData);
     }
 }

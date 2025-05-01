@@ -26,6 +26,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Enums\CustomerStatusEnum;
 use Filament\Tables\Actions;
+use App\Filament\Helpers\FilamentHelper;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromArray; // Korr
+
 
 class CustomerResource extends Resource
 {
@@ -294,6 +298,17 @@ class CustomerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
 
+            ])
+            ->headerActions([
+                Actions\Action::make('Exportieren')
+                    ->label('Excel Export')
+                    ->icon('heroicon-o-folder-arrow-down')
+                    ->action(function (array $data, $livewire) {
+                        $records = $livewire->getFilteredTableQuery()->get(); // Das funktioniert bei Table-Components
+                        $records = FilamentHelper::excelExport($records);
+                        // Anonyme Export-Klasse
+                        return Excel::download($records, 'export.xlsx');
+                    })
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
