@@ -100,10 +100,10 @@ class AdminPanelProvider extends PanelProvider
                     ->badge($counts['contact'] ?? 0)
                     ->isActiveWhen(fn () => request()->fullUrlIs(CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => 'contact']]]) . '*')),
 
-                NavigationItem::make('ASSD')
-                     ->url('https:/assd.com', shouldOpenInNewTab: true)
+                NavigationItem::make('API Documentation')
+                     ->url('https://noppal.de/api/documentation', shouldOpenInNewTab: true)
                      ->icon('heroicon-o-shopping-cart')
-                     ->group('External')
+                     ->group('Documentation')
                      ->sort(3)
                      ->hidden(fn(): bool => auth()->user()->can('view'))
             ])
