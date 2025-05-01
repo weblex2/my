@@ -61,96 +61,13 @@ class CustomerController extends Controller
         return Customer::all();
     }
 
-   /*  public function store(Request $request)
-    {
-        // Extrahiere die rows aus dem Request
-        $data = $request->input('rows', []);
-
-        // Validierung der Eingabe: rows muss ein Array sein
-        if (!is_array($data)) {
-            return response()->json(['error' => 'Rows must be an array'], 400);
-        }
-
-        $res = ['success' => [], 'errors' => []];
-
-        // Verarbeite jede Row in einer Transaktion
-        foreach ($data as $index => $row) {
-            // Validierungsregeln für einen einzelnen Kunden
-            $validator = Validator::make($row, [
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:customers,email',
-                #'resources' => 'sometimes|array',
-                #'resources.*.name' => 'required|string|max:255',
-            ]);
-
-            if ($validator->fails()) {
-                $res['errors'][] = [
-                    'index' => $index,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors(),
-                    'data' => $row,
-                ];
-                continue;
-            }
-
-            try {
-                // Erstelle Kunden und Ressourcen in einer Transaktion
-                $customer = DB::transaction(function () use ($row, $request) {
-                    $customer = $request->user()->customers()->create([
-                        'name' => $row['name'],
-                        'name' => $row['phone'],
-                        'email' => $row['email'],
-                        #'user_id' => $request->user()->id,
-                    ]);
-
-                    // Erstelle abhängige Ressourcen, falls vorhanden
-                    if (isset($row['resources']) && is_array($row['resources'])) {
-                        $resources = collect($row['resources'])->map(function ($resource) use ($customer, $request) {
-                            return [
-                                'name' => $resource['name'],
-                                'customer_id' => $customer->id,
-                                'user_id' => $request->user()->id,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ];
-                        });
-
-                        $customer->resources()->insert($resources->toArray());
-                    }
-
-                    $customer->load('resources');
-                    return $customer;
-                });
-
-                $res['success'][] = [
-                    'id' => $customer->id,
-                    'message' => 'Customer created successfully',
-                    'data' => new CustomerResource($customer),
-                ];
-            } catch (\Exception $e) {
-                $res['errors'][] = [
-                    'index' => $index,
-                    'message' => $e->getMessage(),
-                    'data' => $row,
-                ];
-            }
-        }
-
-        // Bestimme den Statuscode
-        $status = count($res['errors']) > 0 ? 400 : 201;
-        if (count($res['success']) > 0 && count($res['errors']) > 0) {
-            $status = 207; // HTTP 207 Multi-Status für teilweise Erfolge
-        }
-
-        return response()->json($res, $status);
-    } */
-
-
 /**
  * @OA\Post(
  *     path="/api/customers",
  *     tags={"Customers"},
- *     summary="Create multiple customers",
+ *     summary="Find customer by ID",
+ *     description="Retrieve a customer by their ID.",
+ *     security={{"bearerAuth": {}}},
  *     @OA\RequestBody(
  *         @OA\JsonContent(
  *             required={"rows"},
@@ -159,15 +76,79 @@ class CustomerController extends Controller
  *                 type="array",
  *                 @OA\Items(
  *                     required={"name", "email"},
- *                     @OA\Property(property="name", type="string"),
- *                     @OA\Property(property="email", type="string", format="email")
+ *                     @OA\Property(property="name", type="string", example="string"),
+ *                     @OA\Property(property="email", type="string", format="email", example="user@example.com")
  *                 )
  *             )
  *         )
  *     ),
- *     @OA\Response(response=201, description="All customers created"),
- *     @OA\Response(response=207, description="Partial success"),
- *     @OA\Response(response=400, description="Validation or creation failed")
+ *     @OA\Response(
+ *         response=201,
+ *         description="All customers created",
+ *         @OA\JsonContent(
+ *             @OA\Property(
+ *                 property="success",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="message", type="string", example="Customer created successfully"),
+ *                     @OA\Property(
+ *                         property="data",
+ *                         type="object",
+ *                         @OA\Property(property="id", type="integer", example=1),
+ *                         @OA\Property(property="name", type="string", example="string"),
+ *                         @OA\Property(property="email", type="string", example="user@example.com"),
+ *                         @OA\Property(property="user_id", type="integer", example=1),
+ *                         @OA\Property(property="created_at", type="string", format="date-time", example="2025-05-01T12:00:00.000000Z"),
+ *                         @OA\Property(property="updated_at", type="string", format="date-time", example="2025-05-01T12:00:00.000000Z")
+ *                     )
+ *                 )
+ *             ),
+ *             @OA\Property(
+ *                 property="errors",
+ *                 type="array",
+ *                 @OA\Items(type="object")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=207,
+ *         description="Partial success",
+ *         @OA\JsonContent(
+ *             @OA\Property(
+ *                 property="success",
+ *                 type="array",
+ *                 @OA\Items(type="object")
+ *             ),
+ *             @OA\Property(
+ *                 property="errors",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="index", type="integer", example=0),
+ *                     @OA\Property(property="message", type="string", example="Validation failed"),
+ *                     @OA\Property(
+ *                         property="errors",
+ *                         type="object",
+ *                         @OA\Property(
+ *                             property="email",
+ *                             type="array",
+ *                             @OA\Items(type="string", example="The email has already been taken.")
+ *                         )
+ *                     ),
+ *                     @OA\Property(
+ *                         property="data",
+ *                         type="object",
+ *                         @OA\Property(property="name", type="string", example="string"),
+ *                         @OA\Property(property="email", type="string", example="user@example.com")
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Validation or creation failed"),
+ *     @OA\Response(response=401, description="Unauthorized")
  * )
  */
 
