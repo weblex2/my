@@ -313,18 +313,59 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        if ($customer->user_id !== $request->user()->id) {
+        /* if ($customer->user_id !== $request->user()->id) {
             return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        } */
 
-        $validated = $request->validate([
+        // Validierungsregeln
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:fil_customers,email,' . $customer->id,
+            'email' => 'required|email',
+            'sales_volume' => ['nullable', 'decimal:2', 'between:0,999999.99'],
         ]);
 
-        $customer->update($validated);
-        return $customer;
+        // Wenn die Validierung fehlschlägt
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => [
+                    [
+                        'message' => 'Validation failed',
+                        'errors' => $validator->errors(),
+                        'data' => $request->all(),
+                    ]
+                ]
+            ], 400);
+        }
+
+        try {
+            // Aktualisiere den Customer in einer Transaktion
+            $updatedCustomer = DB::transaction(function () use ($request, $customer) {
+                $customer->update([
+                    'name' => $request->input('name'),
+                    //'email' => $request->input('email'),
+                    'sales_volume' => $request->input('sales_volume', null),
+                    'user_id' => $request->user()->id,
+                ]);
+                return $customer->fresh(); // Lade das aktualisierte Modell
+            });
+
+            return response()->json([
+                'success' => [
+                    'id' => $updatedCustomer->id,
+                    'message' => 'Customer updated successfully',
+                    'data' => $updatedCustomer,
+                ]
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'errors' => [
+                    'message' => $e->getMessage(),
+                    'data' => $request->all(),
+                ]
+            ], 400);
+        }
     }
+
 
     /**
      * @OA\Delete(
@@ -346,9 +387,9 @@ class CustomerController extends Controller
      */
     public function destroy(Request $request, Customer $customer)
     {
-        if ($customer->user_id !== $request->user()->id) {
+        /* if ($customer->user_id !== $request->user()->id) {
             return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        } */
 
         $customer->delete();
         return response()->json(null, 204);
