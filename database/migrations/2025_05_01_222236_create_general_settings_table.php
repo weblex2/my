@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('general_settings', function (Blueprint $table) {
             $table->id();
             $table->string('field')->unique();  // Das Feld für den Schlüssel, der eindeutig ist
-            $table->text('value');  // Das Feld für den Wert, der gespeichert wird
+            $table->text('value')->nullable();  // Das Feld für den Wert, der gespeichert wird
             $table->timestamps();  // Automatisch erstellte Zeitstempel für created_at und updated_at
         });
     }
