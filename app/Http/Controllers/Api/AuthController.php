@@ -9,6 +9,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+
+/**
+ * @OA\Info(
+ *     title="Noppal CRM API456",
+ *     version="1.0.0",
+ *     description="API for managing customers in NOPPAL CRM.",
+ *     @OA\Contact(
+ *         email="support@example.com"
+ *     )
+ * )
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     description="Enter your JWT token in the format 'Bearer {token}'"
+ * )
+ */
+
 class AuthController extends Controller
 {
     private function generateToken(User $user): array

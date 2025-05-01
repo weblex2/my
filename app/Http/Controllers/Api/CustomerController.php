@@ -8,25 +8,6 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-
-/**
- * @OA\Info(
- *     title="Noppal CRM API",
- *     version="1.0.0",
- *     description="API for managing customers in NOPPAL CRM.",
- *     @OA\Contact(
- *         email="support@example.com"
- *     )
- * )
- * @OA\SecurityScheme(
- *     securityScheme="bearerAuth",
- *     type="http",
- *     scheme="bearer",
- *     bearerFormat="JWT",
- *     description="Enter your JWT token in the format 'Bearer {token}'"
- * )
- */
-
 class CustomerController extends Controller
 {
 
