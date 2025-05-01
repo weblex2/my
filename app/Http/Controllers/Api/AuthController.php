@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * @OA\Info(
- *     title="Noppal CRM API456",
+ *     title="Noppal CRM API",
  *     version="1.0.0",
  *     description="API for managing customers in NOPPAL CRM.",
  *     @OA\Contact(
