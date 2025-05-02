@@ -44,10 +44,15 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('filament/admin')
             ->login()
+            ->brandLogo('Mein//  Noppal')
+            ->brandName(\App\Models\GeneralSetting::where('field', 'site_name')->value('value') ?? 'CRM')
             ->maxContentWidth('1280px')
             ->colors([
                 'primary' => '#14b8a6',
+                #'primary' => ColorTeal')
             ])
+            //->font('Inter')
+            ->font('Poppins')
             ->resources([
                 UserResource::class,
                 RoleResource::class,
@@ -121,7 +126,7 @@ class AdminPanelProvider extends PanelProvider
                 'User Management', // Definiere die Navigationsgruppe
                 'Settings',
             ])
-            ->font('Poppins')
+
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 //Widgets\AccountWidget::class,

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\GeneralSetting;
 use Filament\Pages\Page;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -32,11 +33,16 @@ class Settings extends Page
 
     public function mount(): void
     {
-        $this->settings = Cache::get('settings', [
-            'site_name' => config('app.name'),
-            'email_notifications' => true,
-        ]);
+        $settings = GeneralSetting::all()->pluck('value', 'field')->toArray();
 
+        $this->settings = [
+            'site_name' => $settings['site_name'] ?? config('app.name'),
+            'email_notifications' => $settings['email_notifications'] ?? true,
+            'imap_server' => $settings['imap_server'] ?? '',
+            'imap_port' => $settings['imap_port'] ?? 995,
+            'imap_encryption' => $settings['imap_encryption'] ?? 'ssl',
+            // Weitere Felder bei Bedarf
+        ];
 
         $this->form->fill($this->settings);
     }
