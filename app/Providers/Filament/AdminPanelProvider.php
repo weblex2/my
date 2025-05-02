@@ -158,7 +158,7 @@ class AdminPanelProvider extends PanelProvider
     }
 
     public static function getLinks($counts){
-        $filters = FilamentConfig::where('type','navlink')->orderBy('order', 'asc')->get();
+        //$filters = FilamentConfig::where('type','navlink')->orderBy('order', 'asc')->get();
         $navItems = [];
         foreach ($filters as $i => $filter){
             $name = ucfirst($filter->value);
