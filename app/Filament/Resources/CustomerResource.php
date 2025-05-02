@@ -327,10 +327,13 @@ class CustomerResource extends Resource
                     'lead' => 'Lead',
                     'contact' => 'Contact',
                 ]), */
-                ->options([
+               /*  ->options([
                     '' => 'Alle',
                     ...FilamentConfig::getFiltersFor('customer','status'), // deine dynamischen Werte
-                ]),
+                ]), */
+                ->options(function () {
+                    return FilamentConfig::getFiltersFor('customer', 'status');
+                })
             ])
             ->recordAction(Tables\Actions\EditAction::class) // Keine Aktion bei einfachem Klick
             ->recordUrl(null)
