@@ -10,7 +10,9 @@ class FilamentConfig extends Model
 
     public static function getFiltersFor(string $resource, string $field): array
     {
-
+        if (!Schema::hasTable('filament_configs')) {
+            return []; // leeres Array, wenn Tabelle noch nicht da
+        }
         return self::query()
             ->where('type', 'option')
             ->where('field', $field)
