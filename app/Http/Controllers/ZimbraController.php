@@ -60,13 +60,20 @@ class ZimbraController extends Controller
         ];
 
         $user = Auth::user();
-        $host = "mail.efm.de";
+        #$host = "mail.efm.de";
         $host = FilamentHelper::readSetting('imap_server');
-        $port = 993;
+        #$port = 993;
+        $port = FilamentHelper::readSetting('imap_port');
         $username = $user->email;
         #$password = 'Akwg44Frt6Cx';
-        $password = decrypt($user->user01);
-
+        try{
+            $password = decrypt($user->user01);
+        }
+        catch(\Exception $e){
+            $result['status'] = "error";
+            $result['errors'][] = "No valid IMAP Password found. You can set it via User Management.";
+            return $result;
+        }
         $cm = new ClientManager();
 
         $client = $cm->make([

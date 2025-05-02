@@ -25,6 +25,8 @@ use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use App\Filament\Resources\FilTableFieldsResource;
 use App\Models\Customer;
 use App\Filament\Pages\CustomNotificationsPage;
+use App\Models\FilamentConfig;
+
 
 
 
@@ -67,7 +69,7 @@ class AdminPanelProvider extends PanelProvider
                 CustomNotificationsPage::class,
             ])
 
-            ->navigationItems([
+            ->navigationItems(/*[
                 NavigationItem::make('All Customers')
                     ->url(fn (): string => CustomerResource::getUrl('index'))
                     ->icon('heroicon-o-users')
@@ -76,7 +78,6 @@ class AdminPanelProvider extends PanelProvider
                     ->isActiveWhen(function () {
                         $currentUrl = url()->full();
                         $targetUrl = CustomerResource::getUrl('index');
-
                         // Nur aktiv, wenn exakt gleiche URL ohne Filter
                         return $currentUrl === $targetUrl || parse_url($currentUrl, PHP_URL_QUERY) === null;
                     }),
@@ -110,8 +111,12 @@ class AdminPanelProvider extends PanelProvider
                      ->icon('heroicon-o-shopping-cart')
                      ->group('Documentation')
                      ->sort(3)
-                     ->hidden(fn(): bool => auth()->user()->can('view'))
-            ])
+                     ->hidden(fn(): bool => auth()->user()->can('view')),
+
+
+            ]*/
+                $this->getLinks($counts),
+            )
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Settings')
@@ -151,4 +156,23 @@ class AdminPanelProvider extends PanelProvider
             ])
             ;
     }
+
+    public static function getLinks($counts){
+        $filters = FilamentConfig::where('type','navlink')->orderBy('order', 'asc')->get();
+        $navItems = [];
+        foreach ($filters as $i => $filter){
+            $name = ucfirst($filter->value);
+            $filter = $filter->key;
+            $navItem = NavigationItem::make($name);
+            $navItem->url(fn (): string => CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => $filter]]]))
+                    ->icon('heroicon-o-users')
+                    ->group('Customers')
+                    ->badge($counts[$filter] ?? 0);
+                    //->isActiveWhen(fn () => request()->fullUrlIs(CustomerResource::getUrl('index', ['tableFilters' => ['status' => ['value' => $filter]]]) . '*'))
+            $navItems[] = $navItem;
+        }
+        return $navItems;
+    }
+
+
 }

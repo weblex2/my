@@ -11,6 +11,8 @@ use App\Models\CustomerAddress;
 use App\Models\FilTableFields;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\FilamentConfig;
+
 
 class TestController extends Controller
 {
@@ -43,7 +45,9 @@ class TestController extends Controller
 
     public function testModel(){
 
-
+        $filter = FilamentConfig::getFiltersFor('customer');
+        dump($filter);
+        die();
         $user = User::find(1);
         dump($user);
         dump($user->user01);

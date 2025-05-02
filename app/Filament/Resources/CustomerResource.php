@@ -28,7 +28,7 @@ use App\Enums\CustomerStatusEnum;
 use Filament\Tables\Actions;
 use App\Filament\Helpers\FilamentHelper;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Concerns\FromArray; // Korr
+use App\Models\FilamentConfig;
 
 
 class CustomerResource extends Resource
@@ -75,11 +75,15 @@ class CustomerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('status')
                 ->label('Status')
-                ->options([
+                /* ->options([
                     'exacc' => CustomerStatusEnum::EXACC->label(),
                     'deal' => CustomerStatusEnum::DEAL->label(),
                     'lead' => CustomerStatusEnum::LEAD->label(),
                     'contact' => CustomerStatusEnum::CONTACT->label(),
+                ]), */
+                ->options([
+                    '' => 'Alle123',
+                    ...FilamentConfig::getFiltersFor('customer','status'), // deine dynamischen Werte
                 ]),
 
                 Forms\Components\TextInput::make('phone')
@@ -124,6 +128,9 @@ class CustomerResource extends Resource
 
                     Forms\Components\TextInput::make('sales_volume')
                         ->numeric(),
+                    Forms\Components\DatePicker::make('updated_at')
+                        ->displayFormat('d.m.Y'),
+
 
                        // ->reactive(), // Optional: Macht das Feld reaktiv, falls du später Logik hinzufügen möchtest
 
@@ -313,12 +320,16 @@ class CustomerResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 SelectFilter::make('status')
-                ->options([
+                /* ->options([
                     '' => 'Alle',
                     'exacc' => 'Existing Account',
                     'deal' => 'Deal',
                     'lead' => 'Lead',
                     'contact' => 'Contact',
+                ]), */
+                ->options([
+                    '' => 'Alle',
+                    ...FilamentConfig::getFiltersFor('customer','status'), // deine dynamischen Werte
                 ]),
             ])
             ->recordAction(Tables\Actions\EditAction::class) // Keine Aktion bei einfachem Klick
@@ -386,6 +397,5 @@ class CustomerResource extends Resource
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }
-
 
 }

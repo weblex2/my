@@ -527,6 +527,35 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $type
+ * @property string $resource
+ * @property string|null $field
+ * @property string $key
+ * @property string $value
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int|null $order
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereResource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilamentConfig whereValue($value)
+ */
+	class FilamentConfig extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $name
  * @property string $street
  * @property string $plz
@@ -812,7 +841,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $field
- * @property string $value
+ * @property string|null $value
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GeneralSetting newModelQuery()
