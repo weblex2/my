@@ -82,7 +82,7 @@ class CustomerResource extends Resource
                     'contact' => CustomerStatusEnum::CONTACT->label(),
                 ]), */
                 ->options([
-                    '' => 'Alle123',
+                    '' => 'Alle',
                     ...FilamentConfig::getFiltersFor('customer','status'), // deine dynamischen Werte
                 ]),
 
