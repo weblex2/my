@@ -57,7 +57,7 @@ class ContactController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'external_id'  => 'nullable|string|unique:contacts,external_id',
-            'customer_id'  => 'required|exists:customers,id',
+            'customer_id'  => 'required|exists:fil_customers,id',
             'type'         => 'required|string|max:191',
             'from'         => 'required|string|max:191',
             'to'           => 'required|string|max:191',
