@@ -109,6 +109,7 @@ class ContactController extends Controller
      * @OA\Delete(
      *     path="/api/contacts/{id}",
      *     summary="Delete a contact",
+     *     security={{"bearerAuth": {}}},
      *     tags={"Contacts"},
      *     @OA\Parameter(
      *         name="id",
