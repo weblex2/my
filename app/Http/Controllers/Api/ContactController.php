@@ -19,6 +19,7 @@ class ContactController extends Controller
      * @OA\Get(
      *     path="/api/contacts",
      *     summary="Get list of contacts",
+     *     security={{"bearerAuth": {}}},
      *     tags={"Contacts"},
      *     @OA\Response(response=200, description="Successful response")
      * )
