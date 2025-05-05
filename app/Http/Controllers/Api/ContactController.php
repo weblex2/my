@@ -32,6 +32,7 @@ class ContactController extends Controller
      * @OA\Post(
      *     path="/api/contacts",
      *     summary="Create a new contact",
+     *     security={{"bearerAuth": {}}},
      *     tags={"Contacts"},
      *     @OA\RequestBody(
      *         required=true,
@@ -80,6 +81,7 @@ class ContactController extends Controller
      * @OA\Get(
      *     path="/api/contacts/{id}",
      *     summary="Get a specific contact",
+     *     security={{"bearerAuth": {}}},
      *     tags={"Contacts"},
      *     @OA\Parameter(
      *         name="id",
