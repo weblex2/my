@@ -120,9 +120,9 @@ class ContactController extends Controller
      *     @OA\Response(response=204, description="Deleted successfully")
      * )
      */
-    public function destroy(Request $request, Contact $customer)
+    public function destroy(Request $request, Contact $contact)
     {
-        $customer->delete();
+        $contact->delete();
         return response()->json(null, 204);
     }
 }
