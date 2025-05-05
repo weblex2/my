@@ -7,6 +7,7 @@ use App\Models\KnowledgeBase;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,8 +55,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth.api')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::apiResource('resources', ResourceController::class);
+    //Route::apiResource('resources', ResourceController::class);
     Route::apiResource('customers', CustomerController::class);
+    Route::apiResource('contacts', ContactController::class);
 });
 
 /* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
