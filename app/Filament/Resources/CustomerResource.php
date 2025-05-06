@@ -163,6 +163,7 @@ class CustomerResource extends Resource
 
                 Tables\Columns\TextColumn::make('name')
                     ->url(fn ($record) => static::getUrl('view', ['record' => $record])) // Link zur View-Seite,
+                    ->color('primary')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('first_name')
