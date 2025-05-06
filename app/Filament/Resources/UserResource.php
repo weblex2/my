@@ -69,11 +69,12 @@ class UserResource extends Resource
                     ->default(null),
                  Forms\Components\TextInput::make('user01')
                     ->label('IMAP Password')
-                    //->password()
-                    ->afterStateHydrated(fn ($component, $state) => $component->state($state ? decrypt($state) : ''))
-                    ->dehydrated(fn (?string $state): bool => filled($state)) // Nur speichern, wenn ein Wert eingegeben wurde
-                    ->dehydrateStateUsing(fn (string $state): string => encrypt($state)) // Passwort verschlüsseln
-                    ->visibleOn(['create', 'edit']), // Sichtbar beim Erstellen und Bearbeiten
+                    ->password() // Eingabe maskieren
+                    ->afterStateHydrated(fn ($component) => $component->state('')) // Nie entschlüsseltes Passwort anzeigen
+                    ->dehydrated(fn (?string $state): bool => filled($state)) // Nur speichern, wenn etwas eingegeben wurde
+                    ->dehydrateStateUsing(fn (string $state): string => encrypt($state)) // Neue Eingabe verschlüsseln
+                    ->visibleOn(['create', 'edit'])
+                    ->maxLength(255),
 
             ]);
     }
