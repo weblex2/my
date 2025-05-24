@@ -26,9 +26,16 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Enums\CustomerStatusEnum;
 use Filament\Tables\Actions;
+use Filament\Tables\Actions\Modal;
 use App\Filament\Helpers\FilamentHelper;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\FilamentConfig;
+use Filament\Notifications\Notification;
+use App\Models\CustomerField;
+use App\Livewire\AddFieldComponent;
+use Filament\Forms\Components\Livewire as LivewireComponent;
+use Filament\Widgets\ButtonWidget;
+use Illuminate\Support\Facades\Session;
 
 
 class CustomerResource extends Resource
@@ -42,6 +49,16 @@ class CustomerResource extends Resource
     protected static ?string $navigationLabel = 'All Customers';
 
     protected static ?int $navigationSort = 4;
+
+    protected static $form;
+
+    public static function fillForm($res)
+    {
+        // Hier wird auf die statische Eigenschaft zugegriffen
+        self::$form->fill([
+            'operation_result' => $res
+        ]);
+    }
 
     public static function getNavigationBadge(): ?string  {
         return static::getModel()::count();
@@ -116,6 +133,13 @@ class CustomerResource extends Resource
                         }
                     }),
 
+                    Forms\Components\Select::make('type')
+                        ->label('Type')
+                        ->options([
+                            'national' => 'National',
+                            'internationional' => 'Internationional',
+                        ]),
+
                     Forms\Components\Select::make('bi')
                         ->label('BI')
                         ->options([
@@ -144,19 +168,9 @@ class CustomerResource extends Resource
     {
         $fc = new FilamentFieldsController('customer',0);
         $form_fields = $fc->getFields();
+        $cust_field = CustomerField::where('resource','customer')->get();
         return $table
-            ->columns(
-                    //$form_fields,
-                    [
-               /*  Tables\Columns\TextColumn::make('actions')
-                    ->label('Actions') // Kein Label, um Platz zu sparen
-                    ->getStateUsing(fn () => '') // Kein Inhalt, nur Platzhalter
-                    ->html()
-                    ->formatStateUsing(fn ($record) => view('filament.tables.actions', [
-                        'record' => $record,
-                    ])->render())
-                ->extraAttributes(['class' => 'w-16']),
-                */
+            ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
@@ -246,6 +260,7 @@ class CustomerResource extends Resource
                 Tables\Columns\BadgeColumn::make('solution')
                     ->label('Solution')
                     ->searchable()
+                    ->alignRight()
                     ->getStateUsing(fn ($record) => $record->solution ?? 'no_solution')
                     ->visible(function ($livewire) {
                         $filters = $livewire->tableFilters;
@@ -274,10 +289,11 @@ class CustomerResource extends Resource
 
                 Tables\Columns\BadgeColumn::make('sales_volume')
                     ->label('Sales Volume')
+                    ->alignRight()
                     ->colors([
-                        'danger' => fn ($state) => $state < 5000,
-                        'warning' => fn ($state) => $state >= 5000 && $state < 10000,
-                        'success' => fn ($state) => $state >= 10000,
+                        'danger' => fn ($state) => $state < 1000,
+                        'warning' => fn ($state) => $state >= 2000 && $state < 40000,
+                        'success' => fn ($state) => $state >= 40000,
                     ])
                     ->default(0.0)
                     ->numeric()
@@ -315,7 +331,13 @@ class CustomerResource extends Resource
                         $records = FilamentHelper::excelExport($records);
                         // Anonyme Export-Klasse
                         return Excel::download($records, 'export.xlsx');
-                    })
+                    }),
+                Actions\Action::make('addField')
+                    ->label('Feld hinzufügen')
+                    ->modalContent(fn () => view('filament.actions.add-db-field-modal'))
+                    ->modalSubmitAction(false)
+                    ->modalCancelAction(false),
+
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -400,5 +422,28 @@ class CustomerResource extends Resource
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }
+
+    public function getButtons(): array
+    {
+        return [
+            /* ButtonWidget::make('Add Field')->modal(fn () => Modal::make()
+                ->title('Feld hinzufügen 123')
+                ->form([
+                    Forms\Components\TextInput::make('field_name')
+                        ->label('Feldname')
+                        ->required(),
+                    Forms\Components\TextInput::make('field_type')
+                        ->label('Feldtyp')
+                        ->required(),
+                    Forms\Components\Button::make('submit')
+                        ->label('Absenden')
+                        ->color('primary')
+                        ->submit('submitField')
+                ])
+                ->size('lg')
+            ) */
+        ];
+    }
+
 
 }

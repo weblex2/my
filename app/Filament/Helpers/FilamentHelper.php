@@ -8,6 +8,9 @@ use App\Models\Quote;
 use Illuminate\Support\Facades\Log;
 use App\Exports\CustomExport;
 use App\Models\GeneralSetting;
+use Illuminate\Support\Facades\Artisan;
+
+
 
 class FilamentHelper
 {
@@ -64,5 +67,63 @@ class FilamentHelper
             $exportData[] = $row;
         }
         return new CustomExport($exportData);
+    }
+
+    public static function createField(array $field){
+        $filename = self::createMigrationFile($field);
+        $result = self::execMigration($filename);
+        // if migration was not successful delete it
+        if ($result['status']!==0){
+            unlink($filename);
+        }
+        return $result;
+    }
+    private static function createMigrationFile(array $field)
+    {
+        $table = 'fil_customers'; // z. B. von der Resource ableiten
+
+        $migrationName = 'add_' . $field['name'] . '_to_' . $table . '_table';
+
+        $migrationCommand = 'make:migration ' . $migrationName . ' --table=' . $table;
+        Artisan::call($migrationCommand);
+
+        // Migration anpassen
+        $path = $path = collect(glob(database_path('migrations/*.php')))
+            ->filter(fn ($f) => str_contains($f, $migrationName))
+            ->first();
+
+        $stub = self::generateFieldLine($field);
+        file_put_contents($path, str_replace('//', $stub, file_get_contents($path)));
+        return $path;
+    }
+
+    protected static function generateFieldLine(array $field): string
+    {
+        $line = "\$table->{$field['type']}('{$field['name']}'";
+
+        if (!empty($field['length']) && $field['type'] === 'string') {
+            $line .= ", {$field['length']}";
+        }
+
+        $line .= ");";
+
+        return "            {$line}\n";
+    }
+
+    private static function execMigration($path){
+        $command  = "migrate";
+        try{
+            $status = Artisan::call($command);
+        }
+        catch(\Exception $e){
+            $output = $e->getMessage();
+            $status = 1;
+        }
+        finally{
+            $output = Artisan::output();
+            $result['status'] = $status;
+            $result['output'] = $output;
+            return $result;
+        }
     }
 }
