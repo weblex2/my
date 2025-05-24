@@ -335,6 +335,7 @@ class CustomerResource extends Resource
                     }),
                 Actions\Action::make('addField')
                     ->label('Feld hinzufügen')
+                    ->icon('heroicon-o-plus-circle')
                     ->modalContent(fn () => view('filament.actions.add-db-field-modal'))
                     ->modalSubmitAction(false)
                     ->modalCancelAction(false),
