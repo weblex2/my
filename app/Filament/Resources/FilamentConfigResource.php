@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\SelectFilter;
 
 class FilamentConfigResource extends Resource
 {
@@ -72,7 +73,20 @@ class FilamentConfigResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                 SelectFilter::make('type')
+                        ->options([
+                        '' => 'Alle',
+                        'navlink' => 'Navlink',
+                        'option' => 'Filter Option',
+
+                ]),
+                SelectFilter::make('resource')
+                        ->options([
+                        '' => 'Alle',
+                        'customer' => 'Customer',
+                        'contact' => 'Contact',
+                        'doc' => 'Document',
+                ])
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
