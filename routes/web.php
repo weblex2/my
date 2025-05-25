@@ -31,7 +31,7 @@ use App\Http\Controllers\LaravelMyAdminController;
 use App\Http\Controllers\GitController;
 use App\Http\Controllers\ZimbraController;
 use App\Http\Controllers\DocumentDownloadController;
-
+use App\Http\Controllers\BankTransactionController;
 
 
 
@@ -336,3 +336,9 @@ Route::controller(ZimbraController::class)->group(function () {
 
 Route::get('/documents/{document}/download', [DocumentDownloadController::class, 'download'])->name('documents.download');
 Route::get('/pdf/view/{id}', [DocumentDownloadController::class, 'view'])->name('pdf.view');
+
+Route::controller(BankTransactionController::class)->group(function () {
+    Route::get('/bank-transactions', 'index')->middleware(['auth'])->name('bank-transactions.index');
+    Route::get('/bank-transactions/upload', 'uploadForm')->middleware(['auth'])->name('bank-transactions.showupload');
+    Route::post('/bank-transactions/upload', 'upload')->middleware(['auth'])->name('bank-transactions.upload');
+});

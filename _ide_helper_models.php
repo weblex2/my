@@ -15,6 +15,17 @@ namespace App\Models{
 /**
  * 
  *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction query()
+ */
+	class BankTransaction extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
  * @property int $id
  * @property int $user_id
  * @property string $slug
@@ -264,6 +275,10 @@ namespace App\Models{
  * @property string|null $rooms
  * @property string|null $sales_volume
  * @property int|null $user_id
+ * @property string $user01
+ * @property string $user02
+ * @property string $user03
+ * @property string $test
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $addresses
  * @property-read int|null $addresses_count
  * @property-read \App\Models\CustomerAssd|null $assd
@@ -312,8 +327,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereSolution($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereSpread($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUser01($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUser02($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUser03($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereWebsite($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withTrashed()
@@ -392,6 +411,33 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerAssd whereUpdatedAt($value)
  */
 	class CustomerAssd extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $resource
+ * @property string $field
+ * @property string $type
+ * @property string $display_as
+ * @property string $visible
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereDisplayAs($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereResource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CustomerField whereVisible($value)
+ */
+	class CustomerField extends \Eloquent {}
 }
 
 namespace App\Models{
