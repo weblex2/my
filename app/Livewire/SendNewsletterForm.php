@@ -56,16 +56,24 @@ class SendNewsletterForm extends Component implements HasForms
                             'deal' => 'Deal',
                             'lead' => 'Lead',
                             'exacc' => 'Existing Account',
-                            '' => 'All',
+                            '*' => 'All',
                         ])
                         ->required()
                         ->reactive()
                         ->afterStateUpdated(function ($state, callable $set) {
                             $set('bcc', []);
                             if ($state) {
-                                $emails = Customer::where('status', $state)
+
+                                if ($state!="*"){
+                                    $emails = Customer::where('status', $state)
                                     ->pluck('email', 'email')
                                     ->toArray();
+                                }
+                                else{
+                                    $emails = Customer::all()
+                                    ->pluck('email', 'email')
+                                    ->toArray();
+                                }
                                 $set('bcc', array_keys($emails));
                             }
                         }),
