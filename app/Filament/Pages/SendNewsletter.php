@@ -10,7 +10,7 @@ class SendNewsletter extends Page
 
     protected static string $view = 'filament.pages.send-newsletter';
 
-    protected static ?string $navigationLabel = 'Newsletter versenden';
+    protected static ?string $navigationLabel = 'Newsletter';
 
     protected static ?string $title = 'Newsletter versenden';
 
