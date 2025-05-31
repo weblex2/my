@@ -3,10 +3,10 @@
          <h1>Bank</h1>
     </x-slot>
     <div>
-        @php
-            //$header = strtoupper(array_keys($transactions[0]));
-        @endphp
-        <table class="w-full border-red-700">
+        @livewire('bank-transaction-table')
+        {{-- @livewire('simple-filter') --}}
+
+        {{-- <table class="w-full border-red-700">
             <tr>
                 <th class="p-2 text-xs border">Booking Date</th>
                 <th class="p-2 text-xs border">Balue Date</th>
@@ -29,7 +29,7 @@
                         <td class="p-2 text-xs border !border-zinc-700 whitespace-nowrap ">{{ $trans->category }}</td>
                     </tr>
                 @endforeach
-        </table>
+        </table> --}}
     </div>
 
 </x-noppal>

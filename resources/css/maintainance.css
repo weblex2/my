@@ -51,10 +51,10 @@
 }
 
 /* Stil für die Diagramme (Canvas) */
-canvas {
+/* canvas {
     max-width: 250px;
     max-height: 250px;
-}
+} */
 
 /* Stil für die Festplattenkarten bei Hover */
 .disk-card:hover {

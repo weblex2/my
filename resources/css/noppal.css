@@ -10,7 +10,7 @@
 
 body{
     font-family: "Urbanist", sans-serif; font-style: normal;
-    @apply bg-zinc-900 text-white
+   /*  @apply bg-zinc-900 text-white */
 }
 
 .badges{
