@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bank_transactions', function (Blueprint $table) {
-            $table->id();
+            $table->string('id')->unique()->before('account_number'); // oder `->after('email')`
             $table->string('account_number')->index();
             $table->date('booking_date');
             $table->date('value_date');

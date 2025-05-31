@@ -21,6 +21,6 @@ class MigrationBadge extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.migration-badge');
+        return view('components.laravel-my-admin.migration-badge'); 
     }
 }
