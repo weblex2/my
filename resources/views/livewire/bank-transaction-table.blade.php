@@ -1,6 +1,6 @@
 
 <div class="relative items-center font-black bg-white">
-    <div wire:loading class="fixed inset-0 top-0 left-0 z-50 flex items-center justify-center w-screen h-screen bg-green-500 bg-opacity-25">
+    <div class="fixed inset-0 z-50 flex items-center justify-center hidden w-screen h-screen bg-black bg-opacity-25" wire:loading.class.remove="hidden" wire:loading.class="flex">
         <div class="p-4 text-lg text-gray-700 bg-white border rounded shadow">
             Daten werden geladen...
         </div>
@@ -14,24 +14,28 @@
     <div class="flex justify-center w-full gap-4 mb-4">
 
         <div>
-            Booking Date
-            <input type="date" wire:model.live="bookingDate" class="p-1 border" placeholder="Booking Date">
+            Booking Date From
+            <input type="date" wire:model.live="bookingDateFrom" class="p-1 border" placeholder="Booking Date From">
+            Booking Date To
+            <input type="date" wire:model.live="bookingDateTo" class="p-1 border" placeholder="Booking Date To">
         </div>
         <div>
-            Value Date
-            <input type="date" wire:model.live="valueDate" class="p-1 border" placeholder="Value Date">
+            Value Date From
+            <input type="date" wire:model.live="valueDateFrom" class="p-1 border" placeholder="Value Date From">
+            Value Date To
+            <input type="date" wire:model.live="valueDateTo" class="p-1 border" placeholder="Value Date To">
         </div>
         <div>
             Category
-            <input type="text" wire:model.defer="category" wire:keydown.enter="$refresh" class="p-1 border" placeholder="Category">
+            <input type="text" wire:model.change="category" wire:keydown.enter="$refresh" class="p-1 border" placeholder="Category">
         </div>
         <div>
             Counterparty
-            <input type="text" wire:model.defer="counterparty" wire:keydown.enter="$refresh" class="p-1 border" placeholder="Counterparty">
+            <input type="text" wire:model.change="counterparty" wire:keydown.enter="$refresh" class="p-1 border" placeholder="Counterparty">
         </div>
     </div>
     <div class="flex justify-center w-full">
-    <table class="w-[90%] border border-collapse border-gray-300 text-black">
+    <table class="striped-table">
         <thead>
             <tr class="bg-gray-200">
                 <th class="p-2 border">Booking Date</th>

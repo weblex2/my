@@ -188,3 +188,21 @@ a.box div{
 .filament-field-config input{
     @apply bg-white text-black p-1
 }
+
+
+/* Bank */
+
+@layer components {
+    .striped-table {
+        @apply w-[90%] border border-collapse border-gray-300 text-black;
+    }
+    .striped-table tbody tr:odd {
+        @apply bg-red-900 text-white; /* Added text-white for readability */
+    }
+    .striped-table tbody tr:even {
+        @apply bg-green-200;
+    }
+    .striped-table tbody tr:hover {
+        @apply bg-gray-200 transition-colors; /* Optional: hover effect */
+    }
+}
