@@ -21,6 +21,7 @@ class TestController extends Controller
 
     public function testRedis(){
         try {
+            dd(new \Redis());
             // Setze einen Schlüssel
             Redis::set('test:key', 'Hallo Redis!');
 
