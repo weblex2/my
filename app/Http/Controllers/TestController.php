@@ -45,6 +45,10 @@ class TestController extends Controller
 
     public function testModel(){
 
+
+        $emails = Customer::all()->pluck('email', 'email')->toArray();
+        dd($emails);
+
         $filter = FilamentConfig::getFiltersFor('customer');
         dump($filter);
         die();
@@ -65,5 +69,36 @@ class TestController extends Controller
         $user->assignRole('admin');
         $adminRole->givePermissionTo(Permission::all());
         echo "Done";
+    }
+
+    public function check(){
+
+        $baseDir = __DIR__ . '/app';
+        $classes = [];
+
+        $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($baseDir));
+
+        foreach ($rii as $file) {
+            if (!$file->isFile() || $file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $contents = file_get_contents($file->getPathname());
+
+            if (preg_match('/namespace\s+(.+?);/', $contents, $nsMatch) &&
+                preg_match('/class\s+([a-zA-Z0-9_]+)/', $contents, $classMatch)) {
+
+                $fqcn = $nsMatch[1] . '\\' . $classMatch[1];
+
+                if (isset($classes[$fqcn])) {
+                    echo "❗ Doppelte Klasse gefunden: {$fqcn}\n";
+                    echo " - Datei 1: {$classes[$fqcn]}\n";
+                    echo " - Datei 2: {$file->getPathname()}\n\n";
+                } else {
+                    $classes[$fqcn] = $file->getPathname();
+                }
+            }
+        }
+
     }
 }

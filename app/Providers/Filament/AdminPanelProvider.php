@@ -24,7 +24,7 @@ use App\Filament\Resources\UserResource;
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use App\Filament\Resources\FilTableFieldsResource;
 use App\Models\Customer;
-use App\Filament\Pages\CustomNotificationsPage;
+//use App\Filament\Pages\CustomNotificationsPage2;
 use App\Models\FilamentConfig;
 
 
@@ -47,7 +47,11 @@ class AdminPanelProvider extends PanelProvider
             ->path('filament/admin')
             ->login()
             ->brandLogo('Mein//  Noppal')
-            ->brandName(\App\Models\GeneralSetting::where('field', 'site_name')->value('value') ?? 'CRM')
+            ->brandName(
+                \Illuminate\Support\Facades\Schema::hasTable('general_settings')
+                    ? \App\Models\GeneralSetting::where('field', 'site_name')->value('value') ?? 'CRM'
+                    : 'CRM'
+            )
             ->maxContentWidth('1280px')
             ->colors([
                 'primary' => '#14b8a6',
@@ -66,7 +70,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
-                CustomNotificationsPage::class,
+                //CustomNotificationsPage2::class,
             ])
 
             ->navigationItems(/*[
@@ -125,9 +129,9 @@ class AdminPanelProvider extends PanelProvider
 
             ])
             ->navigationGroups([
-                'Customers',      // Erscheint zuerst
+                'Customers',        // Erscheint zuerst
                 'Angebote',
-                'Shop',          // Erscheint als zweites
+                'Shop',            // Erscheint als zweites
                 'User Management', // Definiere die Navigationsgruppe
                 'Settings',
             ])

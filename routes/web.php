@@ -95,7 +95,8 @@ Route::controller(S3Controller::class)->group(function () {
 
 Route::controller(TestController::class)->group(function () {
     Route::get('/gpt', 'chatGptApi')->name('cv.index');
-    Route::get('/test2', 'testModel')->name('testProduct');
+    Route::get('/test', 'testModel')->name('testProduct');
+    Route::get('/check', 'check')->name('check');
 });
 
 Route::controller(FutterController::class)->group(function () {
@@ -109,7 +110,7 @@ Route::controller(FutterController::class)->group(function () {
 });
 
 Route::controller(CvController::class)->group(function () {
-    Route::get('/cv', 'index')->name('cv.index');
+    Route::get('/cv', 'index')->name('cv.index2');
     Route::get('/cv/json/{edit?}', 'json')->name('cv.json');
     Route::post('/cv/saveJson/', 'saveJson')->name('cv.savejson');
     Route::get('/cv/downloadJson/', 'downloadJson')->name('cv.downloadjson');

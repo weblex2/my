@@ -8,7 +8,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
-class CustomNotificationsPage extends Page implements HasTable
+class CustomNotificationsPage3 extends Page implements HasTable
 {
     use InteractsWithTable;
 
