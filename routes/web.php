@@ -97,6 +97,7 @@ Route::controller(TestController::class)->group(function () {
     Route::get('/gpt', 'chatGptApi')->name('cv.index');
     Route::get('/test', 'testModel')->name('testProduct');
     Route::get('/check', 'check')->name('check');
+    Route::get('/redischeck', 'testRedis')->name('testRedis');
 });
 
 Route::controller(FutterController::class)->group(function () {

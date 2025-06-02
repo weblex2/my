@@ -12,6 +12,7 @@ use App\Models\FilTableFields;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\FilamentConfig;
+use Illuminate\Support\Facades\Redis;
 
 
 class TestController extends Controller
@@ -100,5 +101,25 @@ class TestController extends Controller
             }
         }
 
+    }
+
+    public function testRedis(){
+        try {
+        // Setze einen Schlüssel
+        Redis::set('test:key', 'Hallo Redis!');
+
+        // Lese den Schlüssel aus
+        $value = Redis::get('test:key');
+
+        return response()->json([
+            'status' => 'OK',
+            'message' => $value,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'Fehler',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
     }
 }
