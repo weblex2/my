@@ -85,7 +85,6 @@ Route::controller(MaintainanceController::class)->group(function () {
     Route::post('/logs', 'refreshLogs')->middleware(['auth'])->name('maintainance.refreshLogs');
     Route::get('/maintainance/diskinfo', 'diskinfo')->name('maintainance.diskInfo');
     Route::get('/maintainance/redisInsight', 'redisInsight')->middleware(['auth'])->name('maintainance.redisInsight');
-
 });
 
 
@@ -100,6 +99,7 @@ Route::controller(TestController::class)->group(function () {
     Route::get('/test', 'testModel')->name('testProduct');
     Route::get('/check', 'check')->name('check');
     Route::get('/redischeck', 'testRedis')->name('testRedis');
+    Route::get('/testEmail', 'testEmail')->middleware(['auth'])->name('testEmail');
 });
 
 Route::controller(FutterController::class)->group(function () {

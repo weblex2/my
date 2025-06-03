@@ -13,6 +13,8 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\FilamentConfig;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Mail;
+use Webklex\PHPIMAP\ClientManager;
 
 
 
@@ -125,6 +127,88 @@ class TestController extends Controller
             }
         }
 
+    }
+
+    public function testEmail(){
+        $x = 1;
+        try {
+            // Strato-Konfiguration direkt im Code
+            config([
+                'mail.mailer' => 'smtp',
+                'mail.host' => 'smtp.strato.de',
+                'mail.port' => 465,
+                'mail.username' => 'alex@noppenberger.org', // Ersetze mit deiner Strato-E-Mail
+                'mail.password' => '!Cyberbob03', // Ersetze mit deinem Passwort
+                'mail.encryption' => 'ssl',
+                'mail.from.address' => 'test@example.com', // Ersetze mit deiner Strato-E-Mail
+                'mail.from.name' => 'Test-App',
+            ]);
+
+            // E-Mail-Empfänger
+            $recipient = 'alex@noppenberger.org'; // Ersetze mit einer echten E-Mail-Adresse
+
+            // E-Mail-Inhalt direkt als HTML
+            $messageContent = "<!DOCTYPE html>
+            <html>
+            <head>
+                <title>Test-E-Mail</title>
+            </head>
+            <body>
+                <h1>Test-E-Mail</h1>
+                <p>Dies ist eine Test-E-Mail, gesendet über Strato.</p>
+            </body>
+            </html>";
+
+            // E-Mail senden
+            #Mail::html($messageContent, function ($message) use ($recipient) {
+            #    $message->to($recipient)
+            #            ->subject('Test-E-Mail von Strato');
+            #});
+
+            $cm = new ClientManager();
+            $client = $cm->make([
+                'host' => 'imap.strato.de',
+                'port' => 993,
+                'encryption' => 'ssl',
+                'validate_cert' => true,
+                'username' => 'alex@noppenberger.org', // Ersetze mit deiner Strato-E-Mail
+                'password' => '!Cyberbob03', // Ersetze mit deinem Passwort
+                'protocol' => 'imap',
+            ]);
+
+            // Verbindung herstellen
+            $client->connect();
+            $folders = $client->getFolders();
+            dump($folders);
+            // "Gesendet"-Ordner auswählen
+            $folder = $client->getFolder('Sent Items');
+            if (!$folder) {
+                return response()->json(['status' => 'error', 'message' => 'Gesendet-Ordner nicht gefunden'], 500);
+            }
+
+            $subject = "Email im Postausgang";
+            // E-Mail-Inhalt für IMAP vorbereiten
+            // E-Mail-Inhalt für IMAP vorbereiten
+            $rawMessage = "From: Test-App <alex@noppenberger.org>\r\n"; // Ersetze mit deiner Strato-E-Mail
+            $rawMessage .= "To: $recipient\r\n";
+            $rawMessage .= "Subject: $subject\r\n";
+            $rawMessage .= "MIME-Version: 1.0\r\n";
+            $rawMessage .= "Content-Type: text/html; charset=utf-8\r\n";
+            $rawMessage .= "Content-Transfer-Encoding: quoted-printable\r\n";
+            $rawMessage .= "\r\n";
+            $rawMessage .= quoted_printable_encode($messageContent);
+
+            // E-Mail im "Gesendet"-Ordner speichern
+            $message = \Webklex\PHPIMAP\Message::fromString($rawMessage);
+            $folder->appendMessage($rawMessage); // Direkt rawMessage verwenden
+
+            // Verbindung trennen
+            $client->disconnect();
+
+            return response()->json(['status' => 'success', 'message' => 'E-Mail erfolgreich gesendet und im Gesendet-Ordner gespeichert']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()], 500);
+        }
     }
 
 }
