@@ -215,6 +215,9 @@ class TestController extends Controller
 
 
     public function sendEmail(){
+
+            $this->sendWhatsApp();
+            return;
         // PHPMailer-Instanz erstellen
             $mailer = new PHPMailer(true);
 
@@ -256,6 +259,28 @@ class TestController extends Controller
 
             // E-Mail senden
             $mailer->send();
+    }
+
+    public function sendWhatsApp(){
+        $phone="+491722044069";  // Enter your phone number here
+        $apikey="4153439";       // Enter your personal apikey received in step 3 above
+        $message = "hi from WhatsApp";
+        $url='https://api.callmebot.com/whatsapp.php?source=php&phone='.$phone.'&text='.urlencode($message).'&apikey='.$apikey;
+
+        if($ch = curl_init($url))
+        {
+            curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $html = curl_exec($ch);
+            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            // echo "Output:".$html;  // you can print the output for troubleshooting
+            curl_close($ch);
+            return (int) $status;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }

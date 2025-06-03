@@ -4,20 +4,19 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class NtfyNotification extends Component
+class ShowAlternativeBlog extends Component
 {
-    public $mode;
-    public $notification;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($notification, $mode, $emoticons)
+
+    public $alternativeBlogs;
+
+    public function __construct($alternativeBlogs)
     {
-        $this->mode = $mode;
-        $this->notification = $notification;
-        $this->$emoticons  = $emoticons;
+        $this->alternativeBlogs = $alternativeBlogs;
     }
 
     /**
@@ -27,6 +26,6 @@ class NtfyNotification extends Component
      */
     public function render()
     {
-        return view('components.ntfy.notification');
+        return view('components.gallery.show-alternative-blog');
     }
 }

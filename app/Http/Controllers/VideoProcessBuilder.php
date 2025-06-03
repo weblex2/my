@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\YoutubeDl;
+namespace App\Http\Controllers;
 
 use Symfony\Component\Process\Process;
 use YoutubeDl\Process\ProcessBuilderInterface;

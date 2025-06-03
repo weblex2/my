@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\laravelMyAdmin;
+namespace App\View\Components\LaravelMyAdmin;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -21,6 +21,6 @@ class MigrationBadge extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.laravel-my-admin.migration-badge'); 
+        return view('components.laravel-my-admin.migration-badge');
     }
 }
