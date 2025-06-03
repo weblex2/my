@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class ntfy.notification extends Component
+class NtfyNotification extends Component
 {
     public $mode;
     public $notification;

@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class yt2mp3.layout extends Component
+class Yt2mp3Layout extends Component
 {
     /**
      * Create a new component instance.

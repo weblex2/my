@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class ntfy.modal extends Component
+class NtfyModal extends Component
 {
     /**
      * Create a new component instance.
