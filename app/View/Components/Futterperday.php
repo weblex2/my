@@ -6,14 +6,14 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class futter.futterperday extends Component
+class Futterperday extends Component
 {
     /**
      * Create a new component instance.
      */
 
-    public img;
-    public name;
+    public $img;
+    public $name;
 
     public function __construct($name, $img)
     {
