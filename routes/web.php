@@ -84,7 +84,7 @@ Route::controller(MaintainanceController::class)->group(function () {
     Route::get('/logs', 'showLogs')->middleware(['auth'])->name('maintainance.showLogs');
     Route::post('/logs', 'refreshLogs')->middleware(['auth'])->name('maintainance.refreshLogs');
     Route::get('/maintainance/diskinfo', 'diskinfo')->name('maintainance.diskInfo');
-    Route::get('/maintainance/redisInsight', 'redisInsight')->name('maintainance.redisInsight');
+    Route::get('/maintainance/redisInsight', 'redisInsight')->middleware(['auth'])->name('maintainance.redisInsight');
 
 });
 
