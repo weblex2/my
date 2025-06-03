@@ -21,9 +21,11 @@ class TestController extends Controller
 
     public function testRedis(){
         try {
-            // Setze einen Schlüssel
-            Redis::set('test:key', 'Hallo Redis!');
-
+            $value = Redis::get('test:key');
+            if (!$value){
+                // Setze einen Schlüssel
+                Redis::set('test:key', 'Hallo Redis!');
+            }
             // Lese den Schlüssel aus
             $value = Redis::get('test:key');
 
