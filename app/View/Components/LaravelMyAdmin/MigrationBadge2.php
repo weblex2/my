@@ -24,3 +24,4 @@ class MigrationBadge extends Component
         return view('components.laravel-my-admin.migration-badge');
     }
 }
+ 
