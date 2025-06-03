@@ -100,6 +100,8 @@ Route::controller(TestController::class)->group(function () {
     Route::get('/check', 'check')->name('check');
     Route::get('/redischeck', 'testRedis')->name('testRedis');
     Route::get('/testEmail', 'testEmail')->middleware(['auth'])->name('testEmail');
+    Route::get('/sendEmail', 'sendEmail')->middleware(['auth'])->name('sendEmail');
+
 });
 
 Route::controller(FutterController::class)->group(function () {

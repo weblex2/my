@@ -15,6 +15,8 @@ use App\Models\FilamentConfig;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Mail;
 use Webklex\PHPIMAP\ClientManager;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 
 
@@ -209,6 +211,51 @@ class TestController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()], 500);
         }
+    }
+
+
+    public function sendEmail(){
+        // PHPMailer-Instanz erstellen
+            $mailer = new PHPMailer(true);
+
+            // SMTP-Konfiguration für Strato
+            $mailer->isSMTP();
+            $mailer->Host = 'smtp.strato.de';
+            $mailer->SMTPAuth = true;
+            $mailer->Username = 'alex@noppenberger.org'; // Ersetze mit deiner Strato-E-Mail
+            $mailer->Password = '!Cyberbob03'; // Ersetze mit deinem Passwort
+            $mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mailer->Port = 465;
+            $mailer->CharSet = 'UTF-8';
+
+            // Absender und Empfänger
+            $fromName = 'Test-App';
+            $fromEmail = 'alex@noppenberger.net'; // Ersetze mit deiner Strato-E-Mail
+            $recipient = 'alex@noppenberger.org'; // Ersetze mit einer echten E-Mail-Adresse
+            $subject = 'Test-E-Mail von Strato';
+
+            $mailer->setFrom($fromEmail, $fromName);
+            $mailer->addAddress($recipient);
+
+            // E-Mail-Inhalt
+            $messageContent = "<!DOCTYPE html>
+            <html>
+            <head>
+                <title>Test-E-Mail</title>
+                <meta charset='UTF-8'>
+            </head>
+            <body>
+                <h1>Test-E-Mail</h1>
+                <p>Dies ist eine Test-E-Mail, gesendet über Strato mit Sonderzeichen: äöüß.</p>
+            </body>
+            </html>";
+
+            $mailer->isHTML(true);
+            $mailer->Subject = $subject;
+            $mailer->Body = $messageContent;
+
+            // E-Mail senden
+            $mailer->send();
     }
 
 }
