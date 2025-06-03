@@ -4,7 +4,7 @@
     </a>
     <div class="flex flex-col flex-grow p-5">
         <div class="h-20">
-            <a href="#">
+            <a href="{{route($link)}}" target="_blank">
                 <h5 class="header">{{$header}}</h5>
             </a>
         </div>
