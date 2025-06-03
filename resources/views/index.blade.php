@@ -125,6 +125,13 @@
                 link="maintainance.showLogs"
             />
 
+            <x-index.card
+                img="cv-maintainance.jpeg"
+                header="RedisInsight"
+                text="GUI für Redis... nettes Tool"
+                link="maintainance.redisInsight"
+            />
+
         </div>
 
         {{-- <div class="my-flex-box">

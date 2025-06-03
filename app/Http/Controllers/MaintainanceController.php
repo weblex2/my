@@ -159,4 +159,9 @@ class MaintainanceController extends Controller
             return $diskInfo;
         }
 
+    public function redisInsight()
+    {
+        return Redirect::away('http://noppal.de:5540/');
+    }
+
 }
