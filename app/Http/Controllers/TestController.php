@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Webklex\PHPIMAP\ClientManager;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
+use App\Http\Controllers\MailController;
 
 
 class TestController extends Controller
@@ -100,39 +100,31 @@ class TestController extends Controller
         echo "Done";
     }
 
-    public function check(){
-
-        $baseDir = __DIR__ . '/app';
-        $classes = [];
-
-        $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($baseDir));
-
-        foreach ($rii as $file) {
-            if (!$file->isFile() || $file->getExtension() !== 'php') {
-                continue;
-            }
-
-            $contents = file_get_contents($file->getPathname());
-
-            if (preg_match('/namespace\s+(.+?);/', $contents, $nsMatch) &&
-                preg_match('/class\s+([a-zA-Z0-9_]+)/', $contents, $classMatch)) {
-
-                $fqcn = $nsMatch[1] . '\\' . $classMatch[1];
-
-                if (isset($classes[$fqcn])) {
-                    echo "❗ Doppelte Klasse gefunden: {$fqcn}\n";
-                    echo " - Datei 1: {$classes[$fqcn]}\n";
-                    echo " - Datei 2: {$file->getPathname()}\n\n";
-                } else {
-                    $classes[$fqcn] = $file->getPathname();
-                }
-            }
-        }
-
-    }
 
     public function testEmail(){
         $x = 1;
+
+        $mailcontent = [
+           'subject' => 'it´s just a Test',
+           'recipient' => 'alex@noppenberger.org',
+           'body' => '<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Test-E-Mail</title>
+                </head>
+                <body>
+                    <h1>Test-E-Mail</h1>
+                    <p>Dies ist eine Test-E-Mail, gesendet über Strato.</p>
+                </body>
+                </html>'
+
+        ];
+
+        $mail = new MailController();
+        $mail->sendMail($mailcontent);
+        $mail->putMailInSentItems($mailcontent);
+        die();
+
         try {
             // Strato-Konfiguration direkt im Code
             config([
@@ -215,9 +207,10 @@ class TestController extends Controller
 
 
     public function sendEmail(){
+           $mail = new MailController();
+           $mail->putMailInSentItems();
+           die();
 
-            $this->sendWhatsApp();
-            return;
         // PHPMailer-Instanz erstellen
             $mailer = new PHPMailer(true);
 

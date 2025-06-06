@@ -28,7 +28,7 @@
         <script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
 
         <!-- Scripts -->
-        @vite(['resources/css/clean.css',  'resources/css/laravelMyAdmin.css'])
+        @vite(['resources/css/clean.css',  'resources/css/laravelMyAdmin.css', 'resources/css/sk.css'])
 
         <!-- Styles -->
         @livewireStyles
@@ -36,7 +36,7 @@
 
     <body class="font-sans antialiased">
 
-    <x-navigation-clean />
+    {{-- <x-navigation-clean /> --}}
 
     <div class="max-h-screen min-h-screen">
         @if (isset($header))

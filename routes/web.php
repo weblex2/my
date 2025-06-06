@@ -32,7 +32,7 @@ use App\Http\Controllers\GitController;
 use App\Http\Controllers\ZimbraController;
 use App\Http\Controllers\DocumentDownloadController;
 use App\Http\Controllers\BankTransactionController;
-
+use App\Http\Controllers\SchafkopfController;
 
 
 
@@ -348,3 +348,11 @@ Route::controller(BankTransactionController::class)->group(function () {
     Route::get('/bank-transactions/upload', 'uploadForm')->middleware(['auth'])->name('bank-transactions.showupload');
     Route::post('/bank-transactions/upload', 'upload')->middleware(['auth'])->name('bank-transactions.upload');
 });
+
+
+Route::controller(SchafkopfController::class)->group(function () {
+    Route::get('/sk', 'index')->middleware(['auth'])->name('sk.index');
+    #Route::get('/bank-transactions/upload', 'uploadForm')->middleware(['auth'])->name('bank-transactions.showupload');
+    #Route::post('/bank-transactions/upload', 'upload')->middleware(['auth'])->name('bank-transactions.upload');
+});
+
