@@ -70,14 +70,7 @@ class CustomerResource extends Resource
         $form_fields = $fc->getFields();
 
         return $form
-            ->schema([
-
-                /* $form_fields[0],
-                $form_fields[1],
-                $form_fields[2],
-                $form_fields[3],
-                $form_fields[4], */
-
+            ->schema(array_merge([
                 Forms\Components\Toggle::make('is_active')
                     ->required()
                     ->columnSpanFull(),
@@ -154,29 +147,24 @@ class CustomerResource extends Resource
                         ->numeric(),
                     Forms\Components\DatePicker::make('updated_at')
                         ->displayFormat('d.m.Y'),
-
-
-                       // ->reactive(), // Optional: Macht das Feld reaktiv, falls du später Logik hinzufügen möchtest
-
                 Forms\Components\Textarea::make('comments')
                     ->columnSpanFull(),
 
-            ])->columns(3);
+            ],$form_fields))->columns(3);
     }
 
     public static function table(Table $table): Table
     {
         $fc = new FilamentFieldsController('customer',0);
-        $form_fields = $fc->getFields();
-        $cust_field = CustomerField::where('resource','customer')->get();
+        $table_fields = $fc->getFields();
         return $table
-            ->columns([
+            ->columns(array_merge([
                 Tables\Columns\TextColumn::make('id')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
 
                 Tables\Columns\TextColumn::make('name')
-                    ->url(fn ($record) => static::getUrl('view', ['record' => $record])) // Link zur View-Seite,
+                    ->url(fn ($record) => static::getUrl('edit', ['record' => $record])) // Link zur View-Seite,
                     ->color('primary')
                     ->sortable()
                     ->searchable(),
@@ -322,7 +310,7 @@ class CustomerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
 
-            ])
+            ],$table_fields))
             ->headerActions([
                 Actions\Action::make('Exportieren')
                     ->label('Excel Export')

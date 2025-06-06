@@ -34,8 +34,7 @@ class FilamentFieldsController extends Controller
     }
 
     public function getFields(){
-        $tableFields = FilTableFields::where('user_id',"=", $this->userId)
-                                     ->where('table',"=", $this->tableName)
+        $tableFields = FilTableFields::where('table',"=", $this->tableName)
                                      ->where('form',"=",$this->isForm)
                                      ->get();
         foreach ($tableFields as $index => $tableField ){

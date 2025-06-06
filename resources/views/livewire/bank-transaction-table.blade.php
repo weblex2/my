@@ -40,9 +40,13 @@
             <tr class="bg-gray-200">
                 <th class="p-2 border">Booking Date</th>
                 <th class="p-2 border">Value Date</th>
+                <th class="p-2 border">Auftragskonto</th>
+                <th class="p-2 border">Buchungstext</th>
+                <th class="p-2 border">Verwendungszweck</th>
                 <th class="p-2 border">Category</th>
                 <th class="p-2 border">Counterparty</th>
                 <th class="p-2 border">Amount</th>
+                {{-- "Beguenstigter/Zahlungspflichtiger";"Kontonummer/IBAN";"BIC (SWIFT-Code)";"Betrag";"Waehrung";"Info";"Kategorie" --}}
             </tr>
         </thead>
         <tbody>
@@ -50,6 +54,9 @@
                 <tr>
                     <td class="p-2 border">{{ $tx->booking_date->format('d.m.Y') }}</td>
                     <td class="p-2 border">{{ $tx->value_date->format('d.m.Y') }}</td>
+                    <td class="p-2 border">{{ $tx->account_number }}</td>
+                    <td class="p-2 border">{{ $tx->booking_text }}</td>
+                    <td class="p-2 border">{{ $tx->purpose }}</td>
                     <td class="p-2 border">{{ $tx->category }}</td>
                     <td class="p-2 border">{{ $tx->counterparty }}</td>
                     <td class="p-2 text-right border">{{ number_format($tx->amount, 2) }} {{ $tx->currency }}</td>

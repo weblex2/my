@@ -37,12 +37,13 @@ class FilTableFieldsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id')->dehydrated(),
-                Forms\Components\TextInput::make('user_id')->default(Auth::id()),
-                Forms\Components\TextInput::make('form'),
-                Forms\Components\TextInput::make('table'),
-                Forms\Components\TextInput::make('field'),
+
+                //Forms\Components\TextInput::make('user_id')->default(Auth::id()),
+
+                Forms\Components\TextInput::make('table')->required()->disabled(),
+                Forms\Components\TextInput::make('field')->required()->disabled(),
                 Forms\Components\Select::make('type')
+                    ->required()
                     ->options([
                         'text' => 'text',
                         'date' => 'date',
@@ -51,7 +52,8 @@ class FilTableFieldsResource extends Resource
                         'select' => 'select',
                         'markup' => 'markdown',
                     ]),
-                Forms\Components\TextInput::make('label'),
+                Forms\Components\TextInput::make('label')->required(),
+                Forms\Components\Toggle::make('form')->required()->disabled(),
                 Forms\Components\Toggle::make('sortable'),
                 Forms\Components\Toggle::make('searchable'),
                 Forms\Components\Toggle::make('disabled'),
@@ -84,10 +86,10 @@ class FilTableFieldsResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('user_id')
+                /* SelectFilter::make('user_id')
                     ->label('Benutzer')
                     ->options(User::pluck('name', 'id')->toArray()) // Alle Benutzer
-                    ->default(Auth::id()), // Standardwert: aktueller Benutzer
+                    ->default(Auth::id()), // Standardwert: aktueller Benutzer */
                 TernaryFilter::make('form')
                     ->label('Formular / Übersicht') // Label für den Filter
                     ->trueLabel('Formular') // Was angezeigt wird, wenn true (1)
@@ -111,7 +113,7 @@ class FilTableFieldsResource extends Resource
                         }
                         // Andernfalls filtere nach dem ausgewählten "table" Wert
                         else{
-                            $query->where('table', $state);
+                            $query->where('table', 'like' ,'%')->orderBy('table', 'DESC');
                         }
                     }),
             ])

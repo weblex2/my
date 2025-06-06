@@ -95,7 +95,7 @@ class AddFieldComponent extends Component implements HasForms
 
         // Aufruf der statischen Methode FilamentHelper::createField
         $this->result = FilamentHelper::createField($fieldData);
-        if ($this->result['status']==0){  // in this case 0 means success
+        if ($this->result['status']=='Success'){  // in this case 0 means success
             Notification::make()
                 ->title('Erfolg!')
                 ->body('Das Feld wurde erfolgreich hinzugefügt.')

@@ -194,15 +194,18 @@ a.box div{
 
 @layer components {
     .striped-table {
-        @apply w-[90%] border border-collapse border-gray-300 text-black;
+        @apply w-[90%] border border-collapse border-gray-300 text-black text-xs;
+    }
+    .striped-table th{
+        @apply border border-gray-900
     }
     .striped-table tbody tr:odd {
-        @apply bg-red-900 text-white; /* Added text-white for readability */
+        @apply text-white bg-red-900; /* Added text-white for readability */
     }
     .striped-table tbody tr:even {
         @apply bg-green-200;
     }
     .striped-table tbody tr:hover {
-        @apply bg-gray-200 transition-colors; /* Optional: hover effect */
+        @apply transition-colors bg-gray-200; /* Optional: hover effect */
     }
 }

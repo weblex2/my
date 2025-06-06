@@ -8,6 +8,7 @@ use App\Models\Quote;
 use Illuminate\Support\Facades\Log;
 use App\Exports\CustomExport;
 use App\Models\GeneralSetting;
+use App\Models\FilTableFields;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -73,8 +74,36 @@ class FilamentHelper
         $filename = self::createMigrationFile($field);
         $result = self::execMigration($filename);
         // if migration was not successful delete it
-        if ($result['status']!==0){
+        if ($result['status']=='Fail'){
             unlink($filename);
+        }
+        else{
+
+            switch($field['type']){
+                case 'string':
+                    $type = "text";
+                    break;
+                case 'date':
+                    $type = "text";
+                    break;
+                default:
+                    $type = "text";
+                    break;
+            }
+
+            // Create Field in Table Fields
+            $newfield = [
+                'form' => 0,
+                'user_id' => 0,
+                'label' => $label = ucwords(str_replace('_', ' ', $field['name'])),
+                'table' => 'customer',
+                'field' => $field['name'],
+                'type' => $type,
+            ];
+            FilTableFields::create($newfield);
+            $newfield['form']=1;
+            FilTableFields::create($newfield);
+
         }
         return $result;
     }
@@ -112,12 +141,14 @@ class FilamentHelper
 
     private static function execMigration($path){
         $command  = "migrate";
+        $status = "";
         try{
-            $status = Artisan::call($command);
+            Artisan::call($command);
+            $status = "Success";
         }
         catch(\Exception $e){
             $output = $e->getMessage();
-            $status = 1;
+            $status = "Fail";
         }
         finally{
             $output = Artisan::output();
@@ -125,5 +156,9 @@ class FilamentHelper
             $result['output'] = $output;
             return $result;
         }
+    }
+
+    private function createCrmField($field){
+
     }
 }

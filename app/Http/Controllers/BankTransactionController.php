@@ -6,6 +6,8 @@ use App\Models\BankTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
+use League\Csv\Reader;
+
 
 
 class BankTransactionController extends Controller
@@ -47,6 +49,7 @@ class BankTransactionController extends Controller
                 }
 
                 BankTransaction::create([
+                    'id' => hash('sha256', $record['Buchungstag'] . $record['Betrag'] . $record['Valutadatum'] . $record['Verwendungszweck'] . $record['Kontonummer/IBAN'] . $record['BIC (SWIFT-Code)'] . $record['Buchungstext']),
                     'account_number' => $record['Auftragskonto'],
                     'booking_date' => $bookingDate,
                     'value_date' => $valueDate,

@@ -9,20 +9,7 @@ class BankTransaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'account_number',
-        'booking_date',
-        'value_date',
-        'booking_text',
-        'purpose',
-        'counterparty',
-        'counterparty_iban',
-        'counterparty_bic',
-        'amount',
-        'currency',
-        'info',
-        'category'
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'booking_date' => 'date',

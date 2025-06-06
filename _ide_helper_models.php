@@ -15,9 +15,39 @@ namespace App\Models{
 /**
  * 
  *
+ * @property int $id
+ * @property string $account_number
+ * @property \Illuminate\Support\Carbon $booking_date
+ * @property \Illuminate\Support\Carbon $value_date
+ * @property string $booking_text
+ * @property string $purpose
+ * @property string $counterparty
+ * @property string|null $counterparty_iban
+ * @property string|null $counterparty_bic
+ * @property numeric $amount
+ * @property string $currency
+ * @property string $info
+ * @property string $category
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereAccountNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereBookingDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereBookingText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereCategory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereCounterparty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereCounterpartyBic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereCounterpartyIban($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction wherePurpose($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BankTransaction whereValueDate($value)
  */
 	class BankTransaction extends \Eloquent {}
 }
