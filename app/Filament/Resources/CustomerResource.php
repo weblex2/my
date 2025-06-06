@@ -67,9 +67,8 @@ class CustomerResource extends Resource
     public static function form(Form $form): Form
     {
         $fc = new FilamentFieldsController('customer',1);
-        $form_fields = $fc->getFields();
-        dd($form_fields);
-
+        $form_fields = $fc->getFields() ?? [];
+        
         return $form
             ->schema(array_merge([
                 Forms\Components\Toggle::make('is_active')
