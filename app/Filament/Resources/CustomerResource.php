@@ -68,6 +68,7 @@ class CustomerResource extends Resource
     {
         $fc = new FilamentFieldsController('customer',1);
         $form_fields = $fc->getFields();
+        dd($form_fields);
 
         return $form
             ->schema(array_merge([
