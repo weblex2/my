@@ -109,7 +109,7 @@ class FilamentHelper
     }
     private static function createMigrationFile(array $field)
     {
-        $table = 'fil_customers'; // z. B. von der Resource ableiten
+        $table = $field['tablename']; // z. B. von der Resource ableiten
 
         $migrationName = 'add_' . $field['name'] . '_to_' . $table . '_table';
 

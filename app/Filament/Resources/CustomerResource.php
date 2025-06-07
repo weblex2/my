@@ -68,7 +68,7 @@ class CustomerResource extends Resource
     {
         $fc = new FilamentFieldsController('customer',1);
         $form_fields = $fc->getFields() ?? [];
-        
+
         return $form
             ->schema(array_merge([
                 Forms\Components\Toggle::make('is_active')
@@ -85,12 +85,6 @@ class CustomerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('status')
                 ->label('Status')
-                /* ->options([
-                    'exacc' => CustomerStatusEnum::EXACC->label(),
-                    'deal' => CustomerStatusEnum::DEAL->label(),
-                    'lead' => CustomerStatusEnum::LEAD->label(),
-                    'contact' => CustomerStatusEnum::CONTACT->label(),
-                ]), */
                 ->options([
                     '' => 'Alle',
                     ...FilamentConfig::getFiltersFor('customer','status'), // deine dynamischen Werte
@@ -324,7 +318,11 @@ class CustomerResource extends Resource
                 Actions\Action::make('addField')
                     ->label('Feld hinzufügen')
                     ->icon('heroicon-o-plus-circle')
-                    ->modalContent(fn () => view('filament.actions.add-db-field-modal'))
+                    ->modalContent(function ($record) {
+                        return view('filament.actions.add-db-field-modal', [
+                            'tableName' => 'customers', // Beispielparameter
+                        ]);
+                    })
                     ->modalSubmitAction(false)
                     ->modalCancelAction(false),
 

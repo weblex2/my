@@ -308,7 +308,9 @@ namespace App\Models{
  * @property string $user01
  * @property string $user02
  * @property string $user03
- * @property string $test
+ * @property string $test4
+ * @property string $test6
+ * @property string $test_7
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $addresses
  * @property-read int|null $addresses_count
  * @property-read \App\Models\CustomerAssd|null $assd
@@ -357,7 +359,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereSolution($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereSpread($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest4($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest6($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest7($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUser01($value)
@@ -1129,6 +1133,29 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $show_name
+ * @property string $series
+ * @property string $lead_actor
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData whereLeadActor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData whereSeries($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData whereShowName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PdfData whereUpdatedAt($value)
+ */
+	class PdfData extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $name
  * @property int $brand_id
  * @property string $slug
@@ -1383,5 +1410,30 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutRole($roles, $guard = null)
  */
 	class User extends \Eloquent {}
+}
+
+namespace App\Models\sk{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $game_id
+ * @property string $player_id
+ * @property int $card_id
+ * @property int $played
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card whereCardId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card whereGameId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card wherePlayed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card wherePlayerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Card whereUpdatedAt($value)
+ */
+	class Card extends \Eloquent {}
 }
 

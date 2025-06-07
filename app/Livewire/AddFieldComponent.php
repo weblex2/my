@@ -25,12 +25,22 @@ class AddFieldComponent extends Component implements HasForms
     public $newFieldUnique = false;
     public $newFieldDefaultValue = '';
     public $result = false;
+    public string $tableName = '';
+
+    public function mount($tableName = '')
+    {
+        $this->tableName = $tableName;
+    }
 
     protected function getForms(): array
     {
         return [
             'form' => $this->makeForm()
                 ->schema([
+                    TextInput::make('tableName')
+                        ->default($this->tableName)
+                        ->disabled()
+                        ->dehydrated(false), // <-- wichtig!
                     TextInput::make('newFieldName') // Setze den Namen auf das Property
                         ->label('Feldname')
                         ->placeholder('z. B. benutzer_status')
@@ -85,6 +95,7 @@ class AddFieldComponent extends Component implements HasForms
 
         // Erstelle das Feld-Array
         $fieldData = [
+            'tablename' => $this->tableName,
             'name' => $this->newFieldName,
             'type' => $this->newFieldType,
             'length' => $this->newFieldLength,
@@ -100,6 +111,13 @@ class AddFieldComponent extends Component implements HasForms
                 ->title('Erfolg!')
                 ->body('Das Feld wurde erfolgreich hinzugefügt.')
                 ->success() // Du kannst auch `error()`, `warning()` oder `info()` verwenden
+                ->send();
+        }
+        else {  // in this case 0 means success
+            Notification::make()
+                ->title('Erfolg!')
+                ->body('Error:')
+                ->danger() // Du kannst auch `error()`, `warning()` oder `info()` verwenden
                 ->send();
         }
 
