@@ -71,6 +71,7 @@ class FilamentHelper
     }
 
     public static function createField(array $field){
+        $field['name'] = self::sanitizeMysqlFieldName($field['name']);
         $filename = self::createMigrationFile($field);
         $result = self::execMigration($filename);
         // if migration was not successful delete it
@@ -96,7 +97,7 @@ class FilamentHelper
                 'form' => 0,
                 'user_id' => 0,
                 'label' => $label = ucwords(str_replace('_', ' ', $field['name'])),
-                'table' => 'customer',
+                'table' => $field['tablename'],
                 'field' => $field['name'],
                 'type' => $type,
             ];
@@ -142,23 +143,55 @@ class FilamentHelper
     private static function execMigration($path){
         $command  = "migrate";
         $status = "";
-        try{
+        try {
             Artisan::call($command);
             $status = "Success";
-        }
-        catch(\Exception $e){
-            $output = $e->getMessage();
-            $status = "Fail";
-        }
-        finally{
             $output = Artisan::output();
-            $result['status'] = $status;
-            $result['output'] = $output;
-            return $result;
+        } catch (\Exception $e) {
+            $status = "Fail";
+            $output = $e->getMessage();
         }
+
+        $result = [
+            'status' => $status,
+            'output' => $output,
+        ];
+
+        return $result;
     }
 
     private function createCrmField($field){
 
     }
+
+    private static function sanitizeMysqlFieldName(string $input): string
+    {
+        // Kleinbuchstaben
+        $field = strtolower($input);
+
+        // Umlaute ersetzen
+        $field = str_replace(
+            ['ä', 'ö', 'ü', 'ß'],
+            ['ae', 'oe', 'ue', 'ss'],
+            $field
+        );
+
+        // Leerzeichen und Sonderzeichen durch Unterstriche ersetzen
+        $field = preg_replace('/[^a-z0-9_]+/', '_', $field);
+
+        // Mehrere Unterstriche zusammenfassen
+        $field = preg_replace('/_+/', '_', $field);
+
+        // Vorne und hinten Unterstriche entfernen
+        $field = trim($field, '_');
+
+        // Fängt der Feldname mit einer Zahl an? Dann Prefix hinzufügen
+        if (preg_match('/^[0-9]/', $field)) {
+            $field = 'f_' . $field;
+        }
+
+        // Optional: auf maximale Länge von 64 Zeichen beschränken
+        return substr($field, 0, 64);
+    }
+
 }

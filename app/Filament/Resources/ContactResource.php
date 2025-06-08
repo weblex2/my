@@ -122,7 +122,4 @@ class ContactResource extends Resource
             'view' => Pages\ViewContact::route('/{record}'),
         ];
     }
-
-
-
 }

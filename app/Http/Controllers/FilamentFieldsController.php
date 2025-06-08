@@ -46,6 +46,10 @@ class FilamentFieldsController extends Controller
                         $this->field = Forms\Components\TextInput::make($tableField->field);
                         break;
                     }
+                    case "date": {
+                        $this->field = Forms\Components\DatePicker::make($tableField->field);
+                        break;
+                    }
                     case "toggle": {
                         $this->field = Forms\Components\Toggle::make($tableField->field);
                         break;
