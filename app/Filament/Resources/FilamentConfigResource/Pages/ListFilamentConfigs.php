@@ -9,6 +9,10 @@ use Filament\Resources\Pages\ListRecords;
 class ListFilamentConfigs extends ListRecords
 {
     protected static string $resource = FilamentConfigResource::class;
+    public function getTitle(): string
+    {
+        return 'Config / Dopdowns';
+    }
 
     protected function getHeaderActions(): array
     {

@@ -18,9 +18,15 @@ class FilamentConfigResource extends Resource
 {
     protected static ?string $model = FilamentConfig::class;
 
-    protected static ?string $navigationLabel = 'Config';
+    protected static ?string $navigationGroup = 'Configuration';
+    protected static ?string $navigationLabel = 'Dopdown Lists';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected function getTitle(): string
+    {
+        return 'Konfigurationsübersicht';
+    }
 
     public static function form(Form $form): Form
     {

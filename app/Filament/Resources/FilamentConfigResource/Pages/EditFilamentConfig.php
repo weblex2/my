@@ -10,6 +10,11 @@ class EditFilamentConfig extends EditRecord
 {
     protected static string $resource = FilamentConfigResource::class;
 
+    public function getTitle(): string
+    {
+        return 'Config / Dopdowns';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
