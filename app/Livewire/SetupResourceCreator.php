@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire;
 
 use Filament\Forms;
@@ -8,7 +9,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-
 
 class SetupResourceCreator extends Component implements HasForms
 {
@@ -25,13 +25,18 @@ class SetupResourceCreator extends Component implements HasForms
 
     public function form(Form $form): Form
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('resourceName')
-                ->label('Ressourcen-Name')
-                ->required()
-                ->minLength(3)
-                ->placeholder('z. B. User, Product, Invoice'),
-        ]);
+        return $form
+            ->schema([
+                Forms\Components\Grid::make(2) // 2 Spalten für das Formular
+                    ->schema([
+                        Forms\Components\TextInput::make('resourceName')
+                            ->label('Ressourcen-Name')
+                            ->required()
+                            ->minLength(3)
+                            ->placeholder('z. B. User, Product, Invoice')
+                            ->columnSpan(2), // Überspannt beide Spalten
+                    ]),
+            ]);
     }
 
     protected function loadResources(): void
@@ -56,7 +61,6 @@ class SetupResourceCreator extends Component implements HasForms
     public function createResource(): void
     {
         $data = $this->form->getState();
-        //$resourceName = trim($data['resourceName']);
         $resourceName = Str::studly($data['resourceName']) . 'Resource';
 
         if (empty($resourceName)) {
@@ -65,10 +69,8 @@ class SetupResourceCreator extends Component implements HasForms
         }
 
         try {
-            // Clear old output buffer
             Artisan::output();
 
-            // Aufruf mit zusätzlicher Option
             $status = Artisan::call("make:custom-filament-resource", [
                 'name' => $resourceName,
                 '--model' => true,
@@ -79,11 +81,11 @@ class SetupResourceCreator extends Component implements HasForms
 
             if ($status === 0) {
                 session()->flash('success', "✅ Ressource wurde erstellt:\n<pre>{$output}</pre>");
-                $this->form->fill(); // Reset
+                $this->form->fill();
+                $this->loadResources(); // Aktualisiere die Ressourcenliste
             } else {
                 $this->addError('resourceName', "❌ Fehler beim Erstellen:\n<pre>{$output}</pre>");
             }
-
         } catch (\Throwable $e) {
             $this->addError('resourceName', '⚠️ Ausnahme: ' . $e->getMessage());
             Log::error('Fehler beim Erstellen der Ressource: ' . $e->getMessage());
@@ -92,6 +94,8 @@ class SetupResourceCreator extends Component implements HasForms
 
     public function render()
     {
-        return view('livewire.setup-resource-creator');
+        return view('livewire.setup-resource-creator', [
+            'resources' => $this->resources,
+        ]);
     }
 }

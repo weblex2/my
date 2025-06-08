@@ -23,6 +23,8 @@ export default defineConfig({
                 'resources/js/laravelMyAdmin.js',
                 'resources/js/websocket.js',
                 'resources/css/clean.css',
+                'resources/css/filament/admin/theme.css',
+                'resources/css/crm.css',
             ],
             refresh: true,
         }),
