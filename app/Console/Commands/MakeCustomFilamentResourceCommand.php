@@ -33,8 +33,8 @@ class MakeCustomFilamentResourceCommand extends Command
     protected function copyStubToApp(string $stubName, string $destination, array $replacements = []): void
     {
         // Pfad zu deinen eigenen Stub-Dateien (hier im Beispiel: resources/stubs/filament)
-        $stubPath = "stubs/filament/{$stubName}.stub";
-
+        //$stubPath = "stubs/filament/{$stubName}.stub";
+        $stubPath = base_path("stubs/filament/{$stubName}.stub");
         if (! file_exists($stubPath)) {
             $this->error("Stub-Datei nicht gefunden: {$stubPath}");
             return;

@@ -6,6 +6,8 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Livewire\Component;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 
 class SetupResourceCreator extends Component implements HasForms
@@ -13,10 +15,12 @@ class SetupResourceCreator extends Component implements HasForms
     use Forms\Concerns\InteractsWithForms;
 
     public ?string $resourceName = '';
+    public array $resources = [];
 
     public function mount(): void
     {
         $this->form->fill();
+        $this->loadResources();
     }
 
     public function form(Form $form): Form
@@ -30,10 +34,30 @@ class SetupResourceCreator extends Component implements HasForms
         ]);
     }
 
+    protected function loadResources(): void
+    {
+        $resourcePath = app_path('Filament/Resources');
+
+        if (!File::exists($resourcePath)) {
+            $this->resources = [];
+            return;
+        }
+
+        $files = File::files($resourcePath);
+
+        $this->resources = collect($files)
+            ->map(fn ($file) => $file->getFilenameWithoutExtension())
+            ->filter(fn ($name) => str_ends_with($name, 'Resource'))
+            ->map(fn ($name) => str_replace('Resource', '', $name))
+            ->values()
+            ->toArray();
+    }
+
     public function createResource(): void
     {
         $data = $this->form->getState();
-        $resourceName = trim($data['resourceName']);
+        //$resourceName = trim($data['resourceName']);
+        $resourceName = Str::studly($data['resourceName']) . 'Resource';
 
         if (empty($resourceName)) {
             $this->addError('resourceName', 'Der Ressourcen-Name darf nicht leer sein.');

@@ -24,7 +24,7 @@ class FilTableFieldsResource extends Resource
 
     protected static ?string $navigationGroup = 'Configuration';
 
-    protected static ?string $navigationLabel = 'Configure Fields';
+    protected static ?string $navigationLabel = 'Fields';
 
     //protected static ?string $title = 'Meine benutzerdefinierte Seite';
 

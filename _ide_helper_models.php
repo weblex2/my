@@ -311,6 +311,8 @@ namespace App\Models{
  * @property string $test4
  * @property string $test6
  * @property string $test_7
+ * @property string $test_9
+ * @property string $test10
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CustomerAddress> $addresses
  * @property-read int|null $addresses_count
  * @property-read \App\Models\CustomerAssd|null $assd
@@ -359,9 +361,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereSolution($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereSpread($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest10($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest4($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest6($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest7($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereTest9($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUser01($value)
@@ -941,6 +945,23 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedAt($value)
+ */
+	class Invoice extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $queue
  * @property string $payload
  * @property int $attempts
@@ -1279,6 +1300,27 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $resource
+ * @property string $navigation_group
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources whereNavigationGroup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources whereResource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resources whereUpdatedAt($value)
+ */
+	class Resources extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property int $page_id
  * @property string $type
  * @property string $path
@@ -1353,6 +1395,27 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeamInvitation whereUpdatedAt($value)
  */
 	class TeamInvitation extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $field_1
+ * @property string $field_2
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereField1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereField2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereUpdatedAt($value)
+ */
+	class Test extends \Eloquent {}
 }
 
 namespace App\Models{
