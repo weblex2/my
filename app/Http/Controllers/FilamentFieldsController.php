@@ -55,8 +55,20 @@ class FilamentFieldsController extends Controller
                         $this->field = Forms\Components\DatePicker::make($tableField->field);
                         break;
                     }
+                     case "datetime": {
+                        $this->field = Forms\Components\DateTimePicker::make($tableField->field);
+                        break;
+                    }
                     case "toggle": {
                         $this->field = Forms\Components\Toggle::make($tableField->field);
+                        break;
+                    }
+                    case "badge": {
+                        $this->field = Forms\Components\TextInput::make($tableField->field);
+                        break;
+                    }
+                     case "markdown": {
+                        $this->field = Forms\Components\MarkdownEditor::make($tableField->field);
                         break;
                     }
                     default: {
@@ -69,6 +81,8 @@ class FilamentFieldsController extends Controller
                 $this->setRequired();
                 $this->setSearchable();
                 $this->getSelectOptions();
+                $this->setColspan();
+                $this->setIcon();
                 //$this->setSortable();
             }
             // Create View Fields
@@ -83,7 +97,7 @@ class FilamentFieldsController extends Controller
                         $this->setDate();
                         break;
                     }
-                    case "dateTime": {
+                    case "datetime": {
                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
                         $this->setDateTime();
                         break;
@@ -93,13 +107,20 @@ class FilamentFieldsController extends Controller
                         $this->setBoolean();
                         break;
                     }
-                    case "markdown": {
-                        $this->field = Tables\Columns\MarkdownEditor::make($tableField->field);
+                     case "badge": {
+                        $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
                         break;
                     }
+
+                    default: {
+                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        break;
+                    }
+
                 }
                 $this->setLabel();
                 $this->setOptionValue();
+                $this->setIcon();
             }
             $this->fields[] = $this->field;
         }
@@ -129,7 +150,6 @@ class FilamentFieldsController extends Controller
                     ->orderBy('order')
                     ->pluck('value', 'key')
                     ->toArray();
-
             $this->field->getStateUsing(function ($record) use ($field, $options) {
                 $val = $record->$field ?? 'none';
                 return $options[$val] ?? 'Kein Tool';
@@ -180,6 +200,23 @@ class FilamentFieldsController extends Controller
         $this->field->dateTime();
     }
 
+    private function setColspan(){
+        if ($this->config->colspan==0) {
+            $this->field->columnSpanFull();
+        }
+        else{
+            $this->field->columnSpan($this->config->colspan);
+        }
+    }
+
+    private function setIcon(){
+        if ($this->config->icon){
+            $this->field->icon($this->config->icon);
+        }
+        if ($this->config->icon_color){
+            $this->field->iconColor($this->config->icon_color);
+        }
+    }
 
 
 }

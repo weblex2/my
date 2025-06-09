@@ -15,6 +15,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
 
 class FilTableFieldsResource extends Resource
 {
@@ -40,20 +43,78 @@ class FilTableFieldsResource extends Resource
 
                 //Forms\Components\TextInput::make('user_id')->default(Auth::id()),
 
-                Forms\Components\TextInput::make('table')->required()->disabled(),
-                Forms\Components\TextInput::make('field')->required()->disabled(),
+                Forms\Components\Select::make('table')
+                ->required()
+                ->options(function () {
+                        $resourcePath = app_path('Filament/Resources');
+                        if (!File::exists($resourcePath)) {
+                            return [];
+                        }
+                        return collect(File::files($resourcePath))
+                            ->map(fn ($file) => $file->getFilenameWithoutExtension())
+                            ->filter(fn ($name) => str_ends_with($name, 'Resource'))
+                            ->mapWithKeys(function ($name) {
+                                $label = str_replace('Resource', '', $name);
+                                return [$label => $label];
+                            })
+                            ->toArray();
+                    })
+                    ->searchable()
+                    ->dehydrateStateUsing(fn ($state) => strtolower($state))
+                    ->required()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        // Optional: reset field if table changes
+                        $set('field', null);
+                    }),
+                Forms\Components\Select::make('field')
+                    ->required()
+                    ->options(function (callable $get) {
+                        $resourceName = $get('table');
+                        if (!$resourceName) {
+                            return [];
+                        }
+
+                        // Resource-Klasse zusammenbauen
+                        $resourceClass = "App\\Filament\\Resources\\" . ucfirst($resourceName) . 'Resource';
+
+                        if (!class_exists($resourceClass)) {
+                            return [];
+                        }
+
+                        // Modell ermitteln
+                        $modelClass = $resourceClass::getModel();
+
+                        // Tabellenname holen
+                        $tableName = (new $modelClass)->getTable();
+
+                        // Spalten aus der DB holen
+                        if (!Schema::hasTable($tableName)) {
+                            return [];
+                        }
+
+                        return collect(Schema::getColumnListing($tableName))
+                            ->mapWithKeys(fn ($column) => [$column => $column])
+                            ->toArray();
+                    })
+                    ->reactive() // reagiert auf Änderung von 'table'
+                    ->searchable(),
                 Forms\Components\Select::make('type')
                     ->required()
                     ->options([
-                        'text' => 'text',
-                        'date' => 'date',
-                        'dateTime' => 'dateTime',
-                        'boolean' => 'boolean',
-                        'select' => 'select',
-                        'markup' => 'markdown',
+                        'text' => 'Text',
+                        'date' => 'Date',
+                        'datetime' => 'DateTime',
+                        'toggle' => 'Boolean',
+                        'select' => 'Select',
+                        'markdown' => 'Markdown',
+                        'bagde' => 'Badge',
                     ]),
                 Forms\Components\TextInput::make('label')->required(),
-                Forms\Components\Toggle::make('form')->required()->disabled(),
+                Forms\Components\TextInput::make('icon')->label('Icon'),
+                Forms\Components\TextInput::make('icon_color')->label('Icon Color'),
+                Forms\Components\TextInput::make('link'),
+                Forms\Components\TextInput::make('link_target')->label('Link Target'),
+                Forms\Components\Toggle::make('form')->required(),
                 Forms\Components\Toggle::make('sortable'),
                 Forms\Components\Toggle::make('searchable'),
                 Forms\Components\Toggle::make('disabled'),
@@ -72,6 +133,10 @@ class FilTableFieldsResource extends Resource
                 Tables\Columns\TextColumn::make('field'),
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('label'),
+                Tables\Columns\TextColumn::make('icon'),
+                Tables\Columns\TextColumn::make('icon_color'),
+                Tables\Columns\TextColumn::make('link'),
+                Tables\Columns\TextColumn::make('link_target'),
                 Tables\Columns\IconColumn::make('sortable')
                     ->boolean()
                     ->sortable(),
