@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\FilTableFields;
+use App\Models\FilamentConfig;
 
 use Illuminate\Http\Request;
 use Filament\Tables;
@@ -46,6 +47,10 @@ class FilamentFieldsController extends Controller
                         $this->field = Forms\Components\TextInput::make($tableField->field);
                         break;
                     }
+                    case "select": {
+                        $this->field = Forms\Components\Select::make($tableField->field);
+                        break;
+                    }
                     case "date": {
                         $this->field = Forms\Components\DatePicker::make($tableField->field);
                         break;
@@ -63,6 +68,7 @@ class FilamentFieldsController extends Controller
                 $this->setLabel();
                 $this->setRequired();
                 $this->setSearchable();
+                $this->getSelectOptions();
                 //$this->setSortable();
             }
             // Create View Fields
@@ -93,10 +99,42 @@ class FilamentFieldsController extends Controller
                     }
                 }
                 $this->setLabel();
+                $this->setOptionValue();
             }
             $this->fields[] = $this->field;
         }
         return $this->fields;
+    }
+
+    private function getSelectOptions(){
+        $options = $this->config->options;
+        if ($options!=""){
+            list($table, $filter) = explode('|',$options);
+            $options = FilamentConfig::where('resource', $table)
+                    ->where('field', $filter)
+                    ->orderBy('order')
+                    ->pluck('value', 'key')
+                    ->toArray();
+            $this->field->options($options);
+        }
+    }
+
+    private function setOptionValue(){
+        $options = $this->config->options;
+        $field = $this->config->field;
+        if ($options!=""){
+            list($table, $filter) = explode('|',$options);
+            $options = FilamentConfig::where('resource', $table)
+                    ->where('field', $filter)
+                    ->orderBy('order')
+                    ->pluck('value', 'key')
+                    ->toArray();
+
+            $this->field->getStateUsing(function ($record) use ($field, $options) {
+                $val = $record->$field ?? 'none';
+                return $options[$val] ?? 'Kein Tool';
+            });
+        }
     }
 
     private function setLabel(){

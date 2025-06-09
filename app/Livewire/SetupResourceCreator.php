@@ -9,6 +9,10 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 
 class SetupResourceCreator extends Component implements HasForms
 {
@@ -16,27 +20,33 @@ class SetupResourceCreator extends Component implements HasForms
 
     public ?string $resourceName = '';
     public array $resources = [];
+    public array $navigationGroups = [];
+    public ?string $navigation_group = null; // Hier speichern wir die ausgewählte oder neue Gruppe
 
     public function mount(): void
     {
         $this->form->fill();
         $this->loadResources();
+
+        $this->navigationGroups = DB::table('resources')
+            ->distinct()
+            ->pluck('navigation_group')
+            ->filter() // null/leer rausfiltern
+            ->toArray();
+        //dump($this->navigationGroups);
     }
 
     public function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Grid::make(2) // 2 Spalten für das Formular
-                    ->schema([
-                        Forms\Components\TextInput::make('resourceName')
-                            ->label('Ressourcen-Name')
-                            ->required()
-                            ->minLength(3)
-                            ->placeholder('z. B. User, Product, Invoice')
-                            ->columnSpan(2), // Überspannt beide Spalten
-                    ]),
-            ]);
+        return $form->schema([
+            Select::make('selectedNavigationGroup')
+                ->label('Navigation Group')
+                ->options(fn () => array_combine($this->navigationGroups, $this->navigationGroups))
+                ->nullable()
+                ->reactive(),
+
+
+        ]);
     }
 
     protected function loadResources(): void
@@ -50,25 +60,69 @@ class SetupResourceCreator extends Component implements HasForms
 
         $files = File::files($resourcePath);
 
-        $this->resources = collect($files)
+        $resourceNames = collect($files)
             ->map(fn ($file) => $file->getFilenameWithoutExtension())
             ->filter(fn ($name) => str_ends_with($name, 'Resource'))
             ->map(fn ($name) => str_replace('Resource', '', $name))
             ->values()
             ->toArray();
+
+        $dbResources = DB::table('resources')
+            ->whereIn('resource', $resourceNames)
+            ->pluck('navigation_group', 'resource'); // key = resource-Name!
+
+        $this->resources = collect($resourceNames)->map(function ($name) use ($dbResources) {
+            return [
+                'name' => $name,
+                'navigation_group' => $dbResources->get($name) ?? null,
+            ];
+        })->toArray();
+        //dump($this->resources);
+    }
+    public function saveResource()
+    {
+        // Hole Form-Daten
+        $data = $this->form->getState();
+
+        // Rufe Controller-Helper auf, z.B.
+        app(\App\Http\Controllers\FilamentHelper::class)->saveResource($data);
+
+        // Optional: Erfolgsmeldung setzen, Formular zurücksetzen etc.
     }
 
     public function createResource(): void
     {
         $data = $this->form->getState();
+
         $resourceName = Str::studly($data['resourceName']) . 'Resource';
+        $navigationGroup = $data['navigation_group'] ?? null;
 
         if (empty($resourceName)) {
             $this->addError('resourceName', 'Der Ressourcen-Name darf nicht leer sein.');
             return;
         }
 
+        if (empty($navigationGroup)) {
+            $this->addError('navigation_group', 'Die Navigation Group darf nicht leer sein.');
+            return;
+        }
+
         try {
+            // Hier ggf. Navigation Group in DB speichern, wenn neu
+            if (!in_array($navigationGroup, $this->navigationGroups)) {
+                // Einfügen in DB (nur wenn noch nicht vorhanden)
+                DB::table('resource')->insertOrIgnore([
+                    'name' => str_replace('Resource', '', $resourceName),
+                    'navigation_group' => $navigationGroup,
+                ]);
+                // Nach Insert nochmal navigationGroups neu laden
+                $this->navigationGroups = DB::table('resources')
+                    ->distinct()
+                    ->pluck('navigation_group')
+                    ->filter()
+                    ->toArray();
+            }
+
             Artisan::output();
 
             $status = Artisan::call("make:custom-filament-resource", [
@@ -96,6 +150,7 @@ class SetupResourceCreator extends Component implements HasForms
     {
         return view('livewire.setup-resource-creator', [
             'resources' => $this->resources,
+            'navigationGroups' => $this->navigationGroups,
         ]);
     }
 }

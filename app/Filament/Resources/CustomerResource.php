@@ -149,7 +149,7 @@ class CustomerResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $fc = new FilamentFieldsController('customer',0);
+        $fc = new FilamentFieldsController('customer',0, $table);
         $table_fields = $fc->getFields();
         return $table
             ->columns(array_merge([
