@@ -55,7 +55,7 @@ class FilamentFieldsController extends Controller
                         $this->field = Forms\Components\DatePicker::make($tableField->field);
                         break;
                     }
-                     case "datetime": {
+                    case "datetime": {
                         $this->field = Forms\Components\DateTimePicker::make($tableField->field);
                         break;
                     }
@@ -67,7 +67,11 @@ class FilamentFieldsController extends Controller
                         $this->field = Forms\Components\TextInput::make($tableField->field);
                         break;
                     }
-                     case "markdown": {
+                    case "link": {
+                        $this->field = Forms\Components\TextInput::make($tableField->field);
+                        break;
+                    }
+                    case "markdown": {
                         $this->field = Forms\Components\MarkdownEditor::make($tableField->field);
                         break;
                     }
@@ -83,6 +87,7 @@ class FilamentFieldsController extends Controller
                 $this->getSelectOptions();
                 $this->setColspan();
                 $this->setIcon();
+
                 //$this->setSortable();
             }
             // Create View Fields
@@ -109,6 +114,12 @@ class FilamentFieldsController extends Controller
                     }
                      case "badge": {
                         $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        break;
+                    }
+
+                    case "link": {
+                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        $this->setLink();
                         break;
                     }
 
@@ -215,6 +226,15 @@ class FilamentFieldsController extends Controller
         }
         if ($this->config->icon_color){
             $this->field->iconColor($this->config->icon_color);
+        }
+    }
+
+    private function setLink(){
+        if ($this->config->link){
+            $this->field->url($this->config->link);
+        }
+        if ($this->config->link_target=='_blank'){
+            $this->field->openUrlInNewTab();
         }
     }
 
