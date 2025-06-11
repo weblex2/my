@@ -209,7 +209,7 @@ class CustomerResource extends Resource
                     ]),
                     //return fn ($state) => ['style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;','title' => $state]
                  Tables\Columns\TextColumn::make('external_id')
-                    ->searchable(), */
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('type')
                     ->label('Type')
                     ->searchable()
@@ -309,7 +309,7 @@ class CustomerResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-
+                */
 
             ],$table_fields))
             ->headerActions([
