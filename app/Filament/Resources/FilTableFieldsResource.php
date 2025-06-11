@@ -160,9 +160,9 @@ class FilTableFieldsResource extends Resource
                 Tables\Columns\TextColumn::make('field'),
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('label'),
-                Tables\Columns\TextColumn::make('icon'),
+                Tables\Columns\TextColumn::make('icon')->icon(fn ($record) => $record->icon),
                 Tables\Columns\TextColumn::make('icon_color'),
-                Tables\Columns\TextColumn::make('link'),
+                Tables\Columns\IconColumn::make('link')->boolean()->getStateUsing(fn ($record) => !empty($record->link)),
                 Tables\Columns\TextColumn::make('link_target'),
                 Tables\Columns\IconColumn::make('sortable')
                     ->boolean()
