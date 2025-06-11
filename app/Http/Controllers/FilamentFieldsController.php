@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Filament\Tables;
 use Filament\Forms;
 use Illuminate\Support\Facades\DB;
+use Filament\Tables\Columns\DateTimeColumn;
 
 
 class FilamentFieldsController extends Controller
@@ -114,12 +115,12 @@ class FilamentFieldsController extends Controller
                     }
                     case "date": {
                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        $this->setDate();
+                        $this->formatDate();
                         break;
                     }
                     case "datetime": {
                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        $this->setDateTime();
+                        $this->formatDate();
                         break;
                     }
                     case "toggle": {
@@ -142,8 +143,24 @@ class FilamentFieldsController extends Controller
                         break;
                     }
                     case "link": {
-                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
                         $this->setLink();
+                        break;
+                    }
+
+                    case "number" :{
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
+                        $this->setNumeric();
                         break;
                     }
 
@@ -167,6 +184,7 @@ class FilamentFieldsController extends Controller
                 $this->extraAttributes();
                 $this->visible();
                 $this->setBadgeColor();
+                $this->align();
             }
             $this->fields[] = $this->field;
         }
@@ -242,8 +260,30 @@ class FilamentFieldsController extends Controller
         $this->field->date();
     }
 
-    private function setDateTime(){
-        $this->field->dateTime();
+    private function setNumeric(){
+        $this->field->numeric();
+    }
+
+    private function formatDate(){
+        $this->field->formatStateUsing(function ($state) {
+            if ($this->config->type=='date'){
+                $format = 'd.m.Y';
+            }
+            elseif ($this->config->type=='datetime'){
+            $format = 'd.m.Y H:i:s';
+            }
+             if (! $state instanceof \DateTimeInterface || $state->format('Y') < 1900) {
+            return '-';
+            }
+            return $state->format($format);
+
+        });
+    }
+
+    private function align(){
+        if ($this->config->align=='r'){
+             $this->field->alignRight();
+        }
     }
 
     private function setColspan(){

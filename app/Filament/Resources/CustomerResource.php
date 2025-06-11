@@ -343,20 +343,9 @@ class CustomerResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 SelectFilter::make('status')
-                /* ->options([
-                    '' => 'Alle',
-                    'exacc' => 'Existing Account',
-                    'deal' => 'Deal',
-                    'lead' => 'Lead',
-                    'contact' => 'Contact',
-                ]), */
-               /*  ->options([
-                    '' => 'Alle',
-                    ...FilamentConfig::getFiltersFor('customer','status'), // deine dynamischen Werte
-                ]), */
-                ->options(function () {
-                    return FilamentConfig::getFiltersFor('customer', 'status');
-                })
+                    ->options(function () {
+                        return FilamentConfig::getFiltersFor('customer', 'status');
+                    })
             ])
             ->recordAction(Tables\Actions\EditAction::class) // Keine Aktion bei einfachem Klick
             ->recordUrl(null)

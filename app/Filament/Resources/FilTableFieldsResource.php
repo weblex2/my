@@ -115,10 +115,10 @@ class FilTableFieldsResource extends Resource
                                 'text' => 'Text',
                                 'date' => 'Date',
                                 'datetime' => 'DateTime',
+                                'number' => 'Number',
                                 'toggle' => 'Boolean',
                                 'select' => 'Select',
                                 'markdown' => 'Markdown',
-                                'bagde' => 'Badge',
                                 'relation' => 'Relation'
                             ]),
                         Forms\Components\TextInput::make('label')->required(),
