@@ -125,7 +125,7 @@ class FilTableFieldsResource extends Resource
                                     })
                                 ];
                             }) */
-                           ->rules([
+                           /* ->rules([
                                 function (callable $get) {
                                     return function ($attribute, $value, $fail) use ($get) {
                                         // Prüfe, ob der Wert eindeutig ist
@@ -161,7 +161,7 @@ class FilTableFieldsResource extends Resource
                                         }
                                     };
                                 },
-                            ]),
+                            ])*/,
                         Forms\Components\Select::make('type')
                             ->required()
                             ->options([
@@ -196,6 +196,7 @@ class FilTableFieldsResource extends Resource
                         Forms\Components\Toggle::make('sortable'),
                         Forms\Components\Toggle::make('searchable'),
                         Forms\Components\Toggle::make('disabled'),
+                        Forms\Components\Toggle::make('is_toggable'),
                         Forms\Components\Textarea::make('format')->rows(5)->placeholder("z.B: return fn (string \state) => \App\Enums\CustomerStatusEnum::tryFrom(\$state)?->label() ?? \$state;")->columnSpanFull(),
                         Forms\Components\Textarea::make('extra_attributes')->rows(5)->placeholder("z.B: return fn (\$state) => ['style' => 'max-inline-size: 200px;];")->columnSpanFull(),
                     ])->columns(3)->collapsible()

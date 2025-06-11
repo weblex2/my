@@ -185,6 +185,7 @@ class FilamentFieldsController extends Controller
                 $this->setVisible();
                 $this->setBadgeColor();
                 $this->align();
+                $this->setSearchable();
                 $this->setToggable();
             }
             $this->fields[] = $this->field;

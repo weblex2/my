@@ -570,38 +570,78 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int|null $section
  * @property int $form
  * @property int $user_id
  * @property string $label
  * @property string $table
  * @property string $field
  * @property string $type
+ * @property int|null $is_badge
+ * @property string|null $badge_color
+ * @property string|null $align
+ * @property string|null $select_options
+ * @property string|null $visible
+ * @property string|null $format
+ * @property string|null $relation_table
+ * @property string|null $relation_show_field
+ * @property string $options
+ * @property string|null $extra_attributes
+ * @property string|null $color
  * @property int $searchable
  * @property int $sortable
+ * @property int|null $is_toggable
  * @property int $disabled
  * @property int $required
  * @property int $dehydrated
  * @property int $collapsible
+ * @property int $colspan
+ * @property string|null $icon
+ * @property string|null $icon_color
+ * @property string|null $link
+ * @property string|null $link_target
+ * @property string $bagdecolor
+ * @property int $order
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereAlign($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereBadgeColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereBagdecolor($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereCollapsible($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereColspan($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereDehydrated($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereDisabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereExtraAttributes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereField($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereFormat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereIconColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereIsBadge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereIsToggable($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereLinkTarget($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereOptions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereRelationShowField($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereRelationTable($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereRequired($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereSearchable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereSection($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereSelectOptions($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereSortable($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereTable($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereVisible($value)
  */
 	class FilTableFields extends \Eloquent {}
 }
@@ -1395,27 +1435,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TeamInvitation whereUpdatedAt($value)
  */
 	class TeamInvitation extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $field_1
- * @property string $field_2
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereField1($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereField2($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereUpdatedAt($value)
- */
-	class Test extends \Eloquent {}
 }
 
 namespace App\Models{
