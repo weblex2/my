@@ -348,7 +348,7 @@ class FilamentFieldsController extends Controller
         }
     }
 
-    private function visible(){
+    private function setVisible(){
         if (trim($this->config->visible)!=""){
             if (substr($this->config->visible,0,6)=='return'){
                 $function = eval($this->config->visible);
