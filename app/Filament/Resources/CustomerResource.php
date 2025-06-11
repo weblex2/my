@@ -108,7 +108,7 @@ class CustomerResource extends Resource
                         'pms2' => 'PMS 2',
                         'pms3' => 'PMS 3',
                     ])
-                    ->default(function ($record) {
+                    /* ->default(function ($record) {
                         return $record->assd->solution ?? 'none'; // Fallback auf 'none', wenn assd oder solution null ist
                     })
                     ->saveRelationshipsUsing(function ($record, $state) {
@@ -118,13 +118,20 @@ class CustomerResource extends Resource
                                 ['solution' => $state]
                             );
                         }
-                    }),
+                    }) */,
 
                     Forms\Components\Select::make('type')
                         ->label('Type')
                         ->options([
-                            'national' => 'National',
-                            'internationional' => 'Internationional',
+                            'acc' => 'Account',
+                            'key' => 'Key Account',
+                        ]),
+
+                    Forms\Components\Select::make('spread')
+                        ->label('Spread')
+                        ->options([
+                            'nat' => 'national',
+                            'inter' => 'International',
                         ]),
 
                     Forms\Components\Select::make('bi')
