@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FilTableFields;
 use App\Models\FilamentConfig;
-
+use App\Filament\Resources\CustomerResource;
 use Illuminate\Http\Request;
 use Filament\Tables;
 use Filament\Forms;
@@ -37,6 +37,7 @@ class FilamentFieldsController extends Controller
     public function getFields(){
         $tableFields = FilTableFields::where('table',"=", $this->tableName)
                                      ->where('form',"=",$this->isForm)
+                                     ->orderBy('order', 'ASC')
                                      ->get();
         foreach ($tableFields as $index => $tableField ){
             $this->config = $tableField;
@@ -75,6 +76,14 @@ class FilamentFieldsController extends Controller
                         $this->field = Forms\Components\MarkdownEditor::make($tableField->field);
                         break;
                     }
+
+                    case "relation": {
+                        $this->field = Forms\Components\Select::make($tableField->field);
+                        $this->setRelationship();
+                        break;
+                    }
+
+
                     default: {
                         $this->field = Forms\Components\TextInput::make($tableField->field);
                         break;
@@ -87,6 +96,7 @@ class FilamentFieldsController extends Controller
                 $this->getSelectOptions();
                 $this->setColspan();
                 $this->setIcon();
+                $this->format();
 
                 //$this->setSortable();
             }
@@ -123,6 +133,12 @@ class FilamentFieldsController extends Controller
                         break;
                     }
 
+                    case "relation": {
+                        $fieldname = $this->config->relation_table ."." .$this->config->relation_show_field;
+                        $this->field = Tables\Columns\TextColumn::make($fieldname);
+                        break;
+                    }
+
                     default: {
                          $this->field = Tables\Columns\TextColumn::make($tableField->field);
                         break;
@@ -132,6 +148,9 @@ class FilamentFieldsController extends Controller
                 $this->setLabel();
                 $this->setOptionValue();
                 $this->setIcon();
+                $this->format();
+                $this->setColor();
+                $this->extraAttributes();
             }
             $this->fields[] = $this->field;
         }
@@ -231,12 +250,43 @@ class FilamentFieldsController extends Controller
 
     private function setLink(){
         if ($this->config->link){
-            $this->field->url($this->config->link);
+            if (substr($this->config->link,0,6)=='return'){
+                $function = eval($this->config->link);
+                $this->field->url($function);
+            }
+            else{
+                $this->field->url($this->config->link);
+            }
         }
         if ($this->config->link_target=='_blank'){
             $this->field->openUrlInNewTab();
         }
     }
 
+    private function setRelationship(){
+        $this->field->relationship($this->config->relation_table, $this->config->relation_show_field);
+    }
+
+    private function setColor(){
+        $this->field->color($this->config->color);
+    }
+
+    private function format(){
+        if (trim($this->config->format)!=""){
+            if (substr($this->config->format,0,6)=='return'){
+                $function = eval($this->config->format);
+                $this->field->formatStateUsing($function);
+            }
+        }
+    }
+
+    private function extraAttributes(){
+        if (trim($this->config->extra_attributes)!=""){
+            if (substr($this->config->extra_attributes,0,6)=='return'){
+                $function = eval($this->config->extra_attributes);
+                $this->field->extraAttributes($function);
+            }
+        }
+    }
 
 }

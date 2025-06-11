@@ -40,86 +40,113 @@ class FilTableFieldsResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Group::make()
+                ->schema([
+                    Forms\Components\Section::make('Base Settings')
+                    ->schema([
 
-                //Forms\Components\TextInput::make('user_id')->default(Auth::id()),
-
-                Forms\Components\Select::make('table')
-                ->required()
-                ->options(function () {
-                        $resourcePath = app_path('Filament/Resources');
-                        if (!File::exists($resourcePath)) {
-                            return [];
-                        }
-                        return collect(File::files($resourcePath))
-                            ->map(fn ($file) => $file->getFilenameWithoutExtension())
-                            ->filter(fn ($name) => str_ends_with($name, 'Resource'))
-                            ->mapWithKeys(function ($name) {
-                                $label = str_replace('Resource', '', $name);
-                                return [$label => $label];
+                        //Forms\Components\TextInput::make('user_id')->default(Auth::id()),
+                        Forms\Components\Toggle::make('form')
+                            ->required()
+                            ->helperText('Form or Table?')
+                            ->disabled(fn (string $context) => $context === 'edit'),
+                        Forms\Components\Toggle::make('required')->columnSpan(3),
+                        Forms\Components\Select::make('table')
+                            ->required()
+                            ->disabled(fn (string $context) => $context === 'edit')
+                            ->options(function () {
+                                $resourcePath = app_path('Filament/Resources');
+                                if (!File::exists($resourcePath)) {
+                                    return [];
+                                }
+                                return collect(File::files($resourcePath))
+                                    ->map(fn ($file) => $file->getFilenameWithoutExtension())
+                                    ->filter(fn ($name) => str_ends_with($name, 'Resource'))
+                                    ->mapWithKeys(function ($name) {
+                                        $label = str_replace('Resource', '', $name);
+                                        return [$label => $label];
+                                    })
+                                    ->toArray();
                             })
-                            ->toArray();
-                    })
-                    ->searchable()
-                    ->dehydrateStateUsing(fn ($state) => strtolower($state))
-                    ->required()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        // Optional: reset field if table changes
-                        $set('field', null);
-                    }),
-                Forms\Components\Select::make('field')
-                    ->required()
-                    ->options(function (callable $get) {
-                        $resourceName = $get('table');
-                        if (!$resourceName) {
-                            return [];
-                        }
+                            ->searchable()
+                            ->dehydrateStateUsing(fn ($state) => strtolower($state))
+                            ->required()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                // Optional: reset field if table changes
+                                $set('field', null);
+                            }),
+                        Forms\Components\Select::make('field')
+                            ->required()
+                            ->disabled(fn (string $context) => $context === 'edit')
+                            ->options(function (callable $get) {
+                                $resourceName = $get('table');
+                                if (!$resourceName) {
+                                    return [];
+                                }
 
-                        // Resource-Klasse zusammenbauen
-                        $resourceClass = "App\\Filament\\Resources\\" . ucfirst($resourceName) . 'Resource';
+                                // Resource-Klasse zusammenbauen
+                                $resourceClass = "App\\Filament\\Resources\\" . ucfirst($resourceName) . 'Resource';
 
-                        if (!class_exists($resourceClass)) {
-                            return [];
-                        }
+                                if (!class_exists($resourceClass)) {
+                                    return [];
+                                }
 
-                        // Modell ermitteln
-                        $modelClass = $resourceClass::getModel();
+                                // Modell ermitteln
+                                $modelClass = $resourceClass::getModel();
 
-                        // Tabellenname holen
-                        $tableName = (new $modelClass)->getTable();
+                                // Tabellenname holen
+                                $tableName = (new $modelClass)->getTable();
 
-                        // Spalten aus der DB holen
-                        if (!Schema::hasTable($tableName)) {
-                            return [];
-                        }
+                                // Spalten aus der DB holen
+                                if (!Schema::hasTable($tableName)) {
+                                    return [];
+                                }
 
-                        return collect(Schema::getColumnListing($tableName))
-                            ->mapWithKeys(fn ($column) => [$column => $column])
-                            ->toArray();
-                    })
-                    ->reactive() // reagiert auf Änderung von 'table'
-                    ->searchable(),
-                Forms\Components\Select::make('type')
-                    ->required()
-                    ->options([
-                        'text' => 'Text',
-                        'date' => 'Date',
-                        'datetime' => 'DateTime',
-                        'toggle' => 'Boolean',
-                        'select' => 'Select',
-                        'markdown' => 'Markdown',
-                        'bagde' => 'Badge',
-                    ]),
-                Forms\Components\TextInput::make('label')->required(),
-                Forms\Components\TextInput::make('icon')->label('Icon'),
-                Forms\Components\TextInput::make('icon_color')->label('Icon Color'),
-                Forms\Components\TextInput::make('link'),
-                Forms\Components\TextInput::make('link_target')->label('Link Target'),
-                Forms\Components\Toggle::make('form')->required(),
-                Forms\Components\Toggle::make('sortable'),
-                Forms\Components\Toggle::make('searchable'),
-                Forms\Components\Toggle::make('disabled'),
-                Forms\Components\Toggle::make('required'),
-            ]);
+                                return collect(Schema::getColumnListing($tableName))
+                                    ->mapWithKeys(fn ($column) => [$column => $column])
+                                    ->toArray();
+                            })
+                            ->reactive() // reagiert auf Änderung von 'table'
+                            ->searchable(),
+                        Forms\Components\Select::make('type')
+                            ->required()
+                            ->options([
+                                'text' => 'Text',
+                                'date' => 'Date',
+                                'datetime' => 'DateTime',
+                                'toggle' => 'Boolean',
+                                'select' => 'Select',
+                                'markdown' => 'Markdown',
+                                'bagde' => 'Badge',
+                                'relation' => 'Relation'
+                            ]),
+                        Forms\Components\TextInput::make('label')->required(),
+                        Forms\Components\TextInput::make('order')->numeric(),
+                        Forms\Components\TextInput::make('icon')->label('Icon'),
+                        Forms\Components\TextInput::make('icon_color')->label('Icon Color'),
+                        Forms\Components\TextInput::make('link')->helperText('Auch Funktion möglich'),
+                        Forms\Components\Select::make('link_target')->label('Link Target')->options([''=>'','_blank'=>'New Tab']),
+
+                    ])->columns(4)->collapsible(),
+
+                    Forms\Components\Section::make('Advanced Settings')
+                    ->schema([
+                        Forms\Components\Select::make('color')->options([
+                                'primary' => 'Primary',
+                                'secondary' => 'Secondary',
+                                'warning' => 'Warming',
+                                'danger' => 'Danger',
+                            ]),
+                        Forms\Components\TextInput::make('relation_table')->label('Relation Table'),
+                        Forms\Components\TextInput::make('relation_show_field')->label('Relation Field'),
+                        Forms\Components\Toggle::make('sortable'),
+                        Forms\Components\Toggle::make('searchable'),
+                        Forms\Components\Toggle::make('disabled'),
+                        Forms\Components\Textarea::make('format')->rows(5)->placeholder("z.B: return fn (string \state) => \App\Enums\CustomerStatusEnum::tryFrom(\$state)?->label() ?? \$state;")->columnSpanFull(),
+                        Forms\Components\Textarea::make('extra_attributes')->rows(5)->placeholder("z.B: return fn (\$state) => ['style' => 'max-inline-size: 200px;];")->columnSpanFull(),
+                    ])->columns(3)->collapsible()
+            ])->columnSpan('full')
+        ]);
     }
 
     public static function table(Table $table): Table

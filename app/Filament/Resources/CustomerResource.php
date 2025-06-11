@@ -149,11 +149,11 @@ class CustomerResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $fc = new FilamentFieldsController('customer',0, $table);
-        $table_fields = $fc->getFields();
+        $fc = new FilamentFieldsController('customers',0);
+        $table_fields = $fc->getFields() ?? [];
         return $table
             ->columns(array_merge([
-                Tables\Columns\TextColumn::make('id')
+                /* Tables\Columns\TextColumn::make('id')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
 
@@ -165,20 +165,25 @@ class CustomerResource extends Resource
                 Tables\Columns\TextColumn::make('first_name')
                     ->sortable()
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('status')
                     ->formatStateUsing(fn (string $state) => CustomerStatusEnum::tryFrom($state)?->label() ?? $state),
+
                 Tables\Columns\TextColumn::make('preferredAddress.address')
                     ->label('Address')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('preferredAddress.city')
                     ->label('City')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('preferredAddress.state')
                     ->label('State')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('preferredAddress.zip')
                     ->label('Zip')
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('phone')
                     ->icon('heroicon-o-phone')
                     ->iconColor('primary')
@@ -186,6 +191,7 @@ class CustomerResource extends Resource
                     ->url(fn ($record) => 'tel:' . preg_replace('/[^0-9+]/', '', $record->phone))
                     ->openUrlInNewTab(false)
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('email')
                     ->icon('heroicon-o-envelope')
                     ->iconColor('primary')
@@ -201,7 +207,8 @@ class CustomerResource extends Resource
                         'style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
                         'title' => $state, // Wert für Tooltip sicherstellen
                     ]),
-                /* Tables\Columns\TextColumn::make('external_id')
+                    //return fn ($state) => ['style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;','title' => $state]
+                 Tables\Columns\TextColumn::make('external_id')
                     ->searchable(), */
                 Tables\Columns\TextColumn::make('type')
                     ->label('Type')
