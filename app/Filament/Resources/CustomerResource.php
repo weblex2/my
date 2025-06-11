@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Enums\CustomerStatusEnum;
 use Filament\Tables\Actions;
-use Filament\Tables\Actions\Modal;
 use App\Filament\Helpers\FilamentHelper;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\FilamentConfig;
@@ -36,7 +35,6 @@ use App\Livewire\AddFieldComponent;
 use Filament\Forms\Components\Livewire as LivewireComponent;
 use Filament\Widgets\ButtonWidget;
 use Illuminate\Support\Facades\Session;
-
 
 class CustomerResource extends Resource
 {
@@ -60,272 +58,130 @@ class CustomerResource extends Resource
         ]);
     }
 
-    public static function getNavigationBadge(): ?string  {
+    public static function getNavigationBadge(): ?string
+    {
         return static::getModel()::count();
     }
 
     public static function form(Form $form): Form
     {
-        $fc = new FilamentFieldsController('customer',1);
+        $fc = new FilamentFieldsController('customer', 1);
         $form_fields = $fc->getFields() ?? [];
 
         return $form
-            ->schema(array_merge([
-                Forms\Components\Toggle::make('is_active')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('first_name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('external_id')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('status')
-                ->label('Status')
-                ->options([
-                    '' => 'Alle',
-                    ...FilamentConfig::getFiltersFor('customer','status'), // deine dynamischen Werte
-                ]),
-
-                Forms\Components\TextInput::make('phone')
-                    ->tel()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->maxLength(255),
-                Forms\Components\Select::make('company_id')
-                    ->relationship('company', 'company_name'),
-
-                Forms\Components\TextInput::make('website')
-                    ->maxLength(255),
-
-                Forms\Components\Select::make('solution')
-                    ->label('Solution')
-                    ->options([
-                        'pms2' => 'PMS 2',
-                        'pms3' => 'PMS 3',
+            ->schema([
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\Section::make('Base Information')
+                            ->schema([
+                                Forms\Components\Toggle::make('is_active')
+                                    ->required()
+                                    ->columnSpanFull(),
+                                Forms\Components\Select::make('company_id')
+                                    ->relationship('company', 'company_name')
+                                    ->columns(3),
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('first_name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('external_id')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\Select::make('status')
+                                    ->label('Status')
+                                    ->options([
+                                        '' => 'Alle',
+                                        ...FilamentConfig::getFiltersFor('customer', 'status'),
+                                    ]),
+                            ])->columns(3)
+                            ->collapsible(),
+                        Forms\Components\Section::make('Contact Information')
+                            ->schema(array_merge([
+                                Forms\Components\TextInput::make('phone')
+                                    ->tel()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('email')
+                                    ->email()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('website')
+                                    ->maxLength(255)
+                            ], $form_fields))
+                            ->columns(3)
+                            ->collapsible(),
+                        Forms\Components\Section::make('Customer Information')
+                          ->schema(array_merge([
+                                Forms\Components\Select::make('spread')
+                                    ->label('Spread')
+                                    ->options([
+                                        'nat' => 'national',
+                                        'inter' => 'International',
+                                    ]),
+                                Forms\Components\Select::make('bi')
+                                    ->label('BI')
+                                    ->options([
+                                        'clickview' => 'ClickView',
+                                        'qlik' => 'Qlik',
+                                        'powerbi' => 'Power BI',
+                                        'tableau' => 'Tableau',
+                                        'none' => 'Kein Tool',
+                                    ]),
+                                Forms\Components\Select::make('solution')
+                                    ->label('Solution')
+                                    ->options([
+                                        'pms2' => 'PMS 2',
+                                        'pms3' => 'PMS 3',
+                                    ]),
+                                Forms\Components\TextInput::make('sales_volume')
+                                    ->numeric(),
+                                Forms\Components\Select::make('type')
+                                    ->label('Type')
+                                    ->options([
+                                        'acc' => 'Account',
+                                        'key' => 'Key Account',
+                                    ]),
+                         ], $form_fields))
+                        ->columns(3)
+                        ->collapsible(),
+                        Forms\Components\Section::make('Information')
+                          ->schema(array_merge([
+                                Forms\Components\Textarea::make('comments')->columnSpan('full'),
+                        ], $form_fields))
+                        ->columns(3)
                     ])
-                    /* ->default(function ($record) {
-                        return $record->assd->solution ?? 'none'; // Fallback auf 'none', wenn assd oder solution null ist
-                    })
-                    ->saveRelationshipsUsing(function ($record, $state) {
-                        if ($state) {
-                            $record->assd()->updateOrCreate(
-                                ['customer_id' => $record->id],
-                                ['solution' => $state]
-                            );
-                        }
-                    }) */,
+                    ->columnSpan('full'),
 
-                    Forms\Components\Select::make('type')
-                        ->label('Type')
-                        ->options([
-                            'acc' => 'Account',
-                            'key' => 'Key Account',
-                        ]),
-
-                    Forms\Components\Select::make('spread')
-                        ->label('Spread')
-                        ->options([
-                            'nat' => 'national',
-                            'inter' => 'International',
-                        ]),
-
-                    Forms\Components\Select::make('bi')
-                        ->label('BI')
-                        ->options([
-                            'clickview' => 'ClickView',
-                            'qlik' => 'Qlik',
-                            'powerbi' => 'Power BI',
-                            'tableau' => 'Tableau',
-                            'none' => 'Kein Tool',
-                        ]),
-
-                    Forms\Components\TextInput::make('sales_volume')
-                        ->numeric(),
-                    Forms\Components\DatePicker::make('updated_at')
-                        ->displayFormat('d.m.Y'),
-                Forms\Components\Textarea::make('comments')
-                    ->columnSpanFull(),
-
-            ],$form_fields))->columns(3);
+            ]);
     }
 
     public static function table(Table $table): Table
     {
-        $fc = new FilamentFieldsController('customers',0);
+        $fc = new FilamentFieldsController('customers', 0);
         $table_fields = $fc->getFields() ?? [];
+
         return $table
             ->columns(array_merge([
-                /* Tables\Columns\TextColumn::make('id')
+                // Auskommentierte Spalten bleiben auskommentiert
+                /*
+                Tables\Columns\TextColumn::make('id')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('company.company_name'),
-
                 Tables\Columns\TextColumn::make('name')
-                    ->url(fn ($record) => static::getUrl('edit', ['record' => $record])) // Link zur View-Seite,
+                    ->url(fn ($record) => static::getUrl('edit', ['record' => $record]))
                     ->color('primary')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('first_name')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('status')
-                    ->formatStateUsing(fn (string $state) => CustomerStatusEnum::tryFrom($state)?->label() ?? $state),
-
-                Tables\Columns\TextColumn::make('preferredAddress.address')
-                    ->label('Address')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('preferredAddress.city')
-                    ->label('City')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('preferredAddress.state')
-                    ->label('State')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('preferredAddress.zip')
-                    ->label('Zip')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('phone')
-                    ->icon('heroicon-o-phone')
-                    ->iconColor('primary')
-                    ->formatStateUsing(fn ($state) => '+49 (0) ' . substr($state, 3, 3) . ' ' . substr($state, 6)) // oder deine Logik
-                    ->url(fn ($record) => 'tel:' . preg_replace('/[^0-9+]/', '', $record->phone))
-                    ->openUrlInNewTab(false)
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('email')
-                    ->icon('heroicon-o-envelope')
-                    ->iconColor('primary')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('website')
-                    ->icon('heroicon-o-link')
-                    ->iconColor('primary')
-                    ->searchable()
-                    //->url(fn ($record) => route('profile.show', $record->id)) //link zum user profile
-                    ->url(fn ($record) => $record->website)
-                    ->openUrlInNewTab()
-                    ->extraAttributes(fn ($state) => [
-                        'style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
-                        'title' => $state, // Wert für Tooltip sicherstellen
-                    ]),
-                 Tables\Columns\TextColumn::make('external_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('type')
-                    ->label('Type')
-                    ->searchable()
-                    ->visible(function ($livewire) {
-                        $filters = $livewire->tableFilters;
-                        $statusFilter = $filters['status']['value'] ?? null;
-                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
-                        return $isVisible;
-                    }),
-                Tables\Columns\TextColumn::make('spread')
-                    ->label('Spread')
-                    ->searchable()
-                    ->visible(function ($livewire) {
-                        $filters = $livewire->tableFilters;
-                        $statusFilter = $filters['status']['value'] ?? null;
-                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
-                        return $isVisible;
-                    }),
-                Tables\Columns\TextColumn::make('bi')
-                    ->label('BI')
-                    ->getStateUsing(function ($record) {
-                        $bi = $record->bi ?? 'none';
-                        return match ($bi) {
-                            'clickview' => 'ClickView',
-                            'qlik' => 'Qlik',
-                            'powerbi' => 'Power BI',
-                            'tableau' => 'Tableau',
-                            'none' => 'Kein Tool',
-                             default => 'Kein Tool',
-                        };
-                    })
-                    ->visible(function ($livewire) {
-                        $filters = $livewire->tableFilters;
-                        $statusFilter = $filters['status']['value'] ?? null;
-                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
-                        return $isVisible;
-                    }),
-                Tables\Columns\BadgeColumn::make('solution')
-                    ->label('Solution')
-                    ->searchable()
-                    ->alignRight()
-                    ->getStateUsing(fn ($record) => $record->solution ?? 'no_solution')
-                    ->visible(function ($livewire) {
-                        $filters = $livewire->tableFilters;
-                        $statusFilter = $filters['status']['value'] ?? null;
-                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
-                        return $isVisible;
-                    })
-                    ->colors([
-                        'info' => fn ($state) => $state === 'pms3',
-                        'warning' => fn ($state) => $state === 'pms2',
-                        'success' => fn ($state) => $state === 'pms1',
-                        'gray' => fn ($state) => $state === 'no_solution',
-                    ])
-                    ->formatStateUsing(function ($state) {
-                        if (blank($state)) {
-                            return 'No Solution';
-                        }
-
-                        return match ($state) {
-                            'pms3' => 'PMS 3',
-                            'pms2' => 'PMS 2',
-                            'pms1' => 'PMS 1',
-                            default => 'No Solution',
-                        };
-                    }),
-
-                Tables\Columns\BadgeColumn::make('sales_volume')
-                    ->label('Sales Volume')
-                    ->alignRight()
-                    ->colors([
-                        'danger' => fn ($state) => $state < 1000,
-                        'warning' => fn ($state) => $state >= 2000 && $state < 40000,
-                        'success' => fn ($state) => $state >= 40000,
-                    ])
-                    ->default(0.0)
-                    ->numeric()
-                    ->formatStateUsing(function ($state, $record) {
-                        $currencySymbol = $record->currency ?? '€'; // Hier kannst du die Währung dynamisch wählen
-                        return $currencySymbol . ' ' . number_format($state, 2, ',', '.');
-                    })
-                    ->visible(function ($livewire) {
-                        $filters = $livewire->tableFilters;
-                        $statusFilter = $filters['status']['value'] ?? null;
-                        $isVisible = in_array($statusFilter, ['deal', 'exacc']);
-                        return $isVisible;
-                    }),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                // ... weitere auskommentierte Spalten
                 */
-
-            ],$table_fields))
+            ], $table_fields))
             ->headerActions([
                 Actions\Action::make('Exportieren')
                     ->label('Excel Export')
                     ->icon('heroicon-o-folder-arrow-down')
                     ->action(function (array $data, $livewire) {
-                        $records = $livewire->getFilteredTableQuery()->get(); // Das funktioniert bei Table-Components
+                        $records = $livewire->getFilteredTableQuery()->get();
                         $records = FilamentHelper::excelExport($records);
-                        // Anonyme Export-Klasse
                         return Excel::download($records, 'export.xlsx');
                     }),
                 Actions\Action::make('addField')
@@ -333,21 +189,20 @@ class CustomerResource extends Resource
                     ->icon('heroicon-o-plus-circle')
                     ->modalContent(function ($record) {
                         return view('filament.actions.add-db-field-modal', [
-                            'tableName' => 'customers', // Beispielparameter
+                            'tableName' => 'customers',
                         ]);
                     })
                     ->modalSubmitAction(false)
                     ->modalCancelAction(false),
-
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 SelectFilter::make('status')
                     ->options(function () {
                         return FilamentConfig::getFiltersFor('customer', 'status');
-                    })
+                    }),
             ])
-            ->recordAction(Tables\Actions\EditAction::class) // Keine Aktion bei einfachem Klick
+            ->recordAction(Tables\Actions\EditAction::class)
             ->recordUrl(null)
             ->actions([
                 Actions\ActionGroup::make([
@@ -375,10 +230,9 @@ class CustomerResource extends Resource
                     }),
                 ]),
             ]);
-
     }
 
-    /* public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
@@ -389,12 +243,12 @@ class CustomerResource extends Resource
                 TextEntry::make('first_name')
                     ->label('First Name'),
                 TextEntry::make('website')
-                    ->label('Website')
+                    ->label('Website'),
                 TextEntry::make('status')
-                    ->label('Status')
+                    ->label('Status'),
             ])
             ->columns(3);
-    } */
+    }
 
     public static function getRelations(): array
     {
@@ -408,15 +262,17 @@ class CustomerResource extends Resource
     {
         return [
             'index' => Pages\ManageCustomers::route('/'),
-            'view' => Pages\ViewCustomer::route('/{record}'), // Detailseite hinzufügen
+            'view' => Pages\ViewCustomer::route('/{record}'),
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }
 
-    public function getButtons(): array
+    public static function getButtons(): array
     {
         return [
-            /* ButtonWidget::make('Add Field')->modal(fn () => Modal::make()
+            // Auskommentierter Button bleibt auskommentiert
+            /*
+            ButtonWidget::make('Add Field')->modal(fn () => Modal::make()
                 ->title('Feld hinzufügen 123')
                 ->form([
                     Forms\Components\TextInput::make('field_name')
@@ -428,12 +284,11 @@ class CustomerResource extends Resource
                     Forms\Components\Button::make('submit')
                         ->label('Absenden')
                         ->color('primary')
-                        ->submit('submitField')
+                        ->submit('submitField'),
                 ])
                 ->size('lg')
-            ) */
+            )
+            */
         ];
     }
-
-
 }
