@@ -52,7 +52,7 @@ class FilTableFieldsResource extends Resource
                             ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Toggle::make('required'),
                         Forms\Components\Toggle::make('is_badge')->label('Is Badge'),
-                        Forms\Components\Toggle::make('toggable')->label('Toggable'),
+                        Forms\Components\Toggle::make('is_toggable')->label('Toggable'),
                         Forms\Components\Select::make('table')
                             ->required()
                             ->disabled(fn (string $context) => $context === 'edit')
