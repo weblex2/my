@@ -31,7 +31,7 @@ class FilTableFieldsResource extends Resource
 
     protected static ?string $navigationLabel = 'Fields';
 
-    protected static getTitle(){
+    protected static function getTitle(){
         return "Edit Fields";
     }
 
