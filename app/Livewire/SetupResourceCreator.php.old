@@ -1,0 +1,235 @@
+<?php
+
+namespace App\Livewire;
+
+use Filament\Forms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Livewire\Component;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+
+class SetupResourceCreator extends Component implements HasForms
+{
+    use Forms\Concerns\InteractsWithForms;
+
+    public ?string $resourceName = '';
+    public array $resources = [];
+    public array $navigationGroups = [];
+    public array $createFormState = [];
+    public array $saveFormStates = [];
+
+    public function mount(): void
+    {
+        Log::info('Mount aufgerufen');
+        $this->loadResources();
+        $this->navigationGroups = DB::table('resources')
+            ->distinct()
+            ->pluck('navigation_group')
+            ->filter()
+            ->toArray();
+
+        // Initialisiere Formularzustände
+        $this->createFormState = [];
+        $this->initializeSaveFormStates();
+
+        Log::info('Mount abgeschlossen', [
+            'resources' => count($this->resources),
+            'navigationGroups' => $this->navigationGroups,
+            'createFormState' => $this->createFormState,
+            'saveFormStates' => $this->saveFormStates,
+        ]);
+    }
+
+    // Formular für Erstellung
+    public function getCreateFormProperty(): Form
+    {
+        Log::info('getCreateFormProperty aufgerufen');
+        return $this->makeForm()
+            ->schema([
+                TextInput::make('resourceName')
+                    ->label('Resource Name')
+                    ->required(),
+                Select::make('navigation_group')
+                    ->label('Navigation Group')
+                    ->options(fn () => array_combine($this->navigationGroups, $this->navigationGroups))
+                    ->nullable()
+                    ->reactive(),
+            ])
+            ->statePath('createFormState')
+            ->fill($this->createFormState);
+    }
+
+    // Formular für Speichern
+    public function getSaveFormsProperty(): array
+    {
+        Log::info('getSaveFormsProperty aufgerufen');
+        $forms = [];
+        foreach ($this->resources as $index => $resource) {
+            $forms[$index] = $this->makeForm()
+                ->schema([
+                    Select::make('navigation_group')
+                        ->label('Navigation Group')
+                        ->options(fn () => array_combine($this->navigationGroups, $this->navigationGroups))
+                        ->nullable()
+                        ->reactive(),
+                ])
+                ->statePath('saveFormStates.' . $index)
+                ->fill($this->saveFormStates[$index] ?? ['navigation_group' => $resource['navigation_group']]);
+        }
+        return $forms;
+    }
+
+    protected function initializeSaveFormStates(): void
+    {
+        Log::info('initializeSaveFormStates aufgerufen');
+        $this->saveFormStates = [];
+        foreach ($this->resources as $index => $resource) {
+            $this->saveFormStates[$index] = [
+                'navigation_group' => $resource['navigation_group'] ?? null,
+            ];
+        }
+        Log::info('saveFormStates initialisiert', ['saveFormStates' => $this->saveFormStates]);
+    }
+
+    protected function loadResources(): void
+    {
+        Log::info('loadResources aufgerufen');
+        $resourcePath = app_path('Filament/Resources');
+
+        if (!File::exists($resourcePath)) {
+            $this->resources = [];
+            Log::info('Ressourcenpfad existiert nicht', ['path' => $resourcePath]);
+            return;
+        }
+
+        $files = File::files($resourcePath);
+
+        $resourceNames = collect($files)
+            ->map(fn ($file) => $file->getFilenameWithoutExtension())
+            ->filter(fn ($name) => str_ends_with($name, 'Resource'))
+            ->map(fn ($name) => str_replace('Resource', '', $name))
+            ->values()
+            ->toArray();
+
+        $dbResources = DB::table('resources')
+            ->whereIn('resource', $resourceNames)
+            ->pluck('navigation_group', 'resource');
+
+        $this->resources = collect($resourceNames)->map(function ($name) use ($dbResources) {
+            return [
+                'name' => $name,
+                'navigation_group' => $dbResources->get($name) ?? null,
+            ];
+        })->toArray();
+
+        Log::info('Ressourcen geladen', ['resources' => $this->resources]);
+    }
+
+    public function createResource(): void
+    {
+        Log::info('createResource aufgerufen', ['createFormState' => $this->createFormState]);
+        $form = $this->getCreateFormProperty();
+        $data = $form->getState();
+
+        $resourceName = Str::studly($data['resourceName']) . 'Resource';
+        $navigationGroup = $data['navigation_group'] ?? null;
+
+        if (empty($resourceName)) {
+            $this->addError('resourceName', 'Der Ressourcen-Name darf nicht leer sein.');
+            Log::error('Ressourcen-Name leer');
+            return;
+        }
+
+        if (empty($navigationGroup)) {
+            $this->addError('navigation_group', 'Die Navigation Group darf nicht leer sein.');
+            Log::error('Navigation Group leer');
+            return;
+        }
+
+        try {
+            if (!in_array($navigationGroup, $this->navigationGroups)) {
+                DB::table('resources')->insertOrIgnore([
+                    'resource' => str_replace('Resource', '', $resourceName),
+                    'navigation_group' => $navigationGroup,
+                ]);
+                $this->navigationGroups = DB::table('resources')
+                    ->distinct()
+                    ->pluck('navigation_group')
+                    ->filter()
+                    ->toArray();
+                Log::info('Neue Navigation Group hinzugefügt', ['navigationGroup' => $navigationGroup]);
+            }
+
+            $status = Artisan::call("make:custom-filament-resource", [
+                'name' => $resourceName,
+                '--model' => true,
+                '--migration' => true,
+            ]);
+
+            $output = Artisan::output();
+
+            if ($status === 0) {
+                session()->flash('success', "✅ Ressource wurde erstellt:\n<pre>{$output}</pre>");
+                $this->createFormState = [];
+                $this->loadResources();
+                $this->initializeSaveFormStates();
+                Log::info('Ressource erfolgreich erstellt', ['resourceName' => $resourceName]);
+            } else {
+                $this->addError('resourceName', "❌ Fehler beim Erstellen:\n<pre>{$output}</pre>");
+                Log::error('Fehler beim Erstellen der Ressource', ['output' => $output]);
+            }
+        } catch (\Throwable $e) {
+            $this->addError('resourceName', '⚠️ Ausnahme: ' . $e->getMessage());
+            Log::error('Ausnahme beim Erstellen der Ressource', ['error' => $e->getMessage()]);
+        }
+    }
+
+    public function saveResource($index): void
+    {
+        Log::info('saveResource aufgerufen', ['index' => $index, 'saveFormStates' => $this->saveFormStates]);
+        if (!isset($this->saveFormStates[$index])) {
+            $this->addError('navigation_group', 'Formularzustand nicht gefunden.');
+            Log::error('saveFormStates für Index nicht gefunden', ['index' => $index]);
+            return;
+        }
+
+        $form = $this->getSaveFormsProperty()[$index];
+        $data = $form->getState();
+        $resource = $this->resources[$index] ?? null;
+
+        if (!$resource) {
+            $this->addError('navigation_group', 'Ressource nicht gefunden.');
+            Log::error('Ressource nicht gefunden', ['index' => $index]);
+            return;
+        }
+
+        try {
+            DB::table('resources')
+                ->where('resource', $resource['name'])
+                ->update(['navigation_group' => $data['navigation_group']]);
+
+            session()->flash('success', "✅ Navigation Group für {$resource['name']} aktualisiert.");
+            $this->loadResources();
+            $this->initializeSaveFormStates();
+            Log::info('Navigation Group aktualisiert', ['resource' => $resource['name'], 'navigation_group' => $data['navigation_group']]);
+        } catch (\Throwable $e) {
+            $this->addError('navigation_group', '⚠️ Fehler beim Speichern: ' . $e->getMessage());
+            Log::error('Fehler beim Speichern der Ressource', ['error' => $e->getMessage()]);
+        }
+    }
+
+    public function render()
+    {
+        Log::info('Render aufgerufen');
+        return view('livewire.setup-resource-creator', [
+            'resources' => $this->resources,
+            'navigationGroups' => $this->navigationGroups,
+        ]);
+    }
+}

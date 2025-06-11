@@ -160,10 +160,6 @@ class FilamentHelper
         return $result;
     }
 
-    private function createCrmField($field){
-
-    }
-
     private static function sanitizeMysqlFieldName(string $input): string
     {
         // Kleinbuchstaben
@@ -194,4 +190,8 @@ class FilamentHelper
         return substr($field, 0, 64);
     }
 
+
+    public function createResource($name){
+        return "Yes!";
+    }
 }

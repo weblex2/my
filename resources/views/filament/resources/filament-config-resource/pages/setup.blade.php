@@ -1,3 +1,3 @@
 <x-filament-panels::page>
-    @livewire('setup-resource-creator')
+    {{-- @livewire('resource-creator') --}}
 </x-filament-panels::page>
