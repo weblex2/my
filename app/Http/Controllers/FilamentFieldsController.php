@@ -182,7 +182,7 @@ class FilamentFieldsController extends Controller
                 $this->format();
                 $this->setColor();
                 $this->extraAttributes();
-                $this->visible();
+                $this->setVisible();
                 $this->setBadgeColor();
                 $this->align();
                 $this->setToggable();
