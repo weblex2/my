@@ -185,6 +185,7 @@ class FilamentFieldsController extends Controller
                 $this->visible();
                 $this->setBadgeColor();
                 $this->align();
+                $this->setToggable();
             }
             $this->fields[] = $this->field;
         }
@@ -253,7 +254,9 @@ class FilamentFieldsController extends Controller
     }
 
     private function setToggable(){
-        $this->field->toggleable(isToggledHiddenByDefault: true);
+        if ($this->config->is_toggable){
+            $this->field->toggleable(isToggledHiddenByDefault: true);
+        }
     }
 
     private function setDate(){

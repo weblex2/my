@@ -51,7 +51,8 @@ class FilTableFieldsResource extends Resource
                             ->helperText('Form or Table?')
                             ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Toggle::make('required'),
-                        Forms\Components\Toggle::make('is_badge')->columnSpan(2)->label('Is Badge'),
+                        Forms\Components\Toggle::make('is_badge')->label('Is Badge'),
+                        Forms\Components\Toggle::make('toggable')->label('Toggable'),
                         Forms\Components\Select::make('table')
                             ->required()
                             ->disabled(fn (string $context) => $context === 'edit')
