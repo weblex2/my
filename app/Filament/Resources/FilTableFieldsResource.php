@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
+use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class FilTableFieldsResource extends Resource
 {
@@ -28,6 +30,10 @@ class FilTableFieldsResource extends Resource
     protected static ?string $navigationGroup = 'Configuration';
 
     protected static ?string $navigationLabel = 'Fields';
+
+    protected static getTitle(){
+        return "Edit Fields";
+    }
 
     //protected static ?string $title = 'Meine benutzerdefinierte Seite';
 
@@ -49,7 +55,7 @@ class FilTableFieldsResource extends Resource
                         Forms\Components\Toggle::make('form')
                             ->required()
                             ->helperText('Form or Table?')
-                            ->disabled(fn (string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit' && request()->get('duplicate') !== '1'),
                         Forms\Components\Toggle::make('required'),
                         Forms\Components\Toggle::make('is_badge')->label('Is Badge'),
                         Forms\Components\Toggle::make('is_toggable')->label('Toggable'),
@@ -109,7 +115,53 @@ class FilTableFieldsResource extends Resource
                                     ->toArray();
                             })
                             ->reactive() // reagiert auf Änderung von 'table'
-                            ->searchable(),
+                            ->searchable()
+                            /* ->rules(function (callable $get) { // $get hier als Parameter
+                                return [
+                                    Rule::unique('fil_table_fields', 'field')->where(function ($query) use ($get) {
+                                        return $query
+                                            ->where('form', $get('form'))
+                                            ->where('table', $get('table'));
+                                    })
+                                ];
+                            }) */
+                           ->rules([
+                                function (callable $get) {
+                                    return function ($attribute, $value, $fail) use ($get) {
+                                        // Prüfe, ob der Wert eindeutig ist
+                                        $exists = \DB::table('fil_table_fields')
+                                            ->where('field', $value)
+                                            ->where('form', $get('form'))
+                                            ->where('table', $get('table'))
+                                            ->exists();
+
+                                        if ($exists) {
+                                            // Sende eine Notification statt eines Validierungsfehlers
+                                            Notification::make()
+                                                ->title('Eindeutigkeitsfehler')
+                                                ->body('Das Felder Form / Table / Field muss eindeutig sein.')
+                                                ->danger()
+                                                ->send();
+
+                                            // Validierung fehlschlagen lassen
+                                            $fail('Das Feld ist bereits vergeben.123');
+                                            // Fehler für die Felder 'form' und 'table' setzen
+                                            // Manuell Fehler für 'form' und 'table' setzen
+                                            $validator = Validator::make([], []);
+                                            $validator->errors()->add('form', 'Dieses Formular ist in Kombination mit dem Feld und der Tabelle ungültig.');
+                                            $validator->errors()->add('table', 'Diese Tabelle ist in Kombination mit dem Feld und dem Formular ungültig.');
+
+                                            // Fehler in die Formularvalidierung einspeisen
+                                            foreach ($validator->errors()->messages() as $field => $messages) {
+                                                foreach ($messages as $message) {
+                                                    $fail("{$field}: {$message}");
+                                                }
+                                            }
+
+                                        }
+                                    };
+                                },
+                            ]),
                         Forms\Components\Select::make('type')
                             ->required()
                             ->options([
@@ -157,11 +209,11 @@ class FilTableFieldsResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\IconColumn::make('form')->boolean(),
-                Tables\Columns\TextColumn::make('user_id'),
+                //Tables\Columns\TextColumn::make('user_id'),
                 Tables\Columns\TextColumn::make('table'),
                 Tables\Columns\TextColumn::make('field'),
                 Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('label'),
+                Tables\Columns\TextColumn::make('label')->searchable(),
                 Tables\Columns\TextColumn::make('icon')->icon(fn ($record) => $record->icon),
                 Tables\Columns\TextColumn::make('icon_color'),
                 Tables\Columns\IconColumn::make('link')->boolean()->getStateUsing(fn ($record) => !empty($record->link)),
@@ -214,6 +266,17 @@ class FilTableFieldsResource extends Resource
 
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('duplicate')
+                    ->label('Duplizieren')
+                    ->icon('heroicon-o-document-duplicate')
+                    ->action(function ($record, $data, $livewire) {
+                        $params = $record->toArray();
+                        unset($params['id']);
+                        $params['label'] .= ' (Kopie)';
+
+                        // Umleiten auf Create-Seite mit den Daten als Query-Parameter
+                        return redirect(route('filament.admin.resources.fil-table-fields.create', ['duplicate_data' => json_encode($params)]));
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

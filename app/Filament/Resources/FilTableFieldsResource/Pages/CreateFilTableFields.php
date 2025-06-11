@@ -11,6 +11,15 @@ class CreateFilTableFields extends CreateRecord
 {
     protected static string $resource = FilTableFieldsResource::class;
 
+    public function mount(): void
+    {
+        $duplicateData = request()->query('duplicate_data');
+        if ($duplicateData) {
+            $data = json_decode($duplicateData, true);
+            $this->form->fill($data);
+        }
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
@@ -34,4 +43,12 @@ class CreateFilTableFields extends CreateRecord
         ];
     }
 
+    protected function getFormData(): array
+    {
+        $duplicateData = request()->query('duplicate_data');
+        if ($duplicateData) {
+            return json_decode($duplicateData, true);
+        }
+        return [];
+    }
 }
