@@ -207,7 +207,6 @@ class CustomerResource extends Resource
                         'style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
                         'title' => $state, // Wert für Tooltip sicherstellen
                     ]),
-                    //return fn ($state) => ['style' => 'max-inline-size: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;','title' => $state]
                  Tables\Columns\TextColumn::make('external_id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')
@@ -238,7 +237,7 @@ class CustomerResource extends Resource
                             'powerbi' => 'Power BI',
                             'tableau' => 'Tableau',
                             'none' => 'Kein Tool',
-                            default => 'Kein Tool',
+                             default => 'Kein Tool',
                         };
                     })
                     ->visible(function ($livewire) {
@@ -258,7 +257,7 @@ class CustomerResource extends Resource
                         $isVisible = in_array($statusFilter, ['deal', 'exacc']);
                         return $isVisible;
                     })
-                     ->colors([
+                    ->colors([
                         'info' => fn ($state) => $state === 'pms3',
                         'warning' => fn ($state) => $state === 'pms2',
                         'success' => fn ($state) => $state === 'pms1',

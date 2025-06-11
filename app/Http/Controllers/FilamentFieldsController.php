@@ -97,14 +97,19 @@ class FilamentFieldsController extends Controller
                 $this->setColspan();
                 $this->setIcon();
                 $this->format();
-
+                $this->setVisible();
                 //$this->setSortable();
             }
             // Create View Fields
             else{
                 switch ($tableField->type){
                     case "text": {
-                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
                         break;
                     }
                     case "date": {
@@ -122,11 +127,20 @@ class FilamentFieldsController extends Controller
                         $this->setBoolean();
                         break;
                     }
-                     case "badge": {
+                    case "badge": {
                         $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
                         break;
                     }
-
+                    case "select": {
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
+                        $this->getSelected();
+                        break;
+                    }
                     case "link": {
                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
                         $this->setLink();
@@ -151,6 +165,8 @@ class FilamentFieldsController extends Controller
                 $this->format();
                 $this->setColor();
                 $this->extraAttributes();
+                $this->visible();
+                $this->setBadgeColor();
             }
             $this->fields[] = $this->field;
         }
@@ -289,4 +305,37 @@ class FilamentFieldsController extends Controller
         }
     }
 
+    private function visible(){
+        if (trim($this->config->visible)!=""){
+            if (substr($this->config->visible,0,6)=='return'){
+                $function = eval($this->config->visible);
+                $this->field->visible($function);
+            }
+            else{
+                $this->field->visible($this->config->visible);
+            }
+        }
+    }
+
+    public function getSelected(){
+        list($table, $field) = explode('.', $this->config->select_options);
+        $options = FilamentConfig::where('resource', $table)
+            ->where('field', $field)
+            ->orderBy('order')
+            ->pluck('value', 'key')
+            ->toArray();
+        $this->field->formatStateUsing(fn (?string $state) => $options[$state] ?? $state);
+    }
+
+    public function setBadgeColor(){
+        if (trim($this->config->badge_color)!=""){
+            if (substr($this->config->badge_color,0,6)=='return'){
+                $function = eval($this->config->badge_color);
+                $this->field->colors($function);
+            }
+            else{
+                $this->field->color($this->config->badge_color);
+            }
+        }
+    }
 }
