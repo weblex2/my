@@ -11,11 +11,11 @@ use Filament\Tables;
 use Filament\Forms;
 use Illuminate\Support\Facades\DB;
 use Filament\Tables\Columns\DateTimeColumn;
-use Filament\Forms\Concerns\InteractsWithForms;
+//use Filament\Forms\Concerns\InteractsWithForms;
 
 class FilamentFieldsController extends Controller
 {
-    use InteractsWithForms;
+    //use InteractsWithForms;
 
     public $form;
     private $userId;
