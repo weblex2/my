@@ -464,7 +464,7 @@ class FilamentFieldsController extends Controller
              if (! $state instanceof \DateTimeInterface || $state->format('Y') < 1900) {
             return '-';
             }
-            return $state->format($format);
+            return $state->format($format ?? 'd.m.Y');
 
         });
     }
