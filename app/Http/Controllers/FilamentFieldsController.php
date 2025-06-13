@@ -381,7 +381,6 @@ class FilamentFieldsController extends Controller
 
                 }
                 $this->setLabel();
-                $this->setOptionValue();
                 $this->setIcon();
                 $this->format();
                 $this->setColor();
@@ -406,27 +405,11 @@ class FilamentFieldsController extends Controller
                     ->orderBy('order')
                     ->pluck('value', 'key')
                     ->toArray();
-            $this->field->options($options);
+            $this->field->options($options ?? []);
         }
     }
 
-    private function setOptionValues(){
-        $options = $this->config->select_options;
-        $field = $this->config->field;
-        if ($options!=""){
-            list($table, $filter) = explode('|',$options);
-            $options = FilamentConfig::where('resource', $table)
-                    ->where('field', $filter)
-                    ->orderBy('order')
-                    ->pluck('value', 'key')
-                    ->toArray();
-            $this->field->getStateUsing(function ($record) use ($field, $options) {
-                $val = $record->$field ?? 'none';
-                return $options[$val] ?? 'Kein Tool';
-            });
-        }
-    }
-
+    
     private function setLabel(){
         if ($this->config->label!=""){
             $this->field->label($this->config->label);
