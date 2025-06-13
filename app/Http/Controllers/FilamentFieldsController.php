@@ -103,6 +103,7 @@ class FilamentFieldsController extends Controller
                     }
                     case "select": {
                         $this->field = Forms\Components\Select::make($tableField->field);
+                        $this->getSelectOptions();
                         break;
                     }
                     case "date": {
@@ -145,7 +146,7 @@ class FilamentFieldsController extends Controller
                 }
                 $this->setLabel();
                 $this->setRequired();
-                $this->getSelectOptions();
+
                 $this->setColspan();
                 //$this->setIcon();
                 $this->format();
