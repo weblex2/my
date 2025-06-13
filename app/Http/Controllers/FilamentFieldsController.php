@@ -298,9 +298,7 @@ class FilamentFieldsController extends Controller
                 }
                 $this->setLabel();
                 $this->setRequired();
-                $this->getSelectOptions();
                 $this->setColspan();
-                //$this->setIcon();
                 $this->format();
                 $this->setVisible();
             }
