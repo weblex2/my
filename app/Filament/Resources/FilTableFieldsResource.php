@@ -100,6 +100,7 @@ class FilTableFieldsResource extends Resource
                         Forms\Components\TextInput::make('link')->helperText('Auch Funktion möglich'),
                         Forms\Components\Select::make('link_target')->label('Link Target')->options([''=>'','_blank'=>'New Tab']),
                         Forms\Components\TextInput::make('section')->numeric(),
+                        Forms\Components\TextInput::make('select_options')->label('Dropdown Values'),
                     ])->columns(4)->collapsible(),
 
                     Forms\Components\Section::make('Advanced Settings')
