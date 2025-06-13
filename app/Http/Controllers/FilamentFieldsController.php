@@ -227,7 +227,6 @@ class FilamentFieldsController extends Controller
 
                 }
                 $this->setLabel();
-                $this->setOptionValues();
                 $this->setIcon();
                 $this->format();
                 $this->setColor();
@@ -409,7 +408,7 @@ class FilamentFieldsController extends Controller
         }
     }
 
-    
+
     private function setLabel(){
         if ($this->config->label!=""){
             $this->field->label($this->config->label);
