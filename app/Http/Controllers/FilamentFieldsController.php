@@ -227,7 +227,7 @@ class FilamentFieldsController extends Controller
 
                 }
                 $this->setLabel();
-                $this->setOptionValue();
+                $this->setOptionValues();
                 $this->setIcon();
                 $this->format();
                 $this->setColor();
