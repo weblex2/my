@@ -99,6 +99,7 @@ class FilTableFieldsResource extends Resource
                         Forms\Components\TextInput::make('icon_color')->label('Icon Color'),
                         Forms\Components\TextInput::make('link')->helperText('Auch Funktion möglich'),
                         Forms\Components\Select::make('link_target')->label('Link Target')->options([''=>'','_blank'=>'New Tab']),
+                        Forms\Components\TextInput::make('section')->numeric(),
                     ])->columns(4)->collapsible(),
 
                     Forms\Components\Section::make('Advanced Settings')
