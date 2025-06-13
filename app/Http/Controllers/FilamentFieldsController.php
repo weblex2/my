@@ -24,6 +24,7 @@ class FilamentFieldsController extends Controller
     private $isForm;
     private $config;
     public  $fields;
+    private $section_ids= [];
 
 
     function __construct($tableName='', $form=0){
@@ -39,11 +40,60 @@ class FilamentFieldsController extends Controller
         return view('filament.managefields', compact('table','user_id'));
     }
 
+    public function getSchema(){
+        $tableFields = FilTableFields::where('table', '=', $this->tableName)
+            ->where('form', '=', $this->isForm)
+            ->orderBy('order', 'ASC')
+            ->get();
+
+        // Eindeutige Gruppen (Groups) ermitteln
+        $groupIds = $tableFields->pluck('group')->unique();
+
+        // Struktur aufbauen
+        $groups = [];
+
+        foreach ($groupIds as $groupId) {
+            // Felder für die aktuelle Gruppe filtern
+            $groupFields = $tableFields->where('group', $groupId);
+
+            // Eindeutige Abschnitte (Sections) für die aktuelle Gruppe ermitteln
+            $sectionIds = $groupFields->pluck('section')->unique();
+
+            $sections = [];
+            foreach ($sectionIds as $sectionId) {
+                // Felder für den aktuellen Abschnitt filtern
+                $sectionFields = $groupFields->where('section', $sectionId);
+
+                // Felder in das Schema umwandeln (hier ein Platzhalter, passe dies an deine Felder an)
+                $fieldSchemas = $sectionFields->map(function ($field) {
+                    return Forms\Components\TextInput::make('field_' . $field->id) // Anpassen an deine Feldtypen
+                        ->label($field->name ?? 'Field') // Passe den Namen an deine DB-Spalte an
+                        ->required();
+                })->toArray();
+
+                // Abschnitt erstellen
+                $sections[] = Forms\Components\Section::make('Section ' . $sectionId)
+                    ->schema($fieldSchemas)
+                    ->columns(3) // Optional: Anzahl der Spalten
+                    ->collapsible();
+            }
+
+            // Gruppe erstellen
+            $groups[] = Forms\Components\Group::make()
+                ->schema($sections)
+                ->columnSpan('full'); // Optional: Vollständige Breite
+        }
+        //dd($groups);
+        return $groups;
+    }
+
     public function getFields(){
+
         $tableFields = FilTableFields::where('table',"=", $this->tableName)
                                      ->where('form',"=",$this->isForm)
                                      ->orderBy('order', 'ASC')
                                      ->get();
+
         foreach ($tableFields as $index => $tableField ){
             $this->config = $tableField;
             // Create Form Fields
@@ -99,7 +149,7 @@ class FilamentFieldsController extends Controller
                 $this->setRequired();
                 $this->getSelectOptions();
                 $this->setColspan();
-                $this->setIcon();
+                //$this->setIcon();
                 $this->format();
                 $this->setVisible();
             }

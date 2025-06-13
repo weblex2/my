@@ -65,12 +65,13 @@ class CustomerResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $fc = new FilamentFieldsController('customer', 1);
+        $fc = new FilamentFieldsController('customers', 1);
         $form_fields = $fc->getFields() ?? [];
-
+        $form_schema = $fc->getSchema() ?? [];
         return $form
-            ->schema([
-                Forms\Components\Group::make()
+            ->schema(
+                $form_schema
+               /*  Forms\Components\Group::make()
                     ->schema([
                         Forms\Components\Section::make('Base Information')
                             ->schema([
@@ -151,8 +152,17 @@ class CustomerResource extends Resource
                         ->columns(3)
                     ])
                     ->columnSpan('full'),
-
-            ]);
+                Forms\Components\Group::make()
+                    ->schema([
+                        Forms\Components\Section::make('Group 2 - Section 1')
+                            ->schema([
+                                Forms\Components\Toggle::make('blubb')
+                                    ->required()
+                                    ->columnSpanFull(),
+                            ])
+                    ])
+                */
+            );
     }
 
     public static function table(Table $table): Table
