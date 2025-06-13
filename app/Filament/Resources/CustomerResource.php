@@ -82,8 +82,7 @@ class CustomerResource extends Resource
                                     ->columns(3),
                                 Forms\Components\TextInput::make('name')
                                     ->required()
-                                    ->maxLength(255)
-                                    ->searchable(),
+                                    ->maxLength(255),
                                 Forms\Components\TextInput::make('first_name')
                                     ->required()
                                     ->maxLength(255),
