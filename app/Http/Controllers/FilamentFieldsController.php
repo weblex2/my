@@ -97,13 +97,11 @@ class FilamentFieldsController extends Controller
                 }
                 $this->setLabel();
                 $this->setRequired();
-                $this->setSearchable();
                 $this->getSelectOptions();
                 $this->setColspan();
                 $this->setIcon();
                 $this->format();
                 $this->setVisible();
-                //$this->setSortable();
             }
             // Create View Fields
             else{
