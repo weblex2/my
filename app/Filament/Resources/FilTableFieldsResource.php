@@ -8,10 +8,14 @@ use Filament\Tables\Filters\TernaryFilter;
 use App\Filament\Resources\FilTableFieldsResource\Pages;
 use App\Filament\Resources\FilTableFieldsResource\RelationManagers;
 use App\Models\FilTableFields;
+use App\Models\Company;
+use App\Models\Customer;
 use Filament\Forms;
+use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Illuminate\Support\Str;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -53,115 +57,30 @@ class FilTableFieldsResource extends Resource
 
                         //Forms\Components\TextInput::make('user_id')->default(Auth::id()),
                         Forms\Components\Toggle::make('form')
-                            ->required()
                             ->helperText('Form or Table?')
-                            ->disabled(fn (string $context) => $context === 'edit' && request()->get('duplicate') !== '1'),
+                            ->default(false)  // ← Standardwert setzen
+                            ->live()
+                            ->disabled(fn (string $context) => $context === 'edit' && request()->get('duplicate') !== '1')
+                            ->afterStateUpdated(fn ($state) => info('form-Toggle: ' . var_export($state, true))),
                         Forms\Components\Toggle::make('required'),
                         Forms\Components\Toggle::make('is_badge')->label('Is Badge'),
                         Forms\Components\Toggle::make('is_toggable')->label('Toggable'),
                         Forms\Components\Select::make('table')
+                            ->label('Tabelle')
+                            ->options(self::getTableOptions())
                             ->required()
+                            ->reactive() // wichtig für Reaktivität
                             ->disabled(fn (string $context) => $context === 'edit')
-                            ->options(function () {
-                                $resourcePath = app_path('Filament/Resources');
-                                if (!File::exists($resourcePath)) {
-                                    return [];
-                                }
-                                return collect(File::files($resourcePath))
-                                    ->map(fn ($file) => $file->getFilenameWithoutExtension())
-                                    ->filter(fn ($name) => str_ends_with($name, 'Resource'))
-                                    ->mapWithKeys(function ($name) {
-                                        $label = str_replace('Resource', '', $name);
-                                        return [$label => $label];
-                                    })
-                                    ->toArray();
-                            })
-                            ->searchable()
-                            ->dehydrateStateUsing(fn ($state) => strtolower($state))
+                            ->afterStateUpdated(fn (callable $set) => $set('field', null)),
+
+                         Forms\Components\Select::make('field')
+                            ->label('Feld')
                             ->required()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                // Optional: reset field if table changes
-                                $set('field', null);
-                            }),
-                        Forms\Components\Select::make('field')
-                            ->required()
-                            ->disabled(fn (string $context) => $context === 'edit')
-                            ->options(function (callable $get) {
-                                $resourceName = $get('table');
-                                if (!$resourceName) {
-                                    return [];
-                                }
+                            ->reactive() // ← das ist ENTSCHEIDEND!
+                            ->options(fn (callable $get) => self::getFieldOptions($get('table')))
+                            ->disabled(fn (callable $get) => ! $get('table')), // funktioniert jetzt
 
-                                // Resource-Klasse zusammenbauen
-                                $resourceClass = "App\\Filament\\Resources\\" . ucfirst($resourceName) . 'Resource';
 
-                                if (!class_exists($resourceClass)) {
-                                    return [];
-                                }
-
-                                // Modell ermitteln
-                                $modelClass = $resourceClass::getModel();
-
-                                // Tabellenname holen
-                                $tableName = (new $modelClass)->getTable();
-
-                                // Spalten aus der DB holen
-                                if (!Schema::hasTable($tableName)) {
-                                    return [];
-                                }
-
-                                return collect(Schema::getColumnListing($tableName))
-                                    ->mapWithKeys(fn ($column) => [$column => $column])
-                                    ->toArray();
-                            })
-                            ->reactive() // reagiert auf Änderung von 'table'
-                            ->searchable()
-                            /* ->rules(function (callable $get) { // $get hier als Parameter
-                                return [
-                                    Rule::unique('fil_table_fields', 'field')->where(function ($query) use ($get) {
-                                        return $query
-                                            ->where('form', $get('form'))
-                                            ->where('table', $get('table'));
-                                    })
-                                ];
-                            }) */
-                           /* ->rules([
-                                function (callable $get) {
-                                    return function ($attribute, $value, $fail) use ($get) {
-                                        // Prüfe, ob der Wert eindeutig ist
-                                        $exists = \DB::table('fil_table_fields')
-                                            ->where('field', $value)
-                                            ->where('form', $get('form'))
-                                            ->where('table', $get('table'))
-                                            ->exists();
-
-                                        if ($exists) {
-                                            // Sende eine Notification statt eines Validierungsfehlers
-                                            Notification::make()
-                                                ->title('Eindeutigkeitsfehler')
-                                                ->body('Das Felder Form / Table / Field muss eindeutig sein.')
-                                                ->danger()
-                                                ->send();
-
-                                            // Validierung fehlschlagen lassen
-                                            $fail('Das Feld ist bereits vergeben.123');
-                                            // Fehler für die Felder 'form' und 'table' setzen
-                                            // Manuell Fehler für 'form' und 'table' setzen
-                                            $validator = Validator::make([], []);
-                                            $validator->errors()->add('form', 'Dieses Formular ist in Kombination mit dem Feld und der Tabelle ungültig.');
-                                            $validator->errors()->add('table', 'Diese Tabelle ist in Kombination mit dem Feld und dem Formular ungültig.');
-
-                                            // Fehler in die Formularvalidierung einspeisen
-                                            foreach ($validator->errors()->messages() as $field => $messages) {
-                                                foreach ($messages as $message) {
-                                                    $fail("{$field}: {$message}");
-                                                }
-                                            }
-
-                                        }
-                                    };
-                                },
-                            ])*/,
                         Forms\Components\Select::make('type')
                             ->required()
                             ->options([
@@ -180,7 +99,6 @@ class FilTableFieldsResource extends Resource
                         Forms\Components\TextInput::make('icon_color')->label('Icon Color'),
                         Forms\Components\TextInput::make('link')->helperText('Auch Funktion möglich'),
                         Forms\Components\Select::make('link_target')->label('Link Target')->options([''=>'','_blank'=>'New Tab']),
-
                     ])->columns(4)->collapsible(),
 
                     Forms\Components\Section::make('Advanced Settings')
@@ -253,15 +171,14 @@ class FilTableFieldsResource extends Resource
                         return  $options;
                     })
 
-                     ->query(function ($query, $state) {
-                        // Wenn "Alle" ausgewählt wird (leerer Wert), keine Filterung anwenden
-                        if ($state['value'] === '') {
-                            return $query; // Gibt alle Datensätze zurück
+                    ->query(function ($query, $state) {
+                        // Wenn kein Wert oder "Alle" ausgewählt ist (leerer String), keine Filterung anwenden
+                        if (empty($state['value'])) {
+                            return $query;
                         }
-                        // Andernfalls filtere nach dem ausgewählten "table" Wert
-                        else{
-                            $query->where('table', 'like' ,'%')->orderBy('table', 'DESC');
-                        }
+
+                        // Filtere nach dem ausgewählten "table"-Wert
+                        return $query->where('table', $state['value']);
                     }),
             ])
 
@@ -308,4 +225,45 @@ class FilTableFieldsResource extends Resource
             'edit' => Pages\EditFilTableFields::route('/{record}/edit'),
         ];
     }
+
+    public static function getTableOptions(): array
+    {
+        $resources = Filament::getResources();
+
+        $tables = [];
+
+        foreach ($resources as $resourceClass) {
+            if (method_exists($resourceClass, 'getModel')) {
+                $modelClass = $resourceClass::getModel();
+
+                if (class_exists($modelClass)) {
+                    $model = new $modelClass();
+                    $table = $model->getTable();
+
+                    $label = $resourceClass::getPluralLabel();
+
+                    if (empty($label)) {
+                        $label = class_basename($modelClass);
+                        $label = Str::plural($label);
+                    }
+
+                    $tables[$table] = $label;
+                }
+            }
+        }
+        asort($tables);
+        return $tables;
+    }
+
+    public static function getFieldOptions(?string $table): array
+    {
+        if (! $table || ! Schema::hasTable($table)) {
+            return [];
+        }
+
+        return collect(Schema::getColumnListing($table))
+            ->mapWithKeys(fn ($column) => [$column => $column])
+            ->toArray();
+    }
+
 }

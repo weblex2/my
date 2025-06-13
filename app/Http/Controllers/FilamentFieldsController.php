@@ -11,16 +11,20 @@ use Filament\Tables;
 use Filament\Forms;
 use Illuminate\Support\Facades\DB;
 use Filament\Tables\Columns\DateTimeColumn;
-
+use Filament\Forms\Concerns\InteractsWithForms;
 
 class FilamentFieldsController extends Controller
 {
+    use InteractsWithForms;
+
+    public $form;
     private $userId;
     private $tableName;
     private $field;
     private $isForm;
     private $config;
     public  $fields;
+
 
     function __construct($tableName='', $form=0){
         $this->tableName = $tableName;

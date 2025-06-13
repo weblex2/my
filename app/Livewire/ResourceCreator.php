@@ -29,9 +29,10 @@ class ResourceCreator extends Component implements HasForms
         ]);
 
         try {
-            $this->navigationGroups = \DB::table('resources')
+            $this->navigationGroups = \DB::table('filament_configs')
                 ->distinct()
-                ->pluck('navigation_group')
+                ->where('type','=','naviagtion_group')
+                ->pluck('value')
                 ->filter()
                 ->values()
                 ->toArray();

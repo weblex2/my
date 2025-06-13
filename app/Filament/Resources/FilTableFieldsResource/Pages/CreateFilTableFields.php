@@ -11,12 +11,15 @@ class CreateFilTableFields extends CreateRecord
 {
     protected static string $resource = FilTableFieldsResource::class;
 
+    public ?array $data = [];
     public function mount(): void
     {
-        $duplicateData = request()->query('duplicate_data');
-        if ($duplicateData) {
-            $data = json_decode($duplicateData, true);
-            $this->form->fill($data);
+        // Wenn duplicate_data vorhanden sind, fülle die Form mit diesen Daten
+        if ($duplicateData = request()->query('duplicate_data')) {
+            $this->form->fill(json_decode($duplicateData, true));
+        } else {
+            // Fülle die Form mit den Standardwerten aus dem Formularschema
+            $this->form->fill();
         }
     }
 
@@ -25,7 +28,7 @@ class CreateFilTableFields extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
-    protected function getFormValidationRules(): array
+    /* protected function getFormValidationRules(): array
     {
         return [
             'data.field' => [
@@ -41,7 +44,7 @@ class CreateFilTableFields extends CreateRecord
             'data.form' => ['required'],
             // ... andere Regeln falls nötig
         ];
-    }
+    } */
 
     protected function getFormData(): array
     {
@@ -49,6 +52,22 @@ class CreateFilTableFields extends CreateRecord
         if ($duplicateData) {
             return json_decode($duplicateData, true);
         }
-        return [];
+        // Hole die Standardwerte aus dem Formularschema
+        $form = $this->getForm();
+        $schema = $form->getSchema();
+        $defaultData = [];
+
+        foreach ($schema->getComponents() as $component) {
+            // Rekursiv durch Gruppen und Sektionen iterieren
+            if ($component instanceof \Filament\Forms\Components\Group || $component instanceof \Filament\Forms\Components\Section) {
+                foreach ($component->getChildComponents() as $childComponent) {
+                    $defaultData[$childComponent->getName()] = $childComponent->getDefaultState();
+                }
+            } else {
+                $defaultData[$component->getName()] = $component->getDefaultState();
+            }
+        }
+
+        return $defaultData;
     }
 }
