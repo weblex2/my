@@ -66,9 +66,7 @@ class FilamentFieldsController extends Controller
 
                 // Felder in das Schema umwandeln (hier ein Platzhalter, passe dies an deine Felder an)
                 $fieldSchemas = $sectionFields->map(function ($field) {
-                    return Forms\Components\TextInput::make('field_' . $field->id) // Anpassen an deine Feldtypen
-                        ->label($field->name ?? 'Field') // Passe den Namen an deine DB-Spalte an
-                        ->required();
+                    return $this->getField($field);
                 })->toArray();
 
                 // Abschnitt erstellen
@@ -245,10 +243,164 @@ class FilamentFieldsController extends Controller
         return $this->fields;
     }
 
+    public function getField($tableField){
+
+
+            $this->config = $tableField;
+            // Create Form Fields
+            if ($this->isForm==1){
+                switch ($tableField->type){
+                    case "text": {
+                        $this->field = Forms\Components\TextInput::make($tableField->field);
+                        break;
+                    }
+                    case "select": {
+                        $this->field = Forms\Components\Select::make($tableField->field);
+                        $this->getSelectOptions();
+                        break;
+                    }
+                    case "date": {
+                        $this->field = Forms\Components\DatePicker::make($tableField->field);
+                        break;
+                    }
+                    case "datetime": {
+                        $this->field = Forms\Components\DateTimePicker::make($tableField->field);
+                        break;
+                    }
+                    case "toggle": {
+                        $this->field = Forms\Components\Toggle::make($tableField->field);
+                        break;
+                    }
+                    case "badge": {
+                        $this->field = Forms\Components\TextInput::make($tableField->field);
+                        break;
+                    }
+                    case "link": {
+                        $this->field = Forms\Components\TextInput::make($tableField->field);
+                        break;
+                    }
+                    case "markdown": {
+                        $this->field = Forms\Components\MarkdownEditor::make($tableField->field);
+                        break;
+                    }
+
+                    case "relation": {
+                        $this->field = Forms\Components\Select::make($tableField->field);
+                        $this->setRelationship();
+                        break;
+                    }
+
+
+                    default: {
+                        $this->field = Forms\Components\TextInput::make($tableField->field);
+                        break;
+                    }
+
+                }
+                $this->setLabel();
+                $this->setRequired();
+                $this->getSelectOptions();
+                $this->setColspan();
+                //$this->setIcon();
+                $this->format();
+                $this->setVisible();
+            }
+            // Create View Fields
+            else{
+                switch ($tableField->type){
+                    case "text": {
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
+                        break;
+                    }
+                    case "date": {
+                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        $this->formatDate();
+                        break;
+                    }
+                    case "datetime": {
+                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        $this->formatDate();
+                        break;
+                    }
+                    case "toggle": {
+                        $this->field = Tables\Columns\IconColumn::make($tableField->field);
+                        $this->setBoolean();
+                        break;
+                    }
+                    case "badge": {
+                        $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        break;
+                    }
+                    case "select": {
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
+                        $this->getSelected();
+                        break;
+                    }
+                    case "link": {
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
+                        $this->setLink();
+                        break;
+                    }
+
+                    case "number" :{
+                        if ($this->config->is_badge){
+                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
+                        }
+                        else{
+                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        }
+                        $this->setNumeric();
+                        break;
+                    }
+
+                    case "relation": {
+                        $fieldname = $this->config->relation_table ."." .$this->config->relation_show_field;
+                        $this->field = Tables\Columns\TextColumn::make($fieldname);
+                        break;
+                    }
+
+                    default: {
+                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
+                        break;
+                    }
+
+                }
+                $this->setLabel();
+                $this->setOptionValue();
+                $this->setIcon();
+                $this->format();
+                $this->setColor();
+                $this->extraAttributes();
+                $this->setVisible();
+                $this->setBadgeColor();
+                $this->align();
+                $this->setSearchable();
+                $this->setToggable();
+            }
+
+            return  $this->field;
+
+    }
+
     private function getSelectOptions(){
-        $options = $this->config->options;
+        $options = $this->config->select_options;
         if ($options!=""){
-            list($table, $filter) = explode('|',$options);
+            list($table, $filter) = explode('.',$options);
             $options = FilamentConfig::where('resource', $table)
                     ->where('field', $filter)
                     ->orderBy('order')
@@ -258,8 +410,8 @@ class FilamentFieldsController extends Controller
         }
     }
 
-    private function setOptionValue(){
-        $options = $this->config->options;
+    private function setOptionValues(){
+        $options = $this->config->select_options;
         $field = $this->config->field;
         if ($options!=""){
             list($table, $filter) = explode('|',$options);

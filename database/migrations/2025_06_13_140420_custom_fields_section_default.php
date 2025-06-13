@@ -9,10 +9,10 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-       public function up(): void
+ public function up(): void
     {
          Schema::table('fil_table_fields', function (Blueprint $table) {
-            $table->integer('group')->default(1)->after('id');
+            $table->integer('section')->default(1)->change();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('fil_table_fields', function (Blueprint $table) {
-            $table->dropColumn('group');
+
         });
     }
 };
