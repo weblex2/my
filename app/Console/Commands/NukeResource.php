@@ -22,7 +22,7 @@ class NukeResource extends Command
             app_path("Filament/Resources/{$name}Resource.php"),
             app_path("Filament/Resources/{$name}Resource/Pages"),
             resource_path("views/{$plural}"),
-            database_path("migrations"),
+            //database_path("migrations"),
         ];
 
         // Lösche die Dateien/Ordner
