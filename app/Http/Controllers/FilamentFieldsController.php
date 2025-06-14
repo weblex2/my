@@ -85,7 +85,7 @@ class FilamentFieldsController extends Controller
         return $groups;
     }
 
-    public function getFields(){
+    public function getTableFields(){
 
         $tableFields = FilTableFields::where('table',"=", $this->tableName)
                                      ->where('form',"=",$this->isForm)
@@ -93,154 +93,9 @@ class FilamentFieldsController extends Controller
                                      ->get();
 
         foreach ($tableFields as $index => $tableField ){
-            $this->config = $tableField;
-            // Create Form Fields
-            if ($this->isForm==1){
-                switch ($tableField->type){
-                    case "text": {
-                        $this->field = Forms\Components\TextInput::make($tableField->field);
-                        break;
-                    }
-                    case "select": {
-                        $this->field = Forms\Components\Select::make($tableField->field);
-                        $this->getSelectOptions();
-                        break;
-                    }
-                    case "date": {
-                        $this->field = Forms\Components\DatePicker::make($tableField->field);
-                        break;
-                    }
-                    case "datetime": {
-                        $this->field = Forms\Components\DateTimePicker::make($tableField->field);
-                        break;
-                    }
-                    case "toggle": {
-                        $this->field = Forms\Components\Toggle::make($tableField->field);
-                        break;
-                    }
-                    case "badge": {
-                        $this->field = Forms\Components\TextInput::make($tableField->field);
-                        break;
-                    }
-                    case "link": {
-                        $this->field = Forms\Components\TextInput::make($tableField->field);
-                        break;
-                    }
-                    case "markdown": {
-                        $this->field = Forms\Components\MarkdownEditor::make($tableField->field);
-                        break;
-                    }
-
-                    case "relation": {
-                        $this->field = Forms\Components\Select::make($tableField->field);
-                        $this->setRelationship();
-                        break;
-                    }
-
-
-                    default: {
-                        $this->field = Forms\Components\TextInput::make($tableField->field);
-                        break;
-                    }
-
-                }
-                $this->setLabel();
-                $this->setRequired();
-
-                $this->setColspan();
-                //$this->setIcon();
-                $this->format();
-                $this->setVisible();
-            }
-            // Create View Fields
-            else{
-                switch ($tableField->type){
-                    case "text": {
-                        if ($this->config->is_badge){
-                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
-                        }
-                        else{
-                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        }
-                        break;
-                    }
-                    case "date": {
-                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        $this->formatDate();
-                        break;
-                    }
-                    case "datetime": {
-                        $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        $this->formatDate();
-                        break;
-                    }
-                    case "toggle": {
-                        $this->field = Tables\Columns\IconColumn::make($tableField->field);
-                        $this->setBoolean();
-                        break;
-                    }
-                    case "badge": {
-                        $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
-                        break;
-                    }
-                    case "select": {
-                        if ($this->config->is_badge){
-                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
-                        }
-                        else{
-                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        }
-                        $this->getSelected();
-                        break;
-                    }
-                    case "link": {
-                        if ($this->config->is_badge){
-                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
-                        }
-                        else{
-                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        }
-                        $this->setLink();
-                        break;
-                    }
-
-                    case "number" :{
-                        if ($this->config->is_badge){
-                            $this->field = Tables\Columns\BadgeColumn::make($tableField->field);
-                        }
-                        else{
-                            $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        }
-                        $this->setNumeric();
-                        break;
-                    }
-
-                    case "relation": {
-                        $fieldname = $this->config->relation_table ."." .$this->config->relation_show_field;
-                        $this->field = Tables\Columns\TextColumn::make($fieldname);
-                        break;
-                    }
-
-                    default: {
-                         $this->field = Tables\Columns\TextColumn::make($tableField->field);
-                        break;
-                    }
-
-                }
-                $this->setLabel();
-                $this->setIcon();
-                $this->format();
-                $this->setColor();
-                $this->extraAttributes();
-                $this->setVisible();
-                $this->setBadgeColor();
-                $this->align();
-                $this->setSearchable();
-                $this->setToggable();
-            }
-            $this->fields[] = $this->field;
+            $fields[] = $this->getField($tableField);
         }
-        return $this->fields;
+        return $fields;
     }
 
     public function getField($tableField){
@@ -302,6 +157,7 @@ class FilamentFieldsController extends Controller
                 $this->setColspan();
                 $this->format();
                 $this->setVisible();
+                $this->setDisabled();
             }
             // Create View Fields
             else{
@@ -426,7 +282,11 @@ class FilamentFieldsController extends Controller
             $this->field->required();
         }
     }
-
+    private function setDisabled(){
+        if ($this->config->disabled){
+            $this->field->disabled();
+        }
+    }
     private function setSearchable(){
         if ($this->config->seachable){
             $this->field->seachable();

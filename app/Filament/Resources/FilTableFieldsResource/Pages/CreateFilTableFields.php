@@ -6,6 +6,9 @@ use App\Filament\Resources\FilTableFieldsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use App\Models\FilTableFields;
+use Filament\Notifications\Notification;
 
 class CreateFilTableFields extends CreateRecord
 {
@@ -28,23 +31,6 @@ class CreateFilTableFields extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
-    /* protected function getFormValidationRules(): array
-    {
-        return [
-            'data.field' => [
-                'required',
-                Rule::unique('fil_table_fields')->where(function ($query) {
-                    $form = $this->form->getState('form');
-                    $table = $this->form->getState('table');
-                    return $query->where('form', $form)
-                                 ->where('table', $table);
-                }),
-            ],
-            'data.table' => ['required'],
-            'data.form' => ['required'],
-            // ... andere Regeln falls nötig
-        ];
-    } */
 
     protected function getFormData(): array
     {
@@ -69,5 +55,47 @@ class CreateFilTableFields extends CreateRecord
         }
 
         return $defaultData;
+    }
+
+    /* protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $exists = FilTableFields::where('form', $data['form'])
+            ->where('table', $data['table'])
+            ->where('field', $data['field'])
+            ->exists();
+
+        if ($exists) {
+            $message = 'Ein Eintrag mit dieser Kombination aus Form, Tabelle und Feld existiert bereits.';
+
+            throw ValidationException::withMessages([
+                'form' => $message,
+                'table' => $message,
+                'field' => $message,
+            ]);
+        }
+
+        return $data;
+    } */
+   protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $exists = \App\Models\FilTableFields::where('form', $data['form'])
+            ->where('table', $data['table'])
+            ->where('field', $data['field'])
+            ->exists();
+
+        if ($exists) {
+            Notification::make()
+                ->title('Duplikat gefunden')
+                ->body('Ein Eintrag mit diesen Werten existiert bereits.')
+                ->danger()
+                ->send();
+            throw ValidationException::withMessages([
+                'data.form' => 'Ein Eintrag mit diesen Werten existiert bereits.',
+                'data.table' => 'Ein Eintrag mit diesen Werten existiert bereits.',
+                'data.field' => 'Ein Eintrag mit diesen Werten existiert bereits.',
+            ]);
+        }
+
+        return $data;
     }
 }

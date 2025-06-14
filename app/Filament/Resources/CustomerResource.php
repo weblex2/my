@@ -66,11 +66,10 @@ class CustomerResource extends Resource
     public static function form(Form $form): Form
     {
         $fc = new FilamentFieldsController('customers', 1);
-        $form_fields = $fc->getFields() ?? [];
-        $form_schema = $fc->getSchema() ?? [];
+        $schema = $fc->getSchema() ?? [];
         return $form
             ->schema(
-                $form_schema
+                $schema
                /*  Forms\Components\Group::make()
                     ->schema([
                         Forms\Components\Section::make('Base Information')
@@ -168,23 +167,11 @@ class CustomerResource extends Resource
     public static function table(Table $table): Table
     {
         $fc = new FilamentFieldsController('customers', 0);
-        $table_fields = $fc->getFields() ?? [];
-
+        $table_fields = $fc->getTableFields() ?? [];
+        $schema = $fc->getSchema() ?? [];
         return $table
-            ->columns(array_merge([
-                // Auskommentierte Spalten bleiben auskommentiert
-                /*
-                Tables\Columns\TextColumn::make('id')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('company.company_name'),
-                Tables\Columns\TextColumn::make('name')
-                    ->url(fn ($record) => static::getUrl('edit', ['record' => $record]))
-                    ->color('primary')
-                    ->sortable()
-                    ->searchable(),
-                // ... weitere auskommentierte Spalten
-                */
-            ], $table_fields))
+            ->columns(array_merge([], $table_fields))
+
             ->headerActions([
                 Actions\Action::make('Exportieren')
                     ->label('Excel Export')

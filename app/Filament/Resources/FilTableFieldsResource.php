@@ -153,10 +153,7 @@ class FilTableFieldsResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                /* SelectFilter::make('user_id')
-                    ->label('Benutzer')
-                    ->options(User::pluck('name', 'id')->toArray()) // Alle Benutzer
-                    ->default(Auth::id()), // Standardwert: aktueller Benutzer */
+
                 TernaryFilter::make('form')
                     ->label('Formular / Übersicht') // Label für den Filter
                     ->trueLabel('Formular') // Was angezeigt wird, wenn true (1)
@@ -267,5 +264,22 @@ class FilTableFieldsResource extends Resource
             ->mapWithKeys(fn ($column) => [$column => $column])
             ->toArray();
     }
+
+    public static function mutateFormDataBeforeSave(array $data): array
+    {
+        $exists = FilTableFields::where('form', $data['form'])
+            ->where('table', $data['table'])
+            ->where('field', $data['field'])
+            ->exists();
+
+        if ($exists) {
+            throw ValidationException::withMessages([
+                'field' => 'Ein Eintrag mit diesen Werten existiert bereits.',
+            ]);
+        }
+
+        return $data;
+    }
+
 
 }
