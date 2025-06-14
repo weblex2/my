@@ -86,7 +86,7 @@ class FilamentFieldsController extends Controller
     }
 
     public function getTableFields(){
-
+        $fields = [];
         $tableFields = FilTableFields::where('table',"=", $this->tableName)
                                      ->where('form',"=",$this->isForm)
                                      ->orderBy('order', 'ASC')

@@ -23,21 +23,21 @@ class {{ resourceClass }} extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return \App\Models\Resources::where('resource', '{{ resourceClass }}')->value('navigation_group') ?? null;
+        return \App\Models\Resource::where('resource', '{{ resourceClass }}')->value('navigation_group') ?? null;
     }
 
     public static function form(Form $form): Form
     {
         $fc = new FilamentFieldsController('{{table}}',1);
-        $table_fields = $fc->getFields() ?? [];
+        $schema = $fc->getSchema() ?? [];
         return $form
-            ->schema($table_fields);
+            ->schema($schema);
     }
 
     public static function table(Table $table): Table
     {
         $fc = new FilamentFieldsController('{{table}}',0);
-        $table_fields = $fc->getFields() ?? [];
+        $table_fields = $fc->getTableFields() ?? [];
         return $table
             ->columns($table_fields)
             ->filters([

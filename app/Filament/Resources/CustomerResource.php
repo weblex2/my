@@ -168,7 +168,6 @@ class CustomerResource extends Resource
     {
         $fc = new FilamentFieldsController('customers', 0);
         $table_fields = $fc->getTableFields() ?? [];
-        $schema = $fc->getSchema() ?? [];
         return $table
             ->columns(array_merge([], $table_fields))
 

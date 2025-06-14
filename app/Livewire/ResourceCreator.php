@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 
+
+
 class ResourceCreator extends Component implements HasForms
 {
     use Forms\Concerns\InteractsWithForms;
@@ -65,7 +67,15 @@ class ResourceCreator extends Component implements HasForms
                     ->label('Navigationsgruppe')
                     ->options(array_combine($this->navigationGroups, $this->navigationGroups))
                     ->required()
-                    ->placeholder('Wähle eine Gruppe'),
+                    ->placeholder('Wähle eine Gruppe')
+                    ->options(
+                        fn () => \DB::table('resources')
+                            ->distinct()
+                            ->pluck('navigation_group')
+                            ->filter() // entfernt leere/null Werte
+                            ->mapWithKeys(fn ($value) => [$value => $value])
+                            ->toArray()
+                    ),
             ])
             ->statePath('formState');
     }
@@ -85,18 +95,17 @@ class ResourceCreator extends Component implements HasForms
         $navigationGroup = $data['navigation_group'];
 
         try {
-            if (!in_array($navigationGroup, $this->navigationGroups)) {
-                \DB::table('resources')->insertOrIgnore([
-                    'resource' => str_replace('Resource', '', $resourceName),
-                    'navigation_group' => $navigationGroup,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                $this->navigationGroups[] = $navigationGroup;
-                Log::info('ResourceCreator: Neue Navigation Group hinzugefügt', [
-                    'navigationGroup' => $navigationGroup,
-                ]);
-            }
+            \DB::table('resources')->insertOrIgnore([
+                'resource' => $resourceName,
+                'navigation_group' => $navigationGroup,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $this->navigationGroups[] = $navigationGroup;
+            Log::info('ResourceCreator: Neue Navigation Group hinzugefügt', [
+                'navigationGroup' => $navigationGroup,
+            ]);
+
 
             $status = Artisan::call('make:custom-filament-resource', [
                 'name' => $resourceName,

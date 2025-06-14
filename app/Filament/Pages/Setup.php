@@ -3,7 +3,7 @@
 namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
-use App\Models\Resources;
+use App\Models\Resource;
 
 class Setup extends Page
 {
@@ -11,7 +11,7 @@ class Setup extends Page
 
     public static function getNavigationGroup(): ?string
     {
-        return \App\Models\Resources::where('resource', 'setup')->value('navigation_group') ?? null;
+        return Resource::where('resource', 'setup')->value('navigation_group') ?? null;
     }
 
     protected static string $view = 'filament.pages.setup';
