@@ -77,7 +77,7 @@
             </td>
             <td>{{$log->type}}</td>
             <td>{{$log->context}}</td>
-            <td>{{$log->message}}</td>
+            <td>{{nl2br($log->message)}}</td>
             <td>{{$log->created_at}}</td>
         </tr>
         @endforeach
