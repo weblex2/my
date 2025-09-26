@@ -68,6 +68,12 @@ class MaintainanceController extends Controller
             return view('logs.logs', compact('logs','types'));
         }
 
+        public function showCertLog(){
+            $file = '/var/www/html/logs/certbot-renew.log';
+            $data = file_get_contents($file);
+            echo $data;
+        }
+
         public function refreshLogs(Request $request){
             $req = $request->all();
             $from  = $req['from'] ?? date('Y-m-d');
