@@ -81,12 +81,14 @@ class MaintainanceController extends Controller
                 $content = file_get_contents($logFile);
 
                 if ($content) {
-                    Logs::create([
+                    /* Logs::create([
                         'level' => 'info',
                         'type' => 'certbot',
                         'context' => 'renew',
                         'message' => $content,
-                    ]);
+                    ]); */
+
+                    Log::channel('database')->info($content, ['type' =>'CERT', 'level' => 1]);
 
                     // Datei leeren
                     file_put_contents($logFile, '');
