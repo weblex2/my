@@ -74,6 +74,26 @@ class MaintainanceController extends Controller
             echo nl2br($data);
         }
 
+        public function certLog2DB(){
+            $logFile = '/var/www/html/logs/certbot-renew.log';
+
+            if (file_exists($logFile)) {
+                $content = file_get_contents($logFile);
+
+                if ($content) {
+                    Log::create([
+                        'level' => 'info',
+                        'type' => 'certbot',
+                        'context' => 'renew',
+                        'message' => $content,
+                    ]);
+
+                    // Datei leeren
+                    file_put_contents($logFile, '');
+                }
+            }
+        }
+
         public function refreshLogs(Request $request){
             $req = $request->all();
             $from  = $req['from'] ?? date('Y-m-d');
