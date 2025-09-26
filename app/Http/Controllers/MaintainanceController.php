@@ -81,7 +81,7 @@ class MaintainanceController extends Controller
                 $content = file_get_contents($logFile);
 
                 if ($content) {
-                    Log::create([
+                    Logs::create([
                         'level' => 'info',
                         'type' => 'certbot',
                         'context' => 'renew',
