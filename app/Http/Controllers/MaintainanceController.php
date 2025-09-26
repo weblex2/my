@@ -71,7 +71,7 @@ class MaintainanceController extends Controller
         public function showCertLog(){
             $file = '/var/www/html/logs/certbot-renew.log';
             $data = file_get_contents($file);
-            echo $data;
+            echo nl2br($data);
         }
 
         public function refreshLogs(Request $request){
