@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use App\Filament\Helpers\FilamentHelper;
 use Filament\Notifications\Notification;
+use App\Models\FilTableFields;
 
 
 class AddFieldComponent extends Component implements HasForms

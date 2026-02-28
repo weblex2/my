@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+
+[x-cloak] { display: none !important; }
+
 .dropzone, .dz-preview, .dz-image-preview, .dz-image, .dz-success, .dz-complete{
     @apply bg-transparent
 }
@@ -209,3 +212,75 @@ a.box div{
         @apply transition-colors bg-gray-200; /* Optional: hover effect */
     }
 }
+
+    .weg-wrapper {
+        @apply text-sm font-extrabold shadow-lg;
+    }
+    .weg-wrapper a{
+        @apply text-blue-500
+    }
+    .weg_table {
+        @apply w-full mx-auto text-black border-collapse rounded-md shadow-2xl table-auto;
+
+    }
+    .doc-content{
+        @apply text-black;
+    }
+    .weg_table td {
+        @apply p-2 border-l;
+    }
+    .weg_table th{
+        @apply p-2 border-l bg-gray-50 bg-slate-300;
+    }
+    .weg_table tr:nth-child(even) {
+        @apply bg-white;
+    }
+    .weg_table tr:nth-child(odd) {
+        @apply bg-zinc-100;
+    }
+    .weg_table img.icon {
+        @apply float-left w-5 h-5 rounded-md;
+    }
+    .weg_table tr:hover {
+        @apply bg-yellow-100;
+    }
+
+    .modal-close {
+        @apply absolute text-2xl text-gray-600 top-2 right-2 hover:text-gray-800;
+    }
+    .weg-attachment{
+        @apply border border-gray-500 px-2 py-1 rounded-md hover:bg-yellow-100
+    }
+
+    .weg-attachment a{
+        @apply no-underline
+    }
+
+    .weg-iframe-wrapper{
+        @apply h-screen w-full
+    }
+
+    .weg-menu{
+        @apply flex  bg-gray-200 p-4 text-center font-bold
+    }
+
+    .weg-input{
+        @apply !bg-gray-200 p-2 text-center !rounded-lg !text-black !text-left
+    }
+
+    .weg-button{
+        @apply  p-2 text-center !rounded-lg !text-black !text-left !border !border-gray-700 !bg-gray-200
+    }
+
+    .weg-search{
+        @apply block w-full p-4 text-sm !text-black border border-gray-300 rounded-lg ps-10 !bg-slate-200 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+    }
+
+    .weg-truncate {
+        max-width: 40ch; /* Begrenzt auf ca. 40 Zeichen */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+

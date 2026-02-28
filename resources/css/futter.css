@@ -3,62 +3,51 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    @apply bg-zinc-900 text-white
+body {
+    @apply bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-100 min-h-screen
 }
 
-.day, .day1{
-    @apply p-3 flex items-center justify-center
+.day, .day1 {
+    @apply p-3 flex items-center justify-center transition-all duration-300
 }
 
-.day{
-    @apply border-b border-gray-500
+.day {
+    @apply border-b border-white/20 text-gray-300 font-semibold tracking-wide
 }
 
-.day1{
-    @apply w-52 h-52
+.day1 {
+    @apply w-full h-32 md:w-48 md:h-48 rounded-xl border border-white/10 bg-white/5 shadow-inner hover:bg-white/10 m-2
 }
 
-.dropzone, .dz-preview, .dz-image-preview, .dz-image, .dz-success, .dz-complete{
+.day1 img {
+    @apply object-cover w-full h-full rounded-xl shadow-lg border-2 border-teal-500/50
+}
+
+.dropzone, .dz-preview, .dz-image-preview, .dz-image, .dz-success, .dz-complete {
     @apply bg-transparent
 }
 
-input[type="text"], input[type="date"], select {
-    @apply rounded bg-zinc-700 text-zinc-100 w-full
+input[type="text"], input[type="date"], select, textarea {
+    @apply rounded-xl bg-gray-800/80 border border-gray-600 text-gray-100 w-full p-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent shadow-inner transition-shadow
 }
 
-select {
-    @apply rounded bg-zinc-700 text-zinc-100 w-full
+.dz-message {
+    @apply p-10 border-dashed border-2 border-gray-600 rounded-xl text-gray-400 hover:text-gray-200 hover:border-gray-400 transition-colors
 }
 
-textarea{
-    @apply rounded-xl bg-zinc-600 w-full
+.calendar-wrapper {
+    @apply grid grid-cols-7 w-full hidden md:grid gap-2 mb-8 bg-black/20 p-4 rounded-3xl border border-white/5 backdrop-blur-md shadow-2xl
 }
 
-.dz-message{
-    @apply p-10 border-zinc-800
+.calendar-mobile {
+    @apply flex flex-col w-full md:hidden mb-8 space-y-4
 }
 
-.calendar-wrapper{
-    @apply grid md:grid-cols-7 w-full hidden md:inline-grid
+.btn-futter {
+    @apply block w-full text-xs md:text-lg py-3 px-8 rounded-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-400 hover:to-emerald-500 shadow-lg shadow-teal-900/50 text-white font-bold tracking-wide transform hover:scale-105 transition-all duration-200 text-center
 }
 
-.container-desktop{
-    @apply grid hidden md:inline-grid grid-cols-3 w-full mb-4 text-center
-}
-
-.container-mobile{
-    @apply w-max flex md:hidden inline-grid mb-4 text-center
-}
-
-.food-mobile{
-    @apply flex w-full my-2
-}
-
-.food-mobile-text{
-    @apply  w-max
-}
-
-.btn-futter{
-    @apply text-xs md:text-xl py-3 px-8 rounded border  mt-3 md:mt-0 text-center
+/* Glassmorphism Card Style for Food items */
+.glass-card {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-6 shadow-2xl hover:shadow-cyan-900/20 hover:bg-white/10 transition-all duration-300
 }

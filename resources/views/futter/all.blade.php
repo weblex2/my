@@ -19,16 +19,9 @@
             <div class="inline-grid md:hidden">
                 <x-futter.calendar-mobile date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
             </div>
-            <div class="grid hidden w-full grid-cols-6 mb-4 text-center md:inline-grid nobr items-justify">
+            <div class="grid w-full grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8 mt-8 items-center justify-center">
                 @foreach ($futter as $f)
                      <x-futter.food :food="$f"/>
-                @endforeach
-            </div>
-            <div class="inline-grid w-full mb-4 md:hidden">
-                @foreach ($futter as $f)
-                     <div class="w-full">
-                     <x-futter.food-mobile :food="$f"/>
-                     </div>
                 @endforeach
             </div>
         </div>

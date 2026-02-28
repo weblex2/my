@@ -2,11 +2,6 @@ import './bootstrap';
 import React from 'react';
 
 import flatpickr from "flatpickr";
-//import Alpine from 'alpinejs';
-
-//window.Alpine = Alpine;
-
-//Alpine.start();
 
 $(function () {
     $('.toggledb').click(function () {
@@ -111,7 +106,7 @@ $(function () {
             rowDataAll.push(rowData);
             console.log(rowData); // z. B. {column1: 'abc', active: '1', type: 'selectOption'}
         });
-        
+
         if (rowDataAll.length == 0) {
             $("#meinModal").find('.modal-body').html("Nothing to do..");
             $("#meinModal").modal("show");

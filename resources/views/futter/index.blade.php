@@ -12,76 +12,40 @@
 <x-futter.calendar  date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
 <div class="container futter">
     <div class="container flex-auto pt-20 mx-auto text-center items-justify">
-        <!-- Desktops -->
-        <div class="container-desktop">
-            <div class="col-span-1 md:col-span-3">
-                <div class="items-center justify-center">
-                    <div class="items-center justify-center">
-                    <x-futter.food :food="$futter[0]" />
-                </div>
-                </div>
+        <!-- Unified Responsive Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center justify-center pt-10">
+            
+            <!-- Left Item (Food 0) -->
+            <div class="flex justify-center">
+                <x-futter.food :food="$futter[0]" />
+            </div>
 
+            <!-- Middle item (Food 1) -->
+            <div class="flex justify-center">
+                <x-futter.food :food="$futter[1]" />
             </div>
-            <div class="">
-                <div class="items-center justify-center">
-                    <x-futter.food :food="$futter[1]" />
-                </div>
 
+            <!-- Right Item (Food 2) -->
+            <div class="flex justify-center">
+                <x-futter.food :food="$futter[2]" />
             </div>
-            <div class="pt-10">
-                <div class="col-span-3">
-                    <a href="futter">
-                        <button class="text-xl border btn"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
-                    </a>
-                </div>
-                <div class="col-span-3">&nbsp;</div>
-                <div class="col-span-3">
-                    <a href="futter/all">
-                        <button class="text-xl border btn"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
-                    </a>
-                </div>
-                <div class="col-span-3">&nbsp;</div>
-                <div class="col-span-3">
-                    <a href="futter/new">
-                        <button class="text-xl border btn"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
-                    </a>
-                </div>
 
+            <!-- Buttons Grid (Span 3 columns on desktop, 1 on mobile) -->
+            <div class="col-span-1 md:col-span-3 pb-10 flex flex-col items-center space-y-4 pt-8">
+                <a href="futter" class="w-full md:w-auto">
+                    <button class="w-full text-xl border btn"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
+                </a>
+                
+                <a href="futter/all" class="w-full md:w-auto">
+                    <button class="w-full text-xl border btn"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
+                </a>
+                
+                <a href="futter/new" class="w-full md:w-auto">
+                    <button class="w-full text-xl border btn"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
+                </a>
             </div>
-            <div class="">
-                <div class="items-center justify-center">
-                    <div class="items-center justify-center">
-                    <x-futter.food :food="$futter[2]" />
-                </div>
-                </div>
-            </div>
+            
         </div>
-
-        <!-- mobile -->
-
-        <div class="container-mobile">
-            <x-futter.food-mobile :food="$futter[0]" />
-            <x-futter.food-mobile :food="$futter[1]" />
-            <x-futter.food-mobile :food="$futter[2]" />
-            <div>
-                <a href="futter" class="float-left">
-                    <button class="btn-futter"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
-                </a>
-            </div>
-            <div>
-                <a href="futter/all" class="float-left">
-                    <button class="btn-futter"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
-                </a>
-            </div>
-            <div>
-                <a href="futter/new" class="float-left">
-                    <button class="btn-futter"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
-                </a>
-            </div>
-
-        </div>
-
-    </div>
 
 </div>
 </div>

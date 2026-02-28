@@ -13,8 +13,6 @@
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $account_number
  * @property \Illuminate\Support\Carbon $booking_date
@@ -54,8 +52,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $user_id
  * @property string $slug
@@ -84,8 +80,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $blog_id
  * @property int|null $user_id
@@ -115,8 +109,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $name
  * @property string $slug
@@ -141,7 +133,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Brand whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Brand whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Brand whereUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Brand withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Brand withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Brand withoutTrashed()
  */
 	class Brand extends \Eloquent {}
@@ -149,8 +141,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $date
  * @property string $event
@@ -176,8 +166,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $name
  * @property string $slug
@@ -208,8 +196,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $company_name
  * @property string|null $address
@@ -232,7 +218,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereZip($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Company withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company withoutTrashed()
  */
 	class Company extends \Eloquent {}
@@ -240,8 +226,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string|null $external_id
  * @property int|null $customer_id
@@ -276,8 +260,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id Die ID halt
  * @property int $is_active
  * @property string $name
@@ -373,7 +355,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUser03($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereWebsite($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withoutTrashed()
  */
 	class Customer extends \Eloquent {}
@@ -381,8 +363,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $customer_id
  * @property string $type
@@ -415,8 +395,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $customer_id
  * @property string|null $type
@@ -453,8 +431,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $resource
  * @property string $field
@@ -480,8 +456,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $type
  * @property string $name
@@ -509,8 +483,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int|null $contact_id
  * @property int|null $customer_id
@@ -544,8 +516,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $xname
  * @property string $xunicode
@@ -567,11 +537,9 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
- * @property int|null $section
- * @property int $form
+ * @property int $section
+ * @property int|null $form
  * @property int $user_id
  * @property string $label
  * @property string $table
@@ -585,23 +553,22 @@ namespace App\Models{
  * @property string|null $format
  * @property string|null $relation_table
  * @property string|null $relation_show_field
- * @property string $options
  * @property string|null $extra_attributes
  * @property string|null $color
- * @property int $searchable
- * @property int $sortable
+ * @property int|null $searchable
+ * @property int|null $sortable
  * @property int|null $is_toggable
- * @property int $disabled
- * @property int $required
- * @property int $dehydrated
- * @property int $collapsible
- * @property int $colspan
+ * @property int|null $disabled
+ * @property int|null $required
+ * @property int|null $dehydrated
+ * @property int|null $collapsible
+ * @property int|null $colspan
  * @property string|null $icon
  * @property string|null $icon_color
  * @property string|null $link
  * @property string|null $link_target
- * @property string $bagdecolor
- * @property int $order
+ * @property string|null $bagdecolor
+ * @property int|null $order
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields newModelQuery()
@@ -628,7 +595,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereLabel($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereLink($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereLinkTarget($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereOptions($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereRelationShowField($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FilTableFields whereRelationTable($value)
@@ -648,8 +614,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $type
  * @property string $resource
@@ -677,8 +641,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $name
  * @property string $street
@@ -712,8 +674,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $friesenid
  * @property string $pic
@@ -734,8 +694,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $name
  * @property string|null $img
@@ -759,8 +717,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $day
  * @property int $futter_id
@@ -781,8 +737,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $code
  * @property string $name
@@ -810,8 +764,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $option
  * @property string|null $value
@@ -833,8 +785,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $gallery_id
  * @property string $country_id
@@ -867,8 +817,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $size
  * @property int $pic_id
@@ -890,8 +838,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $gallery_id
  * @property string $pic
@@ -933,8 +879,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $pic_id
  * @property int $gallery_id
@@ -961,8 +905,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $field
  * @property string|null $value
@@ -982,8 +924,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -999,8 +939,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $queue
  * @property string $payload
@@ -1024,8 +962,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $topic
  * @property string $description
@@ -1048,8 +984,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $level
  * @property string|null $type
@@ -1073,8 +1007,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $team_id
  * @property int $user_id
@@ -1096,8 +1028,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $topic
  * @property string|null $description
@@ -1129,8 +1059,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $customer_id
  * @property string $number
@@ -1158,7 +1086,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereTotalPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Order withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Order withoutTrashed()
  */
 	class Order extends \Eloquent {}
@@ -1166,8 +1094,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $order_id
  * @property int $product_id
@@ -1191,8 +1117,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $show_name
  * @property string $series
@@ -1214,8 +1138,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string $name
  * @property int $brand_id
@@ -1259,7 +1181,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product withoutTrashed()
  */
 	class Product extends \Eloquent {}
@@ -1267,8 +1189,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property string|null $reoccurance
  * @property int $customer_id
@@ -1300,7 +1220,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote whereValidUntil($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quote withoutTrashed()
  */
 	class Quote extends \Eloquent {}
@@ -1308,8 +1228,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $quote_id
  * @property int $product_id
@@ -1318,7 +1236,7 @@ namespace App\Models{
  * @property string $unit_price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Product $product
+ * @property-read \App\Models\Product|null $products
  * @property-read \App\Models\Quote $quote
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuoteProduct newQuery()
@@ -1337,8 +1255,25 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
+ * @property int $id
+ * @property string $resource
+ * @property string $navigation_group
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource whereNavigationGroup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource whereResource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Resource whereUpdatedAt($value)
+ */
+	class Resource extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property string $resource
  * @property string $navigation_group
@@ -1358,8 +1293,27 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $num
+ * @property string $label
+ * @property string $resource
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereNum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereResource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Section whereUpdatedAt($value)
+ */
+	class Section extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property int $page_id
  * @property string $type
@@ -1385,8 +1339,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $user_id
  * @property string $name
@@ -1415,8 +1367,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
  * @property int $id
  * @property int $team_id
  * @property string $email
@@ -1439,8 +1389,34 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * 
- *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $field_1
+ * @property string $field_2
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereField1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereField2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test whereUpdatedAt($value)
+ */
+	class Test extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test2 newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test2 newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Test2 query()
+ */
+	class Test2 extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property string $name
  * @property string $email
@@ -1494,10 +1470,68 @@ namespace App\Models{
 	class User extends \Eloquent {}
 }
 
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string|null $message_id
+ * @property string|null $subject
+ * @property string|null $body
+ * @property string $name
+ * @property string $mime_type
+ * @property int $size
+ * @property string|null $content
+ * @property string|null $received
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\WegDocAttachment> $attachements
+ * @property-read int|null $attachements_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\WegDocAttachment> $attachments
+ * @property-read int|null $attachments_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereMessageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereReceived($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereSubject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDoc whereUpdatedAt($value)
+ */
+	class WegDoc extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $message_id
+ * @property string $filename
+ * @property string $content_type
+ * @property string|null $content
+ * @property int|null $size
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereContentType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereMessageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|WegDocAttachment whereUpdatedAt($value)
+ */
+	class WegDocAttachment extends \Eloquent {}
+}
+
 namespace App\Models\sk{
 /**
- * 
- *
  * @property int $id
  * @property int $game_id
  * @property string $player_id

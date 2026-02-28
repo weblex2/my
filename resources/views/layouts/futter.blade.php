@@ -57,7 +57,7 @@
             @endif
 
 
-        <div class="font-sans antialiased">
+        <div class="font-sans antialiased bg-transparent backdrop-blur-sm sticky top-0 z-50 shadow-md border-b border-white/5 mx-4 mt-4 rounded-2xl p-2 md:p-4">
               @yield('header') 
         </div>
 
@@ -80,7 +80,8 @@
             var dragged = draggable.clone();
             var futterId = ui.draggable.attr("foodid");
             var img = $('#food_'+futterId).find('img').attr('src');
-            $(this).html('<img src="'+img +'" class="w-full h-full rounded-full">');
+            // Provide slightly rounded corners dynamically
+            $(this).html('<img src="'+img +'" class="w-full h-full object-cover rounded-xl shadow-lg border-2 border-teal-500/50">');
             var dat = $(this).attr("date");
             //$(this).text( dat+ ": "+ futterId );
             var data = {};

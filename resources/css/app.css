@@ -10,7 +10,7 @@
 }
 
 .blog .blog_content a{
-    @apply text-blue-300 
+    @apply text-blue-300
 }
 
 .blog h1{
@@ -22,11 +22,11 @@
 }
 
 .blog .avatar{
-    @apply float-left rounded-full w-6 h-6 border border-slate-500 mr-2 
+    @apply float-left rounded-full w-6 h-6 border border-slate-500 mr-2
 }
 
 .block .header{
-    @apply pb-5 
+    @apply pb-5
 }
 
 .block .ck-content{
@@ -59,17 +59,17 @@
 }
 
 .blog blockquote {
-    
+
     display: block;
     white-space: pre;
     line-height: 1.4;
     font-family: 'Courier New', Courier, monospace;
     @apply border border-slate-500 p-3 mb-3 rounded-md bg-slate-900 bg-opacity-30 font-extrabold
  }
- 
+
 
  .blog-main-content{
-    background: url(../img/pen-gb438350eb_1920.jpg); 
+    background: url(../img/pen-gb438350eb_1920.jpg);
     background-repeat: no-repeat;
     background-size: 100% auto;
     background-position: center top;
@@ -78,7 +78,7 @@
 }
 
 .blog-btn-add-comment {
-    @apply bg-gray-700 px-4 py-3 text-xs font-extrabold mb-3 border-slate-900 bg-opacity-60 rounded-md 
+    @apply bg-gray-700 px-4 py-3 text-xs font-extrabold mb-3 border-slate-900 bg-opacity-60 rounded-md
 }
 
 .blog-comment {
@@ -186,18 +186,20 @@
 
  ::-webkit-scrollbar{
     width: 12px;               /* width of the entire scrollbar */
-} 
-  
+}
+
  ::-webkit-scrollbar-track {
     background: #18181b;        /* color of the tracking area */
   }
-  
+
 ::-webkit-scrollbar-thumb {
     background-color: #18181b;    /* color of the scroll thumb */
     border-radius: 0px;       /* roundness of the scroll thumb */
     border: 1px solid #3f3f46;  /* creates padding around scroll thumb */
 }
-  
+
 [x-cloak] {
     display: none;
 }
+
+

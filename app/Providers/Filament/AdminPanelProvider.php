@@ -24,7 +24,6 @@ use App\Filament\Resources\UserResource;
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use App\Filament\Resources\FilTableFieldsResource;
 use App\Models\Customer;
-//use App\Filament\Pages\CustomNotificationsPage2;
 use App\Models\FilamentConfig;
 
 
@@ -35,11 +34,14 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
 
-        $counts = Customer::query()
-            ->selectRaw('status, COUNT(*) as count')
-            ->groupBy('status')
-            ->pluck('count', 'status')
-            ->all();
+        $counts = [];
+        if (\Illuminate\Support\Facades\Schema::hasTable('customers')) {
+            $counts = Customer::query()
+                ->selectRaw('status, COUNT(*) as count')
+                ->groupBy('status')
+                ->pluck('count', 'status')
+                ->all();
+        }
 
         return $panel
             ->default()
@@ -163,7 +165,9 @@ class AdminPanelProvider extends PanelProvider
 
     public static function getLinks($counts){
         $filters = [];
-        $filters = FilamentConfig::where('type','navlink')->orderBy('order', 'asc')->get();
+        if (\Illuminate\Support\Facades\Schema::hasTable('filament_configs')) {
+            $filters = FilamentConfig::where('type','navlink')->orderBy('order', 'asc')->get();
+        }
         $navItems = [];
         foreach ($filters as $i => $filter){
             $name = ucfirst($filter->value);

@@ -15,7 +15,7 @@ class QuoteProduct extends Model
         return $this->belongsTo(Quote::class);
     }
 
-    public function product()
+    public function products()
     {
         return $this->belongsTo(Product::class);
     }

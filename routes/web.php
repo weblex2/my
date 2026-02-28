@@ -33,6 +33,8 @@ use App\Http\Controllers\ZimbraController;
 use App\Http\Controllers\DocumentDownloadController;
 use App\Http\Controllers\BankTransactionController;
 use App\Http\Controllers\SchafkopfController;
+use App\Http\Controllers\WegController;
+use App\Http\Controllers\GameController;
 
 
 
@@ -62,6 +64,10 @@ Route::get('/phpinfo', function () {
 
 Route::get('/', function () {
     return view('index');
+});
+
+Route::get('/2', function () {
+    return view('index2');
 });
 
 Route::get('/arcade', function () {
@@ -355,4 +361,15 @@ Route::controller(SchafkopfController::class)->group(function () {
     #Route::get('/bank-transactions/upload', 'uploadForm')->middleware(['auth'])->name('bank-transactions.showupload');
     #Route::post('/bank-transactions/upload', 'upload')->middleware(['auth'])->name('bank-transactions.upload');
 });
+
+
+Route::controller(WegController::class)->group(function () {
+    Route::get('/weg', 'index')->middleware(['auth'])->name('weg.index');
+    Route::get('/weg/upload', 'upload')->middleware(['auth'])->name('weg.upload');
+    Route::post('/weg/store', 'upload')->middleware(['auth'])->name('weg.store');
+    Route::get('/weg/preview/{id}', 'preview')->middleware(['auth'])->name('attachment.preview');
+    Route::get('weg/content/{id}', 'getDocumentBody')->middleware(['auth'])->name('document.content');
+    Route::get('/upload-modal', function () {return view('livewire.file-upload');})->name('upload.modal');
+});
+
 

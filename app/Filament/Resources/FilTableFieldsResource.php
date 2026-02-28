@@ -61,7 +61,8 @@ class FilTableFieldsResource extends Resource
                             ->default(false)  // ← Standardwert setzen
                             ->live()
                             ->disabled(fn (string $context) => $context === 'edit' && request()->get('duplicate') !== '1')
-                            ->afterStateUpdated(fn ($state) => info('form-Toggle: ' . var_export($state, true))),
+                            ->afterStateUpdated(fn ($state) => info('form-Toggle: ' . var_export($state, true)))
+                            ,
                         Forms\Components\Toggle::make('required'),
                         Forms\Components\Toggle::make('is_badge')->label('Is Badge'),
                         Forms\Components\Toggle::make('is_toggable')->label('Toggable'),

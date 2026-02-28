@@ -66,7 +66,6 @@ class ResourceCreator extends Component implements HasForms
                 Select::make('navigation_group')
                     ->label('Navigationsgruppe')
                     ->options(array_combine($this->navigationGroups, $this->navigationGroups))
-                    ->required()
                     ->placeholder('Wähle eine Gruppe')
                     ->options(
                         fn () => \DB::table('resources')

@@ -1,0 +1,31 @@
+  GNU nano 5.8                                                                                  noppenberger.net-ssl.conf                                                                                            <VirtualHost *:443>
+    ServerName noppenberger.net
+    ServerAlias *.noppenberger.net
+    DocumentRoot /var/www/html/my/public
+
+    SSLEngine on
+
+    #SSLProxyEngine on
+    #ProxyPass "/"  "ws://127.0.0.1:9002/"
+    #ProxyPassReverse "/"  "ws://127.0.0.1:9002/"
+
+
+    <Directory /var/www/html/my/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+
+
+
+    # Optional: Verbessere Sicherheit (z. B. HSTS)
+    #Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    ErrorLog /var/log/httpd/noppal.de-error.log
+    CustomLog /var/log/httpd/noppal.de-access.log combined
+
+    Include /etc/letsencrypt/options-ssl-apache.conf
+    SSLCertificateFile /etc/letsencrypt/live/crm.noppenberger.net/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/crm.noppenberger.net/privkey.pem
+</VirtualHost>

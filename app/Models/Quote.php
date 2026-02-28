@@ -18,7 +18,7 @@ class Quote extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    // Entfernen Sie die belongsToMany-Beziehung
+    
     public function quoteProducts()
     {
         return $this->hasMany(QuoteProduct::class);

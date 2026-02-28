@@ -104,6 +104,8 @@ class FilamentHelper
             FilTableFields::create($newfield);
             $newfield['form']=1;
             FilTableFields::create($newfield);
+            // Delete the migration file
+            unlink($filename);
 
         }
         return $result;
@@ -118,9 +120,9 @@ class FilamentHelper
         Artisan::call($migrationCommand);
 
         // Migration anpassen
-        $path = $path = collect(glob(database_path('migrations/*.php')))
+        $path = collect(glob(database_path('migrations/*.php')))
             ->filter(fn ($f) => str_contains($f, $migrationName))
-            ->first();
+            ->last();
 
         $stub = self::generateFieldLine($field);
         file_put_contents($path, str_replace('//', $stub, file_get_contents($path)));

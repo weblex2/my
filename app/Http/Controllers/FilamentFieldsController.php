@@ -11,7 +11,7 @@ use Filament\Tables;
 use Filament\Forms;
 use Illuminate\Support\Facades\DB;
 use Filament\Tables\Columns\DateTimeColumn;
-//use Filament\Forms\Concerns\InteractsWithForms;
+use App\Models\Section;
 
 class FilamentFieldsController extends Controller
 {
@@ -61,6 +61,18 @@ class FilamentFieldsController extends Controller
 
             $sections = [];
             foreach ($sectionIds as $sectionId) {
+
+                $sectionFields = $groupFields->where('section', $sectionId);
+
+                // 🔍 Hole das passende Label aus der sections-Tabelle
+                $sectionLabel = Section::where('resource', $this->tableName)
+                    ->where('num', $sectionId)
+                    ->value('label') ?? ('Section ' . $sectionId);
+
+                $fieldSchemas = $sectionFields->map(function ($field) {
+                    return $this->getField($field);
+                })->toArray();
+
                 // Felder für den aktuellen Abschnitt filtern
                 $sectionFields = $groupFields->where('section', $sectionId);
 
@@ -70,7 +82,7 @@ class FilamentFieldsController extends Controller
                 })->toArray();
 
                 // Abschnitt erstellen
-                $sections[] = Forms\Components\Section::make('Section ' . $sectionId)
+                $sections[] = Forms\Components\Section::make($sectionLabel)
                     ->schema($fieldSchemas)
                     ->columns(3) // Optional: Anzahl der Spalten
                     ->collapsible();

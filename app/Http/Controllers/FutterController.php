@@ -18,9 +18,11 @@ class FutterController extends Controller
         $futterToday = FutterPerDay::where('day',">=", date('Y-m-d'))->get();
         $ft = [];
         foreach ($futterToday as $fday){
+            $img = $fday->futter->img;
+            $imgUrl = str_starts_with($img, 'http') ? $img : url('storage/futter/'.$img);
             $ft[$fday->day] = [
                 'name' => $fday->futter->name,
-                'img'  => url('storage/futter/'.$fday->futter->img)
+                'img'  => $imgUrl
             ];
         }
 
@@ -74,9 +76,11 @@ class FutterController extends Controller
         $futterToday = FutterPerDay::where('day',">=", date('Y-m-d'))->get();
 
         foreach ($futterToday as $fday){
+            $img = $fday->futter->img;
+            $imgUrl = str_starts_with($img, 'http') ? $img : url('storage/futter/'.$img);
             $ft[$fday->day] = [
                 'name' => $fday->futter->name,
-                'img'  => url('storage/futter/'.$fday->futter->img)
+                'img'  => $imgUrl
             ];
         }
 
