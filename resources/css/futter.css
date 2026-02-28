@@ -7,6 +7,10 @@ body {
     @apply bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-100 min-h-screen
 }
 
+a {
+    @apply no-underline text-inherit hover:no-underline
+}
+
 .day, .day1 {
     @apply p-3 flex items-center justify-center transition-all duration-300
 }

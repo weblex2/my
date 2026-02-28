@@ -36,17 +36,26 @@
             </div>
 
             <!-- Buttons Grid (Span 3 columns on desktop, 1 on mobile) -->
-            <div class="col-span-1 md:col-span-3 pb-10 flex flex-col items-center space-y-4 pt-8">
-                <a href="{{ url('futter') }}" class="w-full md:w-auto">
-                    <button class="w-full text-xl border btn"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
+            <div class="col-span-1 md:col-span-3 pb-10 flex flex-col items-center space-y-6 pt-8">
+                <a href="{{ url('futter') }}" class="w-full md:w-auto transform hover:scale-105 transition-all duration-300">
+                    <button class="w-full md:w-80 text-lg md:text-xl font-bold py-4 px-8 rounded-2xl shadow-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white flex items-center justify-center space-x-3">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        <span>Nööö, gib mir mehr Vorschläge...</span>
+                    </button>
                 </a>
                 
-                <a href="{{ url('futter/all') }}" class="w-full md:w-auto">
-                    <button class="w-full text-xl border btn"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
+                <a href="{{ url('futter/all') }}" class="w-full md:w-auto transform hover:scale-105 transition-all duration-300">
+                    <button class="w-full md:w-80 text-lg md:text-xl font-bold py-4 px-8 rounded-2xl shadow-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>Ach was solls.., alles sehen!!</span>
+                    </button>
                 </a>
                 
-                <a href="{{ url('futter/new') }}" class="w-full md:w-auto">
-                    <button class="w-full text-xl border btn"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
+                <a href="{{ url('futter/new') }}" class="w-full md:w-auto transform hover:scale-105 transition-all duration-300">
+                    <button class="w-full md:w-80 text-lg md:text-xl font-bold py-4 px-8 rounded-2xl shadow-xl bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Yeah - Hab was Neues!!!</span>
+                    </button>
                 </a>
             </div>
             
