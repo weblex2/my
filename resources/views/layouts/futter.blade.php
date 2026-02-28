@@ -103,7 +103,8 @@
                 }
             });
 
-        }
+        }); // <-- RESTORING MISSING CLOSING BRACKET FOR .day1
+        
         // Also bind the droppable event to the mobile calendar dropzones
         $('.day-mobile-dropzone').droppable({
             hoverClass: "futterHoverClass",
@@ -143,6 +144,19 @@
         });
 
     </script>
+    
+    <!-- CSS to prevent mobile devices from trying to save the image instead of dragging it -->
+    <style>
+        .foodimg {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            -webkit-touch-callout: none;
+            user-select: none;
+            touch-action: none;
+        }
+    </style>
     
     <!-- Include jQuery UI Touch Punch to enable drag and drop on mobile touch screens -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
