@@ -37,15 +37,15 @@
 
             <!-- Buttons Grid (Span 3 columns on desktop, 1 on mobile) -->
             <div class="col-span-1 md:col-span-3 pb-10 flex flex-col items-center space-y-4 pt-8">
-                <a href="futter" class="w-full md:w-auto">
+                <a href="{{ url('futter') }}" class="w-full md:w-auto">
                     <button class="w-full text-xl border btn"><i class="fa fa-refresh" aria-hidden="true"></i> &nbsp; Nööö, gib mir mehr Vorschläge...</button>
                 </a>
                 
-                <a href="futter/all" class="w-full md:w-auto">
+                <a href="{{ url('futter/all') }}" class="w-full md:w-auto">
                     <button class="w-full text-xl border btn"><i class="fa-solid fa-globe"></i> &nbsp; Ach was solls.., ich will alles sehen!!</button>
                 </a>
                 
-                <a href="futter/new" class="w-full md:w-auto">
+                <a href="{{ url('futter/new') }}" class="w-full md:w-auto">
                     <button class="w-full text-xl border btn"><i class="fa-solid fa-plus"></i> &nbsp; Yeah - Hab was Neues!!!</button>
                 </a>
             </div>

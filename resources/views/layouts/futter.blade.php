@@ -32,7 +32,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <!--script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script-->
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.4"></script>
         <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.7"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
@@ -103,44 +103,45 @@
                 }
             });
 
-        }); // <-- RESTORING MISSING CLOSING BRACKET FOR .day1
+        }
+        }); 
         
         // Also bind the droppable event to the mobile calendar dropzones
         $('.day-mobile-dropzone').droppable({
             hoverClass: "futterHoverClass",
             drop: function( event, ui ) {
-            var draggable = ui.draggable;
-            var futterId = ui.draggable.attr("foodid");
-            var name = $('#food_'+futterId).find('.food-name').text();
-            
-            // On mobile, we just put the text inside the dropzone
-            $(this).html('<span class="text-white text-xs whitespace-nowrap overflow-hidden text-ellipsis">' + name + '</span>');
-            $(this).addClass("bg-teal-900/50"); // Give it a slight highlight to show it was dropped
+                var draggable = ui.draggable;
+                var futterId = ui.draggable.attr("foodid");
+                var name = $('#food_'+futterId).find('.food-name').text();
+                
+                // On mobile, we just put the text inside the dropzone
+                $(this).html('<span class="text-white text-xs whitespace-nowrap overflow-hidden text-ellipsis">' + name + '</span>');
+                $(this).addClass("bg-teal-900/50"); // Give it a slight highlight to show it was dropped
 
-            // Also update the image right next to it
-            var img = $('#food_'+futterId).find('img').attr('src');
-            $(this).parent().siblings().html('<img src="'+img +'" class="w-full h-full object-cover">');
+                // Also update the image right next to it
+                var img = $('#food_'+futterId).find('img').attr('src');
+                $(this).parent().siblings().html('<img src="'+img +'" class="w-full h-full object-cover">');
 
-            var dat = $(this).attr("date");
-            var data = {};
-            data['day'] = dat;
-            data['futter_id'] = futterId;
+                var dat = $(this).attr("date");
+                var data = {};
+                data['day'] = dat;
+                data['futter_id'] = futterId;
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: 'POST',
-                url: '{{ url("futter/saveFutterPerDay") }}',
-                data: data,
-                success: function (data){
-                     console.log("Mobile drop success: ", data);
-                },
-                error: function( data) {
-                    console.error("Mobile drop error: ", data);
-                }
-            });
-        }
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: 'POST',
+                    url: '{{ url("futter/saveFutterPerDay") }}',
+                    data: data,
+                    success: function (data){
+                         console.log("Mobile drop success: ", data);
+                    },
+                    error: function( data) {
+                        console.error("Mobile drop error: ", data);
+                    }
+                });
+            }
         });
 
     </script>
