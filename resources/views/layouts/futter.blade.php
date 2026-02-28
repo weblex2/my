@@ -104,7 +104,46 @@
             });
 
         }
+        // Also bind the droppable event to the mobile calendar dropzones
+        $('.day-mobile-dropzone').droppable({
+            hoverClass: "futterHoverClass",
+            drop: function( event, ui ) {
+            var draggable = ui.draggable;
+            var futterId = ui.draggable.attr("foodid");
+            var name = $('#food_'+futterId).find('.food-name').text();
+            
+            // On mobile, we just put the text inside the dropzone
+            $(this).html('<span class="text-white text-xs whitespace-nowrap overflow-hidden text-ellipsis">' + name + '</span>');
+            $(this).addClass("bg-teal-900/50"); // Give it a slight highlight to show it was dropped
+
+            // Also update the image right next to it
+            var img = $('#food_'+futterId).find('img').attr('src');
+            $(this).parent().siblings().html('<img src="'+img +'" class="w-full h-full object-cover">');
+
+            var dat = $(this).attr("date");
+            var data = {};
+            data['day'] = dat;
+            data['futter_id'] = futterId;
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: '{{ url("futter/saveFutterPerDay") }}',
+                data: data,
+                success: function (data){
+                     console.log("Mobile drop success: ", data);
+                },
+                error: function( data) {
+                    console.error("Mobile drop error: ", data);
+                }
+            });
+        }
         });
 
     </script>
+    
+    <!-- Include jQuery UI Touch Punch to enable drag and drop on mobile touch screens -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 </html>

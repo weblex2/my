@@ -9,7 +9,12 @@
 @php
     $today = date('Y-m-d');
 @endphp
-<x-futter.calendar  date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
+<div class="hidden md:block">
+    <x-futter.calendar date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
+</div>
+<div class="block md:hidden">
+    <x-futter.calendar-mobile date={{$today}} :ft="$ft" :datesdb=$datesdb :dates=$dates />
+</div>
 <div class="container futter">
     <div class="container flex-auto pt-20 mx-auto text-center items-justify">
         <!-- Unified Responsive Grid -->
