@@ -70,8 +70,25 @@
         });
 
         $( ".foodimg" ).draggable({
-            revert: true,
-            helper: "clone"
+            revert: 'invalid', // Only revert if not dropped on a valid dropzone
+            appendTo: 'body', // Append to body to escape any relative/hidden parent containers
+            helper: function() {
+                var w = $(this).width();
+                var h = $(this).height();
+                var clone = $(this).clone();
+                // Remove fluid Tailwind classes from the clone since it's now attached to the body
+                clone.removeClass('w-full h-full w-20 h-20 md:w-56 md:h-56');
+                clone.css({
+                    'width': w + 'px',
+                    'height': h + 'px',
+                    'z-index': 999999, // Ensure absolute top
+                    'border-radius': '1rem',
+                    'box-shadow': '0 25px 50px -12px rgba(0, 0, 0, 0.5)' // add drag shadow
+                });
+                return clone;
+            },
+            zIndex: 999999,
+            cursorAt: { left: 50, top: 50 } // keep cursor roughly centered for dragging
         });
         $('.day1').droppable({
             hoverClass: "futterHoverClass",
