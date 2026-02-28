@@ -91,6 +91,8 @@ Route::controller(MaintainanceController::class)->group(function () {
     Route::post('/logs', 'refreshLogs')->middleware(['auth'])->name('maintainance.refreshLogs');
     Route::get('/maintainance/diskinfo', 'diskinfo')->name('maintainance.diskInfo');
     Route::get('/maintainance/redisInsight', 'redisInsight')->middleware(['auth'])->name('maintainance.redisInsight');
+    Route::get('/maintainance/cert', 'showCertLog')->middleware(['auth'])->name('maintainance.showCertLog');
+    Route::get('/maintainance/certlog2db', 'certLog2DB')->name('maintainance.certlog2db');
 });
 
 
