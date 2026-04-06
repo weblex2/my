@@ -3,7 +3,6 @@ namespace App\MyClasses;
 
 use DB;
 use File;
-use FFMpeg;
 use App\MyClasses\Misc as Misc;
 use App\Models\GalleryPics;
 use App\Models\GalleryText;
@@ -15,7 +14,7 @@ use App\Http\Controllers\GalleryController;
 
 
 class BlogCreator{
-    
+
     var $manager;
     private $org;
     private $img;
@@ -41,6 +40,8 @@ class BlogCreator{
     private $request;
     private $tmpFolder;
     private $videos;
+    private $autoAssign  = false;
+    public  $assignResult = [];  // populated after savePic() in auto-assign mode
 
     function __construct($request) {
 
@@ -69,10 +70,17 @@ class BlogCreator{
 
         // Set Full Path & Name
         $this->fullPathName  = $this->tmpPath."/".$this->fileName;
-        $this->gallery_id = GalleryController::getGalIdFromCode($request->country_code); 
-        $this->mappoint_id = $request->mappoint_id; 
+
+        // Auto-assign mode: GPS/Timestamp → TripAutoAssigner bestimmt Gallery + Mappoint
+        $this->autoAssign = (bool) ($request->auto_assign ?? false);
+
+        if (!$this->autoAssign) {
+            $this->gallery_id  = GalleryController::getGalIdFromCode($request->country_code);
+            $this->mappoint_id = $request->mappoint_id;
+        }
+
         $this->content = $request->content;
-        $this->status = 'INIT';
+        $this->status  = 'INIT';
     }
 
     public function uploadFile(){
@@ -126,38 +134,51 @@ class BlogCreator{
                 }    
             }
         } 
-        else {   // Video 
-            $this->createVideoThumbnail();
-            foreach ($thumbsizes as $size){
-            }        
-        }    
+        else {   // Video — tmpFolder already created above, thumbnail done in createBlog()
+        }
         
         return true;
     }
 
     private function savePic(){
-        $track = new GetId3($this->fullPathName);
-        $meta = $track->extractInfo();
-        $ext  = strtolower($this->extention); 
-        $lon = null;
-        $lat = null;
+        // Robuste EXIF-Extraktion (iPhone + Android, alle Formate)
+        $exif    = (new ExifExtractor($this->fullPathName))->extract();
+        $lat     = $exif['lat'];
+        $lon     = $exif['lon'];
+        $takenAt = $exif['taken_at'];
 
-        if (isset($meta[$ext]['exif']['GPS']["GPSLongitude"]) && isset($meta[$ext]['exif']['GPS']["GPSLongitudeRef"])){
-            $lon  = $this->gps($meta[$ext]['exif']['GPS']["GPSLongitude"], $meta[$ext]['exif']['GPS']["GPSLongitudeRef"]);
+        // GetId3 meta für das meta-JSON-Feld (bleibt für Kompatibilität)
+        try {
+            $track = new GetId3($this->fullPathName);
+            $meta  = $track->extractInfo();
+        } catch (\Exception $e) {
+            $meta = [];
         }
-        if (isset($meta[$ext]['exif']['GPS']["GPSLatitude"]) && isset($meta[$ext]['exif']['GPS']["GPSLatitudeRef"])){
-            $lat  = $this->gps($meta[$ext]['exif']['GPS']["GPSLatitude"], $meta[$ext]['exif']['GPS']["GPSLatitudeRef"]);
+
+        // Auto-assign: GPS + Timestamp → Gallery & Mappoint automatisch bestimmen
+        if ($this->autoAssign) {
+            if (!$lat || !$lon || !$takenAt) {
+                // Kein GPS oder kein Timestamp → kein harter Fehler, manuell zuordnen
+                $this->assignResult = ['needs_manual' => true];
+                // gallery_id und mappoint_id bleiben null → savePic speichert ohne Zuordnung
+            } else {
+                $assigner = new TripAutoAssigner();
+                $this->assignResult = $assigner->assign($lat, $lon, $takenAt);
+                $this->gallery_id   = $this->assignResult['gallery_id'];
+                $this->mappoint_id  = $this->assignResult['mappoint_id'];
+            }
         }
-        
+
         $this->pic_id = Misc::getPicId();
         $pic = new GalleryPics;
-        $pic->gallery_id = $this->gallery_id;
+        $pic->gallery_id  = $this->gallery_id;
         $pic->mappoint_id = $this->mappoint_id;
-        $pic->pic = $this->fileName;
-        $pic->meta = json_encode($meta)!=null ? $meta : null;
-        $pic->lon = $lon;
-        $pic->lat = $lat;
-        $pic->ord = Misc::getPicOrder($this->mappoint_id);
+        $pic->pic         = $this->fileName;
+        $pic->meta        = !empty($meta) ? $meta : null;
+        $pic->lon         = $lon;
+        $pic->lat         = $lat;
+        $pic->taken_at    = $takenAt;
+        $pic->ord         = Misc::getPicOrder($this->mappoint_id);
         $res = $pic->save();
         $this->pic_id = $pic->id;
         return $res;
@@ -192,7 +213,7 @@ class BlogCreator{
             $pic  = new GalleryPicContent();
             $pic->pic_id = $this->pic_id;
             $pic->size = strtoupper($size);
-            $pic->filecontent = "data:".$mimeType.";base64,".base64_encode(file_get_contents($this->fullPathName));
+            $pic->filecontent = "data:".$mimeType.";base64,".base64_encode(file_get_contents($file));
             $res = $pic->save();        
         }
     }
@@ -206,40 +227,47 @@ class BlogCreator{
     }
 
     public function createBlog(){
-        // Start transaction!
         DB::beginTransaction();
         try {
-            if ($this->isVideo){
-                $vtn = $this->createVideoThumbnails();
-            }
             $this->savePic();
             $this->savePicText();
-            $tmpFiles = glob($this->tmpFolder."/*");
+
+            if ($this->isVideo) {
+                $this->createVideoThumbnails();          // frame → tmpFolder/videotn.jpg
+                $this->saveVideoContent();               // MOV binary → DB (size=MOV)
+                $tmpFiles = glob($this->tmpFolder."/*"); // videotn.jpg
+            } else {
+                $tmpFiles = glob($this->tmpFolder."/*"); // small/medium/big thumbnails
+            }
+
             $this->savePicContent($tmpFiles);
         }
         catch(\Exception $e){
             DB::rollback();
             throw new \Exception($e->getMessage());
-        } 
+        }
         DB::commit();
         $this->cleanup();
         return true;
     }
 
-    public function createVideoThumbnails(){
-        try{
-        FFMpeg::fromDisk('gallery')
-            ->open($this->fullPathName)
-            ->getFrameFromSeconds(1)
-            ->export()
-            ->toDisk('gallery')
-            ->save($this->tmpFolder."/videotn.JPG");
-        } catch (\EncodingException $exception) {
-            $command = $exception->getCommand();
-            $errorLog = $exception->getErrorOutput();
-        }    
+    public function createVideoThumbnails(): void
+    {
+        $thumbPath = $this->tmpFolder . '/videotn.jpg';
+        $cmd = sprintf(
+            'ffmpeg -y -i %s -ss 00:00:01.000 -vframes 1 -q:v 2 %s 2>&1',
+            escapeshellarg($this->fullPathName),
+            escapeshellarg($thumbPath)
+        );
+        exec($cmd);
+        // If ffmpeg failed or isn't installed, continue without thumbnail
     }
 
+
+    public function getPicId(): ?int
+    {
+        return $this->pic_id ?? null;
+    }
 
     public function cleanup(){
         // Cleanup temporary files

@@ -56,6 +56,153 @@ class GalleryController extends Controller
         return view('gallery.index2');
     }
 
+    public function index3(){
+        $galleries = Gallery::orderBy('name')->get();
+        return view('gallery.index3', compact('galleries'));
+    }
+
+    public function getMapData($gallery_id){
+        $mappoints = GalleryMappoint::where('gallery_id', $gallery_id)
+            ->orderBy('ord')
+            ->get()
+            ->map(function($mp) {
+                return [
+                    'id'   => $mp->id,
+                    'name' => $mp->mappoint_name,
+                    'lat'  => (float) $mp->lat,
+                    'lon'  => (float) $mp->lon,
+                    'ord'  => $mp->ord,
+                ];
+            });
+        return Response::json(['mappoints' => $mappoints]);
+    }
+
+    public function getMappointPhotos($mappoint_id, Request $request){
+        $perPage = 5;
+        $page    = (int) $request->get('page', 1);
+
+        $total = GalleryPics::where('mappoint_id', $mappoint_id)->count();
+
+        $pics = GalleryPics::where('mappoint_id', $mappoint_id)
+            ->orderByRaw('COALESCE(taken_at, created_at) ASC')
+            ->orderBy('ord')
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
+
+        $videos = ['mov', 'mp4'];
+
+        $photos = $pics->map(function($pic) use ($videos) {
+            $ext     = strtolower(pathinfo($pic->pic, PATHINFO_EXTENSION));
+            $isVideo = in_array($ext, $videos);
+
+            $thumbnail = null;
+            $content   = null;
+
+            if ($isVideo) {
+                $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'TN')->first();
+                $thumbnail = $tn ? $tn->filecontent : null;
+                $mov = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'MOV')->first();
+                $content = $mov ? $mov->filecontent : null;
+            } else {
+                $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'TN')->first();
+                $thumbnail = $tn ? $tn->filecontent : null;
+            }
+
+            $textRow = GalleryText::where('pic_id', $pic->id)
+                ->where('language', session('lang', 'DE'))
+                ->first();
+
+            return [
+                'id'        => $pic->id,
+                'is_video'  => $isVideo,
+                'thumbnail' => $thumbnail,
+                'content'   => $content,
+                'lat'       => $pic->lat,
+                'lon'       => $pic->lon,
+                'taken_at'  => $pic->taken_at ? \Carbon\Carbon::parse($pic->taken_at)->format('d.m.Y H:i') : null,
+                'text'      => $textRow ? $textRow->text : null,
+            ];
+        });
+
+        $hasMore  = ($page * $perPage) < $total;
+
+        $alternatives = [];
+        if (!$hasMore) {
+            $mp = GalleryMappoint::find($mappoint_id);
+            if ($mp) {
+                $alternatives = Gallery::where('id', '!=', $mp->gallery_id)
+                    ->orderBy('name')
+                    ->limit(4)
+                    ->get(['id', 'name', 'code'])
+                    ->toArray();
+            }
+        }
+
+        return Response::json([
+            'photos'       => $photos,
+            'has_more'     => $hasMore,
+            'alternatives' => $alternatives,
+        ]);
+    }
+
+    public function uploadBulk($gallery_id = null, $mappoint_id = null){
+        $galleries = Gallery::orderBy('name')->get();
+        $mappoints = $gallery_id
+            ? GalleryMappoint::where('gallery_id', $gallery_id)->orderBy('mappoint_name')->get()
+            : collect();
+        $selected_gallery  = $gallery_id;
+        $selected_mappoint = $mappoint_id;
+        return view('gallery.upload_bulk', compact('galleries', 'mappoints', 'selected_gallery', 'selected_mappoint'));
+    }
+
+    public function storeBulk(Request $request){
+        try {
+            $bc = new \App\MyClasses\BlogCreator($request);
+            $bc->uploadFile();
+            $bc->loadMedia();
+            $bc->createThumbNails();
+            $bc->createBlog();
+        } catch(\Exception $e) {
+            return Response::json(['status' => 'error', 'message' => $e->getMessage()], 422);
+        }
+
+        // Kein GPS / kein Timestamp → Foto wurde gespeichert, aber braucht manuelle Zuordnung
+        if (!empty($bc->assignResult['needs_manual'])) {
+            return Response::json([
+                'status'   => 'needs_manual',
+                'pic_id'   => $bc->getPicId(),
+                'message'  => 'Kein GPS oder Zeitstempel im Foto gefunden.',
+            ]);
+        }
+
+        $result = ['status' => 'ok'];
+        if (!empty($bc->assignResult)) {
+            $result['gallery_name']  = $bc->assignResult['gallery_name']  ?? null;
+            $result['mappoint_name'] = $bc->assignResult['mappoint_name'] ?? null;
+            $result['country']       = $bc->assignResult['geo']['country'] ?? null;
+            $result['country_code']  = $bc->assignResult['geo']['country_code'] ?? null;
+        }
+
+        return Response::json($result);
+    }
+
+    public function assignPic(Request $request)
+    {
+        $pic = GalleryPics::findOrFail($request->pic_id);
+        $pic->gallery_id  = $request->gallery_id;
+        $pic->mappoint_id = $request->mappoint_id;
+        $pic->ord         = \App\MyClasses\Misc::getPicOrder($request->mappoint_id);
+        $pic->save();
+
+        GalleryText::where('pic_id', $pic->id)->update([
+            'gallery_id'  => $request->gallery_id,
+            'mappoint_id' => $request->mappoint_id,
+        ]);
+
+        return Response::json(['status' => 'ok']);
+    }
+
     public function setLang(Request $request){
         session(['lang' => $request->lang]);
         return true;

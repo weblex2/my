@@ -133,9 +133,40 @@ Route::controller(CvController::class)->group(function () {
     Route::get('/manu/cv', 'indexm')->name('cv.indexm');
 });
 
+// TEMP DEBUG — GPS dump (remove after debugging)
+Route::post('/dev/exif-dump', function(\Illuminate\Http\Request $request) {
+    if (!$request->hasFile('file')) return response()->json(['error' => 'no file']);
+    $file = $request->file('file');
+    $path = $file->getRealPath();
+    $ext  = strtolower($file->getClientOriginalExtension());
+
+    $id3 = [];
+    try {
+        $track = new \Owenoj\LaravelGetId3\GetId3($path);
+        $id3   = $track->extractInfo();
+    } catch(\Exception $e) { $id3 = ['error' => $e->getMessage()]; }
+
+    $native = [];
+    if (in_array($ext, ['jpg','jpeg','tiff','tif'])) {
+        $native = @exif_read_data($path, 0, true) ?: [];
+    }
+
+    return response()->json([
+        'ext'    => $ext,
+        'id3'    => $id3,
+        'native' => $native,
+    ]);
+});
+
 Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog', 'index')->name('gallery.index');
     Route::get('/travel-blog/index2', 'index2')->name('gallery.index2');
+    Route::get('/travel-blog/index3', 'index3')->name('gallery.index3');
+    Route::get('/travel-blog/map-data/{gallery_id}', 'getMapData')->name('gallery.mapdata');
+    Route::get('/travel-blog/mappoint-photos/{mappoint_id}', 'getMappointPhotos')->name('gallery.mappointphotos');
+    Route::get('/travel-blog/upload-bulk/{gallery_id?}/{mappoint_id?}', 'uploadBulk')->name('gallery.uploadBulk');
+    Route::post('/travel-blog/store-bulk', 'storeBulk')->name('gallery.storeBulk');
+    Route::post('/travel-blog/assign-pic', 'assignPic')->name('gallery.assignPic');
     Route::get('/travel-blog/create', 'create')->name('gallery.create');
     Route::get('/travel-blog/edit', 'edit')->name('gallery.edit');
     Route::post('/travel-blog/store', 'store')->name('gallery.store');
