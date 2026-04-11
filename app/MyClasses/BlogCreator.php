@@ -87,9 +87,9 @@ class BlogCreator{
         $successfullyMoved = $this->request->file->move($this->tmpPath, $this->fileName);
         return $successfullyMoved;
     }
-    
+
     public function loadMedia(){
-        
+
         if ($this->isVideo ){   // Videos
             $this->mimeType = mime_content_type($this->fullPathName);
         }
@@ -98,12 +98,12 @@ class BlogCreator{
             $this->img = $this->manager->read($this->fullPathName);
             $this->mimeType = $this->img->origin()->mediaType();
             $this->size = $this->img->size();
-            $this->ratio = $this->size->aspectRatio(); 
-        } 
+            $this->ratio = $this->size->aspectRatio();
+        }
     }
 
     public function createThumbNails(){
-        
+
         // create a temporary folder for the thumbnails
         $this->tmpFolder = $this->tmpPath."/".pathinfo( $this->fileName, PATHINFO_FILENAME);
         if (!file_exists($this->tmpFolder)) {
@@ -113,30 +113,54 @@ class BlogCreator{
         // Get file sizes from config
         $thumbsizes = Misc::getConfig('pic_size%', 'value', 'DESC');
         $thumbsizes = $thumbsizes->sortByDesc('value');
-        #$thumbsizes[0]->option="300_300_small";
-        #$thumbsizes[1]->option="600_600_medium";
-        #$thumbsizes[2]->option="800_800_big";
+
+        // FALLBACK: Wenn Config leer ist, verwende Default-Größen
+        if ($thumbsizes->count() == 0) {
+            \Log::warning('BlogCreator: No thumbnail config found, using defaults', ['file' => $this->fileName]);
+            $thumbsizes = collect([
+                (object)['option' => 'pic_size_xl', 'value' => 2000, 'value2' => null],
+                (object)['option' => 'pic_size_l', 'value' => 1000, 'value2' => null],
+                (object)['option' => 'pic_size_m', 'value' => 768, 'value2' => null],
+                (object)['option' => 'pic_size_tn', 'value' => 100, 'value2' => 100],
+            ]);
+        }
 
         if (!$this->isVideo){   // Image
-            
+
             foreach ($thumbsizes as $size){
                 $type = explode('_', $size->option)[2];
                 $name = $type.".".$this->extention;
-                
-                // Create squared image
-                if ($size->value2!="") {
-                    $res = $this->img->resize($size->value, $size->value2)->save($this->tmpFolder."/".$name);  
+                $filePath = $this->tmpFolder."/".$name;
+
+                try {
+                    // Create squared image
+                    if ($size->value2!="") {
+                        $res = $this->img->resize($size->value, $size->value2)->save($filePath);
+                    }
+                    // Create scaled image
+                    else{
+                        $res = $this->img->scale(width: $size->value)->save($filePath);
+                    }
+
+                    if (!file_exists($filePath)) {
+                        \Log::error('BlogCreator: Thumbnail not created', [
+                            'file' => $this->fileName,
+                            'size' => $type,
+                            'path' => $filePath
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('BlogCreator: Thumbnail creation failed', [
+                        'file' => $this->fileName,
+                        'size' => $type,
+                        'error' => $e->getMessage()
+                    ]);
                 }
-                
-                // Create scaled image
-                else{
-                    $res = $this->img->scale(width: $size->value)->save($this->tmpFolder."/".$name);
-                }    
             }
-        } 
+        }
         else {   // Video — tmpFolder already created above, thumbnail done in createBlog()
         }
-        
+
         return true;
     }
 
@@ -147,26 +171,29 @@ class BlogCreator{
         $lon     = $exif['lon'];
         $takenAt = $exif['taken_at'];
 
+        // Keine GEO-Daten → Upload abbrechen
+        if (!$lat || !$lon) {
+            throw new \Exception('Keine GPS-Daten im Bild/Video gefunden. Upload abgelehnt.');
+        }
+
         // GetId3 meta für das meta-JSON-Feld (bleibt für Kompatibilität)
         try {
             $track = new GetId3($this->fullPathName);
-            $meta  = $track->extractInfo();
+            $raw   = $track->extractInfo();
+            $meta  = $this->sanitizeMetaForJson($raw);
         } catch (\Exception $e) {
             $meta = [];
         }
 
         // Auto-assign: GPS + Timestamp → Gallery & Mappoint automatisch bestimmen
         if ($this->autoAssign) {
-            if (!$lat || !$lon || !$takenAt) {
-                // Kein GPS oder kein Timestamp → kein harter Fehler, manuell zuordnen
-                $this->assignResult = ['needs_manual' => true];
-                // gallery_id und mappoint_id bleiben null → savePic speichert ohne Zuordnung
-            } else {
-                $assigner = new TripAutoAssigner();
-                $this->assignResult = $assigner->assign($lat, $lon, $takenAt);
-                $this->gallery_id   = $this->assignResult['gallery_id'];
-                $this->mappoint_id  = $this->assignResult['mappoint_id'];
+            if (!$takenAt) {
+                throw new \Exception('Kein Zeitstempel im Bild/Video gefunden. Upload abgelehnt.');
             }
+            $assigner = new TripAutoAssigner();
+            $this->assignResult = $assigner->assign($lat, $lon, $takenAt);
+            $this->gallery_id   = $this->assignResult['gallery_id'];
+            $this->mappoint_id  = $this->assignResult['mappoint_id'];
         }
 
         $this->pic_id = Misc::getPicId();
@@ -202,19 +229,19 @@ class BlogCreator{
         foreach ($files as $file){
              $fileName = pathinfo($file,  PATHINFO_FILENAME);
              $extention = pathinfo($file, PATHINFO_EXTENSION);
-        
+
             if (in_array($extention, $this->videos)){
                 $size = 'MOV';
             }
             else{
                 $size = $fileName;
-            }    
+            }
             $mimeType = mime_content_type($file);
             $pic  = new GalleryPicContent();
             $pic->pic_id = $this->pic_id;
             $pic->size = strtoupper($size);
             $pic->filecontent = "data:".$mimeType.";base64,".base64_encode(file_get_contents($file));
-            $res = $pic->save();        
+            $res = $pic->save();
         }
     }
 
@@ -274,11 +301,27 @@ class BlogCreator{
         $tmpFiles = glob($this->tmpFolder.'/*');
         foreach ($tmpFiles as $file){
             unlink($file);
-        } 
+        }
         // remove folder
         File::deleteDirectory($this->tmpFolder);
         // remove original file
         unlink($this->fullPathName);
+    }
+
+    private function sanitizeMetaForJson($data): mixed
+    {
+        if (is_array($data)) {
+            $result = [];
+            foreach ($data as $key => $value) {
+                $result[$key] = $this->sanitizeMetaForJson($value);
+            }
+            return $result;
+        }
+        if (is_string($data)) {
+            // mb_scrub ersetzt ungültige UTF-8-Sequenzen (z.B. binäre Thumbnails)
+            return mb_scrub($data, 'UTF-8');
+        }
+        return $data;
     }
 
     public function gps($coordinate, $hemisphere) {

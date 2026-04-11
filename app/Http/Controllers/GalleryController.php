@@ -27,12 +27,12 @@ use Illuminate\Database\Events\TransactionBeginning;
 
 class GalleryController extends Controller
 {
-   
-    
+
+
     use ImageTrait;
     var $reloadItems = 3;
     var $img_base_path =  "gallery/";
-    var $lang; 
+    var $lang;
     var $mappoint_name;
     var $alterviveGalleries;
 
@@ -43,7 +43,7 @@ class GalleryController extends Controller
         }
         session(['blog_current_gallery' => ""]);
         session(['blog_current_mappoint_id' => ""]);
-        session(['used_mappoints' => [] ]); 
+        session(['used_mappoints' => [] ]);
         $galleries = Gallery::orderBy('name')->get();
         $galleries->load('GalleryMappoint');
         $mappoints = GalleryMappoint::all();
@@ -63,7 +63,12 @@ class GalleryController extends Controller
 
     public function getMapData($gallery_id){
         $mappoints = GalleryMappoint::where('gallery_id', $gallery_id)
-            ->orderBy('ord')
+            ->leftJoin(
+                \DB::raw('(SELECT mappoint_id, MIN(taken_at) as first_taken FROM gallery_pics WHERE taken_at IS NOT NULL GROUP BY mappoint_id) as pic_dates'),
+                'gallery_mappoint.id', '=', 'pic_dates.mappoint_id'
+            )
+            ->orderByRaw('COALESCE(pic_dates.first_taken, gallery_mappoint.created_at) ASC')
+            ->select('gallery_mappoint.*')
             ->get()
             ->map(function($mp) {
                 return [
@@ -78,72 +83,106 @@ class GalleryController extends Controller
     }
 
     public function getMappointPhotos($mappoint_id, Request $request){
-        $perPage = 5;
-        $page    = (int) $request->get('page', 1);
+        try {
+            $perPage = 5;
+            $page    = (int) $request->get('page', 1);
 
-        $total = GalleryPics::where('mappoint_id', $mappoint_id)->count();
+            $total = GalleryPics::where('mappoint_id', $mappoint_id)->count();
 
-        $pics = GalleryPics::where('mappoint_id', $mappoint_id)
-            ->orderByRaw('COALESCE(taken_at, created_at) ASC')
-            ->orderBy('ord')
-            ->offset(($page - 1) * $perPage)
-            ->limit($perPage)
-            ->get();
+            $pics = GalleryPics::where('mappoint_id', $mappoint_id)
+                ->orderByRaw('COALESCE(taken_at, created_at) ASC')
+                ->orderBy('ord')
+                ->offset(($page - 1) * $perPage)
+                ->limit($perPage)
+                ->get();
 
-        $videos = ['mov', 'mp4'];
+            $videos = ['mov', 'mp4'];
 
-        $photos = $pics->map(function($pic) use ($videos) {
-            $ext     = strtolower(pathinfo($pic->pic, PATHINFO_EXTENSION));
-            $isVideo = in_array($ext, $videos);
+            $photos = $pics->map(function($pic) use ($videos) {
+                $ext     = strtolower(pathinfo($pic->pic, PATHINFO_EXTENSION));
+                $isVideo = in_array($ext, $videos);
 
-            $thumbnail = null;
-            $content   = null;
+                $thumbnail = null;
+                $content   = null;
 
-            if ($isVideo) {
-                $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'TN')->first();
-                $thumbnail = $tn ? $tn->filecontent : null;
-                $mov = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'MOV')->first();
-                $content = $mov ? $mov->filecontent : null;
-            } else {
-                $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'TN')->first();
-                $thumbnail = $tn ? $tn->filecontent : null;
+                if ($isVideo) {
+                    // Videos: Versuche TN, M, L, XL (in dieser Reihenfolge)
+                    foreach (['TN', 'M', 'L', 'XL'] as $size) {
+                        $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', $size)->first();
+                        if ($tn) {
+                            $thumbnail = $tn->filecontent;
+                            break;
+                        }
+                    }
+
+                    $mov = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'MOV')->first();
+                    $content = $mov ? $mov->filecontent : null;
+                } else {
+                    // Bilder: Versuche M, L, XL, TN (in dieser Reihenfolge)
+                    foreach (['M', 'L', 'XL', 'TN'] as $size) {
+                        $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', $size)->first();
+                        if ($tn) {
+                            $thumbnail = $tn->filecontent;
+                            break;
+                        }
+                    }
+
+                    // Fallback: Nimm irgendeinen Content
+                    if (!$thumbnail) {
+                        $anyContent = GalleryPicContent::where('pic_id', $pic->id)->first();
+                        if ($anyContent) {
+                            $thumbnail = $anyContent->filecontent;
+                        }
+                    }
+                }
+
+                $textRow = GalleryText::where('pic_id', $pic->id)
+                    ->where('language', session('lang', 'DE'))
+                    ->first();
+
+                return [
+                    'id'        => $pic->id,
+                    'is_video'  => $isVideo,
+                    'thumbnail' => $thumbnail,
+                    'content'   => $content,
+                    'lat'       => $pic->lat,
+                    'lon'       => $pic->lon,
+                    'taken_at'  => $pic->taken_at ? \Carbon\Carbon::parse($pic->taken_at)->format('d.m.Y H:i') : null,
+                    'text'      => $textRow ? $textRow->text : null,
+                ];
+            });
+
+            $hasMore  = ($page * $perPage) < $total;
+
+            $alternatives = [];
+            if (!$hasMore) {
+                $mp = GalleryMappoint::find($mappoint_id);
+                if ($mp) {
+                    $alternatives = Gallery::where('id', '!=', $mp->gallery_id)
+                        ->orderBy('name')
+                        ->limit(4)
+                        ->get(['id', 'name', 'code'])
+                        ->toArray();
+                }
             }
 
-            $textRow = GalleryText::where('pic_id', $pic->id)
-                ->where('language', session('lang', 'DE'))
-                ->first();
+            return Response::json([
+                'photos'       => $photos,
+                'has_more'     => $hasMore,
+                'alternatives' => $alternatives,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('getMappointPhotos Error: ' . $e->getMessage(), [
+                'mappoint_id' => $mappoint_id,
+                'page' => $request->get('page', 1),
+                'trace' => $e->getTraceAsString()
+            ]);
 
-            return [
-                'id'        => $pic->id,
-                'is_video'  => $isVideo,
-                'thumbnail' => $thumbnail,
-                'content'   => $content,
-                'lat'       => $pic->lat,
-                'lon'       => $pic->lon,
-                'taken_at'  => $pic->taken_at ? \Carbon\Carbon::parse($pic->taken_at)->format('d.m.Y H:i') : null,
-                'text'      => $textRow ? $textRow->text : null,
-            ];
-        });
-
-        $hasMore  = ($page * $perPage) < $total;
-
-        $alternatives = [];
-        if (!$hasMore) {
-            $mp = GalleryMappoint::find($mappoint_id);
-            if ($mp) {
-                $alternatives = Gallery::where('id', '!=', $mp->gallery_id)
-                    ->orderBy('name')
-                    ->limit(4)
-                    ->get(['id', 'name', 'code'])
-                    ->toArray();
-            }
+            return Response::json([
+                'error' => 'Fehler beim Laden der Fotos',
+                'message' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
         }
-
-        return Response::json([
-            'photos'       => $photos,
-            'has_more'     => $hasMore,
-            'alternatives' => $alternatives,
-        ]);
     }
 
     public function uploadBulk($gallery_id = null, $mappoint_id = null){
@@ -164,16 +203,12 @@ class GalleryController extends Controller
             $bc->createThumbNails();
             $bc->createBlog();
         } catch(\Exception $e) {
-            return Response::json(['status' => 'error', 'message' => $e->getMessage()], 422);
-        }
-
-        // Kein GPS / kein Timestamp → Foto wurde gespeichert, aber braucht manuelle Zuordnung
-        if (!empty($bc->assignResult['needs_manual'])) {
-            return Response::json([
-                'status'   => 'needs_manual',
-                'pic_id'   => $bc->getPicId(),
-                'message'  => 'Kein GPS oder Zeitstempel im Foto gefunden.',
+            \Log::error('storeBulk failed', [
+                'file' => $request->file?->getClientOriginalName(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
+            return Response::json(['status' => 'error', 'message' => $e->getMessage()], 422);
         }
 
         $result = ['status' => 'ok'];
@@ -242,7 +277,7 @@ class GalleryController extends Controller
         }
         else{
             return back()->with('error','Problem...');
-        }    
+        }
     }
 
     public function delete(Request $request){
@@ -255,20 +290,20 @@ class GalleryController extends Controller
 
     public function showGallery($code, $mappoint_id=-1, $offset=0){
         $gallery = Gallery::where('code', "=", $code)->get();
-        $gallery_id = $gallery[0]->id; 
+        $gallery_id = $gallery[0]->id;
 
         if ($mappoint_id==-1){
             $mp  = GalleryMappoint::where('gallery_id','=',$gallery_id)->orderBy('ord')->first();
             if ($mp){
                 $mappoint_id = $mp->id;
-            }    
+            }
         }
         if ($mappoint_id){
             $mp = GalleryMappoint::find($mappoint_id);
             $used_mappoints = [0 => $mappoint_id];
             session(['blog_current_gallery' => $gallery_id]);
             session(['blog_current_mappoint_id' => $mappoint_id]);
-            session(['used_mappoints' => $used_mappoints]); 
+            session(['used_mappoints' => $used_mappoints]);
             $gc = new GalleryPics();
             $pics = $gc->select("*")
                 ->where('gallery_id', '=', $gallery_id)
@@ -286,14 +321,14 @@ class GalleryController extends Controller
                 $morePics = $this->getImagesFromNextMapPoint($picCnt, true);
                 if ($morePics) {
                     $pics = $pics->merge($morePics);
-                }    
+                }
             }
         }
         else{
             $pics = new GalleryPics();
-        }    
+        }
         return view('gallery.showGallery', compact('gallery','pics','offset','mp'));
-        
+
     }
 
     public function showMore($offset=0){
@@ -324,7 +359,7 @@ class GalleryController extends Controller
             $alternatives = [];
             $current_gallery[0] = session('blog_current_gallery');
             $morePicsCnt = $this->reloadItems - count($pics);
-            $moreHtml = $this->getImagesFromNextMapPoint($morePicsCnt); 
+            $moreHtml = $this->getImagesFromNextMapPoint($morePicsCnt);
             if (!$moreHtml){
                 $gallery_end = true;
                 $alt_blogs = "";
@@ -350,16 +385,16 @@ class GalleryController extends Controller
     public function getImagesFromNextMapPoint($morePicsCnt, $picsOnly=false){
         $gallery_id = session('blog_current_gallery');
         $used_mappoints = session('used_mappoints');
-        $nextMapPoint = GalleryMappoint::where('gallery_id', "=", $gallery_id) 
+        $nextMapPoint = GalleryMappoint::where('gallery_id', "=", $gallery_id)
                         ->whereNotIn('id', $used_mappoints)->orderBy('ord')->first();
         if (!$nextMapPoint){
             return false;
-        }                
+        }
         $mappoint_id = $nextMapPoint->id;
-        $used_mappoints[] = $mappoint_id;  
-        $this->mappoint_name = $nextMapPoint->mappoint_name;              
+        $used_mappoints[] = $mappoint_id;
+        $this->mappoint_name = $nextMapPoint->mappoint_name;
         session(['blog_current_mappoint_id' => $mappoint_id]);
-        session(['used_mappoints' => $used_mappoints]);    
+        session(['used_mappoints' => $used_mappoints]);
         $gc = new GalleryPics();
         $pics = $gc->select("*")
             ->where('mappoint_id', '=', $mappoint_id)
@@ -378,7 +413,7 @@ class GalleryController extends Controller
                 $html.= view('components.gallery-item', ['pic' => $pic, 'content' => $pic->text]);
             }
             return $html;
-        }    
+        }
     }
 
     public function editMappointPics($mappoint_id){
@@ -386,7 +421,7 @@ class GalleryController extends Controller
         $mp->load('GalleryPics.Thumbnail');
         return view('gallery.editMappointPics', compact('mp'));
     }
-    
+
     public function upload($country_code, $map_point_id){
         $mappoints = GalleryMappoint::where('country_id', '=', $country_code)->orderBy('mappoint_name')->get();
         return view('gallery.upload', compact('country_code', 'map_point_id', 'mappoints'));
@@ -409,14 +444,14 @@ class GalleryController extends Controller
     }
 
     public function storePic(Request $request){
-        $max_upload = 65536; 
+        $max_upload = 65536;
         /* $request->validate([
             //'file' => 'required|max:'. $max_upload,
             'file' => 'required',
             'country_code' => 'required',
             'mappoint_id' => 'required',
         ]); */
-        
+
         try{
             $bc = new BlogCreator($request);
             $bc->uploadFile();
@@ -430,7 +465,7 @@ class GalleryController extends Controller
             return back()
                 ->with('error',$e->getMessage());
         }
-        
+
         // All good
         return back()
             ->with('success','File successfully uploaded.');
@@ -454,10 +489,10 @@ class GalleryController extends Controller
         }
         catch(\Exception $e){
             DB::rollback();
-            return back()->with('error',$e->getMessage()); 
-        }    
+            return back()->with('error',$e->getMessage());
+        }
         DB::commit();
-        return back()->with('success','File successfully deleted.'); 
+        return back()->with('success','File successfully deleted.');
     }
 
     public function editPic($id){
@@ -468,7 +503,7 @@ class GalleryController extends Controller
         $pic->load('GalleryPicContent');
         $mappoints = GalleryMappoint::all();
         return view('gallery.editPic', compact('pic','mappoints'));
-    } 
+    }
 
     public function updatePic(Request $request){
         DB::beginTransaction();
@@ -488,11 +523,11 @@ class GalleryController extends Controller
         catch(\Exception $e)
         {
             DB::rollback();
-            return back()->with('error','Problem...'. $e->getMessage()); 
+            return back()->with('error','Problem...'. $e->getMessage());
         }
         DB::commit();
-        return back()->with('success','File successfully updated.');  
-    } 
+        return back()->with('success','File successfully updated.');
+    }
 
     public function createGalleryMappoint(){
         $gallery = Gallery::select('*')->orderBy('code')->get();
@@ -503,7 +538,7 @@ class GalleryController extends Controller
         $mappoints = GalleryMappoint::select('*')->orderBy('country_id')->orderBy('mappoint_name')->get();
         return view('gallery.editMapPoints', compact('mappoints'));
     }
-    
+
     public function storeGalleryMappoint(Request $request){
         $gallery_id = $this->getGalIdFromCode($request->country_id);
         $request->gallery_id = $gallery_id;
@@ -520,7 +555,7 @@ class GalleryController extends Controller
         }
 
         $req  = $request->all();
-       
+
         $mp = GalleryMappoint::where('gallery_id','=',$gallery_id)->get();
         if (count($mp)==0){
             $ord=1;
@@ -538,7 +573,7 @@ class GalleryController extends Controller
         }
         else{
             return back()->with('error','Problem...');
-        }    
+        }
     }
 
     public function deleteGalleryMappoint(Request $request){
@@ -549,7 +584,7 @@ class GalleryController extends Controller
         }
         else{
             return back()->with('error','Problem...');
-        }  
+        }
 
     }
 
@@ -597,15 +632,15 @@ class GalleryController extends Controller
         }
         catch(\Exception $e){
             DB::rollback();
-            return back()->with('error', $e->getMessage()); 
-        }    
+            return back()->with('error', $e->getMessage());
+        }
         DB::commit();
-        return back()->with('success','Configuration successfully stored.'); 
+        return back()->with('success','Configuration successfully stored.');
     }
 
     public function picTest(){
-        
-        
+
+
         $img = "img/IMG_6961.MOV";
         $track = new GetId3($img);
 
@@ -614,7 +649,7 @@ class GalleryController extends Controller
         $img="img/IMG_6913.JPG";
         $track = new GetId3($img);
 
-        dump($track->extractInfo());    
+        dump($track->extractInfo());
 
         die();
         $exif = exif_read_data($img);
@@ -641,7 +676,7 @@ class GalleryController extends Controller
         $sign = ($hemisphere == 'W' || $hemisphere == 'S') ? -1 : 1;
         return $sign * ($degrees + $minutes/60 + $seconds/3600);
     }
-    
 
-    
+
+
 }

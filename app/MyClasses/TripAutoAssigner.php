@@ -85,6 +85,8 @@ class TripAutoAssigner
         // Alle Galleries für dieses Land holen
         $galleries = Gallery::where('code', $code)->get();
 
+        $emptyFallback = null;
+
         foreach ($galleries as $gallery) {
             $stats = GalleryPics::where('gallery_id', $gallery->id)
                 ->whereNotNull('taken_at')
@@ -92,23 +94,28 @@ class TripAutoAssigner
                 ->first();
 
             if (!$stats || !$stats->min_date) {
-                // Gallery ohne Fotos → nehmen falls keine bessere vorhanden
+                // Gallery ohne Fotos → als Fallback merken
+                $emptyFallback = $emptyFallback ?? $gallery;
                 continue;
             }
 
             $tripStart = Carbon::parse($stats->min_date);
             $tripEnd   = Carbon::parse($stats->max_date);
 
-            // Das Foto passt wenn:
-            // - es NACH oder AM Anfang der Reise liegt UND
-            // - der Trip nach Einschluss noch max. 42 Tage dauert
-            $daysFromStart = $tripStart->diffInDays($takenAt, false); // negativ = vor Reisebeginn
-            $newTripEnd    = max($tripEnd->timestamp, $takenAt->timestamp);
-            $newDuration   = $tripStart->diffInDays(Carbon::createFromTimestamp($newTripEnd));
+            // Erweitere den Zeitraum in beide Richtungen und prüfe ob <= 42 Tage
+            $newStart    = min($tripStart->timestamp, $takenAt->timestamp);
+            $newEnd      = max($tripEnd->timestamp, $takenAt->timestamp);
+            $newDuration = Carbon::createFromTimestamp($newStart)
+                                 ->diffInDays(Carbon::createFromTimestamp($newEnd));
 
-            if ($daysFromStart >= -1 && $newDuration <= self::MAX_TRIP_DAYS) {
+            if ($newDuration <= self::MAX_TRIP_DAYS) {
                 return $gallery;
             }
+        }
+
+        // Leere Gallery vorhanden → die nehmen statt neue anlegen
+        if ($emptyFallback) {
+            return $emptyFallback;
         }
 
         // Keine passende Gallery → neue anlegen

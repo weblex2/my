@@ -10,6 +10,7 @@ use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\FriesenController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\GalleryAdminController;
 use App\Http\Controllers\NtfyController;
 use App\Http\Controllers\KnowledgeBaseController;
 use App\Http\Controllers\yt2mp3;
@@ -190,6 +191,43 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog/config', 'config')->name('gallery.config');
     Route::post('/travel-blog/storeConfig', 'storeConfig')->name('gallery.storeConfig');
     Route::get('/travel-blog/getBigPic/{id}', 'getBigPic')->name('gallery.getBigPic');
+});
+
+// Gallery Admin Routes
+Route::prefix('gallery-admin')->group(function () {
+    Route::controller(GalleryAdminController::class)->group(function () {
+        // Dashboard
+        Route::get('/', 'index')->name('gallery.admin.index');
+
+        // Gallery CRUD
+        Route::post('/gallery', 'storeGallery')->name('gallery.admin.storeGallery');
+        Route::put('/gallery/{id}', 'updateGallery')->name('gallery.admin.updateGallery');
+        Route::delete('/gallery/{id}', 'deleteGallery')->name('gallery.admin.deleteGallery');
+
+        // Mappoint CRUD
+        Route::get('/mappoints/{galleryId}', 'getMappoints')->name('gallery.admin.getMappoints');
+        Route::post('/mappoint', 'storeMappoint')->name('gallery.admin.storeMappoint');
+        Route::put('/mappoint/{id}', 'updateMappoint')->name('gallery.admin.updateMappoint');
+        Route::delete('/mappoint/{id}', 'deleteMappoint')->name('gallery.admin.deleteMappoint');
+        Route::post('/mappoint/reorder', 'reorderMappoints')->name('gallery.admin.reorderMappoints');
+
+        // Photo Management
+        Route::get('/photos/{mappointId?}', 'getPhotos')->name('gallery.admin.getPhotos');
+        Route::delete('/photo/{id}', 'deletePhoto')->name('gallery.admin.deletePhoto');
+        Route::post('/photos/bulk-delete', 'bulkDeletePhotos')->name('gallery.admin.bulkDeletePhotos');
+        Route::post('/photos/assign', 'assignPhotos')->name('gallery.admin.assignPhotos');
+        Route::put('/photo/text/{id}', 'updatePhotoText')->name('gallery.admin.updatePhotoText');
+        Route::put('/photo/date/{id}', 'updatePhotoDate')->name('gallery.admin.updatePhotoDate');
+        Route::post('/photos/reorder', 'reorderPhotos')->name('gallery.admin.reorderPhotos');
+
+        // Search
+        Route::get('/search', 'search')->name('gallery.admin.search');
+    });
+
+    // Test Upload Page
+    Route::get('/test', function() {
+        return view('gallery.test_upload');
+    });
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
