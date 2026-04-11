@@ -130,6 +130,12 @@ class ExifExtractor
             return $this->gpsToDecimal($raw, $ref);
         }
 
+        // 4. QuickTime tags (MOV/MP4 von iPhone) — GetId3 legt alles unter tags.quicktime ab
+        $lat = $this->id3['tags']['quicktime']['gps_latitude'][0]
+            ?? $this->id3['comments']['gps_latitude'][0]
+            ?? null;
+        if ($lat !== null) return (float) $lat;
+
         return null;
     }
 
@@ -164,6 +170,12 @@ class ExifExtractor
         if ($raw) {
             return $this->gpsToDecimal($raw, $ref);
         }
+
+        // 4. QuickTime tags (MOV/MP4 von iPhone)
+        $lon = $this->id3['tags']['quicktime']['gps_longitude'][0]
+            ?? $this->id3['comments']['gps_longitude'][0]
+            ?? null;
+        if ($lon !== null) return (float) $lon;
 
         return null;
     }
@@ -238,7 +250,26 @@ class ExifExtractor
             if ($dt) return $dt;
         }
 
-        // 3. IFD0 DateTime — letzter Ausweg, kann Importzeit sein
+        // 3. QuickTime creationdate (MOV von iPhone) — ISO 8601 mit Timezone
+        $qtDate = $this->id3['tags']['quicktime']['creationdate'][0]
+               ?? $this->id3['comments']['creationdate'][0]
+               ?? null;
+        if ($qtDate) {
+            try {
+                return Carbon::parse($qtDate);
+            } catch (\Exception) {}
+        }
+
+        // 3b. QuickTime timestamps_unix (MP4) — Unix-Timestamp
+        $qtTs = $this->id3['quicktime']['timestamps_unix']['create']['moov mvhd'] ?? null;
+        if ($qtTs && (int) $qtTs > 0) {
+            try {
+                $dt = Carbon::createFromTimestamp((int) $qtTs);
+                if ($dt->year > 1970) return $dt;
+            } catch (\Exception) {}
+        }
+
+        // 4. IFD0 DateTime — letzter Ausweg, kann Importzeit sein
         $fallbacks = [
             $this->id3[$this->ext]['exif']['IFD0']['DateTime'] ?? null,
             $this->id3['jpg']['exif']['IFD0']['DateTime']       ?? null,

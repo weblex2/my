@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Travel Map ✈</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         *,
@@ -520,9 +520,13 @@
     <script>
         am5.ready(function() {
 
+            // ── Visited country codes (from PHP) ────────────
+            var visitedCodes = @json($galleries->pluck('code')->unique()->values());
+
             // ── Colors ──────────────────────────────────────
             var C_BG = am5.color(0x06060d);
             var C_LAND = am5.color(0x111827); // dark blue-grey
+            var C_VISITED = am5.color(0x1a3a2a); // dark green for visited
             var C_BORDER = am5.color(0x06060d);
             var C_HOVER = am5.color(0x1e3a5f);
             var C_PIN = am5.color(0xf97316); // orange
@@ -570,6 +574,16 @@
 
             polySeries.mapPolygons.template.states.create("hover", {
                 fill: C_HOVER
+            });
+
+            // Highlight visited countries after geodata is loaded
+            polySeries.events.on("datavalidated", function() {
+                polySeries.mapPolygons.each(function(polygon) {
+                    var id = polygon.dataItem.get("id");
+                    if (visitedCodes.indexOf(id) !== -1) {
+                        polygon.set("fill", C_VISITED);
+                    }
+                });
             });
 
             // ── Line series ──────────────────────────────────
