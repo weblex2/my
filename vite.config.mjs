@@ -22,6 +22,7 @@ export default defineConfig({
                 'resources/css/laravelMyAdmin.css',
                 'resources/js/laravelMyAdmin.js',
                 'resources/js/websocket.js',
+                'resources/js/travelmap.js',
                 'resources/css/clean.css',
                 'resources/css/crm.css',
             ],
