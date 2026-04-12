@@ -46,9 +46,7 @@ class GalleryController extends Controller
         session(['used_mappoints' => [] ]);
         $galleries = Gallery::orderBy('name')->get();
         $galleries->load('GalleryMappoint');
-        $mappoints = GalleryMappoint::all();
-        $mappoints->load('GalleryPics');
-        $mappoints->loadCount('GalleryPics');
+        $mappoints = GalleryMappoint::withCount('GalleryPics')->get();
         return view('gallery.index', compact('galleries', 'mappoints'));
     }
 
@@ -96,55 +94,52 @@ class GalleryController extends Controller
                 ->limit($perPage)
                 ->get();
 
+            $picIds = $pics->pluck('id');
             $videos = ['mov', 'mp4'];
 
-            $photos = $pics->map(function($pic) use ($videos) {
+            // Bulk-Load: nur pic_id + size, KEIN filecontent — ein Query für alle Pics
+            $allSizes = GalleryPicContent::whereIn('pic_id', $picIds)
+                ->select('pic_id', 'size')
+                ->get()
+                ->groupBy('pic_id')
+                ->map(fn($rows) => $rows->pluck('size')->toArray());
+
+            // Bulk-Load Texte — ein Query für alle Pics
+            $allTexts = GalleryText::whereIn('pic_id', $picIds)
+                ->where('language', session('lang', 'DE'))
+                ->get()
+                ->keyBy('pic_id');
+
+            $photos = $pics->map(function($pic) use ($videos, $allSizes, $allTexts) {
                 $ext     = strtolower(pathinfo($pic->pic, PATHINFO_EXTENSION));
                 $isVideo = in_array($ext, $videos);
+                $sizes   = $allSizes->get($pic->id, []);
 
-                $thumbnail = null;
-                $content   = null;
+                $thumbnailSize = null;
+                $contentSize   = null;
 
                 if ($isVideo) {
-                    // Videos: Versuche TN, M, L, XL (in dieser Reihenfolge)
-                    foreach (['TN', 'M', 'L', 'XL'] as $size) {
-                        $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', $size)->first();
-                        if ($tn) {
-                            $thumbnail = $tn->filecontent;
-                            break;
-                        }
+                    foreach (['TN', 'M', 'L', 'XL'] as $s) {
+                        if (in_array($s, $sizes)) { $thumbnailSize = $s; break; }
                     }
-
-                    $mov = GalleryPicContent::where('pic_id', $pic->id)->where('size', 'MOV')->first();
-                    $content = $mov ? $mov->filecontent : null;
+                    if (in_array('MOV', $sizes)) $contentSize = 'MOV';
                 } else {
-                    // Bilder: Versuche M, L, XL, TN (in dieser Reihenfolge)
-                    foreach (['M', 'L', 'XL', 'TN'] as $size) {
-                        $tn = GalleryPicContent::where('pic_id', $pic->id)->where('size', $size)->first();
-                        if ($tn) {
-                            $thumbnail = $tn->filecontent;
-                            break;
-                        }
+                    foreach (['M', 'L', 'XL', 'TN'] as $s) {
+                        if (in_array($s, $sizes)) { $thumbnailSize = $s; break; }
                     }
-
-                    // Fallback: Nimm irgendeinen Content
-                    if (!$thumbnail) {
-                        $anyContent = GalleryPicContent::where('pic_id', $pic->id)->first();
-                        if ($anyContent) {
-                            $thumbnail = $anyContent->filecontent;
-                        }
+                    // Fallback: irgendeine verfügbare Größe
+                    if (!$thumbnailSize && count($sizes)) {
+                        $thumbnailSize = $sizes[0];
                     }
                 }
 
-                $textRow = GalleryText::where('pic_id', $pic->id)
-                    ->where('language', session('lang', 'DE'))
-                    ->first();
+                $textRow = $allTexts->get($pic->id);
 
                 return [
                     'id'        => $pic->id,
                     'is_video'  => $isVideo,
-                    'thumbnail' => $thumbnail,
-                    'content'   => $content,
+                    'thumbnail' => $thumbnailSize ? route('gallery.serveImage', [$pic->id, $thumbnailSize]) : null,
+                    'content'   => $contentSize   ? route('gallery.serveImage', [$pic->id, $contentSize])   : null,
                     'lat'       => $pic->lat,
                     'lon'       => $pic->lon,
                     'taken_at'  => $pic->taken_at ? \Carbon\Carbon::parse($pic->taken_at)->format('d.m.Y H:i') : null,
@@ -184,6 +179,50 @@ class GalleryController extends Controller
             ], 500);
         }
     }
+
+/* public function getMappointPhotos($mappoint_id, Request $request){
+    try {
+        $perPage = 5;
+        $page    = (int) $request->get('page', 1);
+
+        $total = GalleryPics::where('mappoint_id', $mappoint_id)->count();
+
+        $pics = GalleryPics::where('mappoint_id', $mappoint_id)
+            ->orderByRaw('COALESCE(taken_at, created_at) ASC')
+            ->orderBy('ord')
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
+
+        $picIds = $pics->pluck('id')->toArray();
+
+        $photos = $pics->map(function($pic) {
+            // EINFACH: nimm den ersten besten content
+            $content = GalleryPicContent::where('pic_id', $pic->id)->first();
+
+            return [
+                'id'          => $pic->id,
+                'thumbnail'   => $content ? base64_encode($content->filecontent) : null,
+                'content'     => null,
+                'is_video'    => false,
+                'text'       => $pic->text,
+                'lat'        => $pic->lat,
+                'lon'        => $pic->lon,
+                'taken'      => $pic->taken_at ? (string)$pic->taken_at : null,
+                'created'    => $pic->created_at ? (string)$pic->created_at : null,
+            ];
+        });
+
+        return response()->json([
+            'photos' => $photos,
+            'total' => $total,
+            'page' => $page,
+            'perPage' => $perPage,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+} */
 
     public function uploadBulk($gallery_id = null, $mappoint_id = null){
         $galleries = Gallery::orderBy('name')->get();
@@ -313,9 +352,7 @@ class GalleryController extends Controller
                 ->orderBy('ord')
                 ->get();
 
-            $pics->load('GalleryText');
-            $pics->load('GalleryPicContent');
-            $pics->load('Mappoint');
+            $pics->load(['GalleryText', 'Thumbnail', 'Mappoint']);
             if (count($pics)<$this->reloadItems){
                 $picCnt = $this->reloadItems-count($pics);
                 $morePics = $this->getImagesFromNextMapPoint($picCnt, true);
@@ -434,11 +471,17 @@ class GalleryController extends Controller
     }
 
     public function getBigPic($id){
-        $pic = GalleryPics::find($id);
-        $pic->load('GalleryPicContent');
-        //$pic->load('PicXl');
+        // Beste verfügbare Vollbild-Größe ermitteln (kein filecontent laden)
+        $sizes = GalleryPicContent::where('pic_id', $id)->pluck('size')->toArray();
+        $bestSize = null;
+        foreach (['L', 'XL', 'M', 'TN'] as $s) {
+            if (in_array($s, $sizes)) { $bestSize = $s; break; }
+        }
+        if (!$bestSize) {
+            return Response::json(['status' => 'not_found'], 404);
+        }
         return Response::json([
-            'data' => $pic->GalleryPicContent->filecontent,
+            'data'   => route('gallery.serveImage', [$id, $bestSize]),
             'status' => 'ok',
         ], 200);
     }
@@ -656,6 +699,29 @@ class GalleryController extends Controller
         $latitude = $this->gps($exif["GPSLatitude"], $exif['GPSLatitudeRef']);
         $longitude = $this->gps($exif["GPSLongitude"], $exif['GPSLongitudeRef']);
         echo $latitude . "," . $longitude;
+    }
+
+    public function serveImage($pic_id, $size = 'TN'){
+        $content = GalleryPicContent::where('pic_id', $pic_id)
+            ->where('size', $size)
+            ->firstOrFail();
+
+        $raw = $content->filecontent;
+
+        // filecontent kann als Data-URL gespeichert sein (data:image/jpeg;base64,...)
+        if (str_starts_with($raw, 'data:')) {
+            [$meta, $b64] = explode(',', $raw, 2);
+            preg_match('/data:([^;]+)/', $meta, $m);
+            $mime   = $m[1] ?? 'image/jpeg';
+            $binary = base64_decode($b64);
+        } else {
+            $mime   = 'image/jpeg';
+            $binary = $raw;
+        }
+
+        return response($binary, 200)
+            ->header('Content-Type', $mime)
+            ->header('Cache-Control', 'public, max-age=86400');
     }
 
     public function gps($coordinate, $hemisphere) {

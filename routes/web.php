@@ -191,6 +191,7 @@ Route::controller(GalleryController::class)->group(function () {
     Route::get('/travel-blog/config', 'config')->name('gallery.config');
     Route::post('/travel-blog/storeConfig', 'storeConfig')->name('gallery.storeConfig');
     Route::get('/travel-blog/getBigPic/{id}', 'getBigPic')->name('gallery.getBigPic');
+    Route::get('/travel-blog/image/{pic_id}/{size}', 'serveImage')->name('gallery.serveImage');
 });
 
 // Gallery Admin Routes
