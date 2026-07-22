@@ -128,7 +128,11 @@ am5.ready(function() {
         }),
     })).events.on("click", function() { chart.goHome(); });
 
-    window._map = { root, chart, pinSeries, lineSeries, planeLineSeries, planeSeries, planeShape };
+    window._map = {
+        root, chart, pinSeries, lineSeries, planeLineSeries, planeSeries, planeShape,
+        planeAnimation: null,
+        planePosDisposer: null,
+    };
 });
 
 // ── Gallery laden ─────────────────────────────────────────
@@ -146,6 +150,16 @@ window.loadGallery = function(id, name, code) {
         .then(function(data) {
             const m = window._map;
             if (!m) return;
+
+            // Laufende Flugzeug-Animation und Listener stoppen, bevor Series gecleart werden
+            if (m.planeAnimation) {
+                m.planeAnimation.stop();
+                m.planeAnimation = null;
+            }
+            if (m.planePosDisposer) {
+                m.planePosDisposer.dispose();
+                m.planePosDisposer = null;
+            }
 
             m.pinSeries.data.clear();
             m.lineSeries.data.clear();
@@ -181,11 +195,11 @@ window.loadGallery = function(id, name, code) {
                 const planeItem = m.planeSeries.pushDataItem({
                     lineDataItem: routeLine, positionOnLine: 0, autoRotate: true,
                 });
-                planeItem.animate({
+                m.planeAnimation = planeItem.animate({
                     key: "positionOnLine", to: 1, duration: 14000,
                     loops: Infinity, easing: am5.ease.yoyo(am5.ease.linear),
                 });
-                planeItem.on("positionOnLine", function(val) {
+                m.planePosDisposer = planeItem.on("positionOnLine", function(val) {
                     m.planeShape.set("rotation", val >= 0.99 ? 180 : 0);
                 });
             }

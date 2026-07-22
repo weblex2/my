@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan:*)",
+      "Bash(php -r ':*)",
+      "Bash(cmd.exe /c \"dir \\\\\"F:\\\\Media\\\\Pics\\\\2024 - Thailand\\\\iCloud Fotos\\\\IMG_6375.MOV\\\\\"\")",
+      "Bash(cmd.exe /c \"dir \\\\\"F:\\\\Media\\\\Pics\\\\2024 - Thailand\\\\iCloud Fotos\\\\\" | findstr 6375\")",
+      "Bash(cmd.exe /c \"dir \\\\\"F:\\\\Media\\\\Pics\\\\2024 - Thailand\\\\iCloud Fotos\\\\\" /b | findstr MOV\")",
+      "Bash(cmd.exe /c \"dir \\\\\"F:\\\\Media\\\\Pics\\\\2024 - Thailand\\\\\"\")",
+      "Bash(cmd.exe /c \"dir \\\\\"F:\\\\Media\\\\Pics\\\\2024 - Thailand\\\\\" /b\")",
+      "Bash(xxd)",
+      "Bash(powershell.exe -Command \"Get-ChildItem 'F:\\\\Media\\\\Pics\\\\2024 - Thailand' | Select-Object Name | ConvertTo-Json\")",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(./node_modules/.bin/vite build:*)",
+      "Bash(cmd.exe /c \"cd e:\\\\web\\\\my && npm run build\")",
+      "Bash(cmd.exe /c \"cd e:\\\\web\\\\my && node node_modules\\\\vite\\\\bin\\\\vite.js build\")",
+      "Bash(cmd.exe /c \"dir e:\\\\web\\\\my\\\\node_modules\\\\.bin\\\\vite*\")",
+      "Bash(cmd.exe /c \"dir e:\\\\web\\\\my\\\\node_modules\\\\vite\")",
+      "Bash(cmd.exe /c \"cd e:\\\\web\\\\my && npm install\")"
+    ]
+  }
+}
