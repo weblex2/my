@@ -317,6 +317,155 @@
 }
 
 /* --------------------------------------------------------------------------
+   Lightbox
+   -------------------------------------------------------------------------- */
+
+.tb2-photo img { cursor: zoom-in; }
+
+.tb2-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 3rem);
+    background: rgba(2, 4, 10, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tb2-lightbox.is-open { opacity: 1; visibility: visible; }
+
+.tb2-lightbox-stage {
+    position: relative;
+    max-width: min(1280px, 92vw);
+    max-height: 82vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--nn-line);
+    background: rgba(4, 7, 15, 0.6);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 229, 255, 0.12);
+}
+
+.tb2-lightbox-stage img,
+.tb2-lightbox-stage video {
+    display: block;
+    max-width: min(1280px, 92vw);
+    max-height: 82vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Eckklammern wie bei den Panels */
+.tb2-lightbox-stage::before,
+.tb2-lightbox-stage::after {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    pointer-events: none;
+}
+
+.tb2-lightbox-stage::before {
+    top: -1px; left: -1px;
+    border-top: 2px solid var(--nn-cyan);
+    border-left: 2px solid var(--nn-cyan);
+}
+
+.tb2-lightbox-stage::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 2px solid var(--nn-cyan);
+    border-right: 2px solid var(--nn-cyan);
+}
+
+.tb2-lightbox-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(1280px, 92vw);
+    margin-top: 0.8rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--nn-text-dim);
+}
+
+.tb2-lightbox-bar b {
+    color: var(--nn-cyan);
+    font-weight: 400;
+}
+
+.tb2-lightbox-caption {
+    max-width: min(1280px, 92vw);
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--nn-text);
+    opacity: 0.85;
+    text-align: center;
+}
+
+/* Bedienelemente */
+.tb2-lb-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(4, 7, 15, 0.8);
+    border: 1px solid var(--nn-line);
+    color: var(--nn-cyan);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    z-index: 2;
+}
+
+.tb2-lb-btn:hover {
+    background: rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.35);
+}
+
+.tb2-lb-prev { left: -23px; }
+.tb2-lb-next { right: -23px; }
+
+.tb2-lb-close {
+    position: absolute;
+    top: clamp(1rem, 3vw, 2rem);
+    right: clamp(1rem, 3vw, 2rem);
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(4, 7, 15, 0.8);
+    border: 1px solid var(--nn-line);
+    color: var(--nn-cyan);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.tb2-lb-close:hover { background: rgba(0, 229, 255, 0.2); }
+
+@media (max-width: 720px) {
+    .tb2-lb-prev { left: 4px; }
+    .tb2-lb-next { right: 4px; }
+}
+
+/* --------------------------------------------------------------------------
    Upload
    -------------------------------------------------------------------------- */
 

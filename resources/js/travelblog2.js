@@ -205,10 +205,14 @@
     let state = { gallery: null, offset: 0, loading: false, done: false };
     let observer = null;
 
+    // Alle bereits eingehaengten Bilder, in Feed-Reihenfolge — Grundlage der Lightbox
+    let shots = [];
+
     function openFeed(galleryId) {
         if (!els.feed || !galleryId) return;
 
         state = { gallery: galleryId, offset: 0, loading: false, done: false };
+        shots = [];
         els.feedBody.innerHTML = '';
         els.feed.classList.add('is-open');
         markActive(galleryId);
@@ -229,7 +233,89 @@
 
     if (els.close) els.close.addEventListener('click', closeFeed);
 
+    /* ---------------------------------------------------------------------
+       Lightbox
+       --------------------------------------------------------------------- */
+    let lb = null;
+    let shotIndex = -1;
+
+    function buildLightbox() {
+        if (lb) return lb;
+
+        const el = document.createElement('div');
+        el.className = 'tb2-lightbox';
+        el.innerHTML =
+            '<button type="button" class="tb2-lb-close" aria-label="Schließen">&times;</button>' +
+            '<div class="tb2-lightbox-stage">' +
+                '<button type="button" class="tb2-lb-btn tb2-lb-prev" aria-label="Vorheriges Bild">&lsaquo;</button>' +
+                '<img alt="">' +
+                '<button type="button" class="tb2-lb-btn tb2-lb-next" aria-label="Nächstes Bild">&rsaquo;</button>' +
+            '</div>' +
+            '<div class="tb2-lightbox-bar"><span data-lb-date></span><span data-lb-count></span></div>' +
+            '<div class="tb2-lightbox-caption" data-lb-caption></div>';
+
+        root.appendChild(el);
+
+        lb = {
+            el,
+            img: el.querySelector('img'),
+            date: el.querySelector('[data-lb-date]'),
+            count: el.querySelector('[data-lb-count]'),
+            caption: el.querySelector('[data-lb-caption]'),
+        };
+
+        el.querySelector('.tb2-lb-close').addEventListener('click', closeShot);
+        el.querySelector('.tb2-lb-prev').addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
+        el.querySelector('.tb2-lb-next').addEventListener('click', (e) => { e.stopPropagation(); step(1); });
+
+        // Klick auf den Hintergrund schliesst, Klick aufs Bild nicht
+        el.addEventListener('click', (e) => { if (e.target === el) closeShot(); });
+
+        return lb;
+    }
+
+    function openShot(i) {
+        if (!shots.length) return;
+        buildLightbox();
+        shotIndex = i;
+        renderShot();
+        lb.el.classList.add('is-open');
+    }
+
+    function renderShot() {
+        const p = shots[shotIndex];
+        if (!p) return;
+
+        lb.img.src = p.src;
+        lb.date.textContent = p.taken_at || '';
+        lb.count.innerHTML = `<b>${shotIndex + 1}</b> / ${shots.length}`;
+        lb.caption.textContent = p.text || '';
+    }
+
+    function step(dir) {
+        if (!shots.length) return;
+        shotIndex = (shotIndex + dir + shots.length) % shots.length;
+        renderShot();
+    }
+
+    function closeShot() {
+        if (lb) lb.el.classList.remove('is-open');
+        shotIndex = -1;
+    }
+
+    function shotOpen() {
+        return lb && lb.el.classList.contains('is-open');
+    }
+
     document.addEventListener('keydown', (e) => {
+        if (shotOpen()) {
+            // Lightbox hat Vorrang vor dem Feed
+            if (e.key === 'Escape') { closeShot(); }
+            else if (e.key === 'ArrowRight') { step(1); }
+            else if (e.key === 'ArrowLeft') { step(-1); }
+            return;
+        }
+
         if (e.key === 'Escape') closeFeed();
     });
 
@@ -300,6 +386,14 @@
             `<figure>${media}</figure>` +
             `<div class="tb2-photo-meta"><span>${p.taken_at || ''}</span>${geo}</div>` +
             (p.text ? `<div class="tb2-photo-text">${escapeHtml(p.text)}</div>` : '');
+
+        // Nur Bilder in die Lightbox; Videos behalten ihre eigenen Bedienelemente
+        if (!p.is_video && p.src) {
+            const idx = shots.length;
+            shots.push(p);
+            const img = card.querySelector('img');
+            if (img) img.addEventListener('click', () => openShot(idx));
+        }
 
         els.feedBody.appendChild(card);
     }
