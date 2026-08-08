@@ -31,6 +31,8 @@ export default defineConfig({
                 'resources/js/netnexus.js',
                 'resources/css/index3.css',
                 'resources/js/index3.js',
+                'resources/css/travelblog2.css',
+                'resources/js/travelblog2.js',
             ],
             refresh: true,
         }),

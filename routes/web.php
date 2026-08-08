@@ -452,4 +452,19 @@ Route::controller(WegController::class)->group(function () {
     Route::get('/upload-modal', function () {return view('livewire.file-upload');})->name('upload.modal');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Travel-Blog 2 - Weltkarte mit eingefaerbten Laendern + durchlaufender Feed
+|--------------------------------------------------------------------------
+| Bewusst getrennt vom bestehenden GalleryController-Block, damit
+| /travel-blog unveraendert bleibt.
+*/
+Route::controller(\App\Http\Controllers\TravelBlog2Controller::class)->group(function () {
+    Route::get('/travel-blog2', 'index')->name('tb2.index');
+    Route::get('/travel-blog2/countries', 'countries')->name('tb2.countries');
+    Route::get('/travel-blog2/feed', 'feed')->name('tb2.feed');
+    Route::get('/travel-blog2/upload', 'upload')->middleware(['auth'])->name('tb2.upload');
+    Route::post('/travel-blog2/store', 'store')->middleware(['auth'])->name('tb2.store');
+});
+
 
