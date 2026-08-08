@@ -1,0 +1,576 @@
+/* ==========================================================================
+   netnexus.css — HUD-/Terminal-Optik fuer die Seite /2 (view: index2)
+   Eigenstaendig geschrieben. Alles unter .nn-root gescoped, damit das global
+   geladene cards.css nicht dazwischenfunkt.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap');
+
+.nn-root {
+    --nn-bg: #04070f;
+    --nn-bg-soft: #0a1020;
+    --nn-panel: rgba(10, 20, 38, 0.72);
+    --nn-line: rgba(0, 229, 255, 0.28);
+    --nn-line-soft: rgba(0, 229, 255, 0.12);
+    --nn-cyan: #00e5ff;
+    --nn-amber: #ffb84d;
+    --nn-magenta: #ff4d9d;
+    --nn-text: #cfe9f5;
+    --nn-text-dim: #6f8ba3;
+    --nn-glow: 0 0 12px rgba(0, 229, 255, 0.55);
+
+    --nn-mono: 'Share Tech Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+    --nn-display: 'Orbitron', 'Urbanist', system-ui, sans-serif;
+
+    position: relative;
+    min-height: 100vh;
+    background: var(--nn-bg);
+    color: var(--nn-text);
+    font-family: var(--nn-mono);
+    overflow-x: hidden;
+    isolation: isolate;
+}
+
+/* --------------------------------------------------------------------------
+   Hintergrund: Farbverlauf, Raster, Scanlines, Vignette
+   -------------------------------------------------------------------------- */
+
+.nn-root::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+        radial-gradient(ellipse at 20% -10%, rgba(0, 229, 255, 0.16), transparent 55%),
+        radial-gradient(ellipse at 85% 110%, rgba(255, 77, 157, 0.12), transparent 55%),
+        linear-gradient(180deg, #04070f 0%, #060c18 40%, #04070f 100%);
+    background-color: var(--nn-bg);
+}
+
+.nn-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background-image:
+        linear-gradient(var(--nn-line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--nn-line-soft) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 25%, transparent 78%);
+    animation: nn-grid-drift 22s linear infinite;
+}
+
+@keyframes nn-grid-drift {
+    to { background-position: 64px 64px, 64px 64px; }
+}
+
+.nn-scanlines {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.16) 3px,
+        rgba(0, 0, 0, 0) 4px
+    );
+    opacity: 0.5;
+}
+
+.nn-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 39;
+    pointer-events: none;
+    box-shadow: inset 0 0 180px 40px rgba(0, 0, 0, 0.85);
+}
+
+/* Partikel-Canvas */
+.nn-particles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Kopfzeile
+   -------------------------------------------------------------------------- */
+
+.nn-shell {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 1.25rem clamp(1rem, 4vw, 3rem) 1.5rem;
+}
+
+.nn-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--nn-line);
+}
+
+.nn-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    font-family: var(--nn-display);
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    font-size: clamp(0.95rem, 2.4vw, 1.4rem);
+    color: #eaf7ff;
+    text-shadow: var(--nn-glow);
+    margin: 0;
+}
+
+.nn-brand .nn-sub {
+    font-family: var(--nn-mono);
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    font-size: 0.7em;
+    color: var(--nn-text-dim);
+    text-shadow: none;
+}
+
+.nn-readouts {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2vw, 1.75rem);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: var(--nn-text-dim);
+    text-transform: uppercase;
+}
+
+.nn-readout b {
+    display: block;
+    font-weight: 400;
+    font-size: 0.68rem;
+    opacity: 0.65;
+}
+
+.nn-readout span {
+    color: var(--nn-cyan);
+    font-size: 0.95rem;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+.nn-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #7dffb0;
+}
+
+.nn-status::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #7dffb0;
+    box-shadow: 0 0 10px #7dffb0;
+    animation: nn-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes nn-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.35; transform: scale(0.8); }
+}
+
+/* Boot-Zeile */
+.nn-bootline {
+    margin: 0.85rem 0 0;
+    font-size: 0.8rem;
+    color: var(--nn-text-dim);
+    letter-spacing: 0.08em;
+    min-height: 1.2em;
+}
+
+.nn-bootline .nn-caret {
+    display: inline-block;
+    width: 0.55em;
+    background: var(--nn-cyan);
+    animation: nn-blink 1.05s steps(1) infinite;
+    margin-left: 2px;
+    color: transparent;
+}
+
+@keyframes nn-blink {
+    50% { opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Buehne + Karussell
+   -------------------------------------------------------------------------- */
+
+.nn-stage {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1.5rem, 5vh, 4rem) 0;
+    perspective: 1600px;
+}
+
+.nn-root .carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
+}
+
+.nn-root .carousel {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    transform-style: preserve-3d;
+}
+
+/* Karten */
+.nn-root .memory-card {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(340px, 78vw);
+    height: 400px;
+    margin-left: calc(min(340px, 78vw) / -2);
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.65s cubic-bezier(0.22, 0.85, 0.3, 1), opacity 0.5s ease;
+    will-change: transform, opacity;
+}
+
+.nn-root .memory-card.nn-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.nn-root .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.nn-root .memory-card.nn-flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.nn-root .card-front,
+.nn-root .card-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--nn-panel);
+    border: 1px solid var(--nn-line);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 18px 50px rgba(0, 0, 0, 0.65),
+        inset 0 0 40px rgba(0, 229, 255, 0.05);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    overflow: hidden;
+    /* abgeschnittene Ecken */
+    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+}
+
+.nn-root .card-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(160deg, rgba(14, 26, 48, 0.9), rgba(6, 12, 24, 0.94));
+}
+
+/* Eckklammern */
+.nn-root .card-front::before,
+.nn-root .card-back::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 10px;
+    width: 26px; height: 26px;
+    border-top: 2px solid var(--nn-cyan);
+    border-left: 2px solid var(--nn-cyan);
+    opacity: 0.75;
+}
+
+.nn-root .card-front::after,
+.nn-root .card-back::after {
+    content: '';
+    position: absolute;
+    bottom: 10px; right: 10px;
+    width: 26px; height: 26px;
+    border-bottom: 2px solid var(--nn-cyan);
+    border-right: 2px solid var(--nn-cyan);
+    opacity: 0.75;
+}
+
+.nn-root .card-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.6rem 1.4rem 1.3rem;
+    text-align: left;
+}
+
+.nn-root .memory-date {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--nn-amber);
+    border-left: 2px solid var(--nn-amber);
+    padding-left: 0.6rem;
+    margin-bottom: 0.9rem;
+}
+
+.nn-root .card-content h3 {
+    font-family: var(--nn-display);
+    font-weight: 700;
+    font-size: 1.12rem;
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    color: #eaf7ff;
+    margin: 0 0 1rem;
+    text-shadow: 0 0 14px rgba(0, 229, 255, 0.35);
+}
+
+.nn-root .memory-image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 118px;
+    margin-bottom: 1rem;
+    color: var(--nn-cyan);
+    border: 1px solid var(--nn-line-soft);
+    background:
+        repeating-linear-gradient(45deg, rgba(0, 229, 255, 0.05) 0 6px, transparent 6px 12px);
+}
+
+.nn-root .memory-image i {
+    filter: drop-shadow(0 0 14px rgba(0, 229, 255, 0.75));
+    animation: nn-float 5s ease-in-out infinite;
+}
+
+@keyframes nn-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-7px); }
+}
+
+.nn-root .glitch-effect {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.16), transparent);
+    transform: translateX(-100%);
+    animation: nn-sweep 4.5s ease-in-out infinite;
+}
+
+@keyframes nn-sweep {
+    0%, 62%  { transform: translateX(-100%); }
+    82%      { transform: translateX(100%); }
+    100%     { transform: translateX(100%); }
+}
+
+.nn-root .memory-preview,
+.nn-root .card-back p {
+    font-size: 0.86rem;
+    line-height: 1.62;
+    color: var(--nn-text);
+    opacity: 0.86;
+    margin: 0;
+}
+
+.nn-root .card-back .card-content h3 {
+    font-size: 1rem;
+}
+
+.nn-root .card-back p {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+    font-size: 0.8rem;
+}
+
+.nn-root .card-back p::-webkit-scrollbar { width: 4px; }
+.nn-root .card-back p::-webkit-scrollbar-thumb {
+    background: var(--nn-line);
+    border-radius: 2px;
+}
+
+.nn-root .card-glow {
+    position: absolute;
+    inset: auto -30% -60% -30%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.3), transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+}
+
+.nn-root .memory-card.nn-active .card-glow { opacity: 1; }
+
+.nn-root .memory-coordinates {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--nn-line-soft);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--nn-text-dim);
+}
+
+.nn-root .memory-coordinates i { color: var(--nn-cyan); margin-right: 0.3rem; }
+
+/* Hinweis "umdrehen" */
+.nn-root .nn-flip-hint {
+    position: absolute;
+    right: 1.1rem;
+    top: 1.2rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: var(--nn-text-dim);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nn-root .memory-card.nn-active:hover .nn-flip-hint { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+   Steuerung
+   -------------------------------------------------------------------------- */
+
+.nn-root .carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2.2rem;
+}
+
+.nn-root .control-btn {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 229, 255, 0.06);
+    color: var(--nn-cyan);
+    border: 1px solid var(--nn-line);
+    cursor: pointer;
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.nn-root .control-btn:hover {
+    background: rgba(0, 229, 255, 0.18);
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.nn-root .control-btn:focus-visible {
+    outline: 2px solid var(--nn-amber);
+    outline-offset: 3px;
+}
+
+.nn-counter {
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    color: var(--nn-text-dim);
+    min-width: 5.5rem;
+    text-align: center;
+}
+
+.nn-counter b {
+    color: var(--nn-cyan);
+    font-weight: 400;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+/* Fortschrittspunkte */
+.nn-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+}
+
+.nn-dot {
+    width: 22px;
+    height: 3px;
+    background: var(--nn-line);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nn-dot.is-active {
+    background: var(--nn-cyan);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   Fusszeile
+   -------------------------------------------------------------------------- */
+
+.nn-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--nn-line);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--nn-text-dim);
+}
+
+.nn-footer a {
+    color: var(--nn-cyan);
+    text-decoration: none;
+    transition: text-shadow 0.25s ease;
+}
+
+.nn-footer a:hover { text-shadow: 0 0 10px rgba(0, 229, 255, 0.7); }
+
+/* --------------------------------------------------------------------------
+   Reduzierte Bewegung + kleine Viewports
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .nn-root *,
+    .nn-root *::before,
+    .nn-root *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+    .nn-grid { animation: none; }
+}
+
+@media (max-width: 640px) {
+    .nn-root .carousel,
+    .nn-root .carousel-container { min-height: 380px; height: 380px; }
+    .nn-root .memory-card { height: 360px; }
+    .nn-readouts { width: 100%; justify-content: space-between; }
+    .nn-scanlines { opacity: 0.3; }
+}

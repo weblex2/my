@@ -27,6 +27,8 @@ export default defineConfig({
                 'resources/css/clean.css',
                 'resources/css/crm.css',
                 'resources/css/cards.css',
+                'resources/css/netnexus.css',
+                'resources/js/netnexus.js',
             ],
             refresh: true,
         }),
