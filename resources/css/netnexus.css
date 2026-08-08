@@ -6,6 +6,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap');
 
+/* cards.css setzt global "html, body { height:100%; overflow:hidden;
+   display:grid; align-items:center }". Das zentriert lange Seiten und
+   schneidet sie oben/unten ab. Hier zuruecknehmen — netnexus.css wird nur
+   auf dieser Seite geladen, andere Seiten bleiben unberuehrt. */
+html,
+body,
+html:has(.nn-root),
+body:has(.nn-root) {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    display: block !important;
+    align-items: initial !important;
+}
+
 .nn-root {
     --nn-bg: #04070f;
     --nn-bg-soft: #0a1020;
