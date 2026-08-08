@@ -309,8 +309,12 @@ class TravelBlog2Controller extends Controller
                 $thumb = $pick(['TN', 'M', 'L', 'XL']);
                 $movie = in_array('MOV', $sizes, true) ? 'MOV' : null;
             } else {
-                $thumb = $pick(['L', 'M', 'XL', 'TN']);
+                $thumb = $pick(['TN', 'M', 'L', 'XL']);
             }
+
+            // Grosse Fassung fuer die Lightbox; faellt auf das Thumbnail
+            // zurueck, wenn es (wie beim Altbestand) nur eine Groesse gibt.
+            $large = $pick(['XL', 'L', 'M', 'TN']);
 
             $text = $allTexts->get($pic->id);
 
@@ -318,6 +322,7 @@ class TravelBlog2Controller extends Controller
                 'id'       => $pic->id,
                 'is_video' => $isVideo,
                 'src'      => $thumb ? route('gallery.serveImage', [$pic->id, $thumb]) : null,
+                'full'     => $large ? route('gallery.serveImage', [$pic->id, $large]) : null,
                 'video'    => $movie ? route('gallery.serveImage', [$pic->id, $movie]) : null,
                 'lat'      => $pic->lat !== null ? (float) $pic->lat : null,
                 'lon'      => $pic->lon !== null ? (float) $pic->lon : null,

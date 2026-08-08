@@ -286,7 +286,8 @@
         const p = shots[shotIndex];
         if (!p) return;
 
-        lb.img.src = p.src;
+        // Lightbox nimmt die grosse Fassung, der Feed nur das Thumbnail
+        lb.img.src = p.full || p.src;
         lb.date.textContent = p.taken_at || '';
         lb.count.innerHTML = `<b>${shotIndex + 1}</b> / ${shots.length}`;
         lb.caption.textContent = p.text || '';
