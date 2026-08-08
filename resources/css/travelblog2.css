@@ -341,10 +341,18 @@
 
 .tb2-lightbox.is-open { opacity: 1; visibility: visible; }
 
+/* Fester Rahmen im Verhaeltnis 3:2. Die dritte Groesse (123vh) ist
+   82vh * 1.5 — damit bleibt das Verhaeltnis exakt erhalten, auch wenn die
+   Hoehe der begrenzende Faktor ist. Ergebnis: Hoch- und Querformat sitzen
+   in exakt demselben Kasten. */
+.tb2-lightbox {
+    --tb2-lb-w: min(1200px, 92vw, 123vh);
+}
+
 .tb2-lightbox-stage {
     position: relative;
-    max-width: min(1280px, 92vw);
-    max-height: 82vh;
+    width: var(--tb2-lb-w);
+    aspect-ratio: 3 / 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -353,13 +361,13 @@
     box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 229, 255, 0.12);
 }
 
+/* contain statt cover: nichts wird abgeschnitten, das ganze Foto bleibt
+   sichtbar. Hochkant bekommt seitliche Raender, quer oben und unten. */
 .tb2-lightbox-stage img,
 .tb2-lightbox-stage video {
     display: block;
-    max-width: min(1280px, 92vw);
-    max-height: 82vh;
-    width: auto;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
 
@@ -390,7 +398,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    width: min(1280px, 92vw);
+    width: var(--tb2-lb-w);
     margin-top: 0.8rem;
     font-size: 0.68rem;
     letter-spacing: 0.14em;
@@ -404,7 +412,7 @@
 }
 
 .tb2-lightbox-caption {
-    max-width: min(1280px, 92vw);
+    width: var(--tb2-lb-w);
     margin-top: 0.5rem;
     font-size: 0.82rem;
     line-height: 1.6;
