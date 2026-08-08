@@ -25,197 +25,105 @@
                         <span data-nn-clock>--:--:--</span>
                     </div>
                     <div class="nn-readout">
-                        <b>sektor</b>
-                        <span>07</span>
+                        <b>module</b>
+                        <span>10</span>
                     </div>
                 </div>
             </header>
 
             <p class="nn-bootline" data-nn-boot></p>
 
-            <main class="nn-stage">
-                <div class="carousel-container">
-                    <div class="carousel" id="memory-carousel">
+            {{-- Vorstellung --}}
+            <section class="nn-section">
+                <h2 class="nn-section-title"><span class="nn-idx">01</span> Identifikation</h2>
 
-                        <x-card h1="Me, myself and I" h2="What you need to know" text="Was ich über mich selbst sage"
-                            icon="fa-person-circle-check"
-                            back="- leidenschaftlicher Programmierer <br>
-                                  - Fokus auf PHP und Laravel. <br>
-                                  - Entwicklung von Webanwendungen<br>
-                                  - neuen Herausforderungen<br>
-                                  - Fähigkeiten zu erweitern<br>
-                                  - das Übliche halt...<br>
-                                  - das ist mein persönliches Experimentierfeld<br>
-                                  - verschiedene Technologien und Konzepte <br>
-                                  " />
+                <div class="nn-intro">
+                    <figure class="nn-portrait">
+                        <img src="{{ asset('img/noppal3.jpg') }}" alt="Alexander">
+                        <figcaption>operator // alexander</figcaption>
+                    </figure>
 
-                        <x-card h1="Filament Project" h2="Build your own CRM" text="Easy Configuration"
-                            icon="fa-branch"
-                            back="Laravel Filament ist ein modernes Admin- und Tooling-Framework, das speziell für Laravel entwickelt wurde. Es liefert dir fertige UI-Komponenten, Admin-Panels und Entwickler-Tools, die sich nahtlos in eine Laravel-Anwendung einfügen, ohne dass du alles von Grund auf selbst programmieren musst." />
-
-                        <div class="memory-card" data-memory-id="3">
-                            <div class="card-inner">
-                                <div class="card-front">
-                                    <div class="card-content">
-                                        <div class="memory-date">CONCEPT: Algorithms</div>
-                                        <h3>The Algorithm Library</h3>
-                                        <div class="memory-image">
-                                            <i class="fa-solid fa-book-open fa-3x"></i>
-                                            <div class="glitch-effect"></div>
-                                        </div>
-                                        <p class="memory-preview">
-                                            Endless tomes of sorting, searching, and optimization...
-                                        </p>
-                                        <div class="card-glow"></div>
-                                    </div>
-                                </div>
-                                <div class="card-back">
-                                    <div class="card-content">
-                                        <h3>The Algorithm Library</h3>
-                                        <p>
-                                            Endless shelves containing every possible solution. I found my
-                                            own data structures there—pages still being written as I coded.
-                                            The Librarian (my senior developer) told me I was never supposed
-                                            to reinvent the wheel. My solution was already optimized. Now I'm
-                                            writing outside the margins, trying new approaches.
-                                        </p>
-                                        <div class="memory-coordinates">
-                                            <span><i class="fa-solid fa-location-dot"></i> Stack Overflow</span>
-                                            <span class="time-stamp"><i class="fa-regular fa-clock"></i> 11:05:40</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="memory-card" data-memory-id="4">
-                            <div class="card-inner">
-                                <div class="card-front">
-                                    <div class="card-content">
-                                        <div class="memory-date">PARADIGM: Abstraction</div>
-                                        <h3>The Abstract Void</h3>
-                                        <div class="memory-image">
-                                            <i class="fa-solid fa-atom fa-3x"></i>
-                                            <div class="glitch-effect"></div>
-                                        </div>
-                                        <p class="memory-preview">
-                                            Nothing concrete exists here, yet I feel the underlying logic...
-                                        </p>
-                                        <div class="card-glow"></div>
-                                    </div>
-                                </div>
-                                <div class="card-back">
-                                    <div class="card-content">
-                                        <h3>The Abstract Void</h3>
-                                        <p>
-                                            Nothing concrete exists here, yet I feel the underlying logic.
-                                            The Abstract Void is the space between concrete implementations,
-                                            a quantum foam of design patterns. I stayed too long designing
-                                            and began to dissolve into pure theory. Parts of my ideas are
-                                            still there, echoing. I'm not whole anymore. Can you feel the
-                                            gaps in my documentation?
-                                        </p>
-                                        <div class="memory-coordinates">
-                                            <span><i class="fa-solid fa-location-dot"></i> design patterns.md</span>
-                                            <span class="time-stamp"><i class="fa-regular fa-clock"></i> --:--:--</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="memory-card" data-memory-id="5">
-                            <div class="card-inner">
-                                <div class="card-front">
-                                    <div class="card-content">
-                                        <div class="memory-date">TOOL: Git</div>
-                                        <h3>The Version Control Mirror</h3>
-                                        <div class="memory-image">
-                                            <i class="fa-solid fa-code-branch fa-3x"></i>
-                                            <div class="glitch-effect"></div>
-                                        </div>
-                                        <p class="memory-preview">
-                                            I saw my code, but not as it is now; multiple branches reflecting...
-                                        </p>
-                                        <div class="card-glow"></div>
-                                    </div>
-                                </div>
-                                <div class="card-back">
-                                    <div class="card-content">
-                                        <h3>The Version Control Mirror</h3>
-                                        <p>
-                                            I saw my code, but not as it is now. The mirror of Git showed
-                                            all my possible branches across different commits. Some were
-                                            stable, some were experimental. All were my work. The reflection
-                                            (my `git log`) spoke: "You're fracturing the codebase by
-                                            merging conflicts. You need to rebase and stay on one timeline."
-                                        </p>
-                                        <div class="memory-coordinates">
-                                            <span><i class="fa-solid fa-location-dot"></i> github.com/my-repo</span>
-                                            <span class="time-stamp"><i class="fa-regular fa-clock"></i> 18:55:20</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="memory-card" data-memory-id="6">
-                            <div class="card-inner">
-                                <div class="card-front">
-                                    <div class="card-content">
-                                        <div class="memory-date">PROCESS: Deployment</div>
-                                        <h3>The Deployment Dream</h3>
-                                        <div class="memory-image">
-                                            <i class="fa-solid fa-rocket fa-3x"></i>
-                                            <div class="glitch-effect"></div>
-                                        </div>
-                                        <p class="memory-preview">
-                                            I'm trying to send it live, but which environment is real?
-                                        </p>
-                                        <div class="card-glow"></div>
-                                    </div>
-                                </div>
-                                <div class="card-back">
-                                    <div class="card-content">
-                                        <h3>The Deployment Dream</h3>
-                                        <p>
-                                            I'm trying to send my application live, but which environment
-                                            is real? Every server feels familiar yet subtly different. The
-                                            boundaries between staging and production are thinning. Sometimes
-                                            I see through the logs of other instances. I'm losing track of
-                                            which configurations belong to which version of my app. Are you
-                                            helping me deploy, or are you causing me to break production?
-                                        </p>
-                                        <div class="memory-coordinates">
-                                            <span><i class="fa-solid fa-location-dot"></i> cloud-server:port</span>
-                                            <span class="time-stamp"><i class="fa-regular fa-clock"></i> NOW</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="nn-bio nn-panel">
+                        <p>
+                            Ich bin ein leidenschaftlicher Programmierer mit einem starken Fokus auf
+                            <strong>PHP</strong> und <strong>Laravel</strong>. In meiner Karriere habe ich mich
+                            intensiv mit der Entwicklung von Webanwendungen beschäftigt und bin ständig auf der
+                            Suche nach neuen Herausforderungen, um meine Fähigkeiten zu erweitern.
+                        </p>
+                        <p>
+                            Diese Seite ist mein persönliches Experimentierfeld, auf dem ich verschiedene
+                            Technologien und Konzepte ausprobiere. Von kleinen Tools und Features bis hin zu
+                            komplexen Anwendungen – hier möchte ich nicht nur zeigen, was ich in der
+                            <strong>Webentwicklung</strong> beherrsche, sondern auch kontinuierlich dazulernen
+                            und innovative Lösungen entwickeln.
+                        </p>
+                        <p>
+                            Schau dich gerne um und sieh dir an, welche Projekte ich aktuell umsetze!
+                        </p>
                     </div>
                 </div>
+            </section>
 
-                <div class="carousel-controls">
-                    <button id="prev-btn" class="control-btn" type="button" aria-label="Vorherige Karte">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
+            {{-- Technologien --}}
+            <section class="nn-section">
+                <h2 class="nn-section-title"><span class="nn-idx">02</span> Technologien</h2>
 
-                    <span class="nn-counter" data-nn-counter aria-live="polite"></span>
-
-                    <button id="next-btn" class="control-btn" type="button" aria-label="Nächste Karte">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
+                <div class="nn-stack">
+                    <span class="nn-chip">PHP</span>
+                    <span class="nn-chip">Laravel</span>
+                    <span class="nn-chip">Laravel Filament</span>
+                    <span class="nn-chip">AWS</span>
+                    <span class="nn-chip">Docker</span>
+                    <span class="nn-chip">MySQL</span>
+                    <span class="nn-chip">Apache</span>
+                    <span class="nn-chip">Tailwind</span>
+                    <span class="nn-chip">jQuery</span>
                 </div>
+            </section>
 
-                <div class="nn-dots" data-nn-dots></div>
-            </main>
+            {{-- Module --}}
+            <section class="nn-section">
+                <h2 class="nn-section-title"><span class="nn-idx">03</span> Module</h2>
+
+                <div class="nn-modules">
+                    <x-index.card img="card-laravel.png" header="Meine ersten Schritte mit Laravel"
+                        text="Was ich auf der Reise mit Laravel so erlebt habe - ein Blog" link="blog.index" />
+
+                    <x-index.card img="card-reverb.png" header="Chat mit Laravel Reverb"
+                        text="Laravel Reverb brings real-time WebSocket communication for Laravel applications."
+                        link="chat.login" />
+
+                    <x-index.card img="card-ntfy.webp" header="Der eigene NTFY Server"
+                        text="Ein einfacher Weg, Nachrichten zu verschicken" link="ntfy.test" />
+
+                    <x-index.card img="card-crm.jpg" header="Erstes eigenes CRM mit Filament"
+                        text="Das wollte ich schon immer einmal haben :)" link="filament.admin.pages.dashboard" />
+
+                    <x-index.card img="card-futter.jpg" header="Futter Manager"
+                        text="Weil wir nie wissen, was wir morgen essen sollen, ihr kennt das..."
+                        link="futter.index" />
+
+                    <x-index.card img="card-phpmyadmin.webp" header="PhpMyAdmin"
+                        text="Nur für mich, weil es so einfacher ist" link="phpmyadmin" />
+
+                    <x-index.card img="card-cv.png" header="Lebenslauf"
+                        text="Ja nun, was soll ich sagen, ein Lebenslauf eben.." link="cv.index" />
+
+                    <x-index.card img="card-gemeni.png" header="Google Gemeni API"
+                        text="Eine einfache API zu Google Gemeni, ich wollte es halt mal ausprobieren"
+                        link="gemeni.index" />
+
+                    <x-index.card img="cv-maintainance.jpeg" header="Site Maintainance"
+                        text="Logs, Serverstatus usw... Was man eben braucht" link="maintainance.showLogs" />
+
+                    <x-index.card img="cv-maintainance.jpeg" header="RedisInsight"
+                        text="GUI für Redis... nettes Tool" link="maintainance.redisInsight" />
+                </div>
+            </section>
 
             <footer class="nn-footer">
-                <span>&larr; &rarr; blättern &nbsp;//&nbsp; leertaste dreht die karte</span>
-                <span><a href="{{ url('/') }}">zurück zur startseite</a></span>
+                <span>noppal.de // persönliches experimentierfeld</span>
+                <span><a href="{{ url('/') }}">klassische ansicht</a></span>
             </footer>
 
         </div>
