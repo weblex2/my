@@ -26,6 +26,7 @@ export default defineConfig({
                 'resources/js/travelmap.js',
                 'resources/css/clean.css',
                 'resources/css/crm.css',
+                'resources/css/cards.css',
             ],
             refresh: true,
         }),
