@@ -73,6 +73,51 @@ class TravelBlog2Controller extends Controller
     }
 
     /**
+     * Freigabe-Ansicht: zeigt alle noch nicht freigegebenen Fotos.
+     */
+    public function admin()
+    {
+        $pending = GalleryPics::where('approved', 0)
+            ->orderByRaw('COALESCE(taken_at, created_at) ASC')
+            ->get();
+
+        $galleries = Gallery::whereIn('id', $pending->pluck('gallery_id')->unique())
+            ->pluck('name', 'id');
+
+        return view('travelblog2.admin', [
+            'photos'    => $this->mapPhotos($pending),
+            'raw'       => $pending->keyBy('id'),
+            'galleries' => $galleries,
+            'total'     => $pending->count(),
+        ]);
+    }
+
+    /**
+     * Freigeben oder verwerfen. Verwerfen loescht nur die Zuordnung nicht —
+     * das Foto bleibt in der DB und kann spaeter noch freigegeben werden.
+     */
+    public function approve(Request $request)
+    {
+        $ids = array_filter(array_map('intval', (array) $request->input('ids', [])));
+
+        if (empty($ids)) {
+            return back()->with('tb2_msg', 'Nichts ausgewählt.');
+        }
+
+        if ($request->input('action') === 'delete') {
+            GalleryPics::whereIn('id', $ids)->delete();
+            GalleryPicContent::whereIn('pic_id', $ids)->delete();
+            GalleryText::whereIn('pic_id', $ids)->delete();
+            $msg = count($ids) . ' Foto(s) gelöscht.';
+        } else {
+            GalleryPics::whereIn('id', $ids)->update(['approved' => 1]);
+            $msg = count($ids) . ' Foto(s) freigegeben.';
+        }
+
+        return back()->with('tb2_msg', $msg);
+    }
+
+    /**
      * Alle bereisten Laender inkl. Kartenpunkte.
      * Grundlage fuer Einfaerbung und Pins.
      */
@@ -80,7 +125,15 @@ class TravelBlog2Controller extends Controller
     {
         $trips = $this->orderedTrips();
 
+        // Nur Orte zeigen, an denen auch ein freigegebenes Foto haengt — sonst
+        // verraten neue Pins Orte, bevor die Fotos freigegeben sind.
+        $visibleMappointIds = GalleryPics::where('approved', 1)
+            ->whereNotNull('mappoint_id')
+            ->distinct()
+            ->pluck('mappoint_id');
+
         $mappoints = GalleryMappoint::whereIn('gallery_id', $trips->pluck('id'))
+            ->whereIn('id', $visibleMappointIds)
             ->whereNotNull('lat')
             ->whereNotNull('lon')
             ->get(['id', 'gallery_id', 'mappoint_name', 'lat', 'lon', 'ord'])
@@ -138,6 +191,7 @@ class TravelBlog2Controller extends Controller
         $trip = $trips[$pos];
 
         $pics = GalleryPics::where('gallery_id', $galleryId)
+            ->where('approved', 1)
             ->orderByRaw('COALESCE(taken_at, created_at) ASC')
             ->orderBy('ord')
             ->offset($offset)
@@ -184,7 +238,8 @@ class TravelBlog2Controller extends Controller
      */
     private function orderedTrips()
     {
-        $counts = GalleryPics::selectRaw('gallery_id, COUNT(*) as c, MIN(COALESCE(taken_at, created_at)) as started')
+        $counts = GalleryPics::where('approved', 1)
+            ->selectRaw('gallery_id, COUNT(*) as c, MIN(COALESCE(taken_at, created_at)) as started')
             ->groupBy('gallery_id')
             ->get()
             ->keyBy('gallery_id');

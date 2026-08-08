@@ -465,6 +465,8 @@ Route::controller(\App\Http\Controllers\TravelBlog2Controller::class)->group(fun
     Route::get('/travel-blog2/feed', 'feed')->name('tb2.feed');
     Route::get('/travel-blog2/upload', 'upload')->middleware(['auth'])->name('tb2.upload');
     Route::post('/travel-blog2/store', 'store')->middleware(['auth'])->name('tb2.store');
+    Route::get('/travel-blog2/admin', 'admin')->middleware(['auth'])->name('tb2.admin');
+    Route::post('/travel-blog2/approve', 'approve')->middleware(['auth'])->name('tb2.approve');
 });
 
 

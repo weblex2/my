@@ -536,6 +536,22 @@
     word-break: break-word;
 }
 
+/* Freigabe-Kachel: ausgewaehlt = cyan umrandet */
+.tb2-pick { position: relative; display: block; cursor: pointer; }
+
+.tb2-pick input {
+    position: absolute;
+    top: 8px; left: 8px;
+    z-index: 2;
+    width: 18px; height: 18px;
+    accent-color: var(--nn-cyan);
+    cursor: pointer;
+}
+
+.tb2-pick img { opacity: 0.45; transition: opacity 0.2s ease; }
+.tb2-pick:has(input:checked) { border-color: var(--nn-cyan); }
+.tb2-pick:has(input:checked) img { opacity: 1; }
+
 .tb2-item.is-ok    { border-color: rgba(125, 255, 176, 0.5); }
 .tb2-item.is-ok    .tb2-item-state { color: #7dffb0; }
 .tb2-item.is-error { border-color: rgba(255, 77, 157, 0.6); }
