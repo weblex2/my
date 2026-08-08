@@ -1,0 +1,202 @@
+/* ==========================================================================
+   index3.css — NUR Ergaenzungen fuer /index3
+   Die Optik kommt unveraendert aus netnexus.css; index3.blade.php laedt beide
+   und nutzt .nn-root. Hier stehen ausschliesslich die neuen Bausteine:
+   Navigationsschiene, Eck-HUD, Radar und Maus-Neigung.
+   Alle Farben ueber die bestehenden --nn-* Variablen. Keine neuen Farbwerte.
+   ========================================================================== */
+
+.nn-root.i3 {
+    --i3-rail: 62px;
+}
+
+/* --------------------------------------------------------------------------
+   Navigationsschiene links
+   -------------------------------------------------------------------------- */
+
+.i3-rail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    width: var(--i3-rail);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4rem;
+    border-right: 1px solid var(--nn-line-soft);
+    background: rgba(4, 7, 15, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.i3-rail-mark {
+    writing-mode: vertical-rl;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--nn-text-dim);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    border-left: 2px solid transparent;
+    transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.i3-rail-mark:hover,
+.i3-rail-mark.is-active {
+    color: var(--nn-cyan);
+    border-left-color: var(--nn-cyan);
+    text-decoration: none;
+}
+
+/* Inhalt neben der Schiene einruecken */
+.nn-root.i3 .nn-shell {
+    margin-left: var(--i3-rail);
+}
+
+/* --------------------------------------------------------------------------
+   Eck-HUD
+   -------------------------------------------------------------------------- */
+
+.i3-corner {
+    position: fixed;
+    z-index: 25;
+    pointer-events: none;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--nn-text-dim);
+    line-height: 1.7;
+}
+
+.i3-corner b {
+    color: var(--nn-cyan);
+    font-weight: 400;
+    text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+.i3-corner--tl {
+    top: 14px;
+    left: calc(var(--i3-rail) + 14px);
+    padding: 10px 0 0 12px;
+    border-top: 1px solid var(--nn-line);
+    border-left: 1px solid var(--nn-line);
+    width: 156px;
+    height: 48px;
+}
+
+.i3-corner--tr {
+    top: 14px;
+    right: 14px;
+    padding: 10px 12px 0 0;
+    border-top: 1px solid var(--nn-line);
+    border-right: 1px solid var(--nn-line);
+    width: 156px;
+    height: 48px;
+    text-align: right;
+}
+
+.i3-corner--br {
+    bottom: 14px;
+    right: 14px;
+    padding: 0 12px 10px 0;
+    border-bottom: 1px solid var(--nn-line);
+    border-right: 1px solid var(--nn-line);
+    width: 156px;
+    height: 48px;
+    text-align: right;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+/* --------------------------------------------------------------------------
+   Radar unten links
+   -------------------------------------------------------------------------- */
+
+.i3-radar {
+    position: fixed;
+    left: calc(var(--i3-rail) + 18px);
+    bottom: 18px;
+    z-index: 26;
+    width: 132px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.i3-radar canvas {
+    display: block;
+    width: 132px;
+    height: 132px;
+    filter: drop-shadow(0 0 14px rgba(0, 229, 255, 0.25));
+}
+
+.i3-radar-meta {
+    margin-top: 6px;
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--nn-text-dim);
+    line-height: 1.7;
+}
+
+.i3-radar-meta b {
+    color: var(--nn-amber);
+    font-weight: 400;
+}
+
+/* --------------------------------------------------------------------------
+   Maus-Neigung der Karten
+   -------------------------------------------------------------------------- */
+
+.nn-root.i3 .nn-modules {
+    perspective: 1200px;
+}
+
+.i3-tilt {
+    transform-style: preserve-3d;
+}
+
+.nn-root.i3 .index-card {
+    height: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* Glanzlicht folgt der Maus. Nutzt die vorhandene Cyan-Tönung. */
+.nn-root.i3 .index-card > .i3-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+        380px circle at var(--i3-mx, 50%) var(--i3-my, 50%),
+        rgba(0, 229, 255, 0.16),
+        transparent 42%
+    );
+}
+
+.nn-root.i3 .index-card:hover > .i3-sheen {
+    opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Kleine Viewports: Schiene und Eck-HUD raus
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+    .nn-root.i3 { --i3-rail: 0px; }
+    .i3-rail,
+    .i3-radar,
+    .i3-corner--tr,
+    .i3-corner--br { display: none; }
+    .i3-corner--tl { left: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nn-root.i3 .index-card { transform: none !important; }
+}

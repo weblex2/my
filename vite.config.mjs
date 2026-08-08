@@ -29,6 +29,8 @@ export default defineConfig({
                 'resources/css/cards.css',
                 'resources/css/netnexus.css',
                 'resources/js/netnexus.js',
+                'resources/css/index3.css',
+                'resources/js/index3.js',
             ],
             refresh: true,
         }),

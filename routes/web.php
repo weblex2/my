@@ -75,6 +75,10 @@ Route::get('/index2', function () {
     return view('index2');
 });
 
+Route::get('/index3', function () {
+    return view('index3');
+});
+
 Route::get('/arcade', function () {
     return view('arcade.index');
 });
