@@ -192,14 +192,12 @@ class TravelBlog2Controller extends Controller
         $galleryId = (int) $request->get('gallery', 0);
         $offset    = max(0, (int) $request->get('offset', 0));
 
-        $pos = $trips->search(fn($t) => $t['id'] === $galleryId);
-        if ($pos === false) {
-            $pos       = 0;
+        $trip = $trips->firstWhere('id', $galleryId);
+        if (!$trip) {
+            $trip      = $trips[0];
+            $galleryId = $trip['id'];
             $offset    = 0;
-            $galleryId = $trips[0]['id'];
         }
-
-        $trip = $trips[$pos];
 
         $pics = GalleryPics::where('gallery_id', $galleryId)
             ->where('approved', 1)
@@ -217,16 +215,22 @@ class TravelBlog2Controller extends Controller
         $loadedTo   = $offset + $pics->count();
         $hasMore    = $loadedTo < $trip['pic_count'];
 
-        // Naechste Reise nur melden, wenn diese hier durch ist
+        // Naechste Reise ueber den Sortierschluessel statt ueber die Position.
+        // Die Liste wird bei jeder Anfrage neu sortiert und aendert sich, sobald
+        // Fotos freigegeben werden - eine gemerkte Position zeigt dann auf eine
+        // andere Reise. Der Schluessel waechst dagegen monoton, damit landet man
+        // immer bei der naechsten und nie wieder am Anfang.
         $nextTrip = null;
-        if (!$hasMore && isset($trips[$pos + 1])) {
-            $n = $trips[$pos + 1];
-            $nextTrip = [
-                'gallery_id' => $n['id'],
-                'name'       => $n['name'],
-                'code'       => strtoupper((string) $n['code']),
-                'pic_count'  => $n['pic_count'],
-            ];
+        if (!$hasMore) {
+            $n = $trips->first(fn($t) => $t['sort_key'] > $trip['sort_key']);
+            if ($n) {
+                $nextTrip = [
+                    'gallery_id' => $n['id'],
+                    'name'       => $n['name'],
+                    'code'       => strtoupper((string) $n['code']),
+                    'pic_count'  => $n['pic_count'],
+                ];
+            }
         }
 
         return Response::json([
@@ -263,19 +267,23 @@ class TravelBlog2Controller extends Controller
             ->get(['id', 'name', 'code'])
             ->map(function ($g) use ($counts) {
                 $row = $counts->get($g->id);
+
+                // Ein zusammengesetzter Schluessel statt mehrerer Closures: Reisen
+                // mit Aufnahmedatum zuerst chronologisch, danach die undatierten
+                // nach Namen. Der Schluessel bleibt am Datensatz, weil der Feed
+                // damit weiterblaettert - siehe feed().
                 return [
                     'id'         => $g->id,
                     'name'       => $g->name,
                     'code'       => $g->code,
                     'pic_count'  => (int) $row->c,
                     'started_at' => $row->started,
+                    'sort_key'   => (empty($row->started) ? '1' : '0')
+                        . str_pad((string) $row->started, 19)
+                        . $g->name,
                 ];
             })
-            // Ein zusammengesetzter Schluessel statt mehrerer Closures: Reisen mit
-            // Aufnahmedatum zuerst chronologisch, danach die undatierten nach Namen.
-            ->sortBy(fn($t) => (empty($t['started_at']) ? '1' : '0')
-                . str_pad((string) $t['started_at'], 19)
-                . $t['name'])
+            ->sortBy('sort_key')
             ->values();
     }
 
