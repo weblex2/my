@@ -37,7 +37,7 @@ class GalleryController extends Controller
     var $alterviveGalleries;
 
     public function index(){
-        $lang =  session('lang');
+        $lang =  session('lang', 'DE');
         if (!$lang){
             session(['lang' => 'DE']);
         }
@@ -550,15 +550,15 @@ class GalleryController extends Controller
 
     public function updatePic(Request $request){
         DB::beginTransaction();
-        $lang  = session('lang');
+        $lang  = session('lang', 'DE');
         $text = str_replace('<a ', '<a target="_blank" ',$request->content);
         try {
-            $picText = GalleryText::where('pic_id',"=",$request->id)->where('language','=', session('lang'))->first();
+            $picText = GalleryText::where('pic_id',"=",$request->id)->where('language','=', session('lang', 'DE'))->first();
             if (!$picText){
                 $picText = new GalleryText();
                 $picText->pic_id = $request->id;
                 $picText->gallery_id = $this->getGalIdFromCode($request->country_code);
-                $picText->language = session('lang');
+                $picText->language = session('lang', 'DE');
             }
             $picText->text = $text;
             $res = $picText->save();

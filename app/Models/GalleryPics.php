@@ -37,7 +37,7 @@ class GalleryPics extends Model
     }
 
     public function GalleryText(){
-        return $this->hasMany(GalleryText::Class, 'pic_id', 'id')->where('language','=', session('lang'));
+        return $this->hasMany(GalleryText::Class, 'pic_id', 'id')->where('language','=', session('lang', 'DE'));
     }
 
     public function GalleryTextAll(){

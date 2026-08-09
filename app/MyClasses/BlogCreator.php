@@ -221,7 +221,7 @@ class BlogCreator{
         $galText->mappoint_id = $this->mappoint_id;
         $content = str_replace('<a ', '<a target="_blank" ',$this->content);
         $galText->text =  $content;
-        $galText->language = session('lang');
+        $galText->language = session('lang', 'DE');
         $galText->save();
     }
 
