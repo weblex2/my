@@ -75,20 +75,27 @@ class TravelBlog2Controller extends Controller
     /**
      * Freigabe-Ansicht: zeigt alle noch nicht freigegebenen Fotos.
      */
-    public function admin()
+    /** Fotos pro Seite in der Freigabe */
+    private const ADMIN_PER_PAGE = 48;
+
+    public function admin(Request $request)
     {
         $pending = GalleryPics::where('approved', 0)
             ->orderByRaw('COALESCE(taken_at, created_at) ASC')
-            ->get();
+            ->paginate(self::ADMIN_PER_PAGE)
+            ->withQueryString();
 
-        $galleries = Gallery::whereIn('id', $pending->pluck('gallery_id')->unique())
+        $items = $pending->getCollection();
+
+        $galleries = Gallery::whereIn('id', $items->pluck('gallery_id')->unique())
             ->pluck('name', 'id');
 
         return view('travelblog2.admin', [
-            'photos'    => $this->mapPhotos($pending),
-            'raw'       => $pending->keyBy('id'),
+            'photos'    => $this->mapPhotos($items),
+            'raw'       => $items->keyBy('id'),
             'galleries' => $galleries,
-            'total'     => $pending->count(),
+            'total'     => $pending->total(),
+            'page'      => $pending,
         ]);
     }
 
@@ -104,6 +111,10 @@ class TravelBlog2Controller extends Controller
             return back()->with('tb2_msg', 'Nichts ausgewählt.');
         }
 
+        // Nach der Aktion immer auf Seite 1: die bearbeiteten Fotos fallen aus
+        // der Liste, alle folgenden ruecken nach. Auf der alten Seitenzahl
+        // wuerde man sonst einen Block ueberspringen.
+
         if ($request->input('action') === 'delete') {
             GalleryPics::whereIn('id', $ids)->delete();
             GalleryPicContent::whereIn('pic_id', $ids)->delete();
@@ -114,7 +125,7 @@ class TravelBlog2Controller extends Controller
             $msg = count($ids) . ' Foto(s) freigegeben.';
         }
 
-        return back()->with('tb2_msg', $msg);
+        return redirect()->route('tb2.admin')->with('tb2_msg', $msg);
     }
 
     /**

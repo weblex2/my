@@ -536,6 +536,29 @@
     word-break: break-word;
 }
 
+/* Blaettern in der Freigabe */
+.tb2-pager {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--nn-line-soft);
+}
+
+.tb2-pager .tb2-btn[aria-disabled="true"] {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.tb2-pager-info {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--nn-text-dim);
+}
+
 /* Freigabe-Kachel: ausgewaehlt = cyan umrandet */
 .tb2-pick { position: relative; display: block; cursor: pointer; }
 

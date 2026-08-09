@@ -23,6 +23,12 @@
                         <b>offen</b>
                         <span>{{ $total }}</span>
                     </div>
+                    @if ($total > 0)
+                        <div class="nn-readout">
+                            <b>seite</b>
+                            <span>{{ $page->currentPage() }} / {{ $page->lastPage() }}</span>
+                        </div>
+                    @endif
                 </div>
             </header>
 
@@ -65,6 +71,28 @@
                             @endforeach
                         </div>
                     </form>
+
+                    {{-- Blaettern. Ausserhalb des Formulars, damit ein Klick
+                         nicht als Absenden zaehlt. --}}
+                    @if ($page->lastPage() > 1)
+                        <nav class="tb2-pager">
+                            @if ($page->onFirstPage())
+                                <span class="tb2-btn" aria-disabled="true">&lsaquo; zurück</span>
+                            @else
+                                <a class="tb2-btn" href="{{ $page->previousPageUrl() }}">&lsaquo; zurück</a>
+                            @endif
+
+                            <span class="tb2-pager-info">
+                                {{ $page->firstItem() }}–{{ $page->lastItem() }} von {{ $total }}
+                            </span>
+
+                            @if ($page->hasMorePages())
+                                <a class="tb2-btn" href="{{ $page->nextPageUrl() }}">weiter &rsaquo;</a>
+                            @else
+                                <span class="tb2-btn" aria-disabled="true">weiter &rsaquo;</span>
+                            @endif
+                        </nav>
+                    @endif
                 @endif
             </section>
 
