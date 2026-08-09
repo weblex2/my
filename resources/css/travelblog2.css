@@ -393,6 +393,33 @@
     border-right: 2px solid var(--nn-cyan);
 }
 
+/* Solange die grosse Fassung laedt, zeigt die Buehne das Thumbnail leicht
+   weichgezeichnet plus einen Fortschrittsbalken an der Oberkante. */
+.tb2-lightbox.is-loading .tb2-lightbox-stage img {
+    filter: blur(1.5px);
+    transition: filter 0.3s ease;
+}
+
+.tb2-lightbox.is-loading .tb2-lightbox-stage::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: auto;
+    bottom: auto;
+    width: 40%;
+    height: 2px;
+    border: 0;
+    background: var(--nn-cyan);
+    box-shadow: 0 0 10px var(--nn-cyan);
+    animation: tb2-lb-load 1.1s ease-in-out infinite;
+}
+
+@keyframes tb2-lb-load {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(250%); }
+}
+
 .tb2-lightbox-bar {
     display: flex;
     align-items: center;

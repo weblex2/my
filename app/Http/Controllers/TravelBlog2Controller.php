@@ -205,6 +205,10 @@ class TravelBlog2Controller extends Controller
             ->where('approved', 1)
             ->orderByRaw('COALESCE(taken_at, created_at) ASC')
             ->orderBy('ord')
+            // Eindeutiger Tiebreaker: ohne ihn ist die Reihenfolge bei
+            // gleichem Zeitstempel und ord undefiniert, und Offset-Pagination
+            // liefert dann Dubletten oder ueberspringt Fotos.
+            ->orderBy('id')
             ->offset($offset)
             ->limit(self::PER_PAGE)
             ->get();

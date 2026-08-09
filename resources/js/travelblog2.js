@@ -274,6 +274,17 @@
         return lb;
     }
 
+    /**
+     * Oeffnet genau dieses Foto. Die Position wird ueber die id gesucht, damit
+     * sie fuer Zaehler und Blaettern stimmt, auch wenn sich die Liste durch
+     * Nachladen veraendert hat.
+     */
+    function openShotFor(p) {
+        let i = shots.findIndex((s) => s.id === p.id);
+        if (i < 0) { shots.push(p); i = shots.length - 1; }
+        openShot(i);
+    }
+
     function openShot(i) {
         if (!shots.length) return;
         buildLightbox();
@@ -286,8 +297,26 @@
         const p = shots[shotIndex];
         if (!p) return;
 
-        // Lightbox nimmt die grosse Fassung, der Feed nur das Thumbnail
-        lb.img.src = p.full || p.src;
+        // Zuerst das Thumbnail, das liegt schon im Browsercache und erscheint
+        // sofort — sonst zeigt der Browser weiter das zuvor geoeffnete Bild,
+        // bis die grosse Fassung geladen ist.
+        lb.img.src = p.src;
+        lb.el.classList.add('is-loading');
+
+        if (p.full && p.full !== p.src) {
+            const big = new Image();
+            big.onload = () => {
+                // nur uebernehmen, wenn inzwischen nicht weitergeblaettert wurde
+                if (shots[shotIndex] && shots[shotIndex].id === p.id) {
+                    lb.img.src = p.full;
+                    lb.el.classList.remove('is-loading');
+                }
+            };
+            big.onerror = () => lb.el.classList.remove('is-loading');
+            big.src = p.full;
+        } else {
+            lb.el.classList.remove('is-loading');
+        }
         lb.date.textContent = p.taken_at || '';
         lb.count.innerHTML = `<b>${shotIndex + 1}</b> / ${shots.length}`;
         lb.caption.textContent = p.text || '';
@@ -390,10 +419,14 @@
 
         // Nur Bilder in die Lightbox; Videos behalten ihre eigenen Bedienelemente
         if (!p.is_video && p.src) {
-            const idx = shots.length;
             shots.push(p);
             const img = card.querySelector('img');
-            if (img) img.addEventListener('click', () => openShot(idx));
+            if (img) {
+                img.dataset.shotId = p.id;
+                // Bewusst das Foto-Objekt binden, keine laufende Nummer: eine
+                // Indexverschiebung koennte sonst das falsche Bild oeffnen.
+                img.addEventListener('click', () => openShotFor(p));
+            }
         }
 
         els.feedBody.appendChild(card);
