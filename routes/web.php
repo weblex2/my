@@ -203,7 +203,10 @@ Route::controller(GalleryController::class)->group(function () {
 });
 
 // Gallery Admin Routes
-Route::prefix('gallery-admin')->group(function () {
+// Login zwingend: die Gruppe kann Galerien, Mappoints und Fotos loeschen und
+// war bis 2026-08-09 ohne Middleware, also oeffentlich erreichbar. Gleiches
+// `auth` wie bei den tb2-Routen.
+Route::prefix('gallery-admin')->middleware(['auth'])->group(function () {
     Route::controller(GalleryAdminController::class)->group(function () {
         // Dashboard
         Route::get('/', 'index')->name('gallery.admin.index');
