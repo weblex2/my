@@ -93,7 +93,7 @@
                     class="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition font-medium">
                     <i class="fa-solid fa-plus mr-2"></i>Neue Galerie
                 </button>
-                <button onclick="openModal('mappoint-modal')"
+                <button onclick="newMappoint()"
                     class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg transition font-medium">
                     <i class="fa-solid fa-location-dot mr-2"></i>Neuer Ort
                 </button>
@@ -269,12 +269,14 @@
         <div
             class="bg-slate-800 border border-slate-700 rounded-xl p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-blue-400">Neuer Ort</h2>
+                <h2 id="mappoint-modal-title" class="text-xl font-bold text-blue-400">Neuer Ort</h2>
                 <button onclick="closeModal('mappoint-modal')" class="text-slate-400 hover:text-slate-200">
                     <i class="fa-solid fa-times text-xl"></i>
                 </button>
             </div>
             <form id="mappoint-form" onsubmit="saveMappoint(event)">
+                {{-- Leer = anlegen, gefuellt = bearbeiten (siehe saveMappoint) --}}
+                <input type="hidden" id="mappoint-id" value="">
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Galerie *</label>
@@ -484,8 +486,35 @@
         // ═══════════════════════════════════════════════════
         // Mappoint CRUD
         // ═══════════════════════════════════════════════════
+        function newMappoint() {
+            document.getElementById('mappoint-form').reset();
+            document.getElementById('mappoint-id').value = '';
+            document.getElementById('mappoint-modal-title').textContent = 'Neuer Ort';
+            openModal('mappoint-modal');
+        }
+
+        function editMappoint(id, name, lat, lon) {
+            document.getElementById('mappoint-modal-title').textContent = 'Ort bearbeiten';
+            document.getElementById('mappoint-id').value = id;
+            document.getElementById('mappoint-name').value = name;
+            document.getElementById('mappoint-lat').value = lat;
+            document.getElementById('mappoint-lon').value = lon;
+            // Die Galerie steht nicht in der Liste - die aus dem Tab-Filter uebernehmen.
+            document.getElementById('mappoint-gallery-id').value =
+                document.getElementById('mappoint-gallery-select').value;
+            openModal('mappoint-modal');
+        }
+
+        // Springt aus der Galerie-Uebersicht in den Orte-Tab und laedt sie gleich.
+        function viewGalleryMappoints(id, name) {
+            switchTab('mappoints');
+            document.getElementById('mappoint-gallery-select').value = id;
+            loadMappoints(id);
+        }
+
         function saveMappoint(e) {
             e.preventDefault();
+            const id = document.getElementById('mappoint-id').value;
             const data = {
                 gallery_id: document.getElementById('mappoint-gallery-id').value,
                 mappoint_name: document.getElementById('mappoint-name').value,
@@ -494,8 +523,8 @@
                 description: document.getElementById('mappoint-description').value,
             };
 
-            fetch('/gallery-admin/mappoint', {
-                    method: 'POST',
+            fetch(id ? `/gallery-admin/mappoint/${id}` : '/gallery-admin/mappoint', {
+                    method: id ? 'PUT' : 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': getCSRF(),
@@ -604,8 +633,10 @@
                     }
 
                     container.innerHTML = data.photos.data.map(photo => {
+                        // lazy: der Altbestand hat keine echten Thumbnails, die
+                        // Kacheln laden dort das Original (4-5 MB pro Foto).
                         const thumbnail = photo.thumbnail ?
-                            `<img src="${photo.thumbnail}" class="w-full h-40 object-cover rounded-t-lg">` :
+                            `<img src="${photo.thumbnail}" loading="lazy" decoding="async" class="w-full h-40 object-cover rounded-t-lg">` :
                             '<div class="w-full h-40 bg-slate-700 flex items-center justify-center"><i class="fa-solid fa-image text-4xl text-slate-600"></i></div>';
                         const date = photo.taken_at ? new Date(photo.taken_at).toLocaleDateString('de-DE') :
                             'Kein Datum';

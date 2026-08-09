@@ -201,9 +201,14 @@ class GalleryAdminController extends Controller
     // PHOTO MANAGEMENT
     // ═══════════════════════════════════════════════
 
-    public function getPhotos($mappointId = null, Request $request)
+    /**
+     * Request muss vor dem optionalen Routenparameter stehen. Andersherum
+     * uebergibt Laravel beim Aufruf ohne {mappointId} nur ein Argument und
+     * PHP wirft einen ArgumentCountError - die Fotoliste lieferte dadurch 500.
+     */
+    public function getPhotos(Request $request, $mappointId = null)
     {
-        $query = GalleryPics::with(['Thumbnail', 'GalleryText', 'Mappoint', 'Gallery']);
+        $query = GalleryPics::with(['GalleryText', 'Mappoint', 'Gallery']);
 
         if ($mappointId) {
             $query->where('mappoint_id', $mappointId);
@@ -222,6 +227,37 @@ class GalleryAdminController extends Controller
 
         $photos = $query->orderByRaw('COALESCE(taken_at, created_at) DESC')
             ->paginate(20);
+
+        // Vorschau-URL selbst bestimmen statt ueber die Relation Thumbnail:
+        // die verlangt hart size = 'TN'. Im Altbestand gibt es aber nur die
+        // Groesse "1", bei Videos heisst das Standbild 'VIDEOTN' - die Kacheln
+        // blieben dadurch leer. MOV ist der Videoblob und nie als <img> nutzbar.
+        $sizes = GalleryPicContent::whereIn('pic_id', $photos->pluck('id'))
+            ->get(['pic_id', 'size'])
+            ->groupBy('pic_id')
+            ->map(fn($rows) => $rows->pluck('size')->all());
+
+        $photos->getCollection()->transform(function ($photo) use ($sizes) {
+            $available = array_values(array_diff($sizes->get($photo->id, []), ['MOV']));
+
+            $pick = null;
+            foreach (['TN', 'VIDEOTN', 'M', 'L', 'XL'] as $size) {
+                if (in_array($size, $available, true)) {
+                    $pick = $size;
+                    break;
+                }
+            }
+            $pick = $pick ?? ($available[0] ?? null);
+
+            $ext = strtolower(pathinfo((string) $photo->pic, PATHINFO_EXTENSION));
+
+            $photo->setAttribute('thumbnail', $pick
+                ? route('gallery.serveImage', [$photo->id, $pick])
+                : null);
+            $photo->setAttribute('is_video', in_array($ext, ['mov', 'mp4'], true));
+
+            return $photo;
+        });
 
         return response()->json(['photos' => $photos]);
     }
