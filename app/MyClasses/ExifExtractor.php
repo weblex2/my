@@ -134,7 +134,7 @@ class ExifExtractor
         $lat = $this->id3['tags']['quicktime']['gps_latitude'][0]
             ?? $this->id3['comments']['gps_latitude'][0]
             ?? null;
-        if ($lat !== null) return (float) $lat;
+        if ($lat !== null) return $this->normalizeQuicktimeCoord($lat, 90.0);
 
         return null;
     }
@@ -175,9 +175,31 @@ class ExifExtractor
         $lon = $this->id3['tags']['quicktime']['gps_longitude'][0]
             ?? $this->id3['comments']['gps_longitude'][0]
             ?? null;
-        if ($lon !== null) return (float) $lon;
+        if ($lon !== null) return $this->normalizeQuicktimeCoord($lon, 180.0);
 
         return null;
+    }
+
+    /**
+     * QuickTime-Koordinaten (loci-Atom, MOV/MP4) sind ein VORZEICHENBEHAFTETER
+     * 16.16-Fixpoint-Wert. GetId3 liest ihn vorzeichenlos, negative Werte kommen
+     * dadurch um 65536 zu gross an: -14.093689 wird zu 65521.906311. Das hier
+     * rechnet zurueck. Was danach immer noch ausserhalb des gueltigen Bereichs
+     * liegt, wird verworfen - kein GPS ist besser als falsches GPS, weil der
+     * TripAutoAssigner sonst eine "Unknown"-Galerie anlegt.
+     */
+    private function normalizeQuicktimeCoord(mixed $value, float $max): ?float
+    {
+        $v = (float) $value;
+
+        if (abs($v) > $max) {
+            $corrected = $v - 65536.0;
+            if (abs($corrected) <= $max) {
+                return $corrected;
+            }
+        }
+
+        return abs($v) <= $max ? $v : null;
     }
 
     /**

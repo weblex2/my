@@ -316,28 +316,30 @@ class TravelBlog2Controller extends Controller
             $isVideo = in_array($ext, $videos);
             $sizes   = $allSizes->get($pic->id, []);
 
+            // Der Videoblob liegt unter derselben Mechanik wie die Bildgroessen,
+            // ist aber nie als <img src> brauchbar. Vor der Auswahl aussortieren,
+            // sonst greift der Rueckfall unten danach und der Feed zeigt nichts.
+            $imageSizes = array_values(array_diff($sizes, ['MOV']));
+
             // In den Bestandsdaten gibt es nur die Groesse "1" - die benannten
             // Groessen TN/M/L/XL existieren dort nicht. Deshalb immer auf die
             // erste vorhandene Groesse zurueckfallen, statt leer auszugehen.
-            $pick = function (array $prefs) use ($sizes) {
+            $pick = function (array $prefs) use ($imageSizes) {
                 foreach ($prefs as $s) {
-                    if (in_array($s, $sizes, true)) return $s;
+                    if (in_array($s, $imageSizes, true)) return $s;
                 }
-                return $sizes[0] ?? null;
+                return $imageSizes[0] ?? null;
             };
 
-            $movie = null;
+            $movie = ($isVideo && in_array('MOV', $sizes, true)) ? 'MOV' : null;
 
-            if ($isVideo) {
-                $thumb = $pick(['TN', 'M', 'L', 'XL']);
-                $movie = in_array('MOV', $sizes, true) ? 'MOV' : null;
-            } else {
-                $thumb = $pick(['TN', 'M', 'L', 'XL']);
-            }
+            // Bei Videos heisst das Standbild "VIDEOTN" (so legt BlogCreator es
+            // ab), bei Fotos gibt es das nicht - eine gemeinsame Liste reicht.
+            $thumb = $pick(['VIDEOTN', 'TN', 'M', 'L', 'XL']);
 
             // Grosse Fassung fuer die Lightbox; faellt auf das Thumbnail
             // zurueck, wenn es (wie beim Altbestand) nur eine Groesse gibt.
-            $large = $pick(['XL', 'L', 'M', 'TN']);
+            $large = $pick(['XL', 'L', 'M', 'TN', 'VIDEOTN']);
 
             $text = $allTexts->get($pic->id);
 
