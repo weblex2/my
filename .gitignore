@@ -42,3 +42,9 @@ docker-compose.yml
 
 # Private Keys / Zugangsdaten - niemals committen
 /cert
+
+# Ad-hoc-Sicherungen der .env. Das Repo ist oeffentlich - `.env` allein
+# genuegt als Muster nicht, Kopien wie `.env.bak-20260809` rutschen sonst
+# bei einem `git add -A` mit durch.
+.env.*
+!.env.example
