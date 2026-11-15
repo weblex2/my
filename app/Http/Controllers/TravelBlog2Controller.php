@@ -24,6 +24,9 @@ class TravelBlog2Controller extends Controller
     /** Fotos pro Feed-Seite */
     private const PER_PAGE = 6;
 
+    /** Hoechstens so viele Fotos laedt ein Sprung zu einem Ort auf einmal */
+    private const MAX_JUMP = 300;
+
     public function index()
     {
         return view('travelblog2.index');
@@ -199,16 +202,23 @@ class TravelBlog2Controller extends Controller
             $offset    = 0;
         }
 
-        $pics = GalleryPics::where('gallery_id', $galleryId)
-            ->where('approved', 1)
-            ->orderByRaw('COALESCE(taken_at, created_at) ASC')
-            ->orderBy('ord')
-            // Eindeutiger Tiebreaker: ohne ihn ist die Reihenfolge bei
-            // gleichem Zeitstempel und ord undefiniert, und Offset-Pagination
-            // liefert dann Dubletten oder ueberspringt Fotos.
-            ->orderBy('id')
+        // Klick auf einen Ort: die erste Seite reicht bis zum ersten Foto dieses
+        // Orts, damit der Client dorthin springen kann. Die Fotos davor bleiben
+        // geladen - zurueckscrollen funktioniert also wie gewohnt.
+        $limit     = self::PER_PAGE;
+        $mappoint  = (int) $request->get('mappoint', 0);
+        if ($mappoint && $offset === 0) {
+            $index = $this->orderedPics($galleryId)
+                ->pluck('mappoint_id')
+                ->search(fn($m) => (int) $m === $mappoint);
+            if ($index !== false) {
+                $limit = min($index + self::PER_PAGE, self::MAX_JUMP);
+            }
+        }
+
+        $pics = $this->orderedPics($galleryId)
             ->offset($offset)
-            ->limit(self::PER_PAGE)
+            ->limit($limit)
             ->get();
 
         $photos     = $this->mapPhotos($pics);
@@ -249,6 +259,23 @@ class TravelBlog2Controller extends Controller
     }
 
     /* ------------------------------------------------------------------ */
+
+    /**
+     * Freigegebene Fotos einer Reise in Feed-Reihenfolge (Query, noch nicht
+     * ausgefuehrt). Eine Stelle fuer die Sortierung, damit der Sprung zu einem
+     * Ort und die Seiten des Feeds garantiert dieselbe Reihenfolge benutzen.
+     */
+    private function orderedPics(int $galleryId)
+    {
+        return GalleryPics::where('gallery_id', $galleryId)
+            ->where('approved', 1)
+            ->orderByRaw('COALESCE(taken_at, created_at) ASC')
+            ->orderBy('ord')
+            // Eindeutiger Tiebreaker: ohne ihn ist die Reihenfolge bei
+            // gleichem Zeitstempel und ord undefiniert, und Offset-Pagination
+            // liefert dann Dubletten oder ueberspringt Fotos.
+            ->orderBy('id');
+    }
 
     /**
      * Reisen mit mindestens einem Foto, sortiert nach fruehestem Aufnahme-
@@ -345,6 +372,7 @@ class TravelBlog2Controller extends Controller
 
             return [
                 'id'       => $pic->id,
+                'mappoint_id' => $pic->mappoint_id !== null ? (int) $pic->mappoint_id : null,
                 'is_video' => $isVideo,
                 'src'      => $thumb ? route('gallery.serveImage', [$pic->id, $thumb]) : null,
                 'full'     => $large ? route('gallery.serveImage', [$pic->id, $large]) : null,
