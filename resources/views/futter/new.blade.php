@@ -33,8 +33,10 @@
 </div>
 
 <script>
-        var dropzone = new Dropzone('#file-upload', {
-            previewTemplate: document.querySelector('#preview-template').innerHTML,
+        // #preview-template fehlt in dieser Seite - dann die Standard-Vorschau
+        // von Dropzone nehmen, statt mit einem Fehler abzubrechen
+        var previewTpl = document.querySelector('#preview-template');
+        var dropzone = new Dropzone('#file-upload', Object.assign(previewTpl ? { previewTemplate: previewTpl.innerHTML } : {}, {
             parallelUploads: 3,
             thumbnailHeight: 150,
             thumbnailWidth: 150,
@@ -54,7 +56,7 @@
                     }, 1);
                 }
             }
-        });
+        }));
 
         var minSteps = 6,
             maxSteps = 60,
