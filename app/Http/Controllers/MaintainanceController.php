@@ -20,13 +20,19 @@ class MaintainanceController extends Controller
         ini_set('memory_limit', '2G');
         $containerName = 'mysql8'; // Name deines Docker-Containers
         $dbUser = env('DB_USERNAME', 'root');
-        $dbPassword = env('DB_PASSWORD', '!Cyberbob03');
+        // Kein Passwort mehr als Fallback im Code (das Repo ist oeffentlich)
+        $dbPassword = env('DB_PASSWORD');
         $dbName = env('DB_DATABASE', 'laravel');
         $backupPath = storage_path('app/laravel.sql');
 
-        $command = "docker exec $containerName mysqldump -u $dbUser -p$dbPassword $dbName > $backupPath";
-        echo "<pre>". $command."<br>";
-        $process = Process::fromShellCommandline($command);
+        // Passwort per Umgebungsvariable statt in der Kommandozeile, und der
+        // Befehl wird nicht mehr ausgegeben (bis 2026-11-15 stand er samt
+        // Passwort auf der - damals oeffentlichen - Seite)
+        $command = sprintf('docker exec -e MYSQL_PWD="$DBPW" %s mysqldump -u %s %s > %s',
+            escapeshellarg($containerName), escapeshellarg($dbUser), escapeshellarg($dbName), escapeshellarg($backupPath));
+        echo "<pre>Backup wird erstellt ...<br>";
+        $process = Process::fromShellCommandline($command, null, ['DBPW' => $dbPassword]);
+        $process->setTimeout(1800);
             try {
                 $process->mustRun();
                 $fileSize = filesize($backupPath);

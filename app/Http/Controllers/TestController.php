@@ -132,7 +132,7 @@ class TestController extends Controller
                 'mail.host' => 'smtp.strato.de',
                 'mail.port' => 465,
                 'mail.username' => 'alex@noppenberger.org', // Ersetze mit deiner Strato-E-Mail
-                'mail.password' => '!Cyberbob03', // Ersetze mit deinem Passwort
+                'mail.password' => env('MAIL_PASSWORD'), // Ersetze mit deinem Passwort
                 'mail.encryption' => 'ssl',
                 'mail.from.address' => 'test@example.com', // Ersetze mit deiner Strato-E-Mail
                 'mail.from.name' => 'Test-App',
@@ -166,7 +166,7 @@ class TestController extends Controller
                 'encryption' => 'ssl',
                 'validate_cert' => true,
                 'username' => 'alex@noppenberger.org', // Ersetze mit deiner Strato-E-Mail
-                'password' => '!Cyberbob03', // Ersetze mit deinem Passwort
+                'password' => env('MAIL_PASSWORD'), // Ersetze mit deinem Passwort
                 'protocol' => 'imap',
             ]);
 
@@ -219,7 +219,7 @@ class TestController extends Controller
             $mailer->Host = 'smtp.strato.de';
             $mailer->SMTPAuth = true;
             $mailer->Username = 'alex@noppenberger.org'; // Ersetze mit deiner Strato-E-Mail
-            $mailer->Password = '!Cyberbob03'; // Ersetze mit deinem Passwort
+            $mailer->Password = env('MAIL_PASSWORD'); // Ersetze mit deinem Passwort
             $mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mailer->Port = 465;
             $mailer->CharSet = 'UTF-8';
@@ -256,7 +256,7 @@ class TestController extends Controller
 
     public function sendWhatsApp(){
         $phone="+491722044069";  // Enter your phone number here
-        $apikey="4153439";       // Enter your personal apikey received in step 3 above
+        $apikey=env('CALLMEBOT_APIKEY');       // Enter your personal apikey received in step 3 above
         $message = "hi from WhatsApp";
         $url='https://api.callmebot.com/whatsapp.php?source=php&phone='.$phone.'&text='.urlencode($message).'&apikey='.$apikey;
 

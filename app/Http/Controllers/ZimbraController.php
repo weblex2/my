@@ -65,7 +65,6 @@ class ZimbraController extends Controller
         #$port = 993;
         $port = FilamentHelper::readSetting('imap_port');
         $username = $user->email;
-        #$password = 'Akwg44Frt6Cx';
         try{
             $password = decrypt($user->user01);
         }
@@ -329,7 +328,7 @@ class ZimbraController extends Controller
         'port' => 587,
         'encryption' => 'tls',
         'username' => 'alex@noppenberger.org',
-        'password' => 'Akwg44Frt6Cx',
+        'password' => env('ZIMBRA_SMTP_PASSWORD'),
         'from' => ['address' => 'alex@noppenberger.org', 'name' => 'Alex'],
     ];
 

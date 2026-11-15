@@ -29,7 +29,7 @@ class MailController extends Controller
             'mail.host' => 'smtp.strato.de',
             'mail.port' => 465,
             'mail.username' => 'alex@noppenberger.org', // Ersetze mit deiner Strato-E-Mail
-            'mail.password' => '!Cyberbob03', // Ersetze mit deinem Passwort
+            'mail.password' => env('MAIL_PASSWORD'), // Ersetze mit deinem Passwort
             'mail.encryption' => 'ssl',
             'mail.from.address' => 'test@example.com', // Ersetze mit deiner Strato-E-Mail
             'mail.from.name' => 'Test-App',
@@ -41,7 +41,7 @@ class MailController extends Controller
             'encryption' =>  'ssl',
             'validate_cert' =>  true,
             'username' =>  'alex@noppenberger.org',
-            'password' =>  '!Cyberbob03',
+            'password' =>  env('MAIL_PASSWORD'),
             'protocol' =>  'imap',
         ];
         $this->sentFolder = 'Sent Items';
@@ -57,7 +57,7 @@ class MailController extends Controller
             $mail->Host       = 'smtp.strato.de';
             $mail->SMTPAuth   = true;
             $mail->Username   = 'alex@noppenberger.org';
-            $mail->Password   = '!Cyberbob03';
+            $mail->Password   = env('MAIL_PASSWORD');
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = 465;
 

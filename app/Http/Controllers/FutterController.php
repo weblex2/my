@@ -64,7 +64,10 @@ class FutterController extends Controller
         $files = scandir(public_path('images/tmp'));
         $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
         foreach ($files as $file){
-                unlink(public_path('images/tmp/').$file);
+            // nur Dateien - ein Unterordner "tmp" liess die Seite bisher abstuerzen
+            if (is_file(public_path('images/tmp/').$file)) {
+                @unlink(public_path('images/tmp/').$file);
+            }
         }
 
         return view('futter.new');
@@ -129,9 +132,15 @@ class FutterController extends Controller
             //unset($data['_token']);
             //dump($data['ingredients']);
 
-            $files = scandir(public_path('images/tmp'));
-            $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
-            $pic_name = basename(array_values($files)[0]);
+            // nur echte Dateien (im tmp-Ordner liegt u. a. ein Unterordner)
+            $files = array_values(array_filter(
+                array_diff(scandir(public_path('images/tmp')), array('..', '.')),
+                fn($f) => is_file(public_path('images/tmp/') . $f)
+            ));
+            if (!$files) {
+                abort(422, 'Kein Bild hochgeladen.');
+            }
+            $pic_name = basename($files[0]);
             // Zielname nie aus Benutzereingaben (Rezeptname) bauen - daraus
             // entstanden die Ordner futter/futter/... mit Schadcode
             $ext = strtolower(pathinfo($pic_name, PATHINFO_EXTENSION));
@@ -145,10 +154,12 @@ class FutterController extends Controller
             $futter = new Futter();
             $futter->fill($data);
             $futter->save();
-            //empty tmp folder
+            //empty tmp folder (nur Dateien)
             $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
             foreach ($files as $file){
-                unlink(public_path('images/tmp/').$file);
+                if (is_file(public_path('images/tmp/').$file)) {
+                    @unlink(public_path('images/tmp/').$file);
+                }
             }
             return redirect()->route('futter.index');
         }
