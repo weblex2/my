@@ -23,9 +23,10 @@ class MaintenanceRun extends Command
     {
         $controller = app(MaintainanceController::class);
 
+        $this->line('[' . now()->format('Y-m-d H:i:s') . '] ' . $this->argument('task'));
         ob_start();  // die Controller-Methoden geben HTML aus
         try {
-            match ($this->argument('task')) {
+            $result = match ($this->argument('task')) {
                 'backupdb'   => $controller->backupDatabase(),
                 'certlog2db' => $controller->certLog2DB(),
                 default      => throw new \InvalidArgumentException('Unbekannte Aufgabe: ' . $this->argument('task')),
@@ -38,6 +39,12 @@ class MaintenanceRun extends Command
         $html = ob_get_clean();
 
         $this->line(trim(strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", (string) $html))));
+        if (is_string($result)) {
+            $this->line($result);
+            if (str_starts_with($result, 'Fehler')) {
+                return self::FAILURE;
+            }
+        }
         return self::SUCCESS;
     }
 }

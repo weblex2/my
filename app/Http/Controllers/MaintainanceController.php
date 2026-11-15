@@ -65,7 +65,19 @@ class MaintainanceController extends Controller
         }
 
         public function uploadToS3($s3_filename, $backupPath){
-            $res = Storage::disk('s3')->put($s3_filename, file_get_contents($backupPath));
+            // Als Stream hochladen: file_get_contents lud das ~800-MB-Backup
+            // komplett in den Speicher (Server hat 1 GB RAM)
+            $stream = fopen($backupPath, 'r');
+            try {
+                $res = Storage::disk('s3')->put($s3_filename, $stream);
+            } finally {
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
+            }
+            if (!$res) {
+                throw new \RuntimeException("S3-Upload fehlgeschlagen: $s3_filename");
+            }
         }
 
         public function showLogs(){
