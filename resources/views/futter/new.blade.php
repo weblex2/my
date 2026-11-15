@@ -33,6 +33,9 @@
 </div>
 
 <script>
+        // Wird hier manuell eingerichtet - sonst haengt sich Dropzone wegen der
+        // Klasse "dropzone" ein zweites Mal an ("Dropzone already attached")
+        Dropzone.autoDiscover = false;
         // #preview-template fehlt in dieser Seite - dann die Standard-Vorschau
         // von Dropzone nehmen, statt mit einem Fehler abzubrechen
         var previewTpl = document.querySelector('#preview-template');
