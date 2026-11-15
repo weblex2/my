@@ -10,7 +10,9 @@ use Response;
 
 class NtfyController extends Controller
 {
-    private $endpoint = "http://noppal.de:81/";
+    // Lokal statt ueber die oeffentliche Adresse; NTFY verlangt seit
+    // 2026-11-15 einen Token zum Senden (NTFY_TOKEN in der .env)
+    private $endpoint = "http://127.0.0.1:81/";
     private $default_channel = "ntfy";
     private $emoticons =[];
     public function index($msg){
@@ -47,7 +49,11 @@ class NtfyController extends Controller
         $headers[] = 'Title: '.$msg->topic;
         $headers[] = 'Tags: '.$msg->tags;
         $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        if (env('NTFY_TOKEN')) {
+            $headers[] = 'Authorization: Bearer ' . env('NTFY_TOKEN');
+        }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
         $result = curl_exec($ch);
         if (curl_errno($ch)) {
