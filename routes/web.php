@@ -50,18 +50,24 @@ use App\Http\Controllers\GameController;
 |
 */
 
+// Rollen mit Schreib-/Verwaltungsrechten (Spatie). Nur 'auth' reicht nicht:
+// bis 2026-11-15 war die Registrierung offen, und fremde Konten ohne Rolle
+// waren damit "eingeloggt". Grundsatz seitdem: oeffentlich ist nur, was zur
+// Website gehoert - alles Interne, Tests und Werkzeuge laufen ueber $adminOnly.
+$adminOnly = ['auth', 'role:super_admin|admin'];
+
 Route::get('/welcome', function () {
     return view('welcome');
 });
 
 Route::get('/phpmyadmin', function () {
     return redirect('https://noppal.de:8081');
-})->middleware(['auth'])->name('phpmyadmin');
+})->middleware($adminOnly)->name('phpmyadmin');
 
 
 Route::get('/phpinfo', function () {
     return phpinfo();
-})->middleware(['auth'])->name('phpinfo');
+})->middleware($adminOnly)->name('phpinfo');
 
 Route::get('/', function () {
     return view('index');
@@ -83,52 +89,50 @@ Route::get('/arcade', function () {
     return view('arcade.index');
 });
 
-Route::get('/check-env', function () {
-    return env('AWS_ACCESS_KEY_ID');
-});
-
-
+// /check-env gab den AWS Access Key oeffentlich aus - entfernt (2026-11-15)
 
 Route::controller(GoogleGemeniController::class)->group(function () {
     Route::get('/askGemeni', 'index')->name('gemeni.index');
-    Route::post('/queryGemeni', 'query')->name('gemeni.query');
+    // kostet API-Guthaben: begrenzen
+    Route::post('/queryGemeni', 'query')->middleware('throttle:10,1')->name('gemeni.query');
 });
 
-Route::controller(MaintainanceController::class)->group(function () {
+Route::controller(MaintainanceController::class)->middleware($adminOnly)->group(function () {
     Route::get('/maintainance/backupDB', 'backupDatabase')->name('maintainance.backupdb');
-    Route::get('/logs', 'showLogs')->middleware(['auth'])->name('maintainance.showLogs');
-    Route::post('/logs', 'refreshLogs')->middleware(['auth'])->name('maintainance.refreshLogs');
+    Route::get('/logs', 'showLogs')->name('maintainance.showLogs');
+    Route::post('/logs', 'refreshLogs')->name('maintainance.refreshLogs');
     Route::get('/maintainance/diskinfo', 'diskinfo')->name('maintainance.diskInfo');
-    Route::get('/maintainance/redisInsight', 'redisInsight')->middleware(['auth'])->name('maintainance.redisInsight');
-    Route::get('/maintainance/cert', 'showCertLog')->middleware(['auth'])->name('maintainance.showCertLog');
+    Route::get('/maintainance/redisInsight', 'redisInsight')->name('maintainance.redisInsight');
+    Route::get('/maintainance/cert', 'showCertLog')->name('maintainance.showCertLog');
     Route::get('/maintainance/certlog2db', 'certLog2DB')->name('maintainance.certlog2db');
 });
 
 
-Route::controller(S3Controller::class)->group(function () {
+Route::controller(S3Controller::class)->middleware($adminOnly)->group(function () {
     Route::get('/s3/test', 'index')->name('s3.index');
     Route::get('/s3/show/filename/{filename}', 'show')->name('s3.show');
     Route::get('/s3/uploadtest', 'uploadtest')->name('s3.uploadtest');
 });
 
-Route::controller(TestController::class)->group(function () {
+Route::controller(TestController::class)->middleware($adminOnly)->group(function () {
     Route::get('/gpt', 'chatGptApi')->name('cv.index');
     Route::get('/test', 'testModel')->name('testProduct');
     Route::get('/check', 'check')->name('check');
     Route::get('/redischeck', 'testRedis')->name('testRedis');
-    Route::get('/testEmail', 'testEmail')->middleware(['auth'])->name('testEmail');
-    Route::get('/sendEmail', 'sendEmail')->middleware(['auth'])->name('sendEmail');
-
+    Route::get('/testEmail', 'testEmail')->name('testEmail');
+    Route::get('/sendEmail', 'sendEmail')->name('sendEmail');
 });
 
-Route::controller(FutterController::class)->group(function () {
+Route::controller(FutterController::class)->group(function () use ($adminOnly) {
+    // Lesen oeffentlich, Anlegen/Aendern nur Admins (ueber /futter/save kamen
+    // bis 2026-11-15 Webshells auf den Server)
     Route::get('/futter', 'index')->name('futter.index');
-    Route::get('/futter/new', 'new')->name('futter.new');
     Route::get('/futter/all', 'showAll')->name('futter.all');
+    Route::get('/futter/new', 'new')->middleware($adminOnly)->name('futter.new');
     Route::get('/futter/{id}', 'showDetails')->name('futter.detail');
-    Route::post('/futter/save', 'save')->name('futter.save');
-    Route::post('/futter/update', 'update')->name('futter.update');
-    Route::post('/futter/saveFutterPerDay', 'saveFutterPerDay')->name('futter.saveFutterPerDay');
+    Route::post('/futter/save', 'save')->middleware($adminOnly)->name('futter.save');
+    Route::post('/futter/update', 'update')->middleware($adminOnly)->name('futter.update');
+    Route::post('/futter/saveFutterPerDay', 'saveFutterPerDay')->middleware($adminOnly)->name('futter.saveFutterPerDay');
 });
 
 Route::controller(CvController::class)->group(function () {
@@ -143,7 +147,7 @@ Route::controller(CvController::class)->group(function () {
 });
 
 // TEMP DEBUG — GPS dump (remove after debugging)
-Route::post('/dev/exif-dump', function(\Illuminate\Http\Request $request) {
+Route::middleware($adminOnly)->post('/dev/exif-dump', function(\Illuminate\Http\Request $request) {
     if (!$request->hasFile('file')) return response()->json(['error' => 'no file']);
     $file = $request->file('file');
     $path = $file->getRealPath();
@@ -166,11 +170,6 @@ Route::post('/dev/exif-dump', function(\Illuminate\Http\Request $request) {
         'native' => $native,
     ]);
 });
-
-// Rollen mit Schreibrechten (Spatie). Nur 'auth' reicht nicht: bis
-// 2026-11-15 war die Registrierung offen, und fremde Konten ohne Rolle
-// waren damit "eingeloggt".
-$adminOnly = ['auth', 'role:super_admin|admin'];
 
 Route::controller(GalleryController::class)->group(function () use ($adminOnly) {
     // Oeffentlich: Anzeigen und Sprache
@@ -258,33 +257,32 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     })->name('dashboard');
 });
 
-Route::get('/send-mail', [MailController::class, 'index']);
+Route::get('/send-mail', [MailController::class, 'index'])->middleware($adminOnly);
 
-Route::controller(TwilioController::class)->group(function () {
+Route::controller(TwilioController::class)->middleware($adminOnly)->group(function () {
     Route::get('/wa', 'send')->name('sendWhatsapp');
 });
 
 
-Route::controller(FilamentFieldsController::class)->group(function () {
-    Route::get('/filament/manageFields/{table?}', 'index')->middleware(['auth'])->name('filament.managefields');;
+Route::controller(FilamentFieldsController::class)->middleware($adminOnly)->group(function () {
+    Route::get('/filament/manageFields/{table?}', 'index')->name('filament.managefields');
 });
 
-Route::controller(BlogController::class)->group(function () {
+Route::controller(BlogController::class)->group(function () use ($adminOnly) {
     Route::get('/blog', 'index')->name('blog.index');
-    //Route::get('/blog', 'index')->name('blog.index');
     Route::get('/blog/cat/{id}', 'showcat')->name('blog.showcat');
-    Route::get('/blog/create', 'create')->middleware(['auth'])->name('blog.create');
-    Route::post('/blog/store', 'store')->middleware(['auth'])->name('blog.store');
-    Route::get('/blog/edit/{id}', 'edit')->middleware(['auth'])->name('blog.edit');
-    Route::post('/blog/update', 'update')->middleware(['auth'])->name('blog.update');
-    Route::post('/blog/delete', 'destroy')->middleware(['auth'])->name('blog.delete');
-    Route::post('/blog/makeComment', 'makeComment')->name('blog.makeComment');
+    Route::get('/blog/create', 'create')->middleware($adminOnly)->name('blog.create');
+    Route::post('/blog/store', 'store')->middleware($adminOnly)->name('blog.store');
+    Route::get('/blog/edit/{id}', 'edit')->middleware($adminOnly)->name('blog.edit');
+    Route::post('/blog/update', 'update')->middleware($adminOnly)->name('blog.update');
+    Route::post('/blog/delete', 'destroy')->middleware($adminOnly)->name('blog.delete');
+    Route::post('/blog/makeComment', 'makeComment')->middleware('throttle:10,1')->name('blog.makeComment');
     Route::get('blog/newComment/{id}', 'commentForm')->name('blog.newComment');
-    Route::post('/blog/deleteComment', 'deleteComment')->name('blog.deleteComment');
-    Route::GET('/blog/reactTest', 'reactTest')->name('blog.reactText');
+    Route::post('/blog/deleteComment', 'deleteComment')->middleware($adminOnly)->name('blog.deleteComment');
+    Route::GET('/blog/reactTest', 'reactTest')->middleware($adminOnly)->name('blog.reactText');
 });
 
-Route::controller(CalendarController::class)->group(function () {
+Route::controller(CalendarController::class)->middleware($adminOnly)->group(function () {
     Route::get('/calendar', 'index')->name('calendar.index');
     Route::get('/calendar/save', 'store')->name('calendar.saveEvent');
 });
@@ -296,13 +294,14 @@ Route::controller(FacebookController::class)->group(function () {
     Route::get('auth/facebook/callback', 'handleFacebookCallback');
 });
 
-Route::get('/home', [FileUploadController::class, 'index']);
-Route::post('/upload', [FileUploadController::class, 'uploadToServer']);
-Route::post('/FileUpload', [FileUploadController::class, 'FileUpload'])->name('FileUpload');
+// Uploads: nahmen bis 2026-11-15 ohne Login jeden Dateityp nach public/ an
+Route::get('/home', [FileUploadController::class, 'index'])->middleware($adminOnly);
+Route::post('/upload', [FileUploadController::class, 'uploadToServer'])->middleware($adminOnly);
+Route::post('/FileUpload', [FileUploadController::class, 'FileUpload'])->middleware($adminOnly)->name('FileUpload');
 
 
 //Queue Test
-Route::controller(QueueController::class)->group(function () {
+Route::controller(QueueController::class)->middleware($adminOnly)->group(function () {
     Route::get('testJob', 'index')->name('job.test');
     Route::post('createJob', 'createJob')->name('job.createJob');
     //Route::get('email-test', 'index')->name('queue.test');
@@ -344,40 +343,42 @@ Route::controller(reactTutorialController::class)->group(function () {
 });
 
 
-Route::controller(yt2mp3::class)->group(function () {
+// yt2mp3: die URL geht ungeprueft an yt-dlp ("--exec ..." waere ein Befehl) - nur Admins
+Route::controller(yt2mp3::class)->middleware($adminOnly)->group(function () {
     Route::GET('/yt2mp3', 'index')->name('yt2mp3.index');
     Route::POST('/yt2mp3/get', 'getmp3')->name('yt2mp3.getMp3');
     Route::GET('/yt2mp3/download/{file}', 'downloadFile')->name('yt2mp3.download');
     Route::GET('/yt2mp3/download2/', 'download2')->name('yt2mp3.download2');
 });
 
-Route::controller(NtfyController::class)->group(function () {
+// NTFY: sendNotifications laeuft evtl. per Cron ueber HTTP - siehe Hinweis im Bericht
+Route::controller(NtfyController::class)->middleware($adminOnly)->group(function () {
     Route::GET('/notify/getDates/{date?}', 'getDates')->name('ntfy.getDates');
     Route::GET('/notify/msg/{msg}', 'index')->name('ntfy.index');
-    Route::GET('/notify/create', 'createNotification')->middleware(['auth'])->name('ntfy.create');
-    Route::POST('/notify/store', 'storeNotification')->middleware(['auth'])->name('ntfy.store');
+    Route::GET('/notify/create', 'createNotification')->name('ntfy.create');
+    Route::POST('/notify/store', 'storeNotification')->name('ntfy.store');
     Route::GET('/notify/test', 'test')->name('ntfy.test');
     Route::POST('/notify/sendTestMessage', 'sendTestMessage')->name('ntfy.sendTestMessage');
-    Route::GET('/notify/show', 'showAll')->middleware(['auth'])->name('ntfy.showAll');
-    Route::GET('/notify/show/{id}', 'show')->middleware(['auth'])->name('ntfy.show');
-    Route::GET('/notify/new', 'new')->middleware(['auth'])->name('ntfy.new');
-    Route::POST('/notify/save', 'save')->middleware(['auth'])->name('ntfy.save');
-    Route::GET('/notify/edit/{id}', 'editNotification')->middleware(['auth'])->name('ntfy.editNotification');
-    Route::POST('/notify/delete', 'deleteNotification')->middleware(['auth'])->name('ntfy.deleteNotification');
+    Route::GET('/notify/show', 'showAll')->name('ntfy.showAll');
+    Route::GET('/notify/show/{id}', 'show')->name('ntfy.show');
+    Route::GET('/notify/new', 'new')->name('ntfy.new');
+    Route::POST('/notify/save', 'save')->name('ntfy.save');
+    Route::GET('/notify/edit/{id}', 'editNotification')->name('ntfy.editNotification');
+    Route::POST('/notify/delete', 'deleteNotification')->name('ntfy.deleteNotification');
     Route::GET('/notify/sendNotifications', 'sendNotifications')->name('ntfy.sendNotifications');
 });
 
-Route::controller(KnowledgeBaseController::class)->group(function () {
-    Route::GET('/kb', 'all')->middleware(['auth'])->name('knowledeBase.index');
-    Route::GET('/kb/add', 'addWeb')->middleware(['auth'])->name('knowledeBase.add');
-    Route::POST('/kb/store', 'storeWeb')->middleware(['auth'])->name('knowledeBase.store');
-    Route::POST('/kb/delete', 'deleteWeb')->middleware(['auth'])->name('knowledeBase.delete');
-    Route::GET('/kb/show/{id}', 'showWeb')->middleware(['auth'])->name('knowledgeBase.webshow');
+Route::controller(KnowledgeBaseController::class)->middleware($adminOnly)->group(function () {
+    Route::GET('/kb', 'all')->name('knowledeBase.index');
+    Route::GET('/kb/add', 'addWeb')->name('knowledeBase.add');
+    Route::POST('/kb/store', 'storeWeb')->name('knowledeBase.store');
+    Route::POST('/kb/delete', 'deleteWeb')->name('knowledeBase.delete');
+    Route::GET('/kb/show/{id}', 'showWeb')->name('knowledgeBase.webshow');
 });
 
-Route::controller(VideoController::class)->group(function () {
+Route::controller(VideoController::class)->group(function () use ($adminOnly) {
     Route::GET('/video', 'index')->name('video.index');
-    Route::GET('/video/create', 'create')->name('video.create');
+    Route::GET('/video/create', 'create')->middleware($adminOnly)->name('video.create');
 });
 
 
@@ -386,11 +387,11 @@ Route::controller(WebsocketController::class)->group(function () {
     Route::POST('/message/send-message', 'store')->name('message.send');
 });
 
-Route::controller(ChatController::class)->group(function () {
+Route::controller(ChatController::class)->group(function () use ($adminOnly) {
     Route::GET('/chat', 'showLogin')->name('chat.showLogin');
     Route::POST('/chat', 'login')->name('chat.login');
     Route::post('/chat/send-message', 'store')->name('chat.send');
-    Route::get('/chat/test', 'test')->name('chat.test');
+    Route::get('/chat/test', 'test')->middleware($adminOnly)->name('chat.test');
     Route::get('/chat/send/{msg}',  'sendMessage')->name('chat.sendMessage');
 });
 
@@ -431,37 +432,35 @@ Route::get('/git/pull', [GitController::class, 'pull'])->middleware($adminOnly)-
 Route::get('/git/npm/{type}',[GitController::class, 'npm'])->middleware($adminOnly)->name('laravelMyAdmin.npm');
 
 
-Route::controller(ZimbraController::class)->group(function () {
-    //Route::post('/zimbra/emails', 'getEmailsByDateRange')->name('zimbra.getEmailsByDateRange');
+Route::controller(ZimbraController::class)->middleware($adminOnly)->group(function () {
     Route::post('/zimbra/emails', 'fetchTodayEmails')->name('zimbra.fetchTodayEmails');
     Route::get('/zimbra/emails','index')->name('zimbra.index');
     Route::get('/zimbra/saveEmails','saveEmails')->name('zimbra.saveEmails');
     Route::get('/zimbra/test','importEmails')->name('zimbra.importEmails');
 });
 
-Route::get('/documents/{document}/download', [DocumentDownloadController::class, 'download'])->name('documents.download');
-Route::get('/pdf/view/{id}', [DocumentDownloadController::class, 'view'])->name('pdf.view');
+// WEG-Dokumente: waren ohne Login per fortlaufender ID abrufbar
+Route::get('/documents/{document}/download', [DocumentDownloadController::class, 'download'])->middleware($adminOnly)->name('documents.download');
+Route::get('/pdf/view/{id}', [DocumentDownloadController::class, 'view'])->middleware($adminOnly)->name('pdf.view');
 
-Route::controller(BankTransactionController::class)->group(function () {
-    Route::get('/bank-transactions', 'index')->middleware(['auth'])->name('bank-transactions.index');
-    Route::get('/bank-transactions/upload', 'uploadForm')->middleware(['auth'])->name('bank-transactions.showupload');
-    Route::post('/bank-transactions/upload', 'upload')->middleware(['auth'])->name('bank-transactions.upload');
+Route::controller(BankTransactionController::class)->middleware($adminOnly)->group(function () {
+    Route::get('/bank-transactions', 'index')->name('bank-transactions.index');
+    Route::get('/bank-transactions/upload', 'uploadForm')->name('bank-transactions.showupload');
+    Route::post('/bank-transactions/upload', 'upload')->name('bank-transactions.upload');
 });
 
 
-Route::controller(SchafkopfController::class)->group(function () {
-    Route::get('/sk', 'index')->middleware(['auth'])->name('sk.index');
-    #Route::get('/bank-transactions/upload', 'uploadForm')->middleware(['auth'])->name('bank-transactions.showupload');
-    #Route::post('/bank-transactions/upload', 'upload')->middleware(['auth'])->name('bank-transactions.upload');
+Route::controller(SchafkopfController::class)->middleware($adminOnly)->group(function () {
+    Route::get('/sk', 'index')->name('sk.index');
 });
 
 
-Route::controller(WegController::class)->group(function () {
-    Route::get('/weg', 'index')->middleware(['auth'])->name('weg.index');
-    Route::get('/weg/upload', 'upload')->middleware(['auth'])->name('weg.upload');
-    Route::post('/weg/store', 'upload')->middleware(['auth'])->name('weg.store');
-    Route::get('/weg/preview/{id}', 'preview')->middleware(['auth'])->name('attachment.preview');
-    Route::get('weg/content/{id}', 'getDocumentBody')->middleware(['auth'])->name('document.content');
+Route::controller(WegController::class)->middleware($adminOnly)->group(function () {
+    Route::get('/weg', 'index')->name('weg.index');
+    Route::get('/weg/upload', 'upload')->name('weg.upload');
+    Route::post('/weg/store', 'upload')->name('weg.store');
+    Route::get('/weg/preview/{id}', 'preview')->name('attachment.preview');
+    Route::get('weg/content/{id}', 'getDocumentBody')->name('document.content');
     Route::get('/upload-modal', function () {return view('livewire.file-upload');})->name('upload.modal');
 });
 

@@ -105,24 +105,42 @@ class ShowSourcecodeController extends Controller
     }
 
     public function getCode(Request $request){
-        $path = $request['path'];
-        $content = file_get_contents($path);
-
-
-        $linecount = 0;
-        $handle = fopen($path, "r");
-        while(!feof($handle)){
-            $line = fgets($handle);
-            $linecount++;
+        // Bis 2026-11-15 las das jede beliebige Datei (auch .env, /etc/passwd).
+        // Jetzt nur noch Quellcode innerhalb des Projekts.
+        $path = $this->allowedSourcePath((string) $request['path']);
+        if ($path === null) {
+            return Response::json(['content' => 'Datei nicht freigegeben.', 'linecount' => 1], 403);
         }
-        fclose($handle);
 
-
+        $content = file_get_contents($path);
 
         return Response::json([
             'content' => $content,
-            'linecount' => $linecount,
+            'linecount' => substr_count($content, "\n") + 1,
         ], 200);
+    }
+
+    /**
+     * Realer Pfad, wenn die Datei im Projekt liegt, kein Geheimnis enthaelt
+     * und eine Quellcode-Endung hat - sonst null.
+     */
+    private function allowedSourcePath(string $path): ?string
+    {
+        $base = realpath(base_path());
+        $real = realpath($path);
+        if ($real === false || !is_file($real) || !str_starts_with($real, $base . DIRECTORY_SEPARATOR)) {
+            return null;
+        }
+
+        $rel = str_replace('\\', '/', substr($real, strlen($base) + 1));
+        $blocked = '#(^|/)\.|^(storage|vendor|node_modules|bootstrap/cache|cert|config)/#';
+        if (preg_match($blocked, $rel)) {
+            return null;
+        }
+
+        $ext = strtolower(pathinfo($real, PATHINFO_EXTENSION));
+        $allowed = ['php', 'js', 'jsx', 'ts', 'tsx', 'vue', 'css', 'scss', 'html', 'md', 'json', 'blade', 'txt', 'mjs'];
+        return in_array($ext, $allowed, true) ? $real : null;
     }
 
 

@@ -10,9 +10,21 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
+    /**
+     * Filament-Admin nur fuer Admin-Rollen. Ohne diese Methode liess Filament
+     * bei APP_ENV=local jeden eingeloggten Benutzer ins Panel - so kamen die
+     * selbst registrierten Scanner-Konten an /filament/admin.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasAnyRole(['super_admin', 'admin']);
+    }
+
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;

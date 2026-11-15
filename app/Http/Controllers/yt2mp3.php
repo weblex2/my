@@ -205,9 +205,12 @@ class yt2mp3 extends Controller
 
 
     public function downloadFile($file){
-        $file = urldecode($file);
-        $filename=basename($file);
-        echo $file;
-        return response()->download('../mp3/'.$file, $filename);
-    } 
+        // Nur Dateien direkt aus dem mp3-Ordner - vorher ging "../" bis zur .env
+        $filename = basename(urldecode($file));
+        $path = realpath(base_path('mp3/' . $filename));
+        if ($path === false || dirname($path) !== realpath(base_path('mp3'))) {
+            abort(404);
+        }
+        return response()->download($path, $filename);
+    }
 }

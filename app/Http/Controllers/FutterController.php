@@ -109,10 +109,12 @@ class FutterController extends Controller
         }
         $pics = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
         if (isset($image)){
-            $imgName = $image->getClientOriginalName();
+            // Nur Bilder, zufaelliger Name (vorher Originalname -> Webshells)
+            $request->validate(['file' => 'required|file|mimes:jpg,jpeg,png,gif,webp,heic|max:20480']);
+            $imgName = FileUploadController::safeName($image);
             //save img to tmp dir
             if (!is_dir(public_path('images/tmp'))){
-                mkdir(public_path('images/tmp'), 0777, true);
+                mkdir(public_path('images/tmp'), 0755, true);
             }
             $image->move(public_path('images/tmp'),$imgName);
         }
@@ -129,12 +131,14 @@ class FutterController extends Controller
 
             $files = scandir(public_path('images/tmp'));
             $files = array_diff(scandir(public_path('images/tmp')), array('..', '.'));
-            $pic_name = array_values($files)[0];
-            $pic_name_to = array_values($files)[0];
-            if (substr($pic_name,0,8)=='download'){
-                $ext = substr($pic_name,8);
-                $pic_name_to = $data['name'].$ext;
+            $pic_name = basename(array_values($files)[0]);
+            // Zielname nie aus Benutzereingaben (Rezeptname) bauen - daraus
+            // entstanden die Ordner futter/futter/... mit Schadcode
+            $ext = strtolower(pathinfo($pic_name, PATHINFO_EXTENSION));
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'], true)) {
+                abort(422, 'Nur Bilder erlaubt.');
             }
+            $pic_name_to = \Illuminate\Support\Str::slug($data['name'] ?? 'rezept') . '-' . \Illuminate\Support\Str::random(6) . '.' . $ext;
             File::move(public_path('images/tmp/').$pic_name, storage_path('app/public/futter/'.$pic_name_to));
 
             $data['img'] = $pic_name_to;

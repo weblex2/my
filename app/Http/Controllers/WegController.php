@@ -32,8 +32,12 @@ class WegController extends Controller
             return response()->json(['message' => 'Keine Datei hochgeladen.'], 400);
         }
 
+        // Nur Dokumente/Bilder, Name ohne Pfadanteile (vorher beliebige Endung -> .php moeglich)
+        $request->validate(['file' => 'required|file|mimes:pdf,jpg,jpeg,png,gif,webp,doc,docx,xls,xlsx,odt,ods,txt,eml,msg|max:51200']);
         $file = $request->file('file');
-        $filename = time() . '_' . $file->getClientOriginalName();
+        $ext = strtolower($file->guessExtension() ?: $file->getClientOriginalExtension());
+        $base = \Illuminate\Support\Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) ?: 'datei';
+        $filename = time() . '_' . $base . '.' . $ext;
         $path = $file->storeAs('uploads', $filename, 'public');
 
         return response()->json(['message' => 'Datei erfolgreich hochgeladen.', 'path' => $path]);

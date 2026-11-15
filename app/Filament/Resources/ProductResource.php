@@ -72,7 +72,7 @@ class ProductResource extends Resource
                     ]),
                     Forms\Components\Section::make('Pricing & Inventory')
                         ->schema([
-                            Forms\Components\FileUpload::make('image'),
+                            Forms\Components\FileUpload::make('image')->image(),
                         ])->collapsible(),
                     ]),
 
