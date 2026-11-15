@@ -244,6 +244,42 @@
     if (els.close) els.close.addEventListener('click', closeFeed);
 
     /* ---------------------------------------------------------------------
+       Vorladen
+       Die grossen Fassungen kommen aus der Datenbank und brauchen spuerbar
+       Zeit. Bilder, die gleich gebraucht werden, laedt der Browser deshalb
+       schon im Hintergrund (danach liegen sie im Cache).
+       --------------------------------------------------------------------- */
+    const preloaded = new Map();   // url -> Image
+    const PRELOAD_MAX = 40;        // Speicher begrenzen
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
+
+    function preload(url) {
+        if (!url || preloaded.has(url)) return;
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = url;
+        preloaded.set(url, img);
+        if (preloaded.size > PRELOAD_MAX) {
+            preloaded.delete(preloaded.keys().next().value);  // aeltesten Eintrag verwerfen
+        }
+    }
+
+    function isPreloaded(url) {
+        const img = preloaded.get(url);
+        return !!(img && img.complete && img.naturalWidth > 0);
+    }
+
+    /** Nachbarn der offenen Lightbox vorladen: die naechsten zwei und das vorherige */
+    function preloadNeighbours() {
+        if (!shots.length) return;
+        const steps = saveData ? [1] : [1, 2, -1];
+        steps.forEach((d) => {
+            const s = shots[(shotIndex + d + shots.length) % shots.length];
+            if (s) preload(s.is_video ? s.src : (s.full || s.src));
+        });
+    }
+
+    /* ---------------------------------------------------------------------
        Lightbox
        --------------------------------------------------------------------- */
     let lb = null;
@@ -333,11 +369,21 @@
             // auch mit Ton. Klappt es trotzdem nicht, bleiben die Controls.
             lb.video.play().catch(() => {});
             renderShotMeta(p);
+            preloadNeighbours();
             return;
         }
 
         lb.video.hidden = true;
         lb.img.hidden = false;
+
+        // Schon vorgeladen: sofort die grosse Fassung, ohne Zwischenschritt
+        if (p.full && isPreloaded(p.full)) {
+            lb.img.src = p.full;
+            lb.el.classList.remove('is-loading');
+            renderShotMeta(p);
+            preloadNeighbours();
+            return;
+        }
 
         // Zuerst das Thumbnail, das liegt schon im Browsercache und erscheint
         // sofort — sonst zeigt der Browser weiter das zuvor geoeffnete Bild,
@@ -360,6 +406,7 @@
             lb.el.classList.remove('is-loading');
         }
         renderShotMeta(p);
+        preloadNeighbours();
     }
 
     function renderShotMeta(p) {
@@ -545,6 +592,12 @@
             // Bewusst das Foto-Objekt binden, keine laufende Nummer: eine
             // Indexverschiebung koennte sonst das falsche Bild oeffnen.
             trigger.addEventListener('click', () => openShotFor(p));
+
+            // Absicht erkennen: Maus darueber bzw. Finger drauf -> grosse
+            // Fassung schon laden, bis zum Klick ist sie meist da
+            const warm = () => preload(isVideo ? p.src : (p.full || p.src));
+            trigger.addEventListener('pointerenter', warm, { once: true });
+            trigger.addEventListener('touchstart', warm, { once: true, passive: true });
         }
 
         const delBtn = card.querySelector('.tb2-del');
@@ -633,7 +686,7 @@
 
         observer = new IntersectionObserver((entries) => {
             if (entries.some((e) => e.isIntersecting)) loadPage(false);
-        }, { root: els.feedBody, rootMargin: '200px' });
+        }, { root: els.feedBody, rootMargin: '1200px' });  // frueher nachladen
 
         observer.observe(s);
     }
