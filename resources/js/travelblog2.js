@@ -183,7 +183,7 @@
                 tooltipText: dataItem.dataContext.title,
             }));
 
-            container.events.on('click', () => openFeed(dataItem.dataContext.galleryId));
+            container.events.on('click', () => openFeed(dataItem.dataContext.galleryId, dataItem.dataContext.mappointId));
 
             return am5.Bullet.new(bulletRoot, { sprite: container });
         });
@@ -194,6 +194,7 @@
                     geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
                     title: `${p.name} — ${c.name}`,
                     galleryId: c.gallery_id,
+                    mappointId: p.id,
                 });
             });
         });
@@ -202,16 +203,21 @@
     /* ---------------------------------------------------------------------
        Feed
        --------------------------------------------------------------------- */
-    let state = { gallery: null, offset: 0, loading: false, done: false };
+    let state = { gallery: null, offset: 0, loading: false, done: false, jump: null };
     let observer = null;
 
     // Alle bereits eingehaengten Bilder, in Feed-Reihenfolge — Grundlage der Lightbox
     let shots = [];
 
-    function openFeed(galleryId) {
+    /**
+     * Feed einer Reise oeffnen. Mit mappointId (Klick auf einen Ort auf der
+     * Karte) springt der Feed zum ersten Foto dieses Orts statt an den Anfang.
+     */
+    function openFeed(galleryId, mappointId) {
         if (!els.feed || !galleryId) return;
+        if (cancelJump) cancelJump();
 
-        state = { gallery: galleryId, offset: 0, loading: false, done: false };
+        state = { gallery: galleryId, offset: 0, loading: false, done: false, jump: mappointId || null };
         shots = [];
         els.feedBody.innerHTML = '';
         els.feed.classList.add('is-open');
@@ -227,6 +233,7 @@
     }
 
     function closeFeed() {
+        if (cancelJump) cancelJump();
         if (els.feed) els.feed.classList.remove('is-open');
         if (observer) { observer.disconnect(); observer = null; }
     }
@@ -389,7 +396,9 @@
         if (state.loading || state.done) return;
         state.loading = true;
 
-        const url = `${cfg.feed}?gallery=${state.gallery}&offset=${state.offset}`;
+        const jump = isFirst ? state.jump : null;
+        const url = `${cfg.feed}?gallery=${state.gallery}&offset=${state.offset}`
+            + (jump ? `&mappoint=${jump}` : '');
 
         fetch(url, { headers: { 'Accept': 'application/json' } })
             .then((r) => r.json())
@@ -416,11 +425,48 @@
 
                 state.loading = false;
                 armSentinel();
+
+                if (jump) {
+                    state.jump = null;
+                    const target = els.feedBody.querySelector(`.tb2-photo[data-mappoint="${jump}"]`);
+                    if (target) jumpTo(target);
+                }
             })
             .catch((err) => {
                 console.error('travelblog2: Feed fehlgeschlagen', err);
                 state.loading = false;
             });
+    }
+
+    /**
+     * Feed so scrollen, dass die Karte oben steht. Bilder davor laden erst
+     * nach (teils mehrere Sekunden) und schieben den Inhalt dann nach unten -
+     * deshalb jede Groessenaenderung oberhalb nachfuehren, bis der Nutzer
+     * selbst scrollt oder ein anderer Feed geoeffnet wird.
+     */
+    let cancelJump = null;
+
+    function jumpTo(card) {
+        if (cancelJump) cancelJump();
+
+        const body = els.feedBody;
+        const align = () => {
+            body.scrollTop += card.getBoundingClientRect().top - body.getBoundingClientRect().top - 8;
+        };
+
+        const ro = new ResizeObserver(align);
+        for (let el = card.previousElementSibling; el; el = el.previousElementSibling) ro.observe(el);
+
+        const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+        const stop = () => {
+            ro.disconnect();
+            events.forEach((ev) => body.removeEventListener(ev, stop));
+            cancelJump = null;
+        };
+        events.forEach((ev) => body.addEventListener(ev, stop, { passive: true }));
+        cancelJump = stop;
+
+        align();
     }
 
     function appendTripHead(trip) {
@@ -439,6 +485,7 @@
     function appendPhoto(p) {
         const card = document.createElement('article');
         card.className = 'tb2-photo';
+        if (p.mappoint_id) card.dataset.mappoint = p.mappoint_id;
 
         // Videos zeigen im Feed nur ihr Standbild mit Play-Symbol und laufen
         // wie die Fotos in der Lightbox.
