@@ -272,13 +272,21 @@ class ExifExtractor
             if ($dt) return $dt;
         }
 
-        // 3. QuickTime creationdate (MOV von iPhone) — ISO 8601 mit Timezone
+        // 3. Videos: lokale Aufnahmezeit (iPhone: com.apple.quicktime.creationdate)
+        if (in_array($this->ext, ['mov', 'mp4', 'm4v'])) {
+            $dt = $this->extractVideoLocalTime();
+            if ($dt) return $dt;
+        }
+
+        // 3a. QuickTime creationdate laut GetId3 — liest das Apple-Keys-Atom bei
+        //     iPhone-Videos nur als Muell (Leerzeichen). Nur echte Datumswerte nehmen,
+        //     Carbon::parse('   ') wuerde sonst "jetzt" liefern.
         $qtDate = $this->id3['tags']['quicktime']['creationdate'][0]
                ?? $this->id3['comments']['creationdate'][0]
                ?? null;
-        if ($qtDate) {
+        if (is_string($qtDate) && preg_match('/^\s*\d{4}-\d{2}-\d{2}/', $qtDate)) {
             try {
-                return Carbon::parse($qtDate);
+                return $this->toLocalWallTime(Carbon::parse(trim($qtDate)));
             } catch (\Exception) {}
         }
 
@@ -304,6 +312,40 @@ class ExifExtractor
         }
 
         return null;
+    }
+
+    /**
+     * Lokale Aufnahmezeit eines Videos per ffprobe. iPhones schreiben sie mit
+     * Zeitzone in com.apple.quicktime.creationdate ("2026-11-11T11:45:52+0200"),
+     * waehrend der QuickTime-Header (mvhd, creation_time) nur UTC kennt. Ohne das
+     * Feld zeigten Videos die UTC-Zeit, Fotos dagegen Ortszeit.
+     */
+    private function extractVideoLocalTime(): ?Carbon
+    {
+        $cmd = sprintf(
+            'ffprobe -v error -show_entries format_tags=com.apple.quicktime.creationdate -of default=nw=1:nk=1 %s',
+            escapeshellarg($this->filePath)
+        );
+        $out = trim((string) @shell_exec($cmd));
+
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $out)) {
+            return null;
+        }
+
+        try {
+            return $this->toLocalWallTime(Carbon::parse($out));
+        } catch (\Exception) {
+            return null;
+        }
+    }
+
+    /**
+     * Ortszeit ohne Zeitzone, wie bei EXIF DateTimeOriginal der Fotos: die
+     * Uhrzeit, die am Aufnahmeort auf der Uhr stand.
+     */
+    private function toLocalWallTime(Carbon $dt): Carbon
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $dt->format('Y-m-d H:i:s'));
     }
 
     private function parseExifDate(?string $str): ?Carbon
