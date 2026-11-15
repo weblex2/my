@@ -322,6 +322,64 @@
 
 .tb2-photo img { cursor: zoom-in; }
 
+/* Video im Feed: Standbild + Play-Symbol, oeffnet die Lightbox */
+.tb2-video-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 140px;
+    padding: 0;
+    border: 0;
+    background: #04070f;
+    cursor: pointer;
+}
+
+.tb2-video-thumb img { cursor: pointer; }
+
+.tb2-video-thumb::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+    border: 1px solid var(--nn-cyan);
+    border-radius: 50%;
+    background: rgba(4, 7, 15, 0.7);
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.35);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tb2-video-thumb::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-35%, -50%);
+    border-style: solid;
+    border-width: 12px 0 12px 20px;
+    border-color: transparent transparent transparent var(--nn-cyan);
+}
+
+.tb2-video-thumb:hover::before,
+.tb2-video-thumb:focus-visible::before {
+    background: rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.55);
+}
+
+.tb2-lightbox-stage img[hidden],
+.tb2-lightbox-stage video[hidden] { display: none; }
+
+/* Hochkant-Medien (z. B. 1600x2133 oder 720x1280) wuerden den 3:2-Rahmen mit
+   ihrer Eigengroesse aufblaehen - absolut positioniert gibt der Rahmen die
+   Groesse vor, object-fit: contain skaliert hinein. */
+.tb2-lightbox-stage img,
+.tb2-lightbox-stage video {
+    position: absolute;
+    inset: 0;
+}
+
 .tb2-lightbox {
     position: fixed;
     inset: 0;

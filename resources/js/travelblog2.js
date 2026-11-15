@@ -249,6 +249,7 @@
             '<div class="tb2-lightbox-stage">' +
                 '<button type="button" class="tb2-lb-btn tb2-lb-prev" aria-label="Vorheriges Bild">&lsaquo;</button>' +
                 '<img alt="">' +
+                '<video controls playsinline preload="metadata" hidden></video>' +
                 '<button type="button" class="tb2-lb-btn tb2-lb-next" aria-label="Nächstes Bild">&rsaquo;</button>' +
             '</div>' +
             '<div class="tb2-lightbox-bar"><span data-lb-date></span><span data-lb-count></span></div>' +
@@ -259,6 +260,7 @@
         lb = {
             el,
             img: el.querySelector('img'),
+            video: el.querySelector('video'),
             date: el.querySelector('[data-lb-date]'),
             count: el.querySelector('[data-lb-count]'),
             caption: el.querySelector('[data-lb-caption]'),
@@ -293,9 +295,35 @@
         lb.el.classList.add('is-open');
     }
 
+    /** Laufendes Video anhalten und entladen, damit es nicht weiterspielt/-laedt. */
+    function stopVideo() {
+        if (!lb || !lb.video.getAttribute('src')) return;
+        lb.video.pause();
+        lb.video.removeAttribute('src');
+        lb.video.load();
+    }
+
     function renderShot() {
         const p = shots[shotIndex];
         if (!p) return;
+
+        stopVideo();
+
+        if (p.is_video && p.video) {
+            lb.img.hidden = true;
+            lb.video.hidden = false;
+            lb.el.classList.remove('is-loading');
+            if (p.src) lb.video.poster = p.src; else lb.video.removeAttribute('poster');
+            lb.video.src = p.video;
+            // Abspielen wurde per Klick ausgeloest, Browser erlauben das daher
+            // auch mit Ton. Klappt es trotzdem nicht, bleiben die Controls.
+            lb.video.play().catch(() => {});
+            renderShotMeta(p);
+            return;
+        }
+
+        lb.video.hidden = true;
+        lb.img.hidden = false;
 
         // Zuerst das Thumbnail, das liegt schon im Browsercache und erscheint
         // sofort — sonst zeigt der Browser weiter das zuvor geoeffnete Bild,
@@ -317,6 +345,10 @@
         } else {
             lb.el.classList.remove('is-loading');
         }
+        renderShotMeta(p);
+    }
+
+    function renderShotMeta(p) {
         lb.date.textContent = p.taken_at || '';
         lb.count.innerHTML = `<b>${shotIndex + 1}</b> / ${shots.length}`;
         lb.caption.textContent = p.text || '';
@@ -329,6 +361,7 @@
     }
 
     function closeShot() {
+        stopVideo();
         if (lb) lb.el.classList.remove('is-open');
         shotIndex = -1;
     }
@@ -340,6 +373,9 @@
     document.addEventListener('keydown', (e) => {
         if (shotOpen()) {
             // Lightbox hat Vorrang vor dem Feed
+            // Hat das Video den Fokus, gehoeren die Pfeiltasten ihm (Spulen)
+            if (e.target === lb.video && e.key !== 'Escape') return;
+
             if (e.key === 'Escape') { closeShot(); }
             else if (e.key === 'ArrowRight') { step(1); }
             else if (e.key === 'ArrowLeft') { step(-1); }
@@ -404,8 +440,13 @@
         const card = document.createElement('article');
         card.className = 'tb2-photo';
 
-        const media = p.is_video && p.video
-            ? `<video controls preload="none" ${p.src ? `poster="${p.src}"` : ''} src="${p.video}"></video>`
+        // Videos zeigen im Feed nur ihr Standbild mit Play-Symbol und laufen
+        // wie die Fotos in der Lightbox.
+        const isVideo = p.is_video && p.video;
+        const media = isVideo
+            ? `<button type="button" class="tb2-video-thumb" aria-label="Video abspielen">` +
+                  (p.src ? `<img loading="lazy" src="${p.src}" alt="">` : '') +
+              `</button>`
             : (p.src ? `<img loading="lazy" src="${p.src}" alt="">` : '');
 
         const geo = (p.lat !== null && p.lon !== null)
@@ -417,16 +458,15 @@
             `<div class="tb2-photo-meta"><span>${p.taken_at || ''}</span>${geo}</div>` +
             (p.text ? `<div class="tb2-photo-text">${escapeHtml(p.text)}</div>` : '');
 
-        // Nur Bilder in die Lightbox; Videos behalten ihre eigenen Bedienelemente
-        if (!p.is_video && p.src) {
+        // Fotos und Videos teilen sich die Lightbox
+        const trigger = isVideo ? card.querySelector('.tb2-video-thumb')
+                                : (p.src ? card.querySelector('img') : null);
+        if (trigger) {
             shots.push(p);
-            const img = card.querySelector('img');
-            if (img) {
-                img.dataset.shotId = p.id;
-                // Bewusst das Foto-Objekt binden, keine laufende Nummer: eine
-                // Indexverschiebung koennte sonst das falsche Bild oeffnen.
-                img.addEventListener('click', () => openShotFor(p));
-            }
+            trigger.dataset.shotId = p.id;
+            // Bewusst das Foto-Objekt binden, keine laufende Nummer: eine
+            // Indexverschiebung koennte sonst das falsche Bild oeffnen.
+            trigger.addEventListener('click', () => openShotFor(p));
         }
 
         els.feedBody.appendChild(card);
