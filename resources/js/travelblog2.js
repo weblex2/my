@@ -465,12 +465,22 @@
             body.scrollTo({ top: body.scrollTop + delta, behavior: 'instant' });
         };
 
+        // Alle Karten beobachten: Bilder davor verschieben das Ziel, Bilder
+        // dahinter machen den Feed erst lang genug, um bis zum Ziel zu scrollen.
         const ro = new ResizeObserver(align);
-        for (let el = card.previousElementSibling; el; el = el.previousElementSibling) ro.observe(el);
+        [...body.children].forEach((el) => ro.observe(el));
+
+        // Nachgeladene Seiten haengen neue Karten an - die auch beobachten
+        const mo = new MutationObserver((records) => {
+            records.forEach((r) => r.addedNodes.forEach((n) => { if (n.nodeType === 1) ro.observe(n); }));
+            align();
+        });
+        mo.observe(body, { childList: true });
 
         const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
         const stop = () => {
             ro.disconnect();
+            mo.disconnect();
             events.forEach((ev) => body.removeEventListener(ev, stop));
             cancelJump = null;
         };
