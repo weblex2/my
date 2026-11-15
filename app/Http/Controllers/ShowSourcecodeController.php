@@ -14,12 +14,22 @@ class ShowSourcecodeController extends Controller
             return "no page_id given";
         }
         $startFile = "";
+        $startFileContent = "";
+        $structure = [];
         $page = Ssc::where('page_id',"=", $page_id)->orderBy('type')->get();
         foreach ($page as $entry){
             $path = str_replace("\\", "/",base_path()."/".$entry->path);
 
             if ($entry->start_file!=null) {
-                $startFileContent = file_get_contents(base_path()."/".$entry->path);
+                // start_file ist entweder ein eigener Pfad (z. B. eine Datei im
+                // Ordner) oder nur ein Merker ("1") fuer "diese Datei". Vorher
+                // wurde immer $entry->path gelesen - bei Ordnern ein 500er.
+                $candidate = is_file(base_path()."/".$entry->start_file)
+                    ? base_path()."/".$entry->start_file
+                    : base_path()."/".$entry->path;
+                if (is_file($candidate)) {
+                    $startFileContent = file_get_contents($candidate);
+                }
             }
             // Hauptverzeichnis setzen (hier z. B. das aktuelle Verzeichnis)
             $type = $entry->type;
