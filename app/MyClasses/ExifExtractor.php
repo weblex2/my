@@ -30,6 +30,11 @@ class ExifExtractor
     /** @var array|null Raw exif_read_data result */
     private ?array $native = null;
 
+    /** @var array|null Container-Tags per ffprobe (nur Videos), lazy geladen */
+    private ?array $ffTags = null;
+
+    private const VIDEO_EXTS = ['mov', 'mp4', 'm4v'];
+
     public function __construct(string $filePath)
     {
         $this->filePath = $filePath;
@@ -130,7 +135,10 @@ class ExifExtractor
             return $this->gpsToDecimal($raw, $ref);
         }
 
-        // 4. QuickTime tags (MOV/MP4 von iPhone) — GetId3 legt alles unter tags.quicktime ab
+        // 4. Videos: ISO-6709-Ort per ffprobe (iPhone/Android)
+        if ($loc = $this->videoLocation()) return $loc['lat'];
+
+        // 5. QuickTime tags laut GetId3 (klassisches ©xyz-Atom)
         $lat = $this->id3['tags']['quicktime']['gps_latitude'][0]
             ?? $this->id3['comments']['gps_latitude'][0]
             ?? null;
@@ -171,7 +179,10 @@ class ExifExtractor
             return $this->gpsToDecimal($raw, $ref);
         }
 
-        // 4. QuickTime tags (MOV/MP4 von iPhone)
+        // 4. Videos: ISO-6709-Ort per ffprobe (iPhone/Android)
+        if ($loc = $this->videoLocation()) return $loc['lon'];
+
+        // 5. QuickTime tags laut GetId3 (klassisches ©xyz-Atom)
         $lon = $this->id3['tags']['quicktime']['gps_longitude'][0]
             ?? $this->id3['comments']['gps_longitude'][0]
             ?? null;
@@ -273,10 +284,7 @@ class ExifExtractor
         }
 
         // 3. Videos: lokale Aufnahmezeit (iPhone: com.apple.quicktime.creationdate)
-        if (in_array($this->ext, ['mov', 'mp4', 'm4v'])) {
-            $dt = $this->extractVideoLocalTime();
-            if ($dt) return $dt;
-        }
+        if ($dt = $this->extractVideoLocalTime()) return $dt;
 
         // 3a. QuickTime creationdate laut GetId3 — liest das Apple-Keys-Atom bei
         //     iPhone-Videos nur als Muell (Leerzeichen). Nur echte Datumswerte nehmen,
@@ -322,11 +330,7 @@ class ExifExtractor
      */
     private function extractVideoLocalTime(): ?Carbon
     {
-        $cmd = sprintf(
-            'ffprobe -v error -show_entries format_tags=com.apple.quicktime.creationdate -of default=nw=1:nk=1 %s',
-            escapeshellarg($this->filePath)
-        );
-        $out = trim((string) @shell_exec($cmd));
+        $out = trim((string) ($this->videoTags()['com.apple.quicktime.creationdate'] ?? ''));
 
         if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $out)) {
             return null;
@@ -337,6 +341,53 @@ class ExifExtractor
         } catch (\Exception) {
             return null;
         }
+    }
+
+    /**
+     * Container-Tags eines Videos per ffprobe, einmal pro Datei. GetId3 kann
+     * die Apple-"Keys"-Metadaten (Ort, Aufnahmezeit) von iPhone-Videos nicht
+     * lesen - ffprobe schon.
+     */
+    private function videoTags(): array
+    {
+        if ($this->ffTags !== null) return $this->ffTags;
+        $this->ffTags = [];
+
+        if (!in_array($this->ext, self::VIDEO_EXTS)) return $this->ffTags;
+
+        $cmd = sprintf(
+            'ffprobe -v error -show_entries format_tags -of json %s',
+            escapeshellarg($this->filePath)
+        );
+        $json = json_decode((string) @shell_exec($cmd), true);
+        $this->ffTags = array_change_key_case($json['format']['tags'] ?? [], CASE_LOWER);
+
+        return $this->ffTags;
+    }
+
+    /**
+     * Ort aus dem ISO-6709-Tag eines Videos, z. B. "+68.9281+026.8944+164.047/".
+     * iPhone: com.apple.quicktime.location.ISO6709, Android: location.
+     *
+     * @return array{lat: float, lon: float}|null
+     */
+    private function videoLocation(): ?array
+    {
+        $tags = $this->videoTags();
+
+        foreach (['com.apple.quicktime.location.iso6709', 'location', 'location-eng'] as $key) {
+            $val = $tags[$key] ?? null;
+            if (is_string($val)
+                && preg_match('/^([+-]\d+(?:\.\d+)?)([+-]\d+(?:\.\d+)?)/', trim($val), $m)) {
+                $lat = (float) $m[1];
+                $lon = (float) $m[2];
+                if (abs($lat) <= 90 && abs($lon) <= 180 && !($lat == 0.0 && $lon == 0.0)) {
+                    return ['lat' => $lat, 'lon' => $lon];
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
