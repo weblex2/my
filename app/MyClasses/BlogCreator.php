@@ -246,11 +246,51 @@ class BlogCreator{
     }
 
     private function saveVideoContent(){
+        // iPhone-Videos sind HEVC - das spielen Chrome/Firefox nicht ab. Deshalb
+        // nach H.264/MP4 umwandeln; klappt das nicht, das Original speichern.
+        $mp4  = $this->tmpPath . '/' . pathinfo($this->fileName, PATHINFO_FILENAME) . '_web.mp4';
+        $file = self::transcodeToWebMp4($this->fullPathName, $mp4) ? $mp4 : $this->fullPathName;
+        $mime = $file === $mp4 ? 'video/mp4' : $this->mimeType;
+
         $pic  = new GalleryPicContent();
         $pic->pic_id = $this->pic_id;
         $pic->size = 'MOV';
-        $pic->filecontent = "data:".$this->mimeType.";base64,".base64_encode(file_get_contents($this->fullPathName));
+        $pic->filecontent = "data:".$mime.";base64,".base64_encode(file_get_contents($file));
         $res = $pic->save();
+
+        if ($file === $mp4) {
+            @unlink($mp4);
+        }
+    }
+
+    /**
+     * Video in ein ueberall abspielbares MP4 umwandeln: H.264 + AAC, laengste
+     * Seite max. 1280 px, moov-Atom vorne (faststart), damit der Browser schon
+     * waehrend des Ladens abspielen kann. ffmpeg dreht Hochkant-Videos dabei
+     * automatisch richtig.
+     */
+    public static function transcodeToWebMp4(string $in, string $out): bool
+    {
+        $scale = "scale='if(gte(iw,ih),min(1280,iw),-2)':'if(gte(iw,ih),-2,min(1280,ih))'";
+        $cmd = sprintf(
+            'ffmpeg -y -v error -i %s -map 0:v:0 -map 0:a:0? -c:v libx264 -preset veryfast -crf 23 '
+            . '-pix_fmt yuv420p -vf %s -c:a aac -b:a 128k -movflags +faststart %s 2>&1',
+            escapeshellarg($in),
+            escapeshellarg($scale),
+            escapeshellarg($out)
+        );
+        exec($cmd, $output, $code);
+
+        if ($code !== 0 || !is_file($out) || filesize($out) === 0) {
+            \Log::warning('BlogCreator: Video-Umwandlung fehlgeschlagen, speichere Original', [
+                'file'   => basename($in),
+                'code'   => $code,
+                'output' => implode("\n", array_slice($output, -5)),
+            ]);
+            @unlink($out);
+            return false;
+        }
+        return true;
     }
 
     public function createBlog(){

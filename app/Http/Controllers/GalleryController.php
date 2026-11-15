@@ -719,9 +719,36 @@ class GalleryController extends Controller
             $binary = $raw;
         }
 
-        return response($binary, 200)
-            ->header('Content-Type', $mime)
-            ->header('Cache-Control', 'public, max-age=86400');
+        $total   = strlen($binary);
+        $headers = [
+            'Content-Type'  => $mime,
+            'Cache-Control' => 'public, max-age=86400',
+            'Accept-Ranges' => 'bytes',
+        ];
+
+        // Range-Anfragen beantworten: Safari/iOS spielen Videos sonst gar nicht
+        // ab, und in den anderen Browsern funktioniert das Vorspulen nicht.
+        $range = request()->header('Range');
+        if ($range && preg_match('/^bytes=(\d*)-(\d*)$/', trim($range), $m) && ($m[1] !== '' || $m[2] !== '')) {
+            if ($m[1] === '') {                     // bytes=-N  -> letzte N Bytes
+                $start = max(0, $total - (int) $m[2]);
+                $end   = $total - 1;
+            } else {
+                $start = (int) $m[1];
+                $end   = $m[2] === '' ? $total - 1 : min((int) $m[2], $total - 1);
+            }
+
+            if ($start > $end || $start >= $total) {
+                return response('', 416, ['Content-Range' => "bytes */$total"] + $headers);
+            }
+
+            return response(substr($binary, $start, $end - $start + 1), 206, $headers + [
+                'Content-Range'  => "bytes $start-$end/$total",
+                'Content-Length' => $end - $start + 1,
+            ]);
+        }
+
+        return response($binary, 200, $headers + ['Content-Length' => $total]);
     }
 
     public function gps($coordinate, $hemisphere) {
