@@ -450,8 +450,19 @@
         if (cancelJump) cancelJump();
 
         const body = els.feedBody;
+
+        // Die Reise-Ueberschrift klebt (sticky) oben im Feed - die Karte muss
+        // darunter stehen, nicht dahinter.
+        const head = [...body.querySelectorAll('.tb2-trip-head')]
+            .filter((h) => h.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING)
+            .pop();
+
         const align = () => {
-            body.scrollTop += card.getBoundingClientRect().top - body.getBoundingClientRect().top - 8;
+            const offset = (head ? head.getBoundingClientRect().height : 0) + 8;
+            const delta = card.getBoundingClientRect().top - body.getBoundingClientRect().top - offset;
+            // 'instant': der Feed hat scroll-behavior: smooth, sonst rechnet das
+            // naechste Nachfuehren mit einer Zwischenposition der Animation.
+            body.scrollTo({ top: body.scrollTop + delta, behavior: 'instant' });
         };
 
         const ro = new ResizeObserver(align);
