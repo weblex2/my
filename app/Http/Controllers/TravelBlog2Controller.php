@@ -132,6 +132,31 @@ class TravelBlog2Controller extends Controller
     }
 
     /**
+     * Einzelnes Foto/Video endgueltig loeschen (Lightbox/Feed, nur Admins).
+     * Entfernt auch alle Bildgroessen und Texte - sonst bliebe das Bild ueber
+     * /travel-blog/image/{id}/{size} weiter abrufbar.
+     */
+    public function destroy(Request $request)
+    {
+        $id  = (int) $request->input('id');
+        $pic = GalleryPics::find($id);
+
+        if (!$pic) {
+            return Response::json(['status' => 'error', 'message' => 'Foto nicht gefunden.'], 404);
+        }
+
+        \DB::transaction(function () use ($id, $pic) {
+            GalleryPicContent::where('pic_id', $id)->delete();
+            GalleryText::where('pic_id', $id)->delete();
+            $pic->delete();
+        });
+
+        \Log::info('travelblog2: Foto geloescht', ['pic_id' => $id, 'user' => $request->user()?->id]);
+
+        return Response::json(['status' => 'ok', 'id' => $id]);
+    }
+
+    /**
      * Alle bereisten Laender inkl. Kartenpunkte.
      * Grundlage fuer Einfaerbung und Pins.
      */

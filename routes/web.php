@@ -167,46 +167,55 @@ Route::post('/dev/exif-dump', function(\Illuminate\Http\Request $request) {
     ]);
 });
 
-Route::controller(GalleryController::class)->group(function () {
+// Rollen mit Schreibrechten (Spatie). Nur 'auth' reicht nicht: bis
+// 2026-11-15 war die Registrierung offen, und fremde Konten ohne Rolle
+// waren damit "eingeloggt".
+$adminOnly = ['auth', 'role:super_admin|admin'];
+
+Route::controller(GalleryController::class)->group(function () use ($adminOnly) {
+    // Oeffentlich: Anzeigen und Sprache
     Route::get('/travel-blog', 'index')->name('gallery.index');
     Route::get('/travel-blog/index2', 'index2')->name('gallery.index2');
     Route::get('/travel-blog/index3', 'index3')->name('gallery.index3');
     Route::get('/travel-blog/map-data/{gallery_id}', 'getMapData')->name('gallery.mapdata');
     Route::get('/travel-blog/mappoint-photos/{mappoint_id}', 'getMappointPhotos')->name('gallery.mappointphotos');
-    Route::get('/travel-blog/upload-bulk/{gallery_id?}/{mappoint_id?}', 'uploadBulk')->name('gallery.uploadBulk');
-    Route::post('/travel-blog/store-bulk', 'storeBulk')->name('gallery.storeBulk');
-    Route::post('/travel-blog/assign-pic', 'assignPic')->name('gallery.assignPic');
-    Route::get('/travel-blog/create', 'create')->name('gallery.create');
-    Route::get('/travel-blog/edit', 'edit')->name('gallery.edit');
-    Route::post('/travel-blog/store', 'store')->name('gallery.store');
-    Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
     Route::get('/travel-blog/show/{id}/{mappoint_id?}', 'showGallery')->name('gallery.showGallery');
     Route::get('/showMore/{offset?}', 'showMore')->name('gallery.showMore');
-    Route::get('/travel-blog/upload/{gallery_id}/{mappoint_id?}', 'upload')->name('gallery.upload');
-    Route::get('/travel-blog/editpic/{pic_id}', 'editpic')->name('gallery.editPic');
-    Route::post('/travel-blog/updatepic', 'updatepic')->name('gallery.updatePic');
-    Route::post('/travel-blog/storepic', 'storePic')->name('gallery.storepic');
-    Route::post('/travel-blog/deletepic', 'deletePic')->name('gallery.deleteBlogItem');
-    Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
-    Route::get('/travel-blog/createMapPoint', 'createGalleryMappoint')->name('gallery.createMappoint');
-    Route::get('/travel-blog/editMapPoint', 'editGalleryMappoints')->name('gallery.editMappoint');
-    Route::post('/travel-blog/storeMapPoint', 'storeGalleryMappoint')->name('gallery.storeMappoint');
-    Route::post('/travel-blog/deleteMapPoint', 'deleteGalleryMappoint')->name('gallery.deleteMappoint');
     Route::post('/travel-blog/setLang', 'setLang')->name('gallery.setLang');
-    Route::get('/travel-blog/editMappointPics/{mp_id}', 'editMappointPics')->name('gallery.editMappointPics');
-    Route::post('/travel-blog/updatePicOrder', 'updatePicOrder')->name('gallery.updatePicOrder');
-    Route::get('/travel-blog/picTest', 'picTest')->name('gallery.picTest');
-    Route::get('/travel-blog/config', 'config')->name('gallery.config');
-    Route::post('/travel-blog/storeConfig', 'storeConfig')->name('gallery.storeConfig');
     Route::get('/travel-blog/getBigPic/{id}', 'getBigPic')->name('gallery.getBigPic');
     Route::get('/travel-blog/image/{pic_id}/{size}', 'serveImage')->name('gallery.serveImage');
+
+    // Schreiben/Verwalten: waren bis 2026-11-15 ganz ohne Schutz
+    Route::middleware($adminOnly)->group(function () {
+        Route::get('/travel-blog/upload-bulk/{gallery_id?}/{mappoint_id?}', 'uploadBulk')->name('gallery.uploadBulk');
+        Route::post('/travel-blog/store-bulk', 'storeBulk')->name('gallery.storeBulk');
+        Route::post('/travel-blog/assign-pic', 'assignPic')->name('gallery.assignPic');
+        Route::get('/travel-blog/create', 'create')->name('gallery.create');
+        Route::get('/travel-blog/edit', 'edit')->name('gallery.edit');
+        Route::post('/travel-blog/store', 'store')->name('gallery.store');
+        Route::post('/travel-blog/delete', 'delete')->name('gallery.delete');
+        Route::get('/travel-blog/upload/{gallery_id}/{mappoint_id?}', 'upload')->name('gallery.upload');
+        Route::get('/travel-blog/editpic/{pic_id}', 'editpic')->name('gallery.editPic');
+        Route::post('/travel-blog/updatepic', 'updatepic')->name('gallery.updatePic');
+        Route::post('/travel-blog/storepic', 'storePic')->name('gallery.storepic');
+        Route::post('/travel-blog/deletepic', 'deletePic')->name('gallery.deleteBlogItem');
+        Route::get('/travel-blog/createMapPoint', 'createGalleryMappoint')->name('gallery.createMappoint');
+        Route::get('/travel-blog/editMapPoint', 'editGalleryMappoints')->name('gallery.editMappoint');
+        Route::post('/travel-blog/storeMapPoint', 'storeGalleryMappoint')->name('gallery.storeMappoint');
+        Route::post('/travel-blog/deleteMapPoint', 'deleteGalleryMappoint')->name('gallery.deleteMappoint');
+        Route::get('/travel-blog/editMappointPics/{mp_id}', 'editMappointPics')->name('gallery.editMappointPics');
+        Route::post('/travel-blog/updatePicOrder', 'updatePicOrder')->name('gallery.updatePicOrder');
+        Route::get('/travel-blog/picTest', 'picTest')->name('gallery.picTest');
+        Route::get('/travel-blog/config', 'config')->name('gallery.config');
+        Route::post('/travel-blog/storeConfig', 'storeConfig')->name('gallery.storeConfig');
+    });
 });
 
 // Gallery Admin Routes
 // Login zwingend: die Gruppe kann Galerien, Mappoints und Fotos loeschen und
 // war bis 2026-08-09 ohne Middleware, also oeffentlich erreichbar. Gleiches
 // `auth` wie bei den tb2-Routen.
-Route::prefix('gallery-admin')->middleware(['auth'])->group(function () {
+Route::prefix('gallery-admin')->middleware($adminOnly)->group(function () {
     Route::controller(GalleryAdminController::class)->group(function () {
         // Dashboard
         Route::get('/', 'index')->name('gallery.admin.index');
@@ -394,7 +403,8 @@ Route::controller(ShowSourcecodeController::class)->group(function () {
 });
 
 
-Route::controller(LaravelMyAdminController::class)->group(function () {
+// Eigener DB-Admin inkl. SQL-Ausfuehrung: nur Admin-Rollen
+Route::controller(LaravelMyAdminController::class)->middleware($adminOnly)->group(function () {
     Route::get('/laravelMyAdmin',  'index')->middleware(['auth'])->name('laravelMyAdmin.index');
     Route::get('/laravelMyAdmin/db/{db}','dbindex')->middleware(['auth'])->name('laravelMyAdmin.viewDatabase');
     Route::get('/laravelMyAdmin/edit/{table}','edit')->middleware(['auth'])->name('laravelMyAdmin.edit');
@@ -417,8 +427,8 @@ Route::controller(LaravelMyAdminController::class)->group(function () {
 
 });
 
-Route::get('/git/pull', [GitController::class, 'pull'])->name('git.pull');
-Route::get('/git/npm/{type}',[GitController::class, 'npm'])->middleware(['auth'])->name('laravelMyAdmin.npm');
+Route::get('/git/pull', [GitController::class, 'pull'])->middleware($adminOnly)->name('git.pull');
+Route::get('/git/npm/{type}',[GitController::class, 'npm'])->middleware($adminOnly)->name('laravelMyAdmin.npm');
 
 
 Route::controller(ZimbraController::class)->group(function () {
@@ -462,14 +472,17 @@ Route::controller(WegController::class)->group(function () {
 | Bewusst getrennt vom bestehenden GalleryController-Block, damit
 | /travel-blog unveraendert bleibt.
 */
-Route::controller(\App\Http\Controllers\TravelBlog2Controller::class)->group(function () {
+Route::controller(\App\Http\Controllers\TravelBlog2Controller::class)->group(function () use ($adminOnly) {
     Route::get('/travel-blog2', 'index')->name('tb2.index');
     Route::get('/travel-blog2/countries', 'countries')->name('tb2.countries');
     Route::get('/travel-blog2/feed', 'feed')->name('tb2.feed');
-    Route::get('/travel-blog2/upload', 'upload')->middleware(['auth'])->name('tb2.upload');
-    Route::post('/travel-blog2/store', 'store')->middleware(['auth'])->name('tb2.store');
-    Route::get('/travel-blog2/admin', 'admin')->middleware(['auth'])->name('tb2.admin');
-    Route::post('/travel-blog2/approve', 'approve')->middleware(['auth'])->name('tb2.approve');
+    Route::get('/travel-blog2/upload', 'upload')->middleware($adminOnly)->name('tb2.upload');
+    Route::post('/travel-blog2/store', 'store')->middleware($adminOnly)->name('tb2.store');
+    Route::get('/travel-blog2/admin', 'admin')->middleware($adminOnly)->name('tb2.admin');
+    Route::post('/travel-blog2/approve', 'approve')->middleware($adminOnly)->name('tb2.approve');
+    Route::post('/travel-blog2/delete', 'destroy')->middleware($adminOnly)->name('tb2.delete');
 });
+
+Route::get('/futter2', fn() => view('futter2'));
 
 

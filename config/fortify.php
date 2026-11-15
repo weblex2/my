@@ -144,7 +144,10 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Registrierung aus (2026-11-15): Jedes registrierte Konto kam an alle
+        // nur per 'auth' geschuetzten Bereiche, und Fremde hatten sich angemeldet.
+        // Neue Konten nur noch von Hand anlegen.
+        // Features::registration(),
         Features::resetPasswords(),
         // Features::emailVerification(),
         Features::updateProfileInformation(),

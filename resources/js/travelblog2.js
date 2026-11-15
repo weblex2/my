@@ -14,6 +14,9 @@
     const cfg = {
         countries: root.dataset.countriesUrl,
         feed: root.dataset.feedUrl,
+        // nur fuer Admins gesetzt (Blade) - sonst gibt es keine Loesch-Knoepfe
+        deleteUrl: root.dataset.deleteUrl || null,
+        csrf: root.dataset.csrf || null,
     };
 
     const els = {
@@ -259,7 +262,9 @@
                 '<video controls playsinline preload="metadata" hidden></video>' +
                 '<button type="button" class="tb2-lb-btn tb2-lb-next" aria-label="Nächstes Bild">&rsaquo;</button>' +
             '</div>' +
-            '<div class="tb2-lightbox-bar"><span data-lb-date></span><span data-lb-count></span></div>' +
+            '<div class="tb2-lightbox-bar"><span data-lb-date></span>' +
+                (cfg.deleteUrl ? '<button type="button" class="tb2-del" data-lb-delete>Löschen</button>' : '') +
+                '<span data-lb-count></span></div>' +
             '<div class="tb2-lightbox-caption" data-lb-caption></div>';
 
         root.appendChild(el);
@@ -274,6 +279,8 @@
         };
 
         el.querySelector('.tb2-lb-close').addEventListener('click', closeShot);
+        const del = el.querySelector('[data-lb-delete]');
+        if (del) del.addEventListener('click', (e) => { e.stopPropagation(); if (shots[shotIndex]) deletePhoto(shots[shotIndex]); });
         el.querySelector('.tb2-lb-prev').addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
         el.querySelector('.tb2-lb-next').addEventListener('click', (e) => { e.stopPropagation(); step(1); });
 
@@ -410,7 +417,7 @@
                     appendTripHead(data.trip);
                 }
 
-                (data.photos || []).forEach(appendPhoto);
+                (data.photos || []).forEach((p) => { p.galleryId = data.trip.gallery_id; appendPhoto(p); });
 
                 if (data.has_more) {
                     state.offset = data.offset;
@@ -506,6 +513,7 @@
     function appendPhoto(p) {
         const card = document.createElement('article');
         card.className = 'tb2-photo';
+        card.dataset.id = p.id;
         if (p.mappoint_id) card.dataset.mappoint = p.mappoint_id;
 
         // Videos zeigen im Feed nur ihr Standbild mit Play-Symbol und laufen
@@ -521,9 +529,11 @@
             ? `<a href="https://www.google.com/maps?q=${p.lat},${p.lon}" target="_blank" rel="noopener">Karte</a>`
             : '<span></span>';
 
+        const del = cfg.deleteUrl ? '<button type="button" class="tb2-del">Löschen</button>' : '';
+
         card.innerHTML =
             `<figure>${media}</figure>` +
-            `<div class="tb2-photo-meta"><span>${p.taken_at || ''}</span>${geo}</div>` +
+            `<div class="tb2-photo-meta"><span>${p.taken_at || ''}</span>${del}${geo}</div>` +
             (p.text ? `<div class="tb2-photo-text">${escapeHtml(p.text)}</div>` : '');
 
         // Fotos und Videos teilen sich die Lightbox
@@ -537,7 +547,64 @@
             trigger.addEventListener('click', () => openShotFor(p));
         }
 
+        const delBtn = card.querySelector('.tb2-del');
+        if (delBtn) delBtn.addEventListener('click', () => deletePhoto(p));
+
         els.feedBody.appendChild(card);
+    }
+
+    /**
+     * Foto/Video endgueltig loeschen (nur Admins) und ohne Neuladen aus Feed,
+     * Lightbox und Zaehlern entfernen.
+     */
+    function deletePhoto(p) {
+        if (!cfg.deleteUrl) return;
+        const what = p.is_video ? 'Video' : 'Foto';
+        if (!window.confirm(`${what} vom ${p.taken_at || 'unbekannten Datum'} endgültig löschen?`)) return;
+
+        const body = new FormData();
+        body.append('id', p.id);
+
+        fetch(cfg.deleteUrl, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': cfg.csrf },
+            body,
+        })
+            .then((r) => r.json().catch(() => ({})).then((d) => ({ ok: r.ok, d })))
+            .then(({ ok, d }) => {
+                if (!ok || d.status !== 'ok') throw new Error(d.message || 'Löschen fehlgeschlagen');
+                removePhoto(p);
+            })
+            .catch((err) => window.alert(err.message));
+    }
+
+    function removePhoto(p) {
+        const card = els.feedBody.querySelector(`.tb2-photo[data-id="${p.id}"]`);
+        if (card) card.remove();
+
+        // Die Feed-Seiten zaehlen per Offset; ein geloeschtes Foto der gerade
+        // nachladenden Reise wuerde sonst beim naechsten Nachladen eins
+        // ueberspringen.
+        if (p.galleryId === state.gallery && state.offset > 0) state.offset -= 1;
+
+        const c = countries.find((x) => x.gallery_id === p.galleryId);
+        if (c) {
+            c.pic_count = Math.max(0, (c.pic_count || 1) - 1);
+            if (els.feedTitle.textContent === c.name) els.feedSub.textContent = `${c.code} // ${c.pic_count} Fotos`;
+            const num = root.querySelector(`.tb2-country[data-gallery="${c.gallery_id}"] .tb2-num`);
+            if (num) num.textContent = c.pic_count;
+        }
+
+        const i = shots.findIndex((s) => s.id === p.id);
+        if (i < 0) return;
+        shots.splice(i, 1);
+
+        if (shotOpen()) {
+            if (!shots.length) { closeShot(); return; }
+            if (shotIndex >= shots.length) shotIndex = shots.length - 1;
+            else if (i < shotIndex) shotIndex -= 1;
+            renderShot();
+        }
     }
 
     function appendEnd() {

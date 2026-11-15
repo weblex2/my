@@ -12,9 +12,15 @@
         'resources/js/travelblog2.js',
     ])
 
+    @php($tb2Admin = auth()->check() && auth()->user()->hasAnyRole(['super_admin', 'admin']))
+
     <div class="nn-root tb2"
          data-countries-url="{{ route('tb2.countries') }}"
-         data-feed-url="{{ route('tb2.feed') }}">
+         data-feed-url="{{ route('tb2.feed') }}"
+         @if ($tb2Admin)
+         data-delete-url="{{ route('tb2.delete') }}"
+         data-csrf="{{ csrf_token() }}"
+         @endif>
 
         <div class="nn-grid" aria-hidden="true"></div>
         <canvas class="nn-particles" data-nn-particles aria-hidden="true"></canvas>
@@ -60,9 +66,9 @@
             <footer class="nn-footer">
                 <span>noppal.de // travel-blog 2</span>
                 <span>
-                    @auth
+                    @if ($tb2Admin)
                         <a href="{{ route('tb2.upload') }}">Fotos hochladen</a> &nbsp;·&nbsp;
-                    @endauth
+                    @endif
                     <a href="{{ url('/travel-blog') }}">alte Ansicht</a>
                 </span>
             </footer>
